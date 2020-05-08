@@ -445,17 +445,17 @@ window.onload = wrap_img;
                   <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">4</span><span class="p">:]</span> <span class="c1">#get the columns after the completely null column</span>
                   <span class="o">.</span><span class="n">set_axis</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
                 <span class="p">)</span>
-       <span class="o">.</span><span class="n">set_axis</span><span class="p">([</span><span class="s1">'Name'</span><span class="p">,</span><span class="s1">'Score'</span><span class="p">,</span><span class="s1">'Grade'</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-       <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'Name != "Name"'</span><span class="p">)</span>
-       <span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">'Name'</span><span class="p">])</span>
-       <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">subject</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Score</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> 
-                                            <span class="n">x</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> 
-                                            <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-                <span class="p">)</span>
-       <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">subject</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">ffill</span><span class="p">())</span>
-       <span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-       <span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">'subject'</span><span class="p">,</span><span class="s1">'Name'</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-       <span class="p">)</span>
+        <span class="o">.</span><span class="n">set_axis</span><span class="p">([</span><span class="s1">'Name'</span><span class="p">,</span><span class="s1">'Score'</span><span class="p">,</span><span class="s1">'Grade'</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'Name != "Name"'</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">'Name'</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">subject</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Score</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> 
+                                             <span class="n">x</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> 
+                                             <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+                 <span class="p">)</span>
+        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">subject</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">ffill</span><span class="p">())</span>
+        <span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">'subject'</span><span class="p">,</span><span class="s1">'Name'</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">)</span>
 
 <span class="n">res</span>
 </pre></div>
@@ -587,7 +587,7 @@ window.onload = wrap_img;
 <h2 id="Case-2-:-Same-table-in-several-worksheets/files-(using-the-sheet/file-name)">
 <a class="anchor" href="#Case-2-:-Same-table-in-several-worksheets/files-(using-the-sheet/file-name)" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Case 2 : Same table in several worksheets/files (using the sheet/file name)</strong><a class="anchor-link" href="#Case-2-:-Same-table-in-several-worksheets/files-(using-the-sheet/file-name)"> </a>
 </h2>
-<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/humanities.png" alt="humanities.png"><img src="Images/performance.png" alt="performance.png"></p>
+<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/humanities.png" alt="humanities.png">   <img src="Images/performance.png" alt="performance.png"></p>
 
 </div>
 </div>
@@ -615,10 +615,10 @@ window.onload = wrap_img;
                         <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheet</span><span class="p">,</span>
                         <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
           <span class="c1">#we are assigning the final column names here</span>
-          <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">'student'</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="s1">'subject'</span><span class="p">)</span>
-          <span class="o">.</span><span class="n">stack</span><span class="p">()</span>
-          <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s1">'scores'</span><span class="p">)</span>
-         <span class="p">)</span>
+           <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">'student'</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="s1">'subject'</span><span class="p">)</span>
+           <span class="o">.</span><span class="n">stack</span><span class="p">()</span>
+           <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s1">'scores'</span><span class="p">)</span>
+          <span class="p">)</span>
     <span class="k">return</span> <span class="n">df</span>
 </pre></div>
 
@@ -769,7 +769,7 @@ window.onload = wrap_img;
 <h2 id="Case-3-:-Same-table-in-several-worksheets/files-but-in-different-positions">
 <a class="anchor" href="#Case-3-:-Same-table-in-several-worksheets/files-but-in-different-positions" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Case 3 : Same table in several worksheets/files but in different positions</strong><a class="anchor-link" href="#Case-3-:-Same-table-in-several-worksheets/files-but-in-different-positions"> </a>
 </h2>
-<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/female.png" alt="female.png"><img src="Images/male.png" alt="male.png"></p>
+<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/female.png" alt="female.png">   <img src="Images/male.png" alt="male.png"></p>
 
 </div>
 </div>
@@ -797,18 +797,18 @@ window.onload = wrap_img;
                         <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheet</span><span class="p">,</span>
                         <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="c1">#our header is not the first row and varies per sheet</span>
                         <span class="n">index_col</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span><span class="c1">#this allows us filter for 'Subject' downwards</span>
-          <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">'Subject'</span><span class="p">:]</span>
-         <span class="p">)</span>
+           <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">'Subject'</span><span class="p">:]</span>
+          <span class="p">)</span>
     
     <span class="c1">#set columns equal to the 'Subject' index </span>
     <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">'Subject'</span><span class="p">]</span>
     <span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
-          <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'Subject'</span><span class="p">)</span>
-          <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">'subject'</span><span class="p">,</span><span class="n">columns</span><span class="o">=</span><span class="s1">'student'</span><span class="p">)</span>
-          <span class="o">.</span><span class="n">stack</span><span class="p">()</span>
-          <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'scores'</span><span class="p">)</span>
-          <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">sex</span> <span class="o">=</span> <span class="n">sheet</span><span class="p">)</span>
-         <span class="p">)</span>
+           <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'Subject'</span><span class="p">)</span>
+           <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">'subject'</span><span class="p">,</span><span class="n">columns</span><span class="o">=</span><span class="s1">'student'</span><span class="p">)</span>
+           <span class="o">.</span><span class="n">stack</span><span class="p">()</span>
+           <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'scores'</span><span class="p">)</span>
+           <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">sex</span> <span class="o">=</span> <span class="n">sheet</span><span class="p">)</span>
+          <span class="p">)</span>
     
     <span class="k">return</span> <span class="n">df</span>
 </pre></div>
@@ -995,22 +995,22 @@ The goal is to get the subjects,grades and scores per field, per student and com
                     <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheet</span><span class="p">,</span>
                     <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                     <span class="p">)</span>
-      <span class="o">.</span><span class="n">ffill</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-      <span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="p">:</span> <span class="s1">'field'</span><span class="p">})</span>
-      <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-      <span class="o">.</span><span class="n">T</span>
-      <span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'field'</span><span class="p">,</span><span class="s1">'Name'</span><span class="p">],</span>
-            <span class="n">var_name</span> <span class="o">=</span> <span class="s1">'student'</span><span class="p">,</span>
-            <span class="n">value_name</span> <span class="o">=</span> <span class="s1">'scores'</span>
-           <span class="p">)</span>
-      <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">grade</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">Name</span> <span class="o">==</span> <span class="s2">"Grade"</span><span class="p">,</span> <span class="s1">'scores'</span><span class="p">])</span>
-      <span class="c1">#scores are above grades per student</span>
-      <span class="c1">#hence the bfill</span>
-      <span class="o">.</span><span class="n">bfill</span><span class="p">()</span>
-      <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'Name != "Grade"'</span><span class="p">)</span>
-      <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'Name'</span><span class="p">:</span><span class="s1">'subject'</span><span class="p">})</span>
-      <span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">'field'</span><span class="p">,</span><span class="s1">'subject'</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-     <span class="p">)</span>
+       <span class="o">.</span><span class="n">ffill</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+       <span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="p">:</span> <span class="s1">'field'</span><span class="p">})</span>
+       <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+       <span class="o">.</span><span class="n">T</span>
+       <span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'field'</span><span class="p">,</span><span class="s1">'Name'</span><span class="p">],</span>
+             <span class="n">var_name</span> <span class="o">=</span> <span class="s1">'student'</span><span class="p">,</span>
+             <span class="n">value_name</span> <span class="o">=</span> <span class="s1">'scores'</span>
+            <span class="p">)</span>
+       <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">grade</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">Name</span> <span class="o">==</span> <span class="s2">"Grade"</span><span class="p">,</span> <span class="s1">'scores'</span><span class="p">])</span>
+       <span class="c1">#scores are above grades per student</span>
+       <span class="c1">#hence the bfill</span>
+       <span class="o">.</span><span class="n">bfill</span><span class="p">()</span>
+       <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'Name != "Grade"'</span><span class="p">)</span>
+       <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'Name'</span><span class="p">:</span><span class="s1">'subject'</span><span class="p">})</span>
+       <span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">'field'</span><span class="p">,</span><span class="s1">'subject'</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+      <span class="p">)</span>
 <span class="n">df</span>
 </pre></div>
 
