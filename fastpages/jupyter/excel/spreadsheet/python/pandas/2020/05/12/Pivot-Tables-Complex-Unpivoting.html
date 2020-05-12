@@ -207,7 +207,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We've dealt with pivot tables in one of the <a href="https://samukweku.github.io/data-wrangling-blog/fastpages/jupyter/excel/spreadsheet/python/pandas/2020/05/10/Pivot-Tables-Simple-Pivoting.html">previous posts</a>. Here, we take the complexity up a notch. Let's dive in to the various scenarios.</p>
+<p>We've dealt with pivot tables in one of the <a href="https://samukweku.github.io/data-wrangling-blog/fastpages/jupyter/excel/spreadsheet/python/pandas/2020/05/10/Pivot-Tables-Simple-Unpivoting.html">previous posts</a>. Here, we take the complexity up a notch. Let's dive in to the various scenarios.</p>
 
 </div>
 </div>
@@ -1193,9 +1193,7 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">'all'</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
       <span class="c1">#extract subjects</span>
       <span class="c1">#where the last column is null , get the entry in column 2</span>
-      <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">temp</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span>
-                                        <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> 
-                                        <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span>
+      <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">temp</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span>
               <span class="n">subject</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">temp</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
              <span class="p">)</span>
       <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'temp'</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
