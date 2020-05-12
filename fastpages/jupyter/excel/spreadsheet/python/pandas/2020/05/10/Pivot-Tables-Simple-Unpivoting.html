@@ -960,7 +960,7 @@ window.onload = wrap_img;
 
 <span class="c1">#final cleanup to tidy form</span>
 
-<span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span> <span class="c1">#get rid of the first two rows - they are already headers, so not needed within the dataframe</span>
+<span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span> 
        <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">'gender'</span><span class="p">,</span> <span class="s1">'student'</span><span class="p">])</span>
        <span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="s1">'field'</span><span class="p">,</span> <span class="s1">'subject'</span><span class="p">])</span>
        <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">,</span><span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1">#breaks it into separate columns - scores and colours</span>
