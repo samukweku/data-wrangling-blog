@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>https://samukweku.github.io/data-wrangling-blog/fastpages/jupyter/excel/spreadsheet/python/pandas/2020/05/08/Small-Multiples.html</loc>
+<loc>https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/2020/05/08/Small-Multiples.html</loc>
 <lastmod>2020-05-08T00:00:00-05:00</lastmod>
 </url>
 <url>
-<loc>https://samukweku.github.io/data-wrangling-blog/fastpages/jupyter/excel/spreadsheet/python/pandas/2020/05/10/Pivot-Tables-Simple-Unpivoting.html</loc>
+<loc>https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/2020/05/10/Pivot-Tables-Simple-Unpivoting.html</loc>
 <lastmod>2020-05-10T00:00:00-05:00</lastmod>
 </url>
 <url>
-<loc>https://samukweku.github.io/data-wrangling-blog/fastpages/jupyter/excel/spreadsheet/python/pandas/2020/05/12/Meaningful-Formats.html</loc>
+<loc>https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/2020/05/12/Meaningful-Formats.html</loc>
 <lastmod>2020-05-12T00:00:00-05:00</lastmod>
 </url>
 <url>
-<loc>https://samukweku.github.io/data-wrangling-blog/fastpages/jupyter/excel/spreadsheet/python/pandas/2020/05/12/Pivot-Tables-Complex-Unpivoting.html</loc>
+<loc>https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/2020/05/12/Pivot-Tables-Complex-Unpivoting.html</loc>
 <lastmod>2020-05-12T00:00:00-05:00</lastmod>
+</url>
+<url>
+<loc>https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/openpyxl/2020/05/19/Access-Tables-In-Excel.html</loc>
+<lastmod>2020-05-19T00:00:00-05:00</lastmod>
 </url>
 <url>
 <loc>https://samukweku.github.io/data-wrangling-blog/about/</loc>
