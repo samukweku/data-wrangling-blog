@@ -28,7 +28,6 @@ end
 
 gem "kramdown-math-katex"
 gem "jemoji"
-gem 'github-pages'
 
 
 # Windows and JRuby does not include zoneinfo files, so bundle the tzinfo-data gem
