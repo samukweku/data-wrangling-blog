@@ -211,11 +211,18 @@ window.onload = wrap_img;
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <blockquote>
-<p>This is a Python package for manipulating 2-dimensional tabular data structures (aka data frames). It is close in spirit to <a href="https://pandas.pydata.org/pandas-&gt;docs/stable/index.html">pandas</a> or <a href="https://github.com/apple/turicreate">SFrame</a>; however we put specific emphasis on speed and big data support. As the name suggests, the &gt;package is closely related to R's <a href="https://github.com/Rdatatable/data.table">data.table</a> and attempts to mimic its core algorithms and API.
-<br><br>I like <code>datatable</code> primarily because of its simple syntax. Yes, there are speed gains, which is the primary aim of the package, but the simplicity is compelling. 
+<p>This is a Python package for manipulating 2-dimensional tabular data structures (aka data frames). It is close in spirit to <a href="https://pandas.pydata.org/pandas-docs/stable/index.html">pandas</a> or <a href="https://github.com/apple/turicreate">SFrame</a>; however we put specific emphasis on speed and big data support. As the name suggests, the package is closely related to R's <a href="https://github.com/Rdatatable/data.table">data.table</a> and attempts to mimic its core algorithms and API.</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>I like <code>datatable</code> primarily because of its simple syntax. Yes, there are significant speed gains, which is the primary aim of the package, but the simplicity is compelling. 
 <br><br>Do note that datatable is in active development - more features will be added. Check out the <a href="https://datatable.readthedocs.io/en/latest/?badge=latest">documentation</a> for more information. 
 <br><br>This introduction focuses on how to select rows, select and perform calculations on columns, and perform aggregations by group.</p>
-</blockquote>
 
 </div>
 </div>
@@ -2206,6 +2213,7 @@ window.onload = wrap_img;
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">sol_2</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
+<span class="c1">#f[:] means the entire columns are selected</span>
 <span class="n">sol_2</span> <span class="o">=</span> <span class="n">sol_2</span><span class="p">[:,</span> <span class="n">f</span><span class="p">[:]</span><span class="o">.</span><span class="n">extend</span><span class="p">({</span><span class="s2">"petal_double"</span> <span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">f</span><span class="o">.</span><span class="n">petal_length</span><span class="p">})]</span>
 
 <span class="n">sol_2</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
@@ -2307,18 +2315,6 @@ window.onload = wrap_img;
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered">
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Notes:</strong></p>
-<ul>
-<li>
-<code>f[:]</code> means the entire columns are selected.</li>
-</ul>
-
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
