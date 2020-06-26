@@ -148,8 +148,8 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h3"><a href="#Datatable-syntax">Datatable syntax </a></li>
 <li class="toc-entry toc-h3"><a href="#The-i-part---Subset-Rows">The i part - Subset Rows </a>
 <ul>
-<li class="toc-entry toc-h4"><a href="#Select-the-first-three-rows-:">Select the first three rows : </a></li>
-<li class="toc-entry toc-h4"><a href="#Select-the-2nd,-4th-and-8th-rows-:">Select the 2nd, 4th and 8th rows : </a></li>
+<li class="toc-entry toc-h4"><a href="#Select-the-first-three-rows">Select the first three rows </a></li>
+<li class="toc-entry toc-h4"><a href="#Select-the-2nd,-4th-and-8th-rows">Select the 2nd, 4th and 8th rows </a></li>
 <li class="toc-entry toc-h4"><a href="#Find-rows-where-species-==-"versicolor"">Find rows where species == &quot;versicolor&quot; </a></li>
 <li class="toc-entry toc-h4"><a href="#Find-rows-where-species-==-"versicolor"-and-sepal_length-==-7">Find rows where species == &quot;versicolor&quot; and sepal_length == 7 </a></li>
 </ul>
@@ -171,11 +171,8 @@ window.onload = wrap_img;
 <ul>
 <li class="toc-entry toc-h4"><a href="#Sort-data-by-sepal_width">Sort data by sepal_width </a></li>
 <li class="toc-entry toc-h4"><a href="#Sort-by-sepal_width-ascending-and-petal_width-descending">Sort by sepal_width ascending and petal_width descending </a></li>
-<li class="toc-entry toc-h4"><a href="#Group-By---Get-the-average-sepal-length-per-species">Group By - Get the average sepal length per species </a>
-<ul>
-<li class="toc-entry toc-h5"><a href="#Group-By---Get-the-average-sepal-length-and-petal-length-per-species">Group By - Get the average sepal length and petal length per species </a></li>
-</ul>
-</li>
+<li class="toc-entry toc-h4"><a href="#Group-By---Get-the-average-sepal-length-per-species">Group By - Get the average sepal length per species </a></li>
+<li class="toc-entry toc-h4"><a href="#Group-By---Get-the-average-sepal-length-and-petal-length-per-species">Group By - Get the average sepal length and petal length per species </a></li>
 <li class="toc-entry toc-h4"><a href="#Group-By---Filter-the-rows-for-sepal_width-greater-than-or-equal-to-3,-then-get-the-average-sepal-length-and-petal-length-per-species">Group By - Filter the rows for sepal_width greater than or equal to 3, then get the average sepal length and petal length per species </a></li>
 <li class="toc-entry toc-h4"><a href="#Group-By---Get-the-average-sepal-length-and-group-on-sepal-width-greater-than-3">Group By - Get the average sepal length and group on sepal width greater than 3 </a></li>
 <li class="toc-entry toc-h4"><a href="#Group-By---Get-the-count-of-each-species,-and-label-the-aggregation-column-as-species_count">Group By - Get the count of each species, and label the aggregation column as species_count </a></li>
@@ -214,7 +211,7 @@ window.onload = wrap_img;
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <blockquote>
-<p>This is a Python package for manipulating 2-dimensional tabular data structures (aka data frames). It is close in spirit to <a href="https://pandas.pydata.org/pandas-docs/stable/index.html">pandas</a> or <a href="https://github.com/apple/turicreate">SFrame</a>; however we put specific emphasis on speed and big data support. As the name suggests, the package is closely related to R's <a href="https://github.com/Rdatatable/data.table">data.table</a> and attempts to mimic its core algorithms and API.
+<p>This is a Python package for manipulating 2-dimensional tabular data structures (aka data frames). It is close in spirit to <a href="https://pandas.pydata.org/pandas-&gt;docs/stable/index.html">pandas</a> or <a href="https://github.com/apple/turicreate">SFrame</a>; however we put specific emphasis on speed and big data support. As the name suggests, the &gt;package is closely related to R's <a href="https://github.com/Rdatatable/data.table">data.table</a> and attempts to mimic its core algorithms and API.
 <br><br>I like <code>datatable</code> primarily because of its simple syntax. Yes, there are speed gains, which is the primary aim of the package, but the simplicity is compelling. 
 <br><br>Do note that datatable is in active development - more features will be added. Check out the <a href="https://datatable.readthedocs.io/en/latest/?badge=latest">documentation</a> for more information. 
 <br><br>This introduction focuses on how to select rows, select and perform calculations on columns, and perform aggregations by group.</p>
@@ -258,7 +255,6 @@ window.onload = wrap_img;
 <span class="kn">from</span> <span class="nn">datatable</span> <span class="kn">import</span> <span class="n">dt</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">by</span>
 
 <span class="c1">#read in data</span>
-
 <span class="n">df</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">fread</span><span class="p">(</span><span class="s2">"iris.csv"</span><span class="p">)</span>
 
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
@@ -431,7 +427,7 @@ window.onload = wrap_img;
 <li>
 <code>dt.fread</code> is a powerful and very fast function for reading in various text files, zip archives, and urls. It can even read in data from the command line.</li>
 <li>
-<code>by</code> is datatable's function for grouping.</li>
+<code>by</code> is a function for grouping.</li>
 <li>
 <code>f</code> is a variable that provides a convenient way to reference the data frame's column within the square brackets. It is really useful when performing computations or creating expressions.</li>
 <li>In a jupyter notebook, the tab colours for the columns indicate various data types - <code>blue</code> is for float column, <code>green</code> -s for integer column, <code>red</code> is for string column, <code>yellow</code> is for boolean, while <code>black</code> is for object column.</li>
@@ -562,8 +558,8 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Select-the-first-three-rows-:">
-<a class="anchor" href="#Select-the-first-three-rows-:" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Select the first three rows :</strong><a class="anchor-link" href="#Select-the-first-three-rows-:"> </a>
+<h4 id="Select-the-first-three-rows">
+<a class="anchor" href="#Select-the-first-three-rows" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Select the first three rows</strong><a class="anchor-link" href="#Select-the-first-three-rows"> </a>
 </h4>
 </div>
 </div>
@@ -658,7 +654,7 @@ window.onload = wrap_img;
 <p><strong>Notes :</strong></p>
 <ul>
 <li>No new syntax, just our knowledge of python's sequence indexing.</li>
-<li>Note also that nothing was selected in the columns. Passing None or <code>...</code> in the j section will work as well.</li>
+<li>Note also that nothing was selected in the columns. Passing <code>None</code> or <code>...</code> in the j section will work as well.</li>
 </ul>
 
 </div>
@@ -667,8 +663,8 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Select-the-2nd,-4th-and-8th-rows-:">
-<a class="anchor" href="#Select-the-2nd,-4th-and-8th-rows-:" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Select the 2nd, 4th and 8th rows :</strong><a class="anchor-link" href="#Select-the-2nd,-4th-and-8th-rows-:"> </a>
+<h4 id="Select-the-2nd,-4th-and-8th-rows">
+<a class="anchor" href="#Select-the-2nd,-4th-and-8th-rows" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Select the 2nd, 4th and 8th rows</strong><a class="anchor-link" href="#Select-the-2nd,-4th-and-8th-rows"> </a>
 </h4>
 </div>
 </div>
@@ -783,7 +779,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">species</span><span class="o">==</span><span class="s2">"versicolor"</span><span class="p">,</span> <span class="p">:]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">species</span> <span class="o">==</span> <span class="s2">"versicolor"</span><span class="p">,</span> <span class="p">:]</span>
 <span class="n">result</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
@@ -943,7 +939,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[(</span><span class="n">f</span><span class="o">.</span><span class="n">species</span><span class="o">==</span><span class="s2">"versicolor"</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">sepal_length</span> <span class="o">==</span> <span class="mi">7</span><span class="p">),</span> <span class="p">:]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[(</span><span class="n">f</span><span class="o">.</span><span class="n">species</span> <span class="o">==</span> <span class="s2">"versicolor"</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">sepal_length</span> <span class="o">==</span> <span class="mi">7</span><span class="p">),</span> <span class="p">:]</span>
 </pre></div>
 
     </div>
@@ -1043,8 +1039,8 @@ window.onload = wrap_img;
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Simply pass a list of the names in the j section </span>
-
 <span class="n">result</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">"species"</span><span class="p">,</span><span class="s2">"petal_width"</span><span class="p">,</span><span class="s2">"petal_length"</span><span class="p">]]</span>
+
 <span class="n">result</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
@@ -1182,6 +1178,7 @@ window.onload = wrap_img;
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Again, we use python's indexing syntax</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+
 <span class="n">result</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
@@ -1295,6 +1292,7 @@ window.onload = wrap_img;
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:,</span> <span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"length"</span><span class="p">)</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">names</span><span class="p">]]</span>
+
 <span class="n">result</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
@@ -1630,7 +1628,7 @@ window.onload = wrap_img;
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Notes:</strong></p>
 <ul>
-<li>To get aggregates of more than one column, you pass it in a list.</li>
+<li>To get aggregates of more than one column, pass a list of column names prefixed with the <code>f</code> symbol to j.</li>
 <li>Alternatively, you can pass a dictionary of key - value pairs, where the keys will be the new column names, and the values are the computed columns.</li>
 </ul>
 <p>For the rest of the tutorial, I will continue using <code>f-expressions</code>, as they are convenient to use, without having to explicitly export column names.</p>
@@ -2611,7 +2609,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Option 2, Use the <code>remove</code> method :</p>
+<p>Option 2. Use the <code>remove</code> method :</p>
 
 </div>
 </div>
@@ -2907,7 +2905,7 @@ window.onload = wrap_img;
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <ul>
-<li>That's all there is to it, just pass in the column name, either as a string or with the <code>f</code> expression.</li>
+<li>That's all there is to it, just pass in the column name, either as a string or as an <code>f</code> expression.</li>
 <li>By default, sorting is in ascending order.</li>
 </ul>
 
@@ -3170,9 +3168,9 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h5 id="Group-By---Get-the-average-sepal-length-and-petal-length-per-species">
+<h4 id="Group-By---Get-the-average-sepal-length-and-petal-length-per-species">
 <a class="anchor" href="#Group-By---Get-the-average-sepal-length-and-petal-length-per-species" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Group By - Get the average sepal length and petal length per species</strong><a class="anchor-link" href="#Group-By---Get-the-average-sepal-length-and-petal-length-per-species"> </a>
-</h5>
+</h4>
 </div>
 </div>
 </div>
