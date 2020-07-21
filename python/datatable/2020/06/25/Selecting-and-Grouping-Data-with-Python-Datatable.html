@@ -1493,7 +1493,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>TIP</strong> : Alternatively, we can use the column names directly, and avoid the <code>f</code> expression, by exporting the column names.</p>
+<p><strong>TIP</strong> : Alternatively, we can use the column names directly, and avoid the <code>f</code> expression, by exporting the column names :</p>
 
 </div>
 </div>
@@ -1558,7 +1558,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">petal_width</span><span class="p">,</span> <span class="n">petal_length</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:,[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]]</span><span class="o">.</span><span class="n">export_names</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">petal_width</span><span class="p">,</span> <span class="n">petal_length</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]]</span><span class="o">.</span><span class="n">export_names</span><span class="p">()</span>
 
 <span class="c1">#calculate mean value of petal_width and petal_length</span>
 <span class="n">df</span><span class="p">[:,</span> <span class="n">dt</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">petal_width</span><span class="p">,</span> <span class="n">petal_length</span><span class="p">])]</span>
