@@ -160,7 +160,6 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h4"><a href="#Select-the-last-two-columns">Select the last two columns </a></li>
 <li class="toc-entry toc-h4"><a href="#Select-only-columns-whose-names-end-with-length">Select only columns whose names end with length </a></li>
 <li class="toc-entry toc-h4"><a href="#Calculate-the-mean-value-of-sepal_length">Calculate the mean value of sepal_length </a></li>
-<li class="toc-entry toc-h4"><a href="#Perform-Operations-in-the-j-section-with-the-column-names">Perform Operations in the j section with the column names </a></li>
 <li class="toc-entry toc-h4"><a href="#Select-only-species-and-petal_length-columns-for-rows-where-the-petal_length-is-greater-than-1.5">Select only species and petal_length columns for rows where the petal_length is greater than 1.5 </a></li>
 <li class="toc-entry toc-h4"><a href="#Select-only-string-columns">Select only string columns </a></li>
 <li class="toc-entry toc-h4"><a href="#Convert-petal_length-from-float-to-integer">Convert petal_length from float to integer </a></li>
@@ -1494,20 +1493,69 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Perform-Operations-in-the-j-section-with-the-column-names">
-<a class="anchor" href="#Perform-Operations-in-the-j-section-with-the-column-names" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Perform Operations in the j section with the column names</strong><a class="anchor-link" href="#Perform-Operations-in-the-j-section-with-the-column-names"> </a>
-</h4>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>We can export the column names and use them, instead of the <code>f</code> symbol :</p>
+<p><strong>TIP</strong> : We can export the column names and use them, instead of the <code>f</code> symbol :</p>
 
 </div>
 </div>
 </div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sepal_length</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">export_names</span><span class="p">()</span>
+
+<span class="c1">#calculate the mean value of sepal_length</span>
+<span class="n">df</span><span class="p">[:,</span> <span class="n">dt</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sepal_length</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>5.84333</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">1 row × 1 column</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -1564,64 +1612,6 @@ window.onload = wrap_img;
   </table>
   <div class="footer">
     <div class="frame_dimensions">1 row × 2 columns</div>
-  </div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sepal_length</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">export_names</span><span class="p">()</span>
-
-<span class="c1">#calculate the mean value of sepal_length</span>
-<span class="n">df</span><span class="p">[:,</span> <span class="n">dt</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sepal_length</span><span class="p">)]</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div class="datatable">
-  <table class="frame">
-  <thead>
-    <tr class="colnames">
-<td class="row_index"></td>
-<th>sepal_length</th>
-</tr>
-    <tr class="coltypes">
-<td class="row_index"></td>
-<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
-</tr>
-  </thead>
-  <tbody>
-    <tr>
-<td class="row_index">0</td>
-<td>5.84333</td>
-</tr>
-  </tbody>
-  </table>
-  <div class="footer">
-    <div class="frame_dimensions">1 row × 1 column</div>
   </div>
 </div>
 
