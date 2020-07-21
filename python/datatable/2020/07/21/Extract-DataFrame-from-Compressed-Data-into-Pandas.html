@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Extract DataFrame from Compressed Data into Pandas | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Extract DataFrame from Compressed Data into Pandas" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Applying functions to subsets of data" />
+<meta property="og:description" content="Applying functions to subsets of data" />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/datatable/2020/07/21/Extract-DataFrame-from-Compressed-Data-into-Pandas.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/datatable/2020/07/21/Extract-DataFrame-from-Compressed-Data-into-Pandas.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:image" content="https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-21T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Applying functions to subsets of data","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/datatable/2020/07/21/Extract-DataFrame-from-Compressed-Data-into-Pandas.html"},"@type":"BlogPosting","url":"https://samukweku.github.io/data-wrangling-blog/python/datatable/2020/07/21/Extract-DataFrame-from-Compressed-Data-into-Pandas.html","headline":"Extract DataFrame from Compressed Data into Pandas","dateModified":"2020-07-21T00:00:00-05:00","datePublished":"2020-07-21T00:00:00-05:00","image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/data-wrangling-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" /><link rel="shortcut icon" type="image/x-icon" href="/data-wrangling-blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Extract DataFrame from Compressed Data into Pandas | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Extract DataFrame from Compressed Data into Pandas" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Applying functions to subsets of data" />
+<meta property="og:description" content="Applying functions to subsets of data" />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/datatable/2020/07/21/Extract-DataFrame-from-Compressed-Data-into-Pandas.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/datatable/2020/07/21/Extract-DataFrame-from-Compressed-Data-into-Pandas.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:image" content="https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-21T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Applying functions to subsets of data","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/datatable/2020/07/21/Extract-DataFrame-from-Compressed-Data-into-Pandas.html"},"@type":"BlogPosting","url":"https://samukweku.github.io/data-wrangling-blog/python/datatable/2020/07/21/Extract-DataFrame-from-Compressed-Data-into-Pandas.html","headline":"Extract DataFrame from Compressed Data into Pandas","dateModified":"2020-07-21T00:00:00-05:00","datePublished":"2020-07-21T00:00:00-05:00","image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+<script type="text/javascript">
+require.config({
+  paths: {
+    jquery: 'https://code.jquery.com/jquery-3.5.0.min',
+    plotly: 'https://cdn.plot.ly/plotly-latest.min'
+  },
+
+  shim: {
+    plotly: {
+      deps: ['jquery'],
+      exports: 'plotly'
+    }
+  }
+});
+</script>
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/data-wrangling-blog/">Samuel Oranyeli</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/data-wrangling-blog/about/">About Me</a><a class="page-link" href="/data-wrangling-blog/search/">Search</a><a class="page-link" href="/data-wrangling-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Extract DataFrame from Compressed Data into Pandas</h1><p class="page-description">Applying functions to subsets of data</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-07-21T00:00:00-05:00" itemprop="datePublished">
+        Jul 21, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      4 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#Python">Python</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#Datatable">Datatable</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/samukweku/data-wrangling-blog/tree/master/_notebooks/2020-07-21-Extract DataFrame from Compressed Data into Pandas.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/data-wrangling-blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          
+          
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#Compressed-Data-Extraction-in-Pandas">Compressed Data Extraction in Pandas </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#Read-Zip-Folder-that-has-only-one-File">Read Zip Folder that has only one File </a></li>
+<li class="toc-entry toc-h3"><a href="#Read-a-File-from-Multiple-Files-in-Zip-Folder">Read a File from Multiple Files in Zip Folder </a></li>
+<li class="toc-entry toc-h3"><a href="#Read-a-Specific-File-from-Multiple-Files-in-Zip-Folder-based-on-its-Extension">Read a Specific File from Multiple Files in Zip Folder based on its Extension </a></li>
+<li class="toc-entry toc-h3"><a href="#Read-Multiple-Files-with-specific-extension-in-Zip-Folder-into-a-Single-Dataframe">Read Multiple Files with specific extension in Zip Folder into a Single Dataframe </a></li>
+<li class="toc-entry toc-h3"><a href="#Read-all-the-Files-in-Zip-Folder-into-a-Single-Dataframe">Read all the Files in Zip Folder into a Single Dataframe </a></li>
+<li class="toc-entry toc-h3"><a href="#Read-Compressed-Data-through-the-Command-Line">Read Compressed Data through the Command Line </a></li>
+</ul>
+</li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2020-07-21-Extract DataFrame from Compressed Data into Pandas.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Compressed-Data-Extraction-in-Pandas">
+<a class="anchor" href="#Compressed-Data-Extraction-in-Pandas" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Compressed Data Extraction in Pandas</strong><a class="anchor-link" href="#Compressed-Data-Extraction-in-Pandas"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You have data in compressed form (<code>zip</code>, <code>7z</code>, ...); how do you read the data into <a href="https://pandas.pydata.org/pandas-docs/stable/index.html">Pandas</a>? This blog post will explore the various options possible. The focus will be on the <code>zip</code> format, as it is widely used and the methods presented here can be adapted for other compression formats.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Read-Zip-Folder-that-has-only-one-File">
+<a class="anchor" href="#Read-Zip-Folder-that-has-only-one-File" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Read Zip Folder that has only one File</strong><a class="anchor-link" href="#Read-Zip-Folder-that-has-only-one-File"> </a>
+</h3>
+<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/zip_single_file.png" alt="zip-single-file.png"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="https://pandas.pydata.org/pandas-docs/stable/index.html">Pandas</a> can easily read a zip folder that contains only one file:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"Data_files/iris.zip"</span><span class="p">)</span>
+<span class="c1"># or : pd.read_csv("Data_files/iris.zip",</span>
+<span class="c1">#                  compression = "zip")</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sepal_length</th>
+      <th>sepal_width</th>
+      <th>petal_length</th>
+      <th>petal_width</th>
+      <th>species</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.1</td>
+      <td>3.5</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4.9</td>
+      <td>3.0</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4.7</td>
+      <td>3.2</td>
+      <td>1.3</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4.6</td>
+      <td>3.1</td>
+      <td>1.5</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>3.6</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Note:</strong></p>
+<ul>
+<li>Note that <a href="https://pandas.pydata.org/pandas-docs/stable/index.html">Pandas</a> successfully inferred the compression type. It pays sometimes though, to be explicit and supply the <code>compression</code> argument.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Read-a-File-from-Multiple-Files-in-Zip-Folder">
+<a class="anchor" href="#Read-a-File-from-Multiple-Files-in-Zip-Folder" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Read a File from Multiple Files in Zip Folder</strong><a class="anchor-link" href="#Read-a-File-from-Multiple-Files-in-Zip-Folder"> </a>
+</h3>
+<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/zip_single_from_multiple_files.png" alt="zip-single-file-from-multiple-files.png"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In this scenario, We want just the <code>setosa.csv</code> file. <a href="https://pandas.pydata.org/pandas-docs/stable/index.html">Pandas</a> cannot directly read data from a zip folder if there are multiple files; to solve this, we will use the <a href="https://docs.python.org/3/library/zipfile.html">zipfile</a> module within Python:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">ZipFile</span>
+
+<span class="c1"># pass in the specific file name </span>
+<span class="c1"># to the open method</span>
+<span class="k">with</span> <span class="n">ZipFile</span><span class="p">(</span><span class="s2">"Data_files/iris_zipped.zip"</span><span class="p">)</span> <span class="k">as</span> <span class="n">myzip</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">myzip</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">"iris_zipped/setosa.csv"</span><span class="p">)</span>
+
+<span class="c1">#Now, we can read in the data</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sepal_length</th>
+      <th>sepal_width</th>
+      <th>petal_length</th>
+      <th>petal_width</th>
+      <th>species</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.1</td>
+      <td>3.5</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4.9</td>
+      <td>3.0</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4.7</td>
+      <td>3.2</td>
+      <td>1.3</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4.6</td>
+      <td>3.1</td>
+      <td>1.5</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>3.6</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Note:</strong></p>
+<ul>
+<li>The context manager ensures the connection is closed after reading in the data.</li>
+<li>The complete path to the specific file is passed (<code>iris_zipped/setosa.csv</code>).</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Read-a-Specific-File-from-Multiple-Files-in-Zip-Folder-based-on-its-Extension">
+<a class="anchor" href="#Read-a-Specific-File-from-Multiple-Files-in-Zip-Folder-based-on-its-Extension" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Read a Specific File from Multiple Files in Zip Folder based on its Extension</strong><a class="anchor-link" href="#Read-a-Specific-File-from-Multiple-Files-in-Zip-Folder-based-on-its-Extension"> </a>
+</h3>
+<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/zip_specific_file_extension.png" alt="zip-specific-file-ext.png"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here, the zip folder contains various file types (<code>xlsx</code>, <code>csv</code>, <code>json</code>, ...), and we want only the <code>.csv</code> file. Let's also assume that we do not know beforehand what the filename is; we do however know that there is just one <code>.csv</code> file in the zip folder. We can pick out the specific file with the <a href="https://docs.python.org/3/library/zipfile.html">zipfile</a> module:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#fnmatch helps to filter for specific file types</span>
+<span class="kn">import</span> <span class="nn">fnmatch</span>
+
+<span class="c1">#read data from the csv file</span>
+<span class="k">with</span> <span class="n">ZipFile</span><span class="p">(</span><span class="s2">"Data_files/zipped.zip"</span><span class="p">)</span> <span class="k">as</span> <span class="n">zipped_files</span><span class="p">:</span>
+    
+    <span class="c1">#get list of files in zip</span>
+    <span class="n">file_list</span> <span class="o">=</span> <span class="n">zipped_files</span><span class="o">.</span><span class="n">namelist</span><span class="p">()</span>
+    
+    <span class="c1">#use fnmatch.filter to get the csv file</span>
+    <span class="n">csv_file</span> <span class="o">=</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">file_list</span><span class="p">,</span> <span class="s2">"*.csv"</span><span class="p">)</span>
+    
+    <span class="c1">#get the csv data</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">zipped_files</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="o">*</span><span class="n">csv_file</span><span class="p">)</span>
+
+<span class="c1">#read into dataframe</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>year</th>
+      <th>month</th>
+      <th>day</th>
+      <th>dep_delay</th>
+      <th>arr_delay</th>
+      <th>carrier</th>
+      <th>origin</th>
+      <th>dest</th>
+      <th>air_time</th>
+      <th>distance</th>
+      <th>hour</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2014</td>
+      <td>1</td>
+      <td>1</td>
+      <td>14</td>
+      <td>13</td>
+      <td>AA</td>
+      <td>JFK</td>
+      <td>LAX</td>
+      <td>359</td>
+      <td>2475</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2014</td>
+      <td>1</td>
+      <td>1</td>
+      <td>-3</td>
+      <td>13</td>
+      <td>AA</td>
+      <td>JFK</td>
+      <td>LAX</td>
+      <td>363</td>
+      <td>2475</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2014</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>9</td>
+      <td>AA</td>
+      <td>JFK</td>
+      <td>LAX</td>
+      <td>351</td>
+      <td>2475</td>
+      <td>19</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2014</td>
+      <td>1</td>
+      <td>1</td>
+      <td>-8</td>
+      <td>-26</td>
+      <td>AA</td>
+      <td>LGA</td>
+      <td>PBI</td>
+      <td>157</td>
+      <td>1035</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2014</td>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>AA</td>
+      <td>JFK</td>
+      <td>LAX</td>
+      <td>350</td>
+      <td>2475</td>
+      <td>13</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Read-Multiple-Files-with-specific-extension-in-Zip-Folder-into-a-Single-Dataframe">
+<a class="anchor" href="#Read-Multiple-Files-with-specific-extension-in-Zip-Folder-into-a-Single-Dataframe" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Read Multiple Files with specific extension in Zip Folder into a Single Dataframe</strong><a class="anchor-link" href="#Read-Multiple-Files-with-specific-extension-in-Zip-Folder-into-a-Single-Dataframe"> </a>
+</h3>
+<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/zip_multiple_files_concat.png" alt="zip-multiple-files-concat.png"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In this scenario, we want to read in only the <code>csv</code> files and combine them into one dataframe - <a href="https://docs.python.org/3/library/zipfile.html">zipfile</a> module to the rescue:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="n">ZipFile</span><span class="p">(</span><span class="s2">"Data_files/zip_various.zip"</span><span class="p">)</span> <span class="k">as</span> <span class="n">zipfiles</span><span class="p">:</span>
+
+    <span class="n">file_list</span> <span class="o">=</span> <span class="n">zipfiles</span><span class="o">.</span><span class="n">namelist</span><span class="p">()</span>
+    
+    <span class="c1">#get only the csv files</span>
+    <span class="n">csv_files</span> <span class="o">=</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">file_list</span><span class="p">,</span> <span class="s2">"*.csv"</span><span class="p">)</span>
+    
+    <span class="c1">#iterate with a list comprehension to get the individual dataframes</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">zipfiles</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">name</span><span class="p">))</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">csv_files</span><span class="p">]</span>
+
+<span class="c1">#combine into one dataframe</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sepal_length</th>
+      <th>sepal_width</th>
+      <th>petal_length</th>
+      <th>petal_width</th>
+      <th>species</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.1</td>
+      <td>3.5</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4.9</td>
+      <td>3.0</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4.7</td>
+      <td>3.2</td>
+      <td>1.3</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4.6</td>
+      <td>3.1</td>
+      <td>1.5</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>3.6</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Read-all-the-Files-in-Zip-Folder-into-a-Single-Dataframe">
+<a class="anchor" href="#Read-all-the-Files-in-Zip-Folder-into-a-Single-Dataframe" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Read all the Files in Zip Folder into a Single Dataframe</strong><a class="anchor-link" href="#Read-all-the-Files-in-Zip-Folder-into-a-Single-Dataframe"> </a>
+</h3>
+<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/zip_single_from_multiple_files.png" alt="zip-single-file-from-multiple-files.png"></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">with</span> <span class="n">ZipFile</span><span class="p">(</span><span class="s2">"Data_files/iris_zipped.zip"</span><span class="p">)</span> <span class="k">as</span> <span class="n">zipfiles</span><span class="p">:</span>
+    <span class="c1">#the first entry is the zipfile name</span>
+    <span class="c1">#we'll skip it</span>
+    <span class="n">filelist</span> <span class="o">=</span> <span class="n">zipfiles</span><span class="o">.</span><span class="n">namelist</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
+    
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">zipfiles</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">name</span><span class="p">))</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">filelist</span><span class="p">]</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sepal_length</th>
+      <th>sepal_width</th>
+      <th>petal_length</th>
+      <th>petal_width</th>
+      <th>species</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.1</td>
+      <td>3.5</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4.9</td>
+      <td>3.0</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4.7</td>
+      <td>3.2</td>
+      <td>1.3</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4.6</td>
+      <td>3.1</td>
+      <td>1.5</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>3.6</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Read-Compressed-Data-through-the-Command-Line">
+<a class="anchor" href="#Read-Compressed-Data-through-the-Command-Line" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Read Compressed Data through the Command Line</strong><a class="anchor-link" href="#Read-Compressed-Data-through-the-Command-Line"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This process is especially useful when dealing with large files that <a href="https://pandas.pydata.org/pandas-docs/stable/index.html">Pandas</a> may struggle with. Preprocess the data, before reading it into Pandas. The command line tools are quite powerful and allow for some efficient data processing.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+
+<span class="c1">#read a zip with only one file</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">"unzip -p Data_files/iris.zip"</span><span class="p">,</span> 
+                      <span class="n">shell</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+                      <span class="n">capture_output</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+                      <span class="n">text</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span>
+<span class="c1">#read in data to pandas</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sepal_length</th>
+      <th>sepal_width</th>
+      <th>petal_length</th>
+      <th>petal_width</th>
+      <th>species</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.1</td>
+      <td>3.5</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4.9</td>
+      <td>3.0</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4.7</td>
+      <td>3.2</td>
+      <td>1.3</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4.6</td>
+      <td>3.1</td>
+      <td>1.5</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>3.6</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># filter for only rows where species == virginica</span>
+<span class="c1"># this comes in handy when dealing with large files </span>
+<span class="c1"># that Pandas may struggle with</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">"""</span>
+<span class="s2">                      unzip -p Data_files/iris.zip | awk 'BEGIN {FS = ","}; </span>
+<span class="s2">                      {if($5=="virginica" ||  NR == 1) </span><span class="si">{print}</span><span class="s2">}'</span>
+<span class="s2">                      """</span><span class="p">,</span> 
+                      <span class="n">shell</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+                      <span class="n">capture_output</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
+                      <span class="n">text</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sepal_length</th>
+      <th>sepal_width</th>
+      <th>petal_length</th>
+      <th>petal_width</th>
+      <th>species</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>6.3</td>
+      <td>3.3</td>
+      <td>6.0</td>
+      <td>2.5</td>
+      <td>virginica</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>5.8</td>
+      <td>2.7</td>
+      <td>5.1</td>
+      <td>1.9</td>
+      <td>virginica</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>7.1</td>
+      <td>3.0</td>
+      <td>5.9</td>
+      <td>2.1</td>
+      <td>virginica</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>6.3</td>
+      <td>2.9</td>
+      <td>5.6</td>
+      <td>1.8</td>
+      <td>virginica</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>6.5</td>
+      <td>3.0</td>
+      <td>5.8</td>
+      <td>2.2</td>
+      <td>virginica</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="samukweku/data-wrangling-blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/data-wrangling-blog/python/datatable/2020/07/21/Extract-DataFrame-from-Compressed-Data-into-Pandas.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/data-wrangling-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/data-wrangling-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Data Wrangling Blog.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/samukweku" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/samukweku" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
