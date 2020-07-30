@@ -1,0 +1,1940 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Extract DataFrame from Compressed Data into Python Datatable | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Extract DataFrame from Compressed Data into Python Datatable" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Extract tables from compressed data with ease" />
+<meta property="og:description" content="Extract tables from compressed data with ease" />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/datatable/compressed%20data/2020/07/28/Extract-DataFrame-from-Compressed-Data-into-Python-Datatable.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/datatable/compressed%20data/2020/07/28/Extract-DataFrame-from-Compressed-Data-into-Python-Datatable.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:image" content="https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-28T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Extract tables from compressed data with ease","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/datatable/compressed%20data/2020/07/28/Extract-DataFrame-from-Compressed-Data-into-Python-Datatable.html"},"@type":"BlogPosting","url":"https://samukweku.github.io/data-wrangling-blog/python/datatable/compressed%20data/2020/07/28/Extract-DataFrame-from-Compressed-Data-into-Python-Datatable.html","headline":"Extract DataFrame from Compressed Data into Python Datatable","dateModified":"2020-07-28T00:00:00-05:00","datePublished":"2020-07-28T00:00:00-05:00","image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/data-wrangling-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" /><link rel="shortcut icon" type="image/x-icon" href="/data-wrangling-blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Extract DataFrame from Compressed Data into Python Datatable | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Extract DataFrame from Compressed Data into Python Datatable" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Extract tables from compressed data with ease" />
+<meta property="og:description" content="Extract tables from compressed data with ease" />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/datatable/compressed%20data/2020/07/28/Extract-DataFrame-from-Compressed-Data-into-Python-Datatable.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/datatable/compressed%20data/2020/07/28/Extract-DataFrame-from-Compressed-Data-into-Python-Datatable.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:image" content="https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-28T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Extract tables from compressed data with ease","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/datatable/compressed%20data/2020/07/28/Extract-DataFrame-from-Compressed-Data-into-Python-Datatable.html"},"@type":"BlogPosting","url":"https://samukweku.github.io/data-wrangling-blog/python/datatable/compressed%20data/2020/07/28/Extract-DataFrame-from-Compressed-Data-into-Python-Datatable.html","headline":"Extract DataFrame from Compressed Data into Python Datatable","dateModified":"2020-07-28T00:00:00-05:00","datePublished":"2020-07-28T00:00:00-05:00","image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+<script type="text/javascript">
+require.config({
+  paths: {
+    jquery: 'https://code.jquery.com/jquery-3.5.0.min',
+    plotly: 'https://cdn.plot.ly/plotly-latest.min'
+  },
+
+  shim: {
+    plotly: {
+      deps: ['jquery'],
+      exports: 'plotly'
+    }
+  }
+});
+</script>
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/data-wrangling-blog/">Samuel Oranyeli</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/data-wrangling-blog/about/">About Me</a><a class="page-link" href="/data-wrangling-blog/search/">Search</a><a class="page-link" href="/data-wrangling-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Extract DataFrame from Compressed Data into Python Datatable</h1><p class="page-description">Extract tables from compressed data with ease</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-07-28T00:00:00-05:00" itemprop="datePublished">
+        Jul 28, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      5 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#Python">Python</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#Datatable">Datatable</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#compressed data">compressed data</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/samukweku/data-wrangling-blog/tree/master/_notebooks/2020-07-28-Extract DataFrame from Compressed Data into Python Datatable.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/data-wrangling-blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          
+          
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#Compressed-Data-Extraction-in-Python-Datatable">Compressed Data Extraction in Python Datatable </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#Read-Zip-Folder-that-has-only-one-File">Read Zip Folder that has only one File </a></li>
+<li class="toc-entry toc-h3"><a href="#Read-a-File-from-Multiple-Files-in-Zip-Folder">Read a File from Multiple Files in Zip Folder </a></li>
+<li class="toc-entry toc-h3"><a href="#Read-a-Specific-File-from-Multiple-Files-in-Zip-Folder-based-on-its-Extension">Read a Specific File from Multiple Files in Zip Folder based on its Extension </a></li>
+<li class="toc-entry toc-h3"><a href="#Read-Multiple-Files-with-specific-extension-in-Zip-Folder-into-a-Single-Dataframe">Read Multiple Files with specific extension in Zip Folder into a Single Dataframe </a></li>
+<li class="toc-entry toc-h3"><a href="#Read-all-the-Files-in-Zip-Folder-into-a-Single-Dataframe">Read all the Files in Zip Folder into a Single Dataframe </a></li>
+<li class="toc-entry toc-h3"><a href="#What-about-other-Formats?">What about other Formats? </a></li>
+<li class="toc-entry toc-h3"><a href="#Summary">Summary </a></li>
+</ul>
+</li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2020-07-28-Extract DataFrame from Compressed Data into Python Datatable.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Compressed-Data-Extraction-in-Python-Datatable">
+<a class="anchor" href="#Compressed-Data-Extraction-in-Python-Datatable" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Compressed Data Extraction in Python Datatable</strong><a class="anchor-link" href="#Compressed-Data-Extraction-in-Python-Datatable"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In a previous <a href="https://samukweku.github.io/data-wrangling-blog/python/pandas/compressed%20data/2020/07/21/Extract-DataFrame-from-Compressed-Data-into-Pandas.html">blog post</a>, I discussed the various ways to extract data  from compressed files into <a href="https://pandas.pydata.org/pandas-docs/stable/index.html">Pandas</a>. This blog post explores those options, this time with <a href="https://datatable.readthedocs.io/en/latest/?badge=latest">Datatable</a>. This package is a reimplementation in Python of <a href="https://rdatatable.gitlab.io/data.table/">Rdatatable</a>, aiming to replicate its speed and concise syntax. Have a look at my other <a href="https://samukweku.github.io/data-wrangling-blog/python/datatable/2020/06/25/Selecting-and-Grouping-Data-with-Python-Datatable.html">blog post</a> that explores the basics of <a href="https://datatable.readthedocs.io/en/latest/?badge=latest">Datatable</a>.
+Most of the examples will focus on the <code>zip</code> format, as it is widely used and the methods presented here can be adapted for other compression formats.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Read-Zip-Folder-that-has-only-one-File">
+<a class="anchor" href="#Read-Zip-Folder-that-has-only-one-File" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Read Zip Folder that has only one File</strong><a class="anchor-link" href="#Read-Zip-Folder-that-has-only-one-File"> </a>
+</h3>
+<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/zip_single_file.png" alt="zip-single-file.png"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We simply pass the zipfile :</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">datatable</span> <span class="kn">import</span> <span class="n">dt</span><span class="p">,</span> <span class="n">fread</span><span class="p">,</span> <span class="n">iread</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">fread</span><span class="p">(</span><span class="s2">"Data_files/iris.zip"</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<style type="text/css">
+.datatable table.frame { margin-bottom: 0; }
+.datatable table.frame thead { border-bottom: none; }
+.datatable table.frame tr.coltypes td {  color: #FFFFFF;  line-height: 6px;  padding: 0 0.5em;}
+.datatable .boolean { background: #DDDD99; }
+.datatable .object  { background: #565656; }
+.datatable .integer { background: #5D9E5D; }
+.datatable .float   { background: #4040CC; }
+.datatable .string  { background: #CC4040; }
+.datatable .row_index {  background: var(--jp-border-color3);  border-right: 1px solid var(--jp-border-color0);  color: var(--jp-ui-font-color3);  font-size: 9px;}
+.datatable .frame tr.coltypes .row_index {  background: var(--jp-border-color0);}
+.datatable th:nth-child(2) { padding-left: 12px; }
+.datatable .hellipsis {  color: var(--jp-cell-editor-border-color);}
+.datatable .vellipsis {  background: var(--jp-layout-color0);  color: var(--jp-cell-editor-border-color);}
+.datatable .na {  color: var(--jp-cell-editor-border-color);  font-size: 80%;}
+.datatable .footer { font-size: 9px; }
+.datatable .frame_dimensions {  background: var(--jp-border-color3);  border-top: 1px solid var(--jp-border-color0);  color: var(--jp-ui-font-color3);  display: inline-block;  opacity: 0.6;  padding: 1px 10px 1px 5px;}
+</style>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+<th>species</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="string" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>5.1</td>
+<td>3.5</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>4.9</td>
+<td>3</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>4.7</td>
+<td>3.2</td>
+<td>1.3</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>4.6</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>5</td>
+<td>3.6</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>5.4</td>
+<td>3.9</td>
+<td>1.7</td>
+<td>0.4</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>4.6</td>
+<td>3.4</td>
+<td>1.4</td>
+<td>0.3</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>5</td>
+<td>3.4</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>4.4</td>
+<td>2.9</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>4.9</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.1</td>
+<td>setosa</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">10 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Notes: </strong></p>
+<ul>
+<li>
+<a href="https://datatable.readthedocs.io/en/latest/api/dt/fread.html#">fread</a> and <a href="https://datatable.readthedocs.io/en/latest/api/dt/iread.html#">iread</a> are file reading features of <a href="https://datatable.readthedocs.io/en/latest/?badge=latest">Datatable</a>, similar to <a href="https://pandas.pydata.org/pandas-docs/stable/index.html">Pandas</a> <a href="https://pandas.pydata.org/pandas-docs/stable/generated/pandas.read_csv.html">read_csv</a>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Read-a-File-from-Multiple-Files-in-Zip-Folder">
+<a class="anchor" href="#Read-a-File-from-Multiple-Files-in-Zip-Folder" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Read a File from Multiple Files in Zip Folder</strong><a class="anchor-link" href="#Read-a-File-from-Multiple-Files-in-Zip-Folder"> </a>
+</h3>
+<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/zip_single_from_multiple_files.png" alt="zip-single-file-from-multiple-files.png"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In this scenario, We want just the <code>setosa.csv</code> file. <a href="https://datatable.readthedocs.io/en/latest/?badge=latest">Datatable</a> can read this with ease - simply pass the filepath to <a href="https://datatable.readthedocs.io/en/latest/api/dt/fread.html#">fread</a> -&gt; <code>archive_name.zip/path_to_file</code>:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">fread</span><span class="p">(</span><span class="s2">"Data_files/iris_zipped.zip/iris_zipped/setosa.csv"</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+<th>species</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="string" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>5.1</td>
+<td>3.5</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>4.9</td>
+<td>3</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>4.7</td>
+<td>3.2</td>
+<td>1.3</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>4.6</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>5</td>
+<td>3.6</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>5.4</td>
+<td>3.9</td>
+<td>1.7</td>
+<td>0.4</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>4.6</td>
+<td>3.4</td>
+<td>1.4</td>
+<td>0.3</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>5</td>
+<td>3.4</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>4.4</td>
+<td>2.9</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>4.9</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.1</td>
+<td>setosa</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">10 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This is easier than working with <a href="https://pandas.pydata.org/pandas-docs/stable/index.html">Pandas</a>, where we had to import the <a href="https://docs.python.org/3/library/zipfile.html">zipfile</a> to do this.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Read-a-Specific-File-from-Multiple-Files-in-Zip-Folder-based-on-its-Extension">
+<a class="anchor" href="#Read-a-Specific-File-from-Multiple-Files-in-Zip-Folder-based-on-its-Extension" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Read a Specific File from Multiple Files in Zip Folder based on its Extension</strong><a class="anchor-link" href="#Read-a-Specific-File-from-Multiple-Files-in-Zip-Folder-based-on-its-Extension"> </a>
+</h3>
+<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/zip_specific_file_extension.png" alt="zip-specific-file-ext.png"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here, the zip folder contains various file types (<code>xlsx</code>, <code>csv</code>, <code>json</code>, ...), and we want only the <code>.csv</code> file. Let's also assume that we do not know beforehand what the filename is; we do however know that there is just one <code>.csv</code> file in the zip folder. There are two options :</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Option 1 : We can pick out the specific file with the <a href="https://datatable.readthedocs.io/en/latest/api/dt/iread.html#">iread</a> function. <a href="https://datatable.readthedocs.io/en/latest/api/dt/iread.html#">iread</a> returns a lazy iterator of all the data frames in the zip folder; as such we can filter for the specific file we are interested in :</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">iread</span><span class="p">(</span><span class="s2">"Data_files/zipped.zip"</span><span class="p">):</span>
+    <span class="c1"># every file has a source attribute</span>
+    <span class="c1"># that describes the file,</span>
+    <span class="c1"># including the file type and name</span>
+    <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".csv"</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">file</span>
+        
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>IOWarning: Could not read Data_files/zipped.zip/zipped/iris.json: Too few fields on line 152: expected 2 but found only 1 (with sep=','). Set fill=True to ignore this error.  &lt;&lt;]&gt;&gt;
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+<th>species</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="string" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>5.1</td>
+<td>3.5</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>4.9</td>
+<td>3</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>4.7</td>
+<td>3.2</td>
+<td>1.3</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>4.6</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>5</td>
+<td>3.6</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>5.4</td>
+<td>3.9</td>
+<td>1.7</td>
+<td>0.4</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>4.6</td>
+<td>3.4</td>
+<td>1.4</td>
+<td>0.3</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>5</td>
+<td>3.4</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>4.4</td>
+<td>2.9</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>4.9</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.1</td>
+<td>setosa</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">10 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Note:</strong></p>
+<ul>
+<li>The <code>.json</code> format is not supported by <a href="https://datatable.readthedocs.io/en/latest/?badge=latest">Datatable</a>.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Option 2 : Use the <code>cmd</code> argument. This passes the processing to the command line. The command line is a powerful tool that can help with a lot of data processing. No need for the <a href="https://datatable.readthedocs.io/en/latest/api/dt/iread.html#">iread</a> function, just let the command line do the work.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">fread</span><span class="p">(</span><span class="n">cmd</span> <span class="o">=</span> <span class="s2">"""unzip -p Data_files/zipped.zip '*.csv' """</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+<th>species</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="string" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>5.1</td>
+<td>3.5</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>4.9</td>
+<td>3</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>4.7</td>
+<td>3.2</td>
+<td>1.3</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>4.6</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>5</td>
+<td>3.6</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>5.4</td>
+<td>3.9</td>
+<td>1.7</td>
+<td>0.4</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>4.6</td>
+<td>3.4</td>
+<td>1.4</td>
+<td>0.3</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>5</td>
+<td>3.4</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>4.4</td>
+<td>2.9</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>4.9</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.1</td>
+<td>setosa</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">10 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Note :</strong></p>
+<ul>
+<li>In the code above, we used the <a href="https://linux.die.net/man/1/unzip">unzip</a> tool to filter for the <code>csv</code> file and extract the data. </li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Read-Multiple-Files-with-specific-extension-in-Zip-Folder-into-a-Single-Dataframe">
+<a class="anchor" href="#Read-Multiple-Files-with-specific-extension-in-Zip-Folder-into-a-Single-Dataframe" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Read Multiple Files with specific extension in Zip Folder into a Single Dataframe</strong><a class="anchor-link" href="#Read-Multiple-Files-with-specific-extension-in-Zip-Folder-into-a-Single-Dataframe"> </a>
+</h3>
+<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/zip_multiple_files_concat.png" alt="zip-multiple-files-concat.png"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In this scenario, we want to read in only the <code>csv</code> files and combine them into one dataframe - We will explore the <a href="https://datatable.readthedocs.io/en/latest/api/dt/iread.html#">iread</a> option and the command line option:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Option 1 - <a href="https://datatable.readthedocs.io/en/latest/api/dt/iread.html#">iread</a> :</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">csv_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">iread</span><span class="p">(</span><span class="s2">"Data_files/zip_various.zip"</span><span class="p">)</span>
+             <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".csv"</span><span class="p">)]</span>
+
+<span class="c1"># combine the dataframes into one with rbind </span>
+<span class="c1"># rbind is similar to pd.concat(*frames, axis=0) :</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">rbind</span><span class="p">(</span><span class="n">csv_files</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+<th>species</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="string" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>5.1</td>
+<td>3.5</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>4.9</td>
+<td>3</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>4.7</td>
+<td>3.2</td>
+<td>1.3</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>4.6</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>5</td>
+<td>3.6</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>5.4</td>
+<td>3.9</td>
+<td>1.7</td>
+<td>0.4</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>4.6</td>
+<td>3.4</td>
+<td>1.4</td>
+<td>0.3</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>5</td>
+<td>3.4</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>4.4</td>
+<td>2.9</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>4.9</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.1</td>
+<td>setosa</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">10 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Option 2 - Command Line :</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">fread</span><span class="p">(</span><span class="n">cmd</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">                 unzip -p Data_files/zip_various.zip '*.csv' | </span>
+<span class="s2">                 awk 'BEGIN {FS = ","}; {if ($1!="sepal_length" || NR==1) </span><span class="si">{print}</span><span class="s2">}' </span>
+<span class="s2">                """</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+<th>species</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="string" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>5.1</td>
+<td>3.5</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>4.9</td>
+<td>3</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>4.7</td>
+<td>3.2</td>
+<td>1.3</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>4.6</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>5</td>
+<td>3.6</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>5.4</td>
+<td>3.9</td>
+<td>1.7</td>
+<td>0.4</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>4.6</td>
+<td>3.4</td>
+<td>1.4</td>
+<td>0.3</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>5</td>
+<td>3.4</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>4.4</td>
+<td>2.9</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>4.9</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.1</td>
+<td>setosa</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">10 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Note:</strong></p>
+<ul>
+<li>The <a href="https://www.gnu.org/software/gawk/manual/html_node/Getting-Started.html#Getting-Started">AWK</a> language is used here to split the columns on the <code>,</code> delimiter, and to get the header for the rows.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Read-all-the-Files-in-Zip-Folder-into-a-Single-Dataframe">
+<a class="anchor" href="#Read-all-the-Files-in-Zip-Folder-into-a-Single-Dataframe" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Read all the Files in Zip Folder into a Single Dataframe</strong><a class="anchor-link" href="#Read-all-the-Files-in-Zip-Folder-into-a-Single-Dataframe"> </a>
+</h3>
+<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/zip_single_from_multiple_files.png" alt="zip-single-file-from-multiple-files.png"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Option 1 - <a href="https://datatable.readthedocs.io/en/latest/api/dt/iread.html#">iread</a> :</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#get a sequence of the files and combine with rbind</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">rbind</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">iread</span><span class="p">(</span><span class="s2">"Data_files/iris_zipped.zip"</span><span class="p">)))</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+<th>species</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="string" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>5.1</td>
+<td>3.5</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>4.9</td>
+<td>3</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>4.7</td>
+<td>3.2</td>
+<td>1.3</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>4.6</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>5</td>
+<td>3.6</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>5.4</td>
+<td>3.9</td>
+<td>1.7</td>
+<td>0.4</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>4.6</td>
+<td>3.4</td>
+<td>1.4</td>
+<td>0.3</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>5</td>
+<td>3.4</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>4.4</td>
+<td>2.9</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>4.9</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.1</td>
+<td>setosa</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">10 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Option 2 - Command Line :</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">fread</span><span class="p">(</span><span class="n">cmd</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">                 unzip -p Data_files/iris_zipped.zip | </span>
+<span class="s2">                 awk 'BEGIN {FS = ","}; {if ($1!="sepal_length" || NR==1) </span><span class="si">{print}</span><span class="s2">}' </span>
+<span class="s2">                 """</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+<th>species</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="string" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>5.1</td>
+<td>3.5</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>4.9</td>
+<td>3</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>4.7</td>
+<td>3.2</td>
+<td>1.3</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>4.6</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>5</td>
+<td>3.6</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>5.4</td>
+<td>3.9</td>
+<td>1.7</td>
+<td>0.4</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>4.6</td>
+<td>3.4</td>
+<td>1.4</td>
+<td>0.3</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>5</td>
+<td>3.4</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>4.4</td>
+<td>2.9</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>4.9</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.1</td>
+<td>setosa</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">10 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="What-about-other-Formats?">
+<a class="anchor" href="#What-about-other-Formats?" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>What about other Formats?</strong><a class="anchor-link" href="#What-about-other-Formats?"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The major compression archive formats supported by <code>fread</code> are : <code>.tar</code>, <code>.gz</code>, <code>.zip</code>, <code>.gz2</code>, and <code>.tgz</code>. So the above steps will work for these formats. But there are other compresssion formats, including <code>.7z</code>. How do we read that? The command line!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Extract archive with a single file :</li>
+</ul>
+<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/7z_single.png" alt="7z-single-file.png"></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">fread</span><span class="p">(</span><span class="n">cmd</span> <span class="o">=</span> <span class="s2">"7z e -so Data_files/iris_single_7z.7z"</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+<th>species</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="string" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>5.1</td>
+<td>3.5</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>4.9</td>
+<td>3</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>4.7</td>
+<td>3.2</td>
+<td>1.3</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>4.6</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>5</td>
+<td>3.6</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>5.4</td>
+<td>3.9</td>
+<td>1.7</td>
+<td>0.4</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>4.6</td>
+<td>3.4</td>
+<td>1.4</td>
+<td>0.3</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>5</td>
+<td>3.4</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>4.4</td>
+<td>2.9</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>4.9</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.1</td>
+<td>setosa</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">10 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Extract specific file :</li>
+</ul>
+<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/7z_multiple.png" alt="7z_multiple.png"></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">fread</span><span class="p">(</span><span class="n">cmd</span> <span class="o">=</span> <span class="s2">""" 7z e -so Data_files/iris_7z.7z "virginica.csv" -r """</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+<th>species</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="string" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>6.3</td>
+<td>3.3</td>
+<td>6</td>
+<td>2.5</td>
+<td>virginica</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>5.8</td>
+<td>2.7</td>
+<td>5.1</td>
+<td>1.9</td>
+<td>virginica</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>7.1</td>
+<td>3</td>
+<td>5.9</td>
+<td>2.1</td>
+<td>virginica</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>6.3</td>
+<td>2.9</td>
+<td>5.6</td>
+<td>1.8</td>
+<td>virginica</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>6.5</td>
+<td>3</td>
+<td>5.8</td>
+<td>2.2</td>
+<td>virginica</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>7.6</td>
+<td>3</td>
+<td>6.6</td>
+<td>2.1</td>
+<td>virginica</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>4.9</td>
+<td>2.5</td>
+<td>4.5</td>
+<td>1.7</td>
+<td>virginica</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>7.3</td>
+<td>2.9</td>
+<td>6.3</td>
+<td>1.8</td>
+<td>virginica</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>6.7</td>
+<td>2.5</td>
+<td>5.8</td>
+<td>1.8</td>
+<td>virginica</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>7.2</td>
+<td>3.6</td>
+<td>6.1</td>
+<td>2.5</td>
+<td>virginica</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">10 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Summary">
+<a class="anchor" href="#Summary" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Summary</strong><a class="anchor-link" href="#Summary"> </a>
+</h3>
+<p><a href="https://datatable.readthedocs.io/en/latest/?badge=latest">Datatable</a> offers convenient features in reading data from compressed file formats, including the ability to read in data via the command line. Compared to <a href="https://pandas.pydata.org/pandas-docs/stable/index.html">Pandas</a>, <a href="https://datatable.readthedocs.io/en/latest/?badge=latest">Datatable</a> offers more flexibility and power when dealing with compressed file formats.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="samukweku/data-wrangling-blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/data-wrangling-blog/python/datatable/compressed%20data/2020/07/28/Extract-DataFrame-from-Compressed-Data-into-Python-Datatable.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/data-wrangling-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/data-wrangling-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Data Wrangling Blog.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/samukweku" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/samukweku" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -110,7 +110,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      4 min read
+      6 min read
     
 </span></p>
 
@@ -339,7 +339,15 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>In this scenario, We want just the <code>setosa.csv</code> file. <a href="https://pandas.pydata.org/pandas-docs/stable/index.html">Pandas</a> cannot directly read data from a zip folder if there are multiple files; to solve this, we will use the <a href="https://docs.python.org/3/library/zipfile.html">zipfile</a> module within Python:</p>
+<p>In this scenario, We want just the <code>setosa.csv</code> file. <a href="https://pandas.pydata.org/pandas-docs/stable/index.html">Pandas</a> cannot directly read data from a zip folder if there are multiple files; to solve this, we will use the <a href="https://docs.python.org/3/library/zipfile.html">zipfile</a> module within Python. The <a href="https://docs.python.org/3/library/zipfile.html">zipfile</a> module offers two routes for reading in zip data : <code>ZipFile</code> and <code>Path</code> classes.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Option 1 - Via <code>ZipFile</code> :</p>
 
 </div>
 </div>
@@ -351,7 +359,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">ZipFile</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">ZipFile</span><span class="p">,</span> <span class="n">Path</span>
 
 <span class="c1"># pass in the specific file name </span>
 <span class="c1"># to the open method</span>
@@ -469,6 +477,124 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Option 2 - Via <code>Path</code>:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+
+<span class="c1"># the 'at' argument accepts the path to the file</span>
+<span class="c1"># within the zip archive</span>
+<span class="c1"># this is convenient when you know the filename</span>
+<span class="n">zipped</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"Data_files/iris_zipped.zip"</span><span class="p">,</span> <span class="n">at</span><span class="o">=</span><span class="s2">"iris_zipped/setosa.csv"</span><span class="p">)</span>
+
+<span class="c1">#read into dataframe, with the '.read_text' method</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">zipped</span><span class="o">.</span><span class="n">read_text</span><span class="p">()))</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sepal_length</th>
+      <th>sepal_width</th>
+      <th>petal_length</th>
+      <th>petal_width</th>
+      <th>species</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.1</td>
+      <td>3.5</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4.9</td>
+      <td>3.0</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4.7</td>
+      <td>3.2</td>
+      <td>1.3</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4.6</td>
+      <td>3.1</td>
+      <td>1.5</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>3.6</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Read-a-Specific-File-from-Multiple-Files-in-Zip-Folder-based-on-its-Extension">
 <a class="anchor" href="#Read-a-Specific-File-from-Multiple-Files-in-Zip-Folder-based-on-its-Extension" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Read a Specific File from Multiple Files in Zip Folder based on its Extension</strong><a class="anchor-link" href="#Read-a-Specific-File-from-Multiple-Files-in-Zip-Folder-based-on-its-Extension"> </a>
 </h3>
@@ -481,6 +607,14 @@ window.onload = wrap_img;
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Here, the zip folder contains various file types (<code>xlsx</code>, <code>csv</code>, <code>json</code>, ...), and we want only the <code>.csv</code> file. Let's also assume that we do not know beforehand what the filename is; we do however know that there is just one <code>.csv</code> file in the zip folder. We can pick out the specific file with the <a href="https://docs.python.org/3/library/zipfile.html">zipfile</a> module:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Option 1 - Via <code>ZipFile</code> :</p>
 
 </div>
 </div>
@@ -606,6 +740,124 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>Option 2 - Via <code>Path</code>:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">zipped</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"Data_files/zipped.zip"</span><span class="p">)</span>
+
+<span class="c1">#filter for csv file</span>
+<span class="n">csv_file</span> <span class="o">=</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">zipped</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">namelist</span><span class="p">(),</span> <span class="s2">"*.csv"</span><span class="p">)</span>
+
+<span class="c1">#append filepath to zipped, and read into dataframe</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">zipped</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="o">*</span><span class="n">csv_file</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sepal_length</th>
+      <th>sepal_width</th>
+      <th>petal_length</th>
+      <th>petal_width</th>
+      <th>species</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.1</td>
+      <td>3.5</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4.9</td>
+      <td>3.0</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4.7</td>
+      <td>3.2</td>
+      <td>1.3</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4.6</td>
+      <td>3.1</td>
+      <td>1.5</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>3.6</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Read-Multiple-Files-with-specific-extension-in-Zip-Folder-into-a-Single-Dataframe">
 <a class="anchor" href="#Read-Multiple-Files-with-specific-extension-in-Zip-Folder-into-a-Single-Dataframe" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Read Multiple Files with specific extension in Zip Folder into a Single Dataframe</strong><a class="anchor-link" href="#Read-Multiple-Files-with-specific-extension-in-Zip-Folder-into-a-Single-Dataframe"> </a>
 </h3>
@@ -618,6 +870,14 @@ window.onload = wrap_img;
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>In this scenario, we want to read in only the <code>csv</code> files and combine them into one dataframe - <a href="https://docs.python.org/3/library/zipfile.html">zipfile</a> module to the rescue:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Option 1 - Via <code>ZipFile</code>:</p>
 
 </div>
 </div>
@@ -637,10 +897,128 @@ window.onload = wrap_img;
     <span class="n">csv_files</span> <span class="o">=</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">file_list</span><span class="p">,</span> <span class="s2">"*.csv"</span><span class="p">)</span>
     
     <span class="c1">#iterate with a list comprehension to get the individual dataframes</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">zipfiles</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">name</span><span class="p">))</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">csv_files</span><span class="p">]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">zipfiles</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">))</span> <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">csv_files</span><span class="p">]</span>
 
 <span class="c1">#combine into one dataframe</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sepal_length</th>
+      <th>sepal_width</th>
+      <th>petal_length</th>
+      <th>petal_width</th>
+      <th>species</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.1</td>
+      <td>3.5</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4.9</td>
+      <td>3.0</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4.7</td>
+      <td>3.2</td>
+      <td>1.3</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4.6</td>
+      <td>3.1</td>
+      <td>1.5</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>3.6</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Option 2 - Via <code>Path</code>:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">zipped</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"Data_files/zip_various.zip"</span><span class="p">)</span>
+
+<span class="n">csv_file</span> <span class="o">=</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">zipped</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">namelist</span><span class="p">(),</span> <span class="s2">"*.csv"</span><span class="p">)</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">zipped</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span> <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">csv_file</span><span class="p">)</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">content</span><span class="p">))</span> <span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">data</span><span class="p">)</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
@@ -745,6 +1123,14 @@ window.onload = wrap_img;
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Option 1 - Via <code>ZipFile</code>:</p>
+
+</div>
+</div>
+</div>
     
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -757,7 +1143,124 @@ window.onload = wrap_img;
     <span class="c1">#we'll skip it</span>
     <span class="n">filelist</span> <span class="o">=</span> <span class="n">zipfiles</span><span class="o">.</span><span class="n">namelist</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
     
-    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">zipfiles</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">name</span><span class="p">))</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">filelist</span><span class="p">]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">zipfiles</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">))</span> <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">filelist</span><span class="p">]</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sepal_length</th>
+      <th>sepal_width</th>
+      <th>petal_length</th>
+      <th>petal_width</th>
+      <th>species</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>5.1</td>
+      <td>3.5</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>4.9</td>
+      <td>3.0</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>4.7</td>
+      <td>3.2</td>
+      <td>1.3</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4.6</td>
+      <td>3.1</td>
+      <td>1.5</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5.0</td>
+      <td>3.6</td>
+      <td>1.4</td>
+      <td>0.2</td>
+      <td>setosa</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Option 2 - Via <code>Path</code>:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">zipped</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"Data_files/iris_zipped.zip"</span><span class="p">)</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">zipped</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span> 
+        <span class="k">for</span> <span class="n">file_name</span> <span class="ow">in</span> <span class="n">zipped</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">namelist</span><span class="p">()[</span><span class="mi">1</span><span class="p">:])</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">content</span><span class="p">))</span> <span class="k">for</span> <span class="n">content</span> <span class="ow">in</span> <span class="n">data</span><span class="p">)</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
@@ -879,7 +1382,6 @@ window.onload = wrap_img;
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">subprocess</span>
-<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
 
 <span class="c1">#read a zip with only one file</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">"unzip -p Data_files/iris.zip"</span><span class="p">,</span> 
@@ -982,6 +1484,17 @@ window.onload = wrap_img;
 </div>
     
 
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Note:</strong></p>
+<ul>
+<li>The <a href="https://linux.die.net/man/1/unzip">unzip</a> tool on the command line does the hardwork here.</li>
+</ul>
+
+</div>
+</div>
+</div>
     
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -1095,6 +1608,17 @@ window.onload = wrap_img;
 </div>
     
 
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Note:</strong></p>
+<ul>
+<li>The <a href="https://www.gnu.org/software/gawk/manual/html_node/Getting-Started.html#Getting-Started">AWK</a> language is used here to filter for the rows and also retain the headers.</li>
+</ul>
+
+</div>
+</div>
+</div>
 </div>
 
 
