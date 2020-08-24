@@ -110,7 +110,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      5 min read
+      6 min read
     
 </span></p>
 
@@ -202,6 +202,17 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Update</strong></p>
+<ul>
+<li>2020-08-12: Code has been improved. Unnecessary steps are chunked out.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Case-1-:-Meaningfully-Formatted-Rows">
 <a class="anchor" href="#Case-1-:-Meaningfully-Formatted-Rows" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Case 1 : Meaningfully Formatted Rows</strong><a class="anchor-link" href="#Case-1-:-Meaningfully-Formatted-Rows"> </a>
 </h3>
@@ -226,6 +237,7 @@ window.onload = wrap_img;
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">janitor</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">openpyxl</span> <span class="kn">import</span> <span class="n">load_workbook</span>  
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
@@ -252,18 +264,37 @@ window.onload = wrap_img;
 
 <span class="c1"># access specific worksheet</span>
 <span class="n">ws</span> <span class="o">=</span> <span class="n">wb</span><span class="p">[</span><span class="s2">"highlights"</span><span class="p">]</span>
+</pre></div>
 
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Next we iterate through each column and collect similar items. Specifically, we need to get the values and the colours :</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 
-<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">iter_rows</span><span class="p">(</span><span class="n">min_row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_row</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_row</span><span class="p">,</span> <span class="n">max_col</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_column</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s2">"s"</span><span class="p">:</span>
-            <span class="n">val</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">value</span>
-        <span class="c1">#attach color information to the numbers,</span>
-        <span class="c1">#as the color applies only to the numbers</span>
-        <span class="k">elif</span> <span class="n">cell</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s2">"n"</span><span class="p">:</span>
-            <span class="n">val</span> <span class="o">=</span> <span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">cell</span><span class="o">.</span><span class="n">fill</span><span class="o">.</span><span class="n">fgColor</span><span class="o">.</span><span class="n">rgb</span><span class="p">))</span>
-        <span class="n">data</span><span class="p">[</span><span class="n">cell</span><span class="o">.</span><span class="n">row</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">column</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">cell</span><span class="o">.</span><span class="n">column_letter</span><span class="si">}</span><span class="s2">_value"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">cell</span><span class="o">.</span><span class="n">column_letter</span><span class="si">}</span><span class="s2">_colour"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">fill</span><span class="o">.</span><span class="n">fgColor</span><span class="o">.</span><span class="n">rgb</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -296,10 +327,10 @@ window.onload = wrap_img;
 
 <div class="output_text output_subarea output_execute_result">
 <pre>defaultdict(list,
-            {1: ['Age', 'Height'],
-             2: ['1,00000000', '2,00000000'],
-             3: ['3,FFFFFF00', '4,FFFFFF00'],
-             4: ['5,00000000', '6,00000000']})</pre>
+            {'A_value': ['Age', 1, 3, 5],
+             'A_colour': ['00000000', '00000000', 'FFFFFF00', '00000000'],
+             'B_value': ['Height', 2, 4, 6],
+             'B_colour': ['00000000', '00000000', 'FFFFFF00', '00000000']})</pre>
 </div>
 
 </div>
@@ -310,6 +341,14 @@ window.onload = wrap_img;
 </div>
     
 
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's view the data in a dataframe :</p>
+
+</div>
+</div>
+</div>
     
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -317,8 +356,115 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#view dataframe</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A_value</th>
+      <th>A_colour</th>
+      <th>B_value</th>
+      <th>B_colour</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Age</td>
+      <td>00000000</td>
+      <td>Height</td>
+      <td>00000000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>00000000</td>
+      <td>2</td>
+      <td>00000000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>FFFFFF00</td>
+      <td>4</td>
+      <td>FFFFFF00</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>5</td>
+      <td>00000000</td>
+      <td>6</td>
+      <td>00000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This looks better and easier to wrangle. Let's put into tidy form</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
+      <span class="c1"># We chunk the last column, since it is the same as A_colour</span>
+      <span class="c1"># remember, we are working with row colours</span>
+      <span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+      <span class="c1"># cleanup here to put a relevant name </span>
+      <span class="c1"># since at some point we will use this row as our column headers</span>
+      <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">A_colour</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">index</span><span class="o">==</span><span class="mi">0</span><span class="p">,</span> 
+                                            <span class="s2">"Fill_colour"</span><span class="p">,</span> 
+                                            <span class="n">x</span><span class="o">.</span><span class="n">A_colour</span><span class="p">))</span>
+      <span class="c1"># row_to_names function is from the pyjanitor package</span>
+      <span class="c1"># we promote the first row as the new column header</span>
+      <span class="o">.</span><span class="n">row_to_names</span><span class="p">(</span><span class="n">row_number</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">remove_row</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+     <span class="p">)</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -352,129 +498,29 @@ window.onload = wrap_img;
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>2</th>
-      <th>3</th>
-      <th>4</th>
+      <th>Age</th>
+      <th>Fill_colour</th>
+      <th>Height</th>
     </tr>
+  </thead>
+  <tbody>
     <tr>
       <th>1</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>Age</th>
-      <td>1,00000000</td>
-      <td>3,FFFFFF00</td>
-      <td>5,00000000</td>
-    </tr>
-    <tr>
-      <th>Height</th>
-      <td>2,00000000</td>
-      <td>4,FFFFFF00</td>
-      <td>6,00000000</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    
-
-<div class="cell border-box-sizing text_cell rendered">
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's put into tidy form</p>
-
-</div>
-</div>
-</div>
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
-       <span class="o">.</span><span class="n">stack</span><span class="p">()</span>
-       <span class="c1">#get values and color into separate columns</span>
-       <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">,</span><span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-       <span class="c1">#get Age and Height as columns</span>
-       <span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-        <span class="c1">#since the colour is the same for the row, </span>
-       <span class="c1">#we'll keep just one</span>
-       <span class="o">.</span><span class="n">iloc</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]</span>
-       <span class="c1">#keep only one column level ... the top level is redundant</span>
-       <span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-       <span class="c1">#fix name of last column from Age to Colour</span>
-       <span class="o">.</span><span class="n">set_axis</span><span class="p">([</span><span class="s1">'Age'</span><span class="p">,</span> <span class="s1">'Height'</span><span class="p">,</span> <span class="s1">'fill_colour'</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-       <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-      <span class="p">)</span>
-
-<span class="n">res</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Age</th>
-      <th>Height</th>
-      <th>fill_colour</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
       <td>1</td>
-      <td>2</td>
       <td>00000000</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>3</td>
-      <td>4</td>
-      <td>FFFFFF00</td>
+      <td>2</td>
     </tr>
     <tr>
       <th>2</th>
+      <td>3</td>
+      <td>FFFFFF00</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>3</th>
       <td>5</td>
-      <td>6</td>
       <td>00000000</td>
+      <td>6</td>
     </tr>
   </tbody>
 </table>
@@ -508,6 +554,14 @@ window.onload = wrap_img;
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A strategy change is needed here, however. We need to identify cells that are numbers and get the cell colours, while ignoring the cell colours for text cells and the headers.</p>
+
+</div>
+</div>
+</div>
     
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -521,7 +575,7 @@ window.onload = wrap_img;
 
 <span class="n">data</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 
-<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">iter_rows</span><span class="p">(</span><span class="n">min_row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_row</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_row</span><span class="p">,</span> <span class="n">max_col</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_column</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">rows</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s2">"s"</span><span class="p">:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">value</span>
@@ -529,7 +583,7 @@ window.onload = wrap_img;
         <span class="c1">#color applies only to the numbers</span>
         <span class="k">elif</span> <span class="n">cell</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s2">"n"</span><span class="p">:</span>
             <span class="n">val</span> <span class="o">=</span> <span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">value</span><span class="p">),</span> <span class="n">cell</span><span class="o">.</span><span class="n">fill</span><span class="o">.</span><span class="n">fgColor</span><span class="o">.</span><span class="n">rgb</span><span class="p">))</span>
-        <span class="n">data</span><span class="p">[</span><span class="n">cell</span><span class="o">.</span><span class="n">row</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="sa">f</span><span class="s2">"column_</span><span class="si">{</span><span class="n">cell</span><span class="o">.</span><span class="n">row</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -546,8 +600,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#create dataframe</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"column_1"</span><span class="p">)</span>
 <span class="n">df</span>
 </pre></div>
 
@@ -580,12 +633,12 @@ window.onload = wrap_img;
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>2</th>
-      <th>3</th>
-      <th>4</th>
+      <th>column_2</th>
+      <th>column_3</th>
+      <th>column_4</th>
     </tr>
     <tr>
-      <th>1</th>
+      <th>column_1</th>
       <th></th>
       <th></th>
       <th></th>
@@ -630,38 +683,20 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#get the first row, which contain the names as the column</span>
-<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">set_names</span><span class="p">([</span><span class="s1">'student'</span><span class="p">])</span>
-<span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">set_names</span><span class="p">(</span><span class="s1">'Variable'</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#final cleanup</span>
-<span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
-       <span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="c1">#the first row is redundant</span>
-       <span class="o">.</span><span class="n">stack</span><span class="p">()</span>
-       <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">,</span><span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-       <span class="o">.</span><span class="n">set_axis</span><span class="p">([</span><span class="s1">'value'</span><span class="p">,</span> <span class="s1">'fill_colour'</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
+      <span class="o">.</span><span class="n">row_to_names</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">stack</span><span class="p">()</span>
+      <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">'Variable'</span><span class="p">,</span> <span class="s2">"Student"</span><span class="p">])</span>
+      <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="n">expand</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">set_axis</span><span class="p">([</span><span class="s1">'value'</span><span class="p">,</span> <span class="s1">'fill_colour'</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="s1">'columns'</span><span class="p">)</span>
        <span class="c1">#for better view</span>
-       <span class="c1">#put the student before the Age/Height column</span>
-       <span class="o">.</span><span class="n">swaplevel</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+       <span class="c1">#put the student column before the Variable column</span>
+      <span class="o">.</span><span class="n">swaplevel</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="s1">'index'</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">level</span> <span class="o">=</span> <span class="s1">'Student'</span><span class="p">)</span>
       <span class="p">)</span>
 
-<span class="n">res</span>
+<span class="n">df</span>
 </pre></div>
 
     </div>
@@ -698,7 +733,7 @@ window.onload = wrap_img;
       <th>fill_colour</th>
     </tr>
     <tr>
-      <th>student</th>
+      <th>Student</th>
       <th>Variable</th>
       <th></th>
       <th></th>
@@ -706,37 +741,34 @@ window.onload = wrap_img;
   </thead>
   <tbody>
     <tr>
-      <th>Matilda</th>
+      <th rowspan="2" valign="top">Matilda</th>
       <th>Age</th>
       <td>1</td>
       <td>00000000</td>
     </tr>
     <tr>
-      <th>Nicholas</th>
-      <th>Age</th>
-      <td>3</td>
-      <td>FFFFFF00</td>
-    </tr>
-    <tr>
-      <th>Olivia</th>
-      <th>Age</th>
-      <td>5</td>
-      <td>00000000</td>
-    </tr>
-    <tr>
-      <th>Matilda</th>
       <th>Height</th>
       <td>2</td>
       <td>00000000</td>
     </tr>
     <tr>
-      <th>Nicholas</th>
+      <th rowspan="2" valign="top">Nicholas</th>
+      <th>Age</th>
+      <td>3</td>
+      <td>FFFFFF00</td>
+    </tr>
+    <tr>
       <th>Height</th>
       <td>4</td>
       <td>00000000</td>
     </tr>
     <tr>
-      <th>Olivia</th>
+      <th rowspan="2" valign="top">Olivia</th>
+      <th>Age</th>
+      <td>5</td>
+      <td>00000000</td>
+    </tr>
+    <tr>
       <th>Height</th>
       <td>6</td>
       <td>FF92D050</td>
@@ -785,9 +817,9 @@ window.onload = wrap_img;
 
 <span class="n">data</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 
-<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">iter_cols</span><span class="p">(</span><span class="n">min_row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_row</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_row</span><span class="p">,</span> <span class="n">max_col</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_column</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
 
-    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">col</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">column</span><span class="p">:</span>
         <span class="c1">#for cells that dont have a font color attribute</span>
         <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">color</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">fontcolor</span> <span class="o">=</span> <span class="s2">"FF000000"</span>
@@ -946,33 +978,14 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#set columns to the first row of the dataframe</span>
-<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="c1">#get rid of the redundant first row</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">row_to_names</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> 
        <span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">'Weight'</span><span class="p">,</span> <span class="s1">'Price'</span><span class="p">])</span>
-       <span class="c1">#split into three columns - Name, fill colour, font colour</span>
        <span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">,</span> <span class="n">expand</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-       <span class="o">.</span><span class="n">set_axis</span><span class="p">([</span><span class="s1">'Name'</span><span class="p">,</span> <span class="s1">'fill_colour'</span><span class="p">,</span> <span class="s1">'font_colour'</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+       <span class="o">.</span><span class="n">set_axis</span><span class="p">([</span><span class="s1">'Name'</span><span class="p">,</span> <span class="s1">'fill_colour'</span><span class="p">,</span> <span class="s1">'font_colour'</span><span class="p">],</span><span class="n">axis</span> <span class="o">=</span> <span class="s1">'columns'</span><span class="p">)</span>
        <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
       <span class="p">)</span>
 
-<span class="n">res</span>
+<span class="n">df</span>
 </pre></div>
 
     </div>
@@ -1096,17 +1109,11 @@ Again, the formatting is applied to the entire row.</li>
 
 <span class="n">data</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
 
-<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">iter_cols</span><span class="p">(</span><span class="n">min_row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_row</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_row</span><span class="p">,</span> <span class="n">max_col</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_column</span><span class="p">):</span>
-
-    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">col</span><span class="p">:</span>
-        <span class="c1">#since the colour is same for each cell in a row</span>
-        <span class="c1">#we'll capture just the format details for just the string datatype</span>
-        <span class="c1">#also, the headers are on row 1 and don't need the format details</span>
-        <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s2">"n"</span> <span class="ow">or</span> <span class="n">cell</span><span class="o">.</span><span class="n">row</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">val</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">value</span>
-        <span class="k">else</span> <span class="p">:</span>
-            <span class="n">val</span> <span class="o">=</span> <span class="s1">','</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,(</span><span class="n">cell</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">cell</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="n">cell</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">i</span><span class="p">)))</span>
-        <span class="n">data</span><span class="p">[</span><span class="n">cell</span><span class="o">.</span><span class="n">column</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">column</span><span class="p">:</span>
+        <span class="n">data</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">cell</span><span class="o">.</span><span class="n">column_letter</span><span class="si">}</span><span class="s2">_value"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">cell</span><span class="o">.</span><span class="n">column_letter</span><span class="si">}</span><span class="s2">_bold"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">data</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">cell</span><span class="o">.</span><span class="n">column_letter</span><span class="si">}</span><span class="s2">_italics"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">i</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -1139,12 +1146,12 @@ Again, the formatting is applied to the entire row.</li>
 
 <div class="output_text output_subarea output_execute_result">
 <pre>defaultdict(list,
-            {1: ['Name',
-              'Matilda,False,False',
-              'Nicholas,False,True',
-              'Olivia,True,False',
-              'Paul,True,True'],
-             2: ['Score', 7, 5, 3, 1]})</pre>
+            {'A_value': ['Name', 'Matilda', 'Nicholas', 'Olivia', 'Paul'],
+             'A_bold': [True, False, False, True, True],
+             'A_italics': [False, False, True, False, True],
+             'B_value': ['Score', 7, 5, 3, 1],
+             'B_bold': [True, False, False, True, True],
+             'B_italics': [False, False, True, False, True]})</pre>
 </div>
 
 </div>
@@ -1196,35 +1203,59 @@ Again, the formatting is applied to the entire row.</li>
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>1</th>
-      <th>2</th>
+      <th>A_value</th>
+      <th>A_bold</th>
+      <th>A_italics</th>
+      <th>B_value</th>
+      <th>B_bold</th>
+      <th>B_italics</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
       <td>Name</td>
+      <td>True</td>
+      <td>False</td>
       <td>Score</td>
+      <td>True</td>
+      <td>False</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>Matilda,False,False</td>
+      <td>Matilda</td>
+      <td>False</td>
+      <td>False</td>
       <td>7</td>
+      <td>False</td>
+      <td>False</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>Nicholas,False,True</td>
+      <td>Nicholas</td>
+      <td>False</td>
+      <td>True</td>
       <td>5</td>
+      <td>False</td>
+      <td>True</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>Olivia,True,False</td>
+      <td>Olivia</td>
+      <td>True</td>
+      <td>False</td>
       <td>3</td>
+      <td>True</td>
+      <td>False</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>Paul,True,True</td>
+      <td>Paul</td>
+      <td>True</td>
+      <td>True</td>
       <td>1</td>
+      <td>True</td>
+      <td>True</td>
     </tr>
   </tbody>
 </table>
@@ -1246,32 +1277,15 @@ Again, the formatting is applied to the entire row.</li>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#assign the first row to the columns</span>
-<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="c1">#first row is redundant, hence the exclusion</span>
-</pre></div>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">"A_value"</span> <span class="p">:</span> <span class="s2">"B_value"</span><span class="p">]</span>
+      <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">A_bold</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">A_value</span> <span class="o">==</span> <span class="s2">"Name"</span><span class="p">,</span> <span class="s2">"Bold"</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">A_bold</span><span class="p">),</span>
+              <span class="n">A_italics</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">A_value</span> <span class="o">==</span> <span class="s2">"Name"</span><span class="p">,</span> <span class="s2">"Italics"</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">A_italics</span><span class="p">)</span>
+             <span class="p">)</span>
+      <span class="o">.</span><span class="n">row_to_names</span><span class="p">(</span><span class="n">row_number</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">remove_row</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+     <span class="p">)</span>
 
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
-       <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'Score'</span><span class="p">)</span>
-       <span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">','</span><span class="p">,</span><span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-       <span class="o">.</span><span class="n">set_axis</span><span class="p">([</span><span class="s1">'Name'</span><span class="p">,</span> <span class="s1">'bold'</span><span class="p">,</span> <span class="s1">'italics'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-      <span class="p">)</span>
-
-<span class="n">res</span>
+<span class="n">df</span>
 </pre></div>
 
     </div>
@@ -1304,40 +1318,39 @@ Again, the formatting is applied to the entire row.</li>
     <tr style="text-align: right;">
       <th></th>
       <th>Name</th>
-      <th>bold</th>
-      <th>italics</th>
-    </tr>
-    <tr>
+      <th>Bold</th>
+      <th>Italics</th>
       <th>Score</th>
-      <th></th>
-      <th></th>
-      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>7</th>
+      <th>1</th>
       <td>Matilda</td>
       <td>False</td>
       <td>False</td>
+      <td>7</td>
     </tr>
     <tr>
-      <th>5</th>
+      <th>2</th>
       <td>Nicholas</td>
       <td>False</td>
       <td>True</td>
+      <td>5</td>
     </tr>
     <tr>
       <th>3</th>
       <td>Olivia</td>
       <td>True</td>
       <td>False</td>
+      <td>3</td>
     </tr>
     <tr>
-      <th>1</th>
+      <th>4</th>
       <td>Paul</td>
       <td>True</td>
       <td>True</td>
+      <td>1</td>
     </tr>
   </tbody>
 </table>
@@ -1361,20 +1374,14 @@ Again, the formatting is applied to the entire row.</li>
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#last part is to create a grade column based on the bold and italics columns :</span>
 <span class="c1">#create a mapping</span>
-<span class="n">mapp</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'False,False'</span><span class="p">:</span><span class="s1">'good'</span><span class="p">,</span>
+<span class="n">mapping</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'False,False'</span><span class="p">:</span><span class="s1">'good'</span><span class="p">,</span>
         <span class="s1">'False,True'</span><span class="p">:</span><span class="s1">'satisfactory'</span><span class="p">,</span>
         <span class="s1">'True,False'</span><span class="p">:</span><span class="s1">'poor'</span><span class="p">,</span>
         <span class="s1">'True,True'</span><span class="p">:</span><span class="s1">'fail'</span><span class="p">}</span>
 
+<span class="n">df</span><span class="p">[</span><span class="s1">'grade'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Bold</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Italics</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">","</span><span class="p">)</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">mapping</span><span class="p">)</span>
 
-<span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">temp</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">bold</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">italics</span><span class="p">,</span><span class="s1">','</span><span class="p">),</span>
-                 <span class="n">grade</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="o">.</span><span class="n">temp</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">mapp</span><span class="p">)</span>
-                <span class="p">)</span>
-       <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'temp'</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-       <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-      <span class="p">)</span>
-
-<span class="n">res</span>
+<span class="n">df</span>
 </pre></div>
 
     </div>
@@ -1406,44 +1413,44 @@ Again, the formatting is applied to the entire row.</li>
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Score</th>
       <th>Name</th>
-      <th>bold</th>
-      <th>italics</th>
+      <th>Bold</th>
+      <th>Italics</th>
+      <th>Score</th>
       <th>grade</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>7</td>
+      <th>1</th>
       <td>Matilda</td>
       <td>False</td>
       <td>False</td>
+      <td>7</td>
       <td>good</td>
     </tr>
     <tr>
-      <th>1</th>
-      <td>5</td>
+      <th>2</th>
       <td>Nicholas</td>
       <td>False</td>
       <td>True</td>
+      <td>5</td>
       <td>satisfactory</td>
     </tr>
     <tr>
-      <th>2</th>
-      <td>3</td>
+      <th>3</th>
       <td>Olivia</td>
       <td>True</td>
       <td>False</td>
+      <td>3</td>
       <td>poor</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>1</td>
+      <th>4</th>
       <td>Paul</td>
       <td>True</td>
       <td>True</td>
+      <td>1</td>
       <td>fail</td>
     </tr>
   </tbody>

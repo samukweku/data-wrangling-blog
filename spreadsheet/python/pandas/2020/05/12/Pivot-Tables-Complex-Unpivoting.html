@@ -237,6 +237,7 @@ window.onload = wrap_img;
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">janitor</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
 <span class="kn">from</span> <span class="nn">openpyxl</span> <span class="kn">import</span> <span class="n">load_workbook</span>
@@ -698,13 +699,13 @@ window.onload = wrap_img;
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#the hard work is done - reshaping is much easier, and just a few lines : </span>
 
-<span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
+<span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
        <span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="s1">'sex'</span><span class="p">,</span> <span class="s1">'name'</span><span class="p">])</span>
        <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'scores'</span><span class="p">)</span>
        <span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s1">'scores'</span><span class="p">:</span><span class="s1">'uint8'</span><span class="p">})</span>
       <span class="p">)</span>
 
-<span class="n">res</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -828,8 +829,7 @@ The index columns are clearly delineated; the pairing of subjects and names is a
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">sheet</span> <span class="o">=</span> <span class="s2">"pivot-repeated-headers"</span>
 <span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheet_name</span> <span class="o">=</span> <span class="n">sheet</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
       <span class="c1">#remove completely empty rows and columns</span>
-      <span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">'all'</span><span class="p">)</span>
-      <span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">'all'</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">remove_empty</span><span class="p">()</span>
       <span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
       <span class="c1">#replace remaining nulls with specific values</span>
       <span class="o">.</span><span class="n">fillna</span><span class="p">({</span><span class="mi">1</span><span class="p">:</span><span class="s1">'subject'</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="s1">'student'</span><span class="p">})</span>
@@ -1026,36 +1026,16 @@ The index columns are clearly delineated; the pairing of subjects and names is a
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#set first row as column</span>
-<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">set_names</span><span class="p">(</span><span class="s1">'Term'</span><span class="p">)</span>
-<span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">set_names</span><span class="p">([</span><span class="s1">'subject'</span><span class="p">,</span><span class="s1">'student'</span><span class="p">])</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#cleanup some more into tidy form </span>
-<span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
-       <span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="c1">#first row not needed</span>
-       <span class="o">.</span><span class="n">stack</span><span class="p">()</span>
-       <span class="c1">#get rid of rows that contain "Term"</span>
-       <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">~</span><span class="n">x</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">"Term"</span><span class="p">,</span> <span class="n">na</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)]</span> 
+<span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">row_to_names</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+       <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'subject'</span><span class="p">,</span><span class="s1">'student'</span><span class="p">],</span>
+                    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Term'</span><span class="p">])</span>
+       <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'`Term 1` != "Term 1"'</span><span class="p">)</span>
+       <span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="s1">'Term'</span><span class="p">)</span>
        <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'scores'</span><span class="p">)</span>
       <span class="p">)</span>
 
-<span class="n">res</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -1129,6 +1109,41 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <td>Term 2</td>
       <td>9</td>
     </tr>
+    <tr>
+      <th>5</th>
+      <td>Classics</td>
+      <td>Nicholas</td>
+      <td>Term 3</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Classics</td>
+      <td>Olivia</td>
+      <td>Term 1</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Classics</td>
+      <td>Olivia</td>
+      <td>Term 2</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Classics</td>
+      <td>Olivia</td>
+      <td>Term 3</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Classics</td>
+      <td>Paul</td>
+      <td>Term 1</td>
+      <td>9</td>
+    </tr>
   </tbody>
 </table>
 </div>
@@ -1171,8 +1186,7 @@ The index columns are clearly delineated; the pairing of subjects and names is a
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> 
                     <span class="n">sheet_name</span> <span class="o">=</span> <span class="s2">"pivot-header-within-data"</span><span class="p">,</span>
                     <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
-      <span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">'all'</span><span class="p">)</span>
-      <span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">'all'</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">remove_empty</span><span class="p">()</span>
       <span class="c1">#extract subjects</span>
       <span class="c1">#where the last column is null , get the entry in column 2</span>
       <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">temp</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span>
@@ -1393,36 +1407,17 @@ The index columns are clearly delineated; the pairing of subjects and names is a
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#set the first row as column</span>
-<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">set_names</span><span class="p">(</span><span class="s1">'Term'</span><span class="p">)</span>
-<span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">set_names</span><span class="p">([</span><span class="s1">'student'</span><span class="p">,</span><span class="s1">'subject'</span><span class="p">])</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#final steps</span>
-<span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
-       <span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-       <span class="o">.</span><span class="n">stack</span><span class="p">()</span>
-       <span class="c1">#exclude rows that contain "Term"</span>
-       <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="o">~</span><span class="n">x</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">'Term'</span><span class="p">,</span> <span class="n">na</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)]</span>
-       <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'scores'</span><span class="p">)</span>
-      <span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
+      <span class="o">.</span><span class="n">row_to_names</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span><span class="o">=</span> <span class="p">[</span><span class="s1">'student'</span><span class="p">,</span><span class="s1">'subject'</span><span class="p">],</span>
+                   <span class="n">columns</span><span class="o">=</span> <span class="p">[</span><span class="s1">'Term'</span><span class="p">])</span>
+      <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"`Term 1` != 'Term 1'"</span><span class="p">)</span>
+      <span class="o">.</span><span class="n">stack</span><span class="p">()</span>
+      <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span> <span class="s1">'Scores'</span><span class="p">)</span>
+     <span class="p">)</span>
 
-<span class="n">res</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -1457,7 +1452,7 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <th>student</th>
       <th>subject</th>
       <th>Term</th>
-      <th>scores</th>
+      <th>Scores</th>
     </tr>
   </thead>
   <tbody>
@@ -1495,6 +1490,41 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <td>Classics</td>
       <td>Term 2</td>
       <td>7</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Nicholas</td>
+      <td>Classics</td>
+      <td>Term 3</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Olivia</td>
+      <td>Classics</td>
+      <td>Term 1</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Olivia</td>
+      <td>Classics</td>
+      <td>Term 2</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Olivia</td>
+      <td>Classics</td>
+      <td>Term 3</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Paul</td>
+      <td>Classics</td>
+      <td>Term 1</td>
+      <td>1</td>
     </tr>
   </tbody>
 </table>

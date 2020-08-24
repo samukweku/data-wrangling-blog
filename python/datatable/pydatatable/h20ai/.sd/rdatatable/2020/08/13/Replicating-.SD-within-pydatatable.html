@@ -1,0 +1,1970 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Replicating .SD in Python Datatable | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Replicating .SD in Python Datatable" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Work with Subset of Data" />
+<meta property="og:description" content="Work with Subset of Data" />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/datatable/pydatatable/h20ai/.sd/rdatatable/2020/08/13/Replicating-.SD-within-pydatatable.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/datatable/pydatatable/h20ai/.sd/rdatatable/2020/08/13/Replicating-.SD-within-pydatatable.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:image" content="https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-08-13T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Work with Subset of Data","@type":"BlogPosting","headline":"Replicating .SD in Python Datatable","url":"https://samukweku.github.io/data-wrangling-blog/python/datatable/pydatatable/h20ai/.sd/rdatatable/2020/08/13/Replicating-.SD-within-pydatatable.html","datePublished":"2020-08-13T00:00:00-05:00","dateModified":"2020-08-13T00:00:00-05:00","image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/datatable/pydatatable/h20ai/.sd/rdatatable/2020/08/13/Replicating-.SD-within-pydatatable.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/data-wrangling-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" /><link rel="shortcut icon" type="image/x-icon" href="/data-wrangling-blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Replicating .SD in Python Datatable | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Replicating .SD in Python Datatable" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Work with Subset of Data" />
+<meta property="og:description" content="Work with Subset of Data" />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/datatable/pydatatable/h20ai/.sd/rdatatable/2020/08/13/Replicating-.SD-within-pydatatable.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/datatable/pydatatable/h20ai/.sd/rdatatable/2020/08/13/Replicating-.SD-within-pydatatable.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:image" content="https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-08-13T00:00:00-05:00" />
+<script type="application/ld+json">
+{"description":"Work with Subset of Data","@type":"BlogPosting","headline":"Replicating .SD in Python Datatable","url":"https://samukweku.github.io/data-wrangling-blog/python/datatable/pydatatable/h20ai/.sd/rdatatable/2020/08/13/Replicating-.SD-within-pydatatable.html","datePublished":"2020-08-13T00:00:00-05:00","dateModified":"2020-08-13T00:00:00-05:00","image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/datatable/pydatatable/h20ai/.sd/rdatatable/2020/08/13/Replicating-.SD-within-pydatatable.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+<script type="text/javascript">
+require.config({
+  paths: {
+    jquery: 'https://code.jquery.com/jquery-3.5.0.min',
+    plotly: 'https://cdn.plot.ly/plotly-latest.min'
+  },
+
+  shim: {
+    plotly: {
+      deps: ['jquery'],
+      exports: 'plotly'
+    }
+  }
+});
+</script>
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/data-wrangling-blog/">Samuel Oranyeli</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/data-wrangling-blog/about/">About Me</a><a class="page-link" href="/data-wrangling-blog/search/">Search</a><a class="page-link" href="/data-wrangling-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Replicating .SD in Python Datatable</h1><p class="page-description">Work with Subset of Data</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-08-13T00:00:00-05:00" itemprop="datePublished">
+        Aug 13, 2020
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      4 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#Python">Python</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#Datatable">Datatable</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#pydatatable">pydatatable</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#h20ai">h20ai</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#.SD">.SD</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#rdatatable">rdatatable</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/samukweku/data-wrangling-blog/tree/master/_notebooks/2020-08-13-Replicating .SD within pydatatable.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/data-wrangling-blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          
+          
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#.SD---Subset-of-Data">.SD - Subset of Data </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#Filtering">Filtering </a></li>
+<li class="toc-entry toc-h3"><a href="#.SDCols">.SDCols </a></li>
+<li class="toc-entry toc-h3"><a href="#Summary">Summary </a></li>
+</ul>
+</li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2020-08-13-Replicating .SD within pydatatable.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id=".SD---Subset-of-Data">
+<a class="anchor" href="#.SD---Subset-of-Data" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>.SD - Subset of Data</strong><a class="anchor-link" href="#.SD---Subset-of-Data"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>I will be using <a href="https://twitter.com/jmrlsz">Jose Morales</a> excellent <a href="https://rpubs.com/josemz/SDbf">post</a> to show how .SD's functionality can be replicated in  python's <a href="https://datatable.readthedocs.io/en/latest/index.html">datatable</a>. Not all functions can be replicated; R <a href="https://github.com/Rdatatable/data.table">data.table</a> has a whole lot more functions and features that are not yet implemented in <a href="https://datatable.readthedocs.io/en/latest/index.html">datatable</a>.
+<br></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">datatable</span> <span class="kn">import</span> <span class="n">dt</span><span class="p">,</span> <span class="n">by</span><span class="p">,</span> <span class="n">sort</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">count</span><span class="p">,</span> <span class="n">update</span><span class="p">,</span> <span class="nb">max</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">fread</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<style type="text/css">
+.datatable table.frame { margin-bottom: 0; }
+.datatable table.frame thead { border-bottom: none; }
+.datatable table.frame tr.coltypes td {  color: #FFFFFF;  line-height: 6px;  padding: 0 0.5em;}
+.datatable .boolean { background: #DDDD99; }
+.datatable .object  { background: #565656; }
+.datatable .integer { background: #5D9E5D; }
+.datatable .float   { background: #4040CC; }
+.datatable .string  { background: #CC4040; }
+.datatable .row_index {  background: var(--jp-border-color3);  border-right: 1px solid var(--jp-border-color0);  color: var(--jp-ui-font-color3);  font-size: 9px;}
+.datatable .frame tr.coltypes .row_index {  background: var(--jp-border-color0);}
+.datatable th:nth-child(2) { padding-left: 12px; }
+.datatable .hellipsis {  color: var(--jp-cell-editor-border-color);}
+.datatable .vellipsis {  background: var(--jp-layout-color0);  color: var(--jp-cell-editor-border-color);}
+.datatable .na {  color: var(--jp-cell-editor-border-color);  font-size: 80%;}
+.datatable .footer { font-size: 9px; }
+.datatable .frame_dimensions {  background: var(--jp-border-color3);  border-top: 1px solid var(--jp-border-color0);  color: var(--jp-ui-font-color3);  display: inline-block;  opacity: 0.6;  padding: 1px 10px 1px 5px;}
+</style>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">fread</span><span class="p">(</span><span class="s1">'Data_files/iris.csv'</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+<th>species</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="string" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>5.1</td>
+<td>3.5</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>4.9</td>
+<td>3</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>4.7</td>
+<td>3.2</td>
+<td>1.3</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>4.6</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>5</td>
+<td>3.6</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>5.4</td>
+<td>3.9</td>
+<td>1.7</td>
+<td>0.4</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>4.6</td>
+<td>3.4</td>
+<td>1.4</td>
+<td>0.3</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>5</td>
+<td>3.4</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>4.4</td>
+<td>2.9</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>4.9</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.1</td>
+<td>setosa</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">10 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Number of unique observations per column</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># DT[, lapply(.SD, uniqueN)] --&gt; Rdatatable</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+<th>species</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="integer" title="int64">▪▪▪▪▪▪▪▪</td>
+<td class="integer" title="int64">▪▪▪▪▪▪▪▪</td>
+<td class="integer" title="int64">▪▪▪▪▪▪▪▪</td>
+<td class="integer" title="int64">▪▪▪▪▪▪▪▪</td>
+<td class="integer" title="int64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>35</td>
+<td>23</td>
+<td>43</td>
+<td>22</td>
+<td>3</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">1 row × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Mean of all columns by <code>species</code>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># DT[, lapply(.SD, mean), by = species] --&gt; Rdatatable</span>
+
+<span class="n">df</span><span class="p">[:,</span> <span class="n">mean</span><span class="p">(</span><span class="n">f</span><span class="p">[:]),</span> <span class="n">by</span><span class="p">(</span><span class="s1">'species'</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>species</th>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="string" title="str32">▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>setosa</td>
+<td>5.006</td>
+<td>3.428</td>
+<td>1.462</td>
+<td>0.246</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>versicolor</td>
+<td>5.936</td>
+<td>2.77</td>
+<td>4.26</td>
+<td>1.326</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>virginica</td>
+<td>6.588</td>
+<td>2.974</td>
+<td>5.552</td>
+<td>2.026</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">3 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Filtering">
+<a class="anchor" href="#Filtering" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Filtering</strong><a class="anchor-link" href="#Filtering"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>First two observations by species</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># DT[, .SD[1:2], by = species]</span>
+
+<span class="n">df</span><span class="p">[:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="n">by</span><span class="p">(</span><span class="s1">'species'</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>species</th>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="string" title="str32">▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>setosa</td>
+<td>5.1</td>
+<td>3.5</td>
+<td>1.4</td>
+<td>0.2</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>setosa</td>
+<td>4.9</td>
+<td>3</td>
+<td>1.4</td>
+<td>0.2</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>versicolor</td>
+<td>7</td>
+<td>3.2</td>
+<td>4.7</td>
+<td>1.4</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>versicolor</td>
+<td>6.4</td>
+<td>3.2</td>
+<td>4.5</td>
+<td>1.5</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>virginica</td>
+<td>6.3</td>
+<td>3.3</td>
+<td>6</td>
+<td>2.5</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>virginica</td>
+<td>5.8</td>
+<td>2.7</td>
+<td>5.1</td>
+<td>1.9</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">6 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In <a href="https://datatable.readthedocs.io/en/latest/index.html">datatable</a>, rows are selected in the <code>i</code> section after the grouping, unlike in R's <a href="https://github.com/Rdatatable/data.table">data.table</a>, where rows are selected in <code>i</code> before grouping, and rows selected in the <code>.SD</code> after grouping.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Last two observations by <code>species</code>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># DT[, tail(.SD, 2), by = species] </span>
+
+<span class="n">df</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:,</span> <span class="p">:,</span> <span class="n">by</span><span class="p">(</span><span class="s1">'species'</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>species</th>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="string" title="str32">▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>setosa</td>
+<td>5.3</td>
+<td>3.7</td>
+<td>1.5</td>
+<td>0.2</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>setosa</td>
+<td>5</td>
+<td>3.3</td>
+<td>1.4</td>
+<td>0.2</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>versicolor</td>
+<td>5.1</td>
+<td>2.5</td>
+<td>3</td>
+<td>1.1</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>versicolor</td>
+<td>5.7</td>
+<td>2.8</td>
+<td>4.1</td>
+<td>1.3</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>virginica</td>
+<td>6.2</td>
+<td>3.4</td>
+<td>5.4</td>
+<td>2.3</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>virginica</td>
+<td>5.9</td>
+<td>3</td>
+<td>5.1</td>
+<td>1.8</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">6 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Again, the rows are selected after grouping by using Python's negative index slicing.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Select the top two sorted by <code>sepal length</code> in descending order</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># DT[order(-sepal_length), head(.SD, 2), by = species] </span>
+
+<span class="n">df</span><span class="p">[:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="n">by</span><span class="p">(</span><span class="s1">'species'</span><span class="p">),</span> <span class="n">sort</span><span class="p">(</span><span class="o">-</span><span class="n">f</span><span class="o">.</span><span class="n">sepal_length</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>species</th>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="string" title="str32">▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>setosa</td>
+<td>5.8</td>
+<td>4</td>
+<td>1.2</td>
+<td>0.2</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>setosa</td>
+<td>5.7</td>
+<td>4.4</td>
+<td>1.5</td>
+<td>0.4</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>versicolor</td>
+<td>7</td>
+<td>3.2</td>
+<td>4.7</td>
+<td>1.4</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>versicolor</td>
+<td>6.9</td>
+<td>3.1</td>
+<td>4.9</td>
+<td>1.5</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>virginica</td>
+<td>7.9</td>
+<td>3.8</td>
+<td>6.4</td>
+<td>2</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>virginica</td>
+<td>7.7</td>
+<td>3.8</td>
+<td>6.7</td>
+<td>2.2</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">6 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In <a href="https://datatable.readthedocs.io/en/latest/index.html">datatable</a>, the <a href="https://datatable.readthedocs.io/en/latest/api/dt/sort.html#">sort</a> function replicates the <code>order</code> function in R's <a href="https://github.com/Rdatatable/data.table">data.table</a>. Note the <code>-</code> symbol before the sepal_length <em>f-expression</em>; this instructs the dataframe to sort in descending order.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Select the top two sorted by the difference between the <code>sepal length</code> and <code>sepal width</code>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># DT[order(sepal_length - sepal_width), head(.SD, 2), by = species] </span>
+
+<span class="n">df</span><span class="p">[:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:,</span> <span class="n">by</span><span class="p">(</span><span class="s1">'species'</span><span class="p">),</span> <span class="n">sort</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">sepal_length</span> <span class="o">-</span> <span class="n">f</span><span class="o">.</span><span class="n">sepal_width</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>species</th>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="string" title="str32">▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>setosa</td>
+<td>4.6</td>
+<td>3.6</td>
+<td>1</td>
+<td>0.2</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>setosa</td>
+<td>5.2</td>
+<td>4.1</td>
+<td>1.5</td>
+<td>0.1</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>versicolor</td>
+<td>5.4</td>
+<td>3</td>
+<td>4.5</td>
+<td>1.5</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>versicolor</td>
+<td>5.2</td>
+<td>2.7</td>
+<td>3.9</td>
+<td>1.4</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>virginica</td>
+<td>4.9</td>
+<td>2.5</td>
+<td>4.5</td>
+<td>1.7</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>virginica</td>
+<td>5.6</td>
+<td>2.8</td>
+<td>4.9</td>
+<td>2</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">6 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Just like in R's <a href="https://github.com/Rdatatable/data.table">data.table</a>, boolean expressions can be passed to the <a href="https://datatable.readthedocs.io/en/latest/api/dt/sort.html#">sort</a> function.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Filter observations above the mean of <code>sepal_length</code> by species</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># DT[, .SD[sepal_length &gt; mean(sepal_length)], by = species] </span>
+
+<span class="n">df</span><span class="p">[:,</span> <span class="n">update</span><span class="p">(</span><span class="n">temp</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">sepal_length</span> <span class="o">&gt;</span> <span class="n">mean</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">sepal_length</span><span class="p">)),</span> <span class="n">by</span><span class="p">(</span><span class="s1">'species'</span><span class="p">)]</span>
+<span class="n">df</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">temp</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="n">f</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+<th>species</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="string" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>5.1</td>
+<td>3.5</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>5.4</td>
+<td>3.9</td>
+<td>1.7</td>
+<td>0.4</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>5.4</td>
+<td>3.7</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>5.8</td>
+<td>4</td>
+<td>1.2</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>5.7</td>
+<td>4.4</td>
+<td>1.5</td>
+<td>0.4</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>5.4</td>
+<td>3.9</td>
+<td>1.3</td>
+<td>0.4</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>5.1</td>
+<td>3.5</td>
+<td>1.4</td>
+<td>0.3</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>5.7</td>
+<td>3.8</td>
+<td>1.7</td>
+<td>0.3</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>5.1</td>
+<td>3.8</td>
+<td>1.5</td>
+<td>0.3</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>5.4</td>
+<td>3.4</td>
+<td>1.7</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">10</td>
+<td>5.1</td>
+<td>3.7</td>
+<td>1.5</td>
+<td>0.4</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">11</td>
+<td>5.1</td>
+<td>3.3</td>
+<td>1.7</td>
+<td>0.5</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">12</td>
+<td>5.2</td>
+<td>3.5</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">13</td>
+<td>5.2</td>
+<td>3.4</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">14</td>
+<td>5.4</td>
+<td>3.4</td>
+<td>1.5</td>
+<td>0.4</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+</tr>
+    <tr>
+<td class="row_index">63</td>
+<td>6.7</td>
+<td>3.1</td>
+<td>5.6</td>
+<td>2.4</td>
+<td>virginica</td>
+</tr>
+    <tr>
+<td class="row_index">64</td>
+<td>6.9</td>
+<td>3.1</td>
+<td>5.1</td>
+<td>2.3</td>
+<td>virginica</td>
+</tr>
+    <tr>
+<td class="row_index">65</td>
+<td>6.8</td>
+<td>3.2</td>
+<td>5.9</td>
+<td>2.3</td>
+<td>virginica</td>
+</tr>
+    <tr>
+<td class="row_index">66</td>
+<td>6.7</td>
+<td>3.3</td>
+<td>5.7</td>
+<td>2.5</td>
+<td>virginica</td>
+</tr>
+    <tr>
+<td class="row_index">67</td>
+<td>6.7</td>
+<td>3</td>
+<td>5.2</td>
+<td>2.3</td>
+<td>virginica</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">68 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Unlike in R's <a href="https://github.com/Rdatatable/data.table">data.table</a>, boolean expressions can not be applied within the <code>i</code> section, in the presence of <code>by</code>. The next best thing is to break it down into two steps - create a temporary column to hold the boolean value, and then filter on that column.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Filter rows with group size greater than 10 </li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># DT[, .SD[.N &gt; 10], keyby = .(species, petal_width)] </span>
+
+<span class="n">df</span><span class="p">[:,</span> <span class="n">update</span><span class="p">(</span><span class="n">temp</span> <span class="o">=</span> <span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">),</span> <span class="n">by</span><span class="p">(</span><span class="s1">'species'</span><span class="p">,</span> <span class="s1">'petal_width'</span><span class="p">)]</span>
+<span class="n">df</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">temp</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="n">f</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+<th>species</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="string" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>5.1</td>
+<td>3.5</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>4.9</td>
+<td>3</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>4.7</td>
+<td>3.2</td>
+<td>1.3</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>4.6</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>5</td>
+<td>3.6</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>5</td>
+<td>3.4</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>4.4</td>
+<td>2.9</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>5.4</td>
+<td>3.7</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>4.8</td>
+<td>3.4</td>
+<td>1.6</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>5.8</td>
+<td>4</td>
+<td>1.2</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">10</td>
+<td>5.4</td>
+<td>3.4</td>
+<td>1.7</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">11</td>
+<td>4.6</td>
+<td>3.6</td>
+<td>1</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">12</td>
+<td>4.8</td>
+<td>3.4</td>
+<td>1.9</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">13</td>
+<td>5</td>
+<td>3</td>
+<td>1.6</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">14</td>
+<td>5.2</td>
+<td>3.5</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+</tr>
+    <tr>
+<td class="row_index">48</td>
+<td>6.2</td>
+<td>2.8</td>
+<td>4.8</td>
+<td>1.8</td>
+<td>virginica</td>
+</tr>
+    <tr>
+<td class="row_index">49</td>
+<td>6.1</td>
+<td>3</td>
+<td>4.9</td>
+<td>1.8</td>
+<td>virginica</td>
+</tr>
+    <tr>
+<td class="row_index">50</td>
+<td>6.4</td>
+<td>3.1</td>
+<td>5.5</td>
+<td>1.8</td>
+<td>virginica</td>
+</tr>
+    <tr>
+<td class="row_index">51</td>
+<td>6</td>
+<td>3</td>
+<td>4.8</td>
+<td>1.8</td>
+<td>virginica</td>
+</tr>
+    <tr>
+<td class="row_index">52</td>
+<td>5.9</td>
+<td>3</td>
+<td>5.1</td>
+<td>1.8</td>
+<td>virginica</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">53 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Get the row with the max petal_length by species.</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># DT[, .SD[which.max(petal_length)], by = species] OR </span>
+<span class="c1"># DT[, .SD[petal_length == max(petal_length)], by = species]  </span>
+
+<span class="n">df</span><span class="p">[:,</span> <span class="n">update</span><span class="p">(</span><span class="n">temp</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">petal_length</span> <span class="o">==</span> <span class="nb">max</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">petal_length</span><span class="p">)),</span> <span class="n">by</span><span class="p">(</span><span class="s1">'species'</span><span class="p">)]</span>
+<span class="n">df</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">temp</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="n">f</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+<th>sepal_width</th>
+<th>petal_length</th>
+<th>petal_width</th>
+<th>species</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="string" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>4.8</td>
+<td>3.4</td>
+<td>1.9</td>
+<td>0.2</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>5.1</td>
+<td>3.8</td>
+<td>1.9</td>
+<td>0.4</td>
+<td>setosa</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>6</td>
+<td>2.7</td>
+<td>5.1</td>
+<td>1.6</td>
+<td>versicolor</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>7.7</td>
+<td>2.6</td>
+<td>6.9</td>
+<td>2.3</td>
+<td>virginica</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">4 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id=".SDCols">
+<a class="anchor" href="#.SDCols" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>.SDCols</strong><a class="anchor-link" href="#.SDCols"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Including columns in <code>.SD</code>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># col_idx &lt;- grep("^sepal", names(DT)) --&gt; filter for the specicfic columns</span>
+<span class="c1"># DT[, lapply(.SD, mean), .SDcols = col_idx]</span>
+
+<span class="c1"># delete 'temp' column</span>
+<span class="k">del</span> <span class="n">df</span><span class="p">[</span><span class="s1">'temp'</span><span class="p">]</span>
+
+<span class="c1"># filter for the specific columns with a list comprehension</span>
+<span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">names</span>
+         <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'sepal'</span><span class="p">)]</span>
+
+<span class="n">df</span><span class="p">[:,</span> <span class="n">mean</span><span class="p">(</span><span class="n">names</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+<th>sepal_width</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>5.84333</td>
+<td>3.05733</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">1 row × 2 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Removing columns from <code>.SD</code>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># col_idx &lt;- grep("^(petal|species)", names(DT))</span>
+<span class="c1"># DT[, lapply(.SD, mean), .SDcols = -col_idx] --&gt; exclusion occurs within .SDcols</span>
+
+<span class="c1"># here, exclusion occurs within the list comprehension</span>
+<span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">names</span> 
+         <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">((</span><span class="s1">'petal'</span><span class="p">,</span><span class="s1">'species'</span><span class="p">))]</span> 
+
+<span class="n">df</span><span class="p">[:,</span> <span class="n">mean</span><span class="p">(</span><span class="n">names</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+<th>sepal_width</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>5.84333</td>
+<td>3.05733</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">1 row × 2 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Column ranges</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># DT[, lapply(.SD, mean), .SDcols = sepal_length:sepal_width]</span>
+
+<span class="n">df</span><span class="p">[:,</span> <span class="n">mean</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s1">'sepal_length'</span><span class="p">:</span><span class="s1">'sepal_width'</span><span class="p">])]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sepal_length</th>
+<th>sepal_width</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>5.84333</td>
+<td>3.05733</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">1 row × 2 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Summary">
+<a class="anchor" href="#Summary" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Summary</strong><a class="anchor-link" href="#Summary"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We've seen how to replicate <code>.SD</code> in <a href="https://datatable.readthedocs.io/en/latest/index.html">datatable</a>. There are other functionalities in <code>.SD</code> that are not presently possible in Python's <a href="https://datatable.readthedocs.io/en/latest/index.html">datatable</a>. It is possible that in the future, <code>.SD</code> will be implemented to allow for custom aggregation functions. That would be truly awesome, as it would allow <a href="https://numpy.org/doc/stable/index.html">numpy</a> functions and functions from other Python libraries into <a href="https://datatable.readthedocs.io/en/latest/index.html">datatable</a>.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="samukweku/data-wrangling-blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/data-wrangling-blog/python/datatable/pydatatable/h20ai/.sd/rdatatable/2020/08/13/Replicating-.SD-within-pydatatable.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/data-wrangling-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/data-wrangling-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Data Wrangling Blog.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/samukweku" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/samukweku" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
