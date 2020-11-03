@@ -150,10 +150,13 @@ window.onload = wrap_img;
 
   <div class="post-content e-content" itemprop="articleBody">
     <ul class="section-nav">
-<li class="toc-entry toc-h3"><a href="#Source-data">Source data </a></li>
-<li class="toc-entry toc-h3"><a href="#Pandas">Pandas </a></li>
-<li class="toc-entry toc-h3"><a href="#Within-Pandas-only">Within Pandas only </a></li>
-<li class="toc-entry toc-h3"><a href="#Via-the-command-line">Via the command line </a></li>
+<li class="toc-entry toc-h4"><a href="#Link-to-Source-data">Link to Source data </a></li>
+<li class="toc-entry toc-h2"><a href="#Pandas">Pandas </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#via-read_csv">via read_csv </a></li>
+<li class="toc-entry toc-h3"><a href="#Via-read_csv-and-the-command-line">Via read_csv and the command line </a></li>
+</ul>
+</li>
 <li class="toc-entry toc-h2"><a href="#datatable">datatable </a>
 <ul>
 <li class="toc-entry toc-h3"><a href="#Via-iread">Via iread </a></li>
@@ -234,26 +237,26 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Source-data">
-<a class="anchor" href="#Source-data" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://people.highline.edu/mgirvin/excelisfun.htm">Source data</a><a class="anchor-link" href="#Source-data"> </a>
-</h3>
+<h4 id="Link-to-Source-data">
+<a class="anchor" href="#Link-to-Source-data" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://people.highline.edu/mgirvin/excelisfun.htm">Link to Source data</a><a class="anchor-link" href="#Link-to-Source-data"> </a>
+</h4>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Pandas">
+<h2 id="Pandas">
 <a class="anchor" href="#Pandas" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Pandas</strong><a class="anchor-link" href="#Pandas"> </a>
-</h3>
+</h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Within-Pandas-only">
-<a class="anchor" href="#Within-Pandas-only" aria-hidden="true"><span class="octicon octicon-link"></span></a>Within Pandas only<a class="anchor-link" href="#Within-Pandas-only"> </a>
+<h3 id="via-read_csv">
+<a class="anchor" href="#via-read_csv" aria-hidden="true"><span class="octicon octicon-link"></span></a>via read_csv<a class="anchor-link" href="#via-read_csv"> </a>
 </h3>
 </div>
 </div>
@@ -268,9 +271,7 @@ window.onload = wrap_img;
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># create a Path instance and filter for only csv files</span>
 <span class="n">files</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"./Data_files/multiple_csvs/"</span><span class="p">)</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span><span class="s2">"*.csv"</span><span class="p">)</span>
 
-<span class="c1"># read in all the csv files, along with the filename</span>
-<span class="c1"># filename is redundant here, since it is the same as the </span>
-<span class="c1"># City column</span>
+<span class="c1"># read in all the csv files</span>
 <span class="n">all_csvs</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
 
 <span class="c1"># lump into one table</span>
@@ -409,8 +410,8 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Via-the-command-line">
-<a class="anchor" href="#Via-the-command-line" aria-hidden="true"><span class="octicon octicon-link"></span></a>Via the command line<a class="anchor-link" href="#Via-the-command-line"> </a>
+<h3 id="Via-read_csv-and-the-command-line">
+<a class="anchor" href="#Via-read_csv-and-the-command-line" aria-hidden="true"><span class="octicon octicon-link"></span></a>Via read_csv and the command line<a class="anchor-link" href="#Via-read_csv-and-the-command-line"> </a>
 </h3>
 </div>
 </div>
@@ -1023,7 +1024,8 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_csvs</span> <span class="o">=</span> <span class="n">fread</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="s2">"awk '(NR==1) || (FNR&gt;1)' ./Data_files/multiple_csvs/*.csv"</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># less verbose than the Pandas option</span>
+<span class="n">all_csvs</span> <span class="o">=</span> <span class="n">fread</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="s2">"awk '(NR==1) || (FNR&gt;1)' ./Data_files/multiple_csvs/*.csv"</span><span class="p">)</span>
 <span class="n">all_csvs</span>
 </pre></div>
 
