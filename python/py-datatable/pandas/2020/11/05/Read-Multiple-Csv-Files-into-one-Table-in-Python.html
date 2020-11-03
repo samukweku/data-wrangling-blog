@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Read Multiple CSV Files into one Frame in Python | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Read Multiple CSV Files into one Frame in Python" />
+<meta name="author" content="Samuel Oranyeli" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Explore in Pandas and Python datatable" />
+<meta property="og:description" content="Explore in Pandas and Python datatable" />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/py-datatable/pandas/2020/11/05/Read-Multiple-Csv-Files-into-one-Table-in-Python.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/py-datatable/pandas/2020/11/05/Read-Multiple-Csv-Files-into-one-Table-in-Python.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:image" content="https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-11-05T00:00:00-06:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Samuel Oranyeli"},"description":"Explore in Pandas and Python datatable","@type":"BlogPosting","headline":"Read Multiple CSV Files into one Frame in Python","url":"https://samukweku.github.io/data-wrangling-blog/python/py-datatable/pandas/2020/11/05/Read-Multiple-Csv-Files-into-one-Table-in-Python.html","datePublished":"2020-11-05T00:00:00-06:00","dateModified":"2020-11-05T00:00:00-06:00","image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/py-datatable/pandas/2020/11/05/Read-Multiple-Csv-Files-into-one-Table-in-Python.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/data-wrangling-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" /><link rel="shortcut icon" type="image/x-icon" href="/data-wrangling-blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Read Multiple CSV Files into one Frame in Python | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Read Multiple CSV Files into one Frame in Python" />
+<meta name="author" content="Samuel Oranyeli" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Explore in Pandas and Python datatable" />
+<meta property="og:description" content="Explore in Pandas and Python datatable" />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/py-datatable/pandas/2020/11/05/Read-Multiple-Csv-Files-into-one-Table-in-Python.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/py-datatable/pandas/2020/11/05/Read-Multiple-Csv-Files-into-one-Table-in-Python.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:image" content="https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-11-05T00:00:00-06:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Samuel Oranyeli"},"description":"Explore in Pandas and Python datatable","@type":"BlogPosting","headline":"Read Multiple CSV Files into one Frame in Python","url":"https://samukweku.github.io/data-wrangling-blog/python/py-datatable/pandas/2020/11/05/Read-Multiple-Csv-Files-into-one-Table-in-Python.html","datePublished":"2020-11-05T00:00:00-06:00","dateModified":"2020-11-05T00:00:00-06:00","image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/py-datatable/pandas/2020/11/05/Read-Multiple-Csv-Files-into-one-Table-in-Python.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+<script type="text/javascript">
+require.config({
+  paths: {
+    jquery: 'https://code.jquery.com/jquery-3.5.0.min',
+    plotly: 'https://cdn.plot.ly/plotly-latest.min'
+  },
+
+  shim: {
+    plotly: {
+      deps: ['jquery'],
+      exports: 'plotly'
+    }
+  }
+});
+</script>
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/data-wrangling-blog/">Samuel Oranyeli</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/data-wrangling-blog/about/">About Me</a><a class="page-link" href="/data-wrangling-blog/search/">Search</a><a class="page-link" href="/data-wrangling-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Read Multiple CSV Files into one Frame in Python</h1><p class="page-description">Explore in Pandas and Python datatable</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-11-05T00:00:00-06:00" itemprop="datePublished">
+        Nov 5, 2020
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Samuel Oranyeli</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      2 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#python">python</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#py-datatable">py-datatable</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#pandas">pandas</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/samukweku/data-wrangling-blog/tree/master/_notebooks/2020-11-05-Read Multiple Csv Files into one Table in Python.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/data-wrangling-blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          
+          
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h3"><a href="#Source-data">Source data </a></li>
+<li class="toc-entry toc-h3"><a href="#Pandas">Pandas </a></li>
+<li class="toc-entry toc-h3"><a href="#Within-Pandas-only">Within Pandas only </a></li>
+<li class="toc-entry toc-h3"><a href="#Via-the-command-line">Via the command line </a></li>
+<li class="toc-entry toc-h2"><a href="#datatable">datatable </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#Via-iread">Via iread </a></li>
+<li class="toc-entry toc-h3"><a href="#Via-fread">Via fread </a></li>
+<li class="toc-entry toc-h3"><a href="#Via-the-command-line">Via the command line </a></li>
+</ul>
+</li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2020-11-05-Read Multiple Csv Files into one Table in Python.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">datatable</span> <span class="kn">import</span> <span class="n">fread</span><span class="p">,</span> <span class="n">iread</span><span class="p">,</span> <span class="n">rbind</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<style type="text/css">
+.datatable table.frame { margin-bottom: 0; }
+.datatable table.frame thead { border-bottom: none; }
+.datatable table.frame tr.coltypes td {  color: #FFFFFF;  line-height: 6px;  padding: 0 0.5em;}
+.datatable .bool    { background: #DDDD99; }
+.datatable .object  { background: #565656; }
+.datatable .int     { background: #5D9E5D; }
+.datatable .float   { background: #4040CC; }
+.datatable .str     { background: #CC4040; }
+.datatable .row_index {  background: var(--jp-border-color3);  border-right: 1px solid var(--jp-border-color0);  color: var(--jp-ui-font-color3);  font-size: 9px;}
+.datatable .frame tr.coltypes .row_index {  background: var(--jp-border-color0);}
+.datatable th:nth-child(2) { padding-left: 12px; }
+.datatable .hellipsis {  color: var(--jp-cell-editor-border-color);}
+.datatable .vellipsis {  background: var(--jp-layout-color0);  color: var(--jp-cell-editor-border-color);}
+.datatable .na {  color: var(--jp-cell-editor-border-color);  font-size: 80%;}
+.datatable .footer { font-size: 9px; }
+.datatable .frame_dimensions {  background: var(--jp-border-color3);  border-top: 1px solid var(--jp-border-color0);  color: var(--jp-ui-font-color3);  display: inline-block;  opacity: 0.6;  padding: 1px 10px 1px 5px;}
+</style>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Source-data">
+<a class="anchor" href="#Source-data" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://people.highline.edu/mgirvin/excelisfun.htm">Source data</a><a class="anchor-link" href="#Source-data"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Pandas">
+<a class="anchor" href="#Pandas" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Pandas</strong><a class="anchor-link" href="#Pandas"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Within-Pandas-only">
+<a class="anchor" href="#Within-Pandas-only" aria-hidden="true"><span class="octicon octicon-link"></span></a>Within Pandas only<a class="anchor-link" href="#Within-Pandas-only"> </a>
+</h3>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># create a Path instance and filter for only csv files</span>
+<span class="n">files</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"./Data_files/multiple_csvs/"</span><span class="p">)</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span><span class="s2">"*.csv"</span><span class="p">)</span>
+
+<span class="c1"># read in all the csv files, along with the filename</span>
+<span class="c1"># filename is redundant here, since it is the same as the </span>
+<span class="c1"># City column</span>
+<span class="n">all_csvs</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
+
+<span class="c1"># lump into one table</span>
+<span class="n">all_csvs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">all_csvs</span><span class="p">)</span>
+
+<span class="n">all_csvs</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>City</th>
+      <th>Date</th>
+      <th>Sales</th>
+      <th>StoreID</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Portland</td>
+      <td>1/1/2014</td>
+      <td>$45.27</td>
+      <td>1002</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Portland</td>
+      <td>1/1/2014</td>
+      <td>$115.61</td>
+      <td>1002</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Portland</td>
+      <td>1/1/2014</td>
+      <td>$35.33</td>
+      <td>1004</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Portland</td>
+      <td>1/1/2014</td>
+      <td>$20.95</td>
+      <td>1004</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Portland</td>
+      <td>1/1/2014</td>
+      <td>$14.25</td>
+      <td>1004</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>216073</th>
+      <td>Tacoma</td>
+      <td>12/31/2015</td>
+      <td>$33.68</td>
+      <td>1523</td>
+    </tr>
+    <tr>
+      <th>216074</th>
+      <td>Tacoma</td>
+      <td>12/31/2015</td>
+      <td>$215.98</td>
+      <td>1521</td>
+    </tr>
+    <tr>
+      <th>216075</th>
+      <td>Tacoma</td>
+      <td>12/31/2015</td>
+      <td>$236.86</td>
+      <td>1521</td>
+    </tr>
+    <tr>
+      <th>216076</th>
+      <td>Tacoma</td>
+      <td>12/31/2015</td>
+      <td>$33.02</td>
+      <td>1522</td>
+    </tr>
+    <tr>
+      <th>216077</th>
+      <td>Tacoma</td>
+      <td>12/31/2015</td>
+      <td>$11.32</td>
+      <td>1523</td>
+    </tr>
+  </tbody>
+</table>
+<p>880349 rows × 4 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Via-the-command-line">
+<a class="anchor" href="#Via-the-command-line" aria-hidden="true"><span class="octicon octicon-link"></span></a>Via the command line<a class="anchor-link" href="#Via-the-command-line"> </a>
+</h3>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">"awk '(NR==1) || (FNR&gt;1)' ./Data_files/multiple_csvs/*.csv"</span><span class="p">,</span> 
+                      <span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+                      <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                      <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">stdout</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+
+<span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>City</th>
+      <th>Date</th>
+      <th>Sales</th>
+      <th>StoreID</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Oakland</td>
+      <td>1/1/2014</td>
+      <td>$9.83</td>
+      <td>982</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Oakland</td>
+      <td>1/1/2014</td>
+      <td>$28.18</td>
+      <td>983</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Oakland</td>
+      <td>1/1/2014</td>
+      <td>$6.83</td>
+      <td>982</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Oakland</td>
+      <td>1/1/2014</td>
+      <td>$43.90</td>
+      <td>982</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Oakland</td>
+      <td>1/1/2014</td>
+      <td>$17.16</td>
+      <td>980</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>880344</th>
+      <td>Tacoma</td>
+      <td>12/31/2015</td>
+      <td>$33.68</td>
+      <td>1523</td>
+    </tr>
+    <tr>
+      <th>880345</th>
+      <td>Tacoma</td>
+      <td>12/31/2015</td>
+      <td>$215.98</td>
+      <td>1521</td>
+    </tr>
+    <tr>
+      <th>880346</th>
+      <td>Tacoma</td>
+      <td>12/31/2015</td>
+      <td>$236.86</td>
+      <td>1521</td>
+    </tr>
+    <tr>
+      <th>880347</th>
+      <td>Tacoma</td>
+      <td>12/31/2015</td>
+      <td>$33.02</td>
+      <td>1522</td>
+    </tr>
+    <tr>
+      <th>880348</th>
+      <td>Tacoma</td>
+      <td>12/31/2015</td>
+      <td>$11.32</td>
+      <td>1523</td>
+    </tr>
+  </tbody>
+</table>
+<p>880349 rows × 4 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="datatable">
+<a class="anchor" href="#datatable" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>datatable</strong><a class="anchor-link" href="#datatable"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Via-iread">
+<a class="anchor" href="#Via-iread" aria-hidden="true"><span class="octicon octicon-link"></span></a>Via iread<a class="anchor-link" href="#Via-iread"> </a>
+</h3>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">files</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"./Data_files/multiple_csvs/"</span><span class="p">)</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span><span class="s2">"*.csv"</span><span class="p">)</span>
+
+<span class="c1"># iread returns an iterator of all files</span>
+<span class="n">all_csvs</span> <span class="o">=</span> <span class="n">iread</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">files</span><span class="p">))</span>
+
+<span class="c1"># combine into one table with rbind</span>
+<span class="n">all_csvs</span> <span class="o">=</span> <span class="n">rbind</span><span class="p">(</span><span class="n">all_csvs</span><span class="p">)</span>
+
+<span class="n">all_csvs</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>City</th>
+<th>Date</th>
+<th>Sales</th>
+<th>StoreID</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$45.27</td>
+<td>1002</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$115.61</td>
+<td>1002</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$35.33</td>
+<td>1004</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$20.95</td>
+<td>1004</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$14.25</td>
+<td>1004</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$37.30</td>
+<td>1002</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$38.40</td>
+<td>1003</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$35.50</td>
+<td>1003</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$37.49</td>
+<td>1005</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$11.17</td>
+<td>1002</td>
+</tr>
+    <tr>
+<td class="row_index">10</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$179.88</td>
+<td>1002</td>
+</tr>
+    <tr>
+<td class="row_index">11</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$42.19</td>
+<td>1003</td>
+</tr>
+    <tr>
+<td class="row_index">12</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$80.73</td>
+<td>1004</td>
+</tr>
+    <tr>
+<td class="row_index">13</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$118.58</td>
+<td>1003</td>
+</tr>
+    <tr>
+<td class="row_index">14</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$132.68</td>
+<td>1005</td>
+</tr>
+    <tr>
+<td class="row_index">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+</tr>
+    <tr>
+<td class="row_index">880,344</td>
+<td>Tacoma</td>
+<td>12/31/2015</td>
+<td>$33.68</td>
+<td>1523</td>
+</tr>
+    <tr>
+<td class="row_index">880,345</td>
+<td>Tacoma</td>
+<td>12/31/2015</td>
+<td>$215.98</td>
+<td>1521</td>
+</tr>
+    <tr>
+<td class="row_index">880,346</td>
+<td>Tacoma</td>
+<td>12/31/2015</td>
+<td>$236.86</td>
+<td>1521</td>
+</tr>
+    <tr>
+<td class="row_index">880,347</td>
+<td>Tacoma</td>
+<td>12/31/2015</td>
+<td>$33.02</td>
+<td>1522</td>
+</tr>
+    <tr>
+<td class="row_index">880,348</td>
+<td>Tacoma</td>
+<td>12/31/2015</td>
+<td>$11.32</td>
+<td>1523</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">880,349 rows × 4 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Via-fread">
+<a class="anchor" href="#Via-fread" aria-hidden="true"><span class="octicon octicon-link"></span></a>Via fread<a class="anchor-link" href="#Via-fread"> </a>
+</h3>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">files</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"./Data_files/multiple_csvs/"</span><span class="p">)</span><span class="o">.</span><span class="n">rglob</span><span class="p">(</span><span class="s2">"*.csv"</span><span class="p">)</span>
+
+<span class="n">all_csvs</span> <span class="o">=</span> <span class="p">[</span><span class="n">fread</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">files</span><span class="p">]</span>
+
+<span class="c1"># combine into one frame</span>
+<span class="n">rbind</span><span class="p">(</span><span class="n">all_csvs</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>City</th>
+<th>Date</th>
+<th>Sales</th>
+<th>StoreID</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$45.27</td>
+<td>1002</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$115.61</td>
+<td>1002</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$35.33</td>
+<td>1004</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$20.95</td>
+<td>1004</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$14.25</td>
+<td>1004</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$37.30</td>
+<td>1002</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$38.40</td>
+<td>1003</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$35.50</td>
+<td>1003</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$37.49</td>
+<td>1005</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$11.17</td>
+<td>1002</td>
+</tr>
+    <tr>
+<td class="row_index">10</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$179.88</td>
+<td>1002</td>
+</tr>
+    <tr>
+<td class="row_index">11</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$42.19</td>
+<td>1003</td>
+</tr>
+    <tr>
+<td class="row_index">12</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$80.73</td>
+<td>1004</td>
+</tr>
+    <tr>
+<td class="row_index">13</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$118.58</td>
+<td>1003</td>
+</tr>
+    <tr>
+<td class="row_index">14</td>
+<td>Portland</td>
+<td>1/1/2014</td>
+<td>$132.68</td>
+<td>1005</td>
+</tr>
+    <tr>
+<td class="row_index">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+</tr>
+    <tr>
+<td class="row_index">880,344</td>
+<td>Tacoma</td>
+<td>12/31/2015</td>
+<td>$33.68</td>
+<td>1523</td>
+</tr>
+    <tr>
+<td class="row_index">880,345</td>
+<td>Tacoma</td>
+<td>12/31/2015</td>
+<td>$215.98</td>
+<td>1521</td>
+</tr>
+    <tr>
+<td class="row_index">880,346</td>
+<td>Tacoma</td>
+<td>12/31/2015</td>
+<td>$236.86</td>
+<td>1521</td>
+</tr>
+    <tr>
+<td class="row_index">880,347</td>
+<td>Tacoma</td>
+<td>12/31/2015</td>
+<td>$33.02</td>
+<td>1522</td>
+</tr>
+    <tr>
+<td class="row_index">880,348</td>
+<td>Tacoma</td>
+<td>12/31/2015</td>
+<td>$11.32</td>
+<td>1523</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">880,349 rows × 4 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Via-the-command-line">
+<a class="anchor" href="#Via-the-command-line" aria-hidden="true"><span class="octicon octicon-link"></span></a>Via the command line<a class="anchor-link" href="#Via-the-command-line"> </a>
+</h3>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">all_csvs</span> <span class="o">=</span> <span class="n">fread</span><span class="p">(</span><span class="n">cmd</span><span class="o">=</span><span class="s2">"awk '(NR==1) || (FNR&gt;1)' ./Data_files/multiple_csvs/*.csv"</span><span class="p">)</span>
+<span class="n">all_csvs</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>City</th>
+<th>Date</th>
+<th>Sales</th>
+<th>StoreID</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Oakland</td>
+<td>1/1/2014</td>
+<td>$9.83</td>
+<td>982</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Oakland</td>
+<td>1/1/2014</td>
+<td>$28.18</td>
+<td>983</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Oakland</td>
+<td>1/1/2014</td>
+<td>$6.83</td>
+<td>982</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Oakland</td>
+<td>1/1/2014</td>
+<td>$43.90</td>
+<td>982</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Oakland</td>
+<td>1/1/2014</td>
+<td>$17.16</td>
+<td>980</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>Oakland</td>
+<td>1/1/2014</td>
+<td>$14.29</td>
+<td>982</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>Oakland</td>
+<td>1/1/2014</td>
+<td>$6.48</td>
+<td>982</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>Oakland</td>
+<td>1/1/2014</td>
+<td>$232.13</td>
+<td>982</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>Oakland</td>
+<td>1/1/2014</td>
+<td>$209.28</td>
+<td>981</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>Oakland</td>
+<td>1/1/2014</td>
+<td>$12.11</td>
+<td>981</td>
+</tr>
+    <tr>
+<td class="row_index">10</td>
+<td>Oakland</td>
+<td>1/1/2014</td>
+<td>$107.96</td>
+<td>982</td>
+</tr>
+    <tr>
+<td class="row_index">11</td>
+<td>Oakland</td>
+<td>1/1/2014</td>
+<td>$47.64</td>
+<td>980</td>
+</tr>
+    <tr>
+<td class="row_index">12</td>
+<td>Oakland</td>
+<td>1/1/2014</td>
+<td>$15.44</td>
+<td>981</td>
+</tr>
+    <tr>
+<td class="row_index">13</td>
+<td>Oakland</td>
+<td>1/1/2014</td>
+<td>$52.72</td>
+<td>982</td>
+</tr>
+    <tr>
+<td class="row_index">14</td>
+<td>Oakland</td>
+<td>1/1/2014</td>
+<td>$3.25</td>
+<td>981</td>
+</tr>
+    <tr>
+<td class="row_index">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+</tr>
+    <tr>
+<td class="row_index">880,344</td>
+<td>Tacoma</td>
+<td>12/31/2015</td>
+<td>$33.68</td>
+<td>1523</td>
+</tr>
+    <tr>
+<td class="row_index">880,345</td>
+<td>Tacoma</td>
+<td>12/31/2015</td>
+<td>$215.98</td>
+<td>1521</td>
+</tr>
+    <tr>
+<td class="row_index">880,346</td>
+<td>Tacoma</td>
+<td>12/31/2015</td>
+<td>$236.86</td>
+<td>1521</td>
+</tr>
+    <tr>
+<td class="row_index">880,347</td>
+<td>Tacoma</td>
+<td>12/31/2015</td>
+<td>$33.02</td>
+<td>1522</td>
+</tr>
+    <tr>
+<td class="row_index">880,348</td>
+<td>Tacoma</td>
+<td>12/31/2015</td>
+<td>$11.32</td>
+<td>1523</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">880,349 rows × 4 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="samukweku/data-wrangling-blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/data-wrangling-blog/python/py-datatable/pandas/2020/11/05/Read-Multiple-Csv-Files-into-one-Table-in-Python.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/data-wrangling-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/data-wrangling-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Data Wrangling Blog.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/samukweku" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/samukweku" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
