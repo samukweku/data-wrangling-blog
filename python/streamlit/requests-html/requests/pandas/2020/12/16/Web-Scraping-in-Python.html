@@ -114,7 +114,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      5 min read
+      4 min read
     
 </span></p>
 
@@ -182,8 +182,6 @@ window.onload = wrap_img;
 <p>The aim here is to show how to scrape pages easily in Python and share your results. We will be using two packages : <a href="https://requests-html.kennethreitz.org/">requests-html</a> for the web scraping, and <a href="https://www.streamlit.io/">streamlit</a> to build a data application.</p>
 <p>Our source for the scraping is <a href="http://books.toscrape.com/">books.toscrape.com</a>. It is a good place to practise web scraping.</p>
 <p>Our goal - Get the title, book url, thumbnail url, rating, price, and availability of each book per genre on the website. Roughly a thousand books. A sample image of one of the books is shown below.</p>
-<p>To effectively scrape web pages, one needs to understand a bit of <a href="https://www.w3schools.com/html/">html</a> and <a href="https://www.w3schools.com/html/html_css.asp">css</a>. <a href="https://www.w3schools.com/">W3Schools</a> is a good place to learn the fundamentals; we will not be dwelling on that here, just how to use it.</p>
-<p>You can check the output of the web scraping <a href="https://safe-refuge-85400.herokuapp.com/">here</a></p>
 
 </div>
 </div>
@@ -192,6 +190,15 @@ window.onload = wrap_img;
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><img src="/data-wrangling-blog/images/copied_from_nb/Images/webscraping.png" alt="webscraping.png"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To effectively scrape web pages, one needs to understand a bit of <a href="https://www.w3schools.com/html/">html</a> and <a href="https://www.w3schools.com/html/html_css.asp">css</a>. <a href="https://www.w3schools.com/">W3Schools</a> is a good place to learn the fundamentals; we will not be dwelling on that here, just how to use it.</p>
+<p>You can check the output of the web scraping <a href="https://safe-refuge-85400.herokuapp.com/">here</a></p>
 
 </div>
 </div>
@@ -208,7 +215,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="https://requests-html.kennethreitz.org/">requests-html</a> makes web scraping easy. It supports both <a href="https://www.w3schools.com/cssref/css_selectors.asp">css-selectors</a> or <a href="https://msdn.microsoft.com/en-us/library/ms256086(v=vs.110">xpath</a>.aspx); we will be using <a href="https://www.w3schools.com/cssref/css_selectors.asp">css-selectors</a>. Let's look at how to scrape the book titles in the <em>Travel</em> category:</p>
+<p><a href="https://requests-html.kennethreitz.org/">requests-html</a> makes web scraping easy. It supports both <a href="https://www.w3schools.com/cssref/css_selectors.asp">css-selectors</a> and <a href="https://msdn.microsoft.com/en-us/library/ms256086(v=vs.110">xpath</a>.aspx); we will be using <a href="https://www.w3schools.com/cssref/css_selectors.asp">css-selectors</a>. Let's look at how to scrape the book titles in the <em>Travel</em> category:</p>
 
 </div>
 </div>
@@ -235,32 +242,6 @@ window.onload = wrap_img;
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>["It's Only the Himalayas",
- 'Full Moon over Noah’s Ark: An Odyssey to Mount Ararat and Beyond',
- 'See America: A Celebration of Our National Parks &amp; Treasured Sites',
- 'Vagabonding: An Uncommon Guide to the Art of Long-Term World Travel',
- 'Under the Tuscan Sun',
- 'A Summer In Europe',
- 'The Great Railway Bazaar',
- 'A Year in Provence (Provence #1)',
- 'The Road to Little Dribbling: Adventures of an American in Britain (Notes From a Small Island #2)',
- 'Neither Here nor There: Travels in Europe',
- '1,000 Places to See Before You Die']</pre>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -371,7 +352,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>We can easily apply the <em>data_exract</em> function to any genre to get the entire details:</p>
+<p>We can easily apply the <em>data_extract</em> function to any genre to get the entire details:</p>
 
 </div>
 </div>
@@ -388,149 +369,6 @@ window.onload = wrap_img;
 </pre></div>
 
     </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Title</th>
-      <th>URL</th>
-      <th>SourceImage</th>
-      <th>Rating</th>
-      <th>Prices</th>
-      <th>Availability</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>It's Only the Himalayas</td>
-      <td>its-only-the-himalayas_981/index.html</td>
-      <td>media/cache/27/a5/27a53d0bb95bdd88288eaf66c923...</td>
-      <td>Two</td>
-      <td>£45.17</td>
-      <td>In stock</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Full Moon over Noah’s Ark: An Odyssey to Mount...</td>
-      <td>full-moon-over-noahs-ark-an-odyssey-to-mount-a...</td>
-      <td>media/cache/57/77/57770cac1628f4407636635f4b85...</td>
-      <td>Four</td>
-      <td>£49.43</td>
-      <td>In stock</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>See America: A Celebration of Our National Par...</td>
-      <td>see-america-a-celebration-of-our-national-park...</td>
-      <td>media/cache/9a/7e/9a7e63f12829df4b43b31d110bf3...</td>
-      <td>Three</td>
-      <td>£48.87</td>
-      <td>In stock</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>Vagabonding: An Uncommon Guide to the Art of L...</td>
-      <td>vagabonding-an-uncommon-guide-to-the-art-of-lo...</td>
-      <td>media/cache/d5/bf/d5bf0090470b0b8ea46d9c166f78...</td>
-      <td>Two</td>
-      <td>£36.94</td>
-      <td>In stock</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>Under the Tuscan Sun</td>
-      <td>under-the-tuscan-sun_504/index.html</td>
-      <td>media/cache/98/c2/98c2e95c5fd1a4e7cd5f2b63c528...</td>
-      <td>Three</td>
-      <td>£37.33</td>
-      <td>In stock</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>A Summer In Europe</td>
-      <td>a-summer-in-europe_458/index.html</td>
-      <td>media/cache/4e/15/4e15150388702ebca2c5a523ac27...</td>
-      <td>Two</td>
-      <td>£44.34</td>
-      <td>In stock</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>The Great Railway Bazaar</td>
-      <td>the-great-railway-bazaar_446/index.html</td>
-      <td>media/cache/76/de/76de41867f323d7f1f4fbe2fdfc1...</td>
-      <td>One</td>
-      <td>£30.54</td>
-      <td>In stock</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>A Year in Provence (Provence #1)</td>
-      <td>a-year-in-provence-provence-1_421/index.html</td>
-      <td>media/cache/db/46/db46159b05faa5d95262112bf9c2...</td>
-      <td>Four</td>
-      <td>£56.88</td>
-      <td>In stock</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>The Road to Little Dribbling: Adventures of an...</td>
-      <td>the-road-to-little-dribbling-adventures-of-an-...</td>
-      <td>media/cache/e0/4f/e04f8eda2a2fa947aec17640202d...</td>
-      <td>One</td>
-      <td>£23.21</td>
-      <td>In stock</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>Neither Here nor There: Travels in Europe</td>
-      <td>neither-here-nor-there-travels-in-europe_198/i...</td>
-      <td>media/cache/06/81/0681530a7bc301caf5c3257e1b0f...</td>
-      <td>Three</td>
-      <td>£38.95</td>
-      <td>In stock</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>1,000 Places to See Before You Die</td>
-      <td>1000-places-to-see-before-you-die_1/index.html</td>
-      <td>media/cache/d7/0f/d70f7edd92705c45a82118c3ff6c...</td>
-      <td>Five</td>
-      <td>£26.08</td>
-      <td>In stock</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
 </div>
 </div>
 
@@ -563,7 +401,7 @@ window.onload = wrap_img;
 <li>Import streamlit, </li>
 <li>give our application a title, </li>
 <li>add our web scraping code, </li>
-<li>add a <a href="">sidebar</a> to select genres, and finally</li>
+<li>add a <a href="https://docs.streamlit.io/en/stable/api.html#add-widgets-to-sidebar">sidebar</a> to select genres, and finally</li>
 <li>add a line of code to show the results. The entire code is listed below:</li>
 </ul>
 
