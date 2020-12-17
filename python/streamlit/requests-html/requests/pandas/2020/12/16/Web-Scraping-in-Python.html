@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Easy Web Scraping with Python | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Easy Web Scraping with Python" />
+<meta name="author" content="Samuel Oranyeli" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="And build a data application" />
+<meta property="og:description" content="And build a data application" />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/streamlit/requests-html/requests/pandas/2020/12/16/Web-Scraping-in-Python.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/streamlit/requests-html/requests/pandas/2020/12/16/Web-Scraping-in-Python.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:image" content="https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-12-16T00:00:00-06:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Samuel Oranyeli"},"description":"And build a data application","dateModified":"2020-12-16T00:00:00-06:00","datePublished":"2020-12-16T00:00:00-06:00","headline":"Easy Web Scraping with Python","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/streamlit/requests-html/requests/pandas/2020/12/16/Web-Scraping-in-Python.html"},"image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","url":"https://samukweku.github.io/data-wrangling-blog/python/streamlit/requests-html/requests/pandas/2020/12/16/Web-Scraping-in-Python.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/data-wrangling-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" /><link rel="shortcut icon" type="image/x-icon" href="/data-wrangling-blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Easy Web Scraping with Python | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Easy Web Scraping with Python" />
+<meta name="author" content="Samuel Oranyeli" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="And build a data application" />
+<meta property="og:description" content="And build a data application" />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/streamlit/requests-html/requests/pandas/2020/12/16/Web-Scraping-in-Python.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/streamlit/requests-html/requests/pandas/2020/12/16/Web-Scraping-in-Python.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:image" content="https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-12-16T00:00:00-06:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Samuel Oranyeli"},"description":"And build a data application","dateModified":"2020-12-16T00:00:00-06:00","datePublished":"2020-12-16T00:00:00-06:00","headline":"Easy Web Scraping with Python","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/streamlit/requests-html/requests/pandas/2020/12/16/Web-Scraping-in-Python.html"},"image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","url":"https://samukweku.github.io/data-wrangling-blog/python/streamlit/requests-html/requests/pandas/2020/12/16/Web-Scraping-in-Python.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+<script type="text/javascript">
+require.config({
+  paths: {
+    jquery: 'https://code.jquery.com/jquery-3.5.0.min',
+    plotly: 'https://cdn.plot.ly/plotly-latest.min'
+  },
+
+  shim: {
+    plotly: {
+      deps: ['jquery'],
+      exports: 'plotly'
+    }
+  }
+});
+</script>
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/data-wrangling-blog/">Samuel Oranyeli</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/data-wrangling-blog/about/">About Me</a><a class="page-link" href="/data-wrangling-blog/search/">Search</a><a class="page-link" href="/data-wrangling-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Easy Web Scraping with Python</h1><p class="page-description">And build a data application</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2020-12-16T00:00:00-06:00" itemprop="datePublished">
+        Dec 16, 2020
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Samuel Oranyeli</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      5 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#python">python</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#streamlit">streamlit</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#requests-html">requests-html</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#requests">requests</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#pandas">pandas</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/samukweku/data-wrangling-blog/tree/master/_notebooks/2020-12-18 -Web Scraping in Python.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/data-wrangling-blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          
+          
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#Web-Scraping">Web Scraping </a></li>
+<li class="toc-entry toc-h2"><a href="#Sharing-Data-Apps">Sharing Data Apps </a></li>
+<li class="toc-entry toc-h2"><a href="#Summary">Summary </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2020-12-18 -Web Scraping in Python.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This is partly motivated by an <a href="https://www.betterdatascience.com/web-scraping-with-r-easier-than-python/">article</a> published by <a href="https://www.betterdatascience.com/author/betterdatascience_onouc8/">Dario Radecic</a> - the article is a good read.</p>
+<p>The aim here is to show how to scrape pages easily in Python and share your results. We will be using two packages : <a href="https://requests-html.kennethreitz.org/">requests-html</a> for the web scraping, and <a href="https://www.streamlit.io/">streamlit</a> to build a data application.</p>
+<p>Our source for the scraping is <a href="http://books.toscrape.com/">books.toscrape.com</a>. It is a good place to practise web scraping.</p>
+<p>Our goal - Get the title, book url, thumbnail url, rating, price, and availability of each book per genre on the website. Roughly a thousand books. A sample image of one of the books is shown below.</p>
+<p>To effectively scrape web pages, one needs to understand a bit of <a href="https://www.w3schools.com/html/">html</a> and <a href="https://www.w3schools.com/html/html_css.asp">css</a>. <a href="https://www.w3schools.com/">W3Schools</a> is a good place to learn the fundamentals; we will not be dwelling on that here, just how to use it.</p>
+<p>You can check the output of the web scraping <a href="https://safe-refuge-85400.herokuapp.com/">here</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/webscraping.png" alt="webscraping.png"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Web-Scraping">
+<a class="anchor" href="#Web-Scraping" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Web Scraping</strong><a class="anchor-link" href="#Web-Scraping"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="https://requests-html.kennethreitz.org/">requests-html</a> makes web scraping easy. It supports both <a href="https://www.w3schools.com/cssref/css_selectors.asp">css-selectors</a> or <a href="https://msdn.microsoft.com/en-us/library/ms256086(v=vs.110">xpath</a>.aspx); we will be using <a href="https://www.w3schools.com/cssref/css_selectors.asp">css-selectors</a>. Let's look at how to scrape the book titles in the <em>Travel</em> category:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">requests_html</span> <span class="kn">import</span> <span class="n">HTMLSession</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">HTMLSession</span><span class="p">()</span>
+
+<span class="c1"># url for travel section:</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s2">"http://books.toscrape.com/catalogue/category/books/travel_2/index.html"</span>
+
+<span class="c1"># access data from url:</span>
+<span class="n">webpage</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+<span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"title"</span><span class="p">]</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">webpage</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">"h3&gt;a"</span><span class="p">)]</span>
+
+<span class="n">titles</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>["It's Only the Himalayas",
+ 'Full Moon over Noah’s Ark: An Odyssey to Mount Ararat and Beyond',
+ 'See America: A Celebration of Our National Parks &amp; Treasured Sites',
+ 'Vagabonding: An Uncommon Guide to the Art of Long-Term World Travel',
+ 'Under the Tuscan Sun',
+ 'A Summer In Europe',
+ 'The Great Railway Bazaar',
+ 'A Year in Provence (Provence #1)',
+ 'The Road to Little Dribbling: Adventures of an American in Britain (Notes From a Small Island #2)',
+ 'Neither Here nor There: Travels in Europe',
+ '1,000 Places to See Before You Die']</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Pretty easy and straightforward. The key part is getting the <a href="https://www.w3schools.com/cssref/css_selectors.asp">css-selectors</a> right.</p>
+<p>Let's write a function that gets the title, urls, and other details:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="k">def</span> <span class="nf">data_extract</span><span class="p">(</span><span class="n">genre</span><span class="p">):</span>
+    <span class="c1"># pull data from specific webpage</span>
+    <span class="n">webpage</span> <span class="o">=</span> <span class="n">genre_urls</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">genre</span><span class="p">)</span>
+    <span class="n">webpage</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">webpage</span><span class="p">)</span>
+    
+    <span class="n">urls</span> <span class="o">=</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"href"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"../"</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">webpage</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">"div.image_container&gt;a"</span><span class="p">)</span>
+           <span class="p">]</span>
+
+    <span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"title"</span><span class="p">]</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">webpage</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">"h3&gt;a"</span><span class="p">)]</span>
+
+    <span class="n">imgs</span> <span class="o">=</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"src"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"../"</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">webpage</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">"div.image_container&gt;a&gt;img"</span><span class="p">)</span>
+           <span class="p">]</span>
+
+    <span class="n">ratings</span> <span class="o">=</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"class"</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> 
+               <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">webpage</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">"p.star-rating"</span><span class="p">)</span>
+              <span class="p">]</span>
+
+    <span class="n">prices</span> <span class="o">=</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">webpage</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">"p.price_color"</span><span class="p">)]</span>
+
+    <span class="n">availability</span> <span class="o">=</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">webpage</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">"p.instock"</span><span class="p">)]</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">Title</span> <span class="o">=</span> <span class="n">titles</span><span class="p">,</span>
+        <span class="n">URL</span> <span class="o">=</span> <span class="n">urls</span><span class="p">,</span>
+        <span class="n">Source_Image</span> <span class="o">=</span> <span class="n">imgs</span><span class="p">,</span>
+        <span class="n">Rating</span> <span class="o">=</span> <span class="n">ratings</span><span class="p">,</span>
+        <span class="n">Price</span> <span class="o">=</span> <span class="n">prices</span><span class="p">,</span>
+        <span class="n">Availability</span> <span class="o">=</span> <span class="n">availability</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The function above pulls in the data and returns a <a href="https://pandas.pydata.org/pandas-docs/stable/reference/frame.html">Pandas</a> dataframe.</p>
+<p>What's left is a pairing of the categories and the urls for each category for the entire website:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">main_url</span> <span class="o">=</span> <span class="s2">"http://books.toscrape.com/"</span>
+<span class="n">main_page</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">main_url</span><span class="p">)</span>
+
+<span class="c1"># the css-selector helps pull out the links for all the categories (travel, horror, crime, ...)</span>
+<span class="n">navlinks</span> <span class="o">=</span> <span class="s2">"div.side_categories&gt;ul.nav.nav-list&gt;li&gt;ul&gt;li&gt;a"</span>
+
+<span class="c1"># get the categories</span>
+<span class="n">genres</span> <span class="o">=</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">main_page</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">navlinks</span><span class="p">)]</span>
+
+<span class="c1"># get the actual urls for each category</span>
+<span class="n">genre_urls</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">main_url</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">element</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'href'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span> 
+             <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">main_page</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">navlinks</span><span class="p">)</span>
+            <span class="p">]</span>
+
+<span class="c1"># pair the category with the url</span>
+<span class="n">genre_urls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">genres</span><span class="p">,</span> <span class="n">genre_urls</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can easily apply the <em>data_exract</em> function to any genre to get the entire details:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># view all the details for the Travel category</span>
+<span class="n">data_extract</span><span class="p">(</span><span class="s2">"Travel"</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Title</th>
+      <th>URL</th>
+      <th>SourceImage</th>
+      <th>Rating</th>
+      <th>Prices</th>
+      <th>Availability</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>It's Only the Himalayas</td>
+      <td>its-only-the-himalayas_981/index.html</td>
+      <td>media/cache/27/a5/27a53d0bb95bdd88288eaf66c923...</td>
+      <td>Two</td>
+      <td>£45.17</td>
+      <td>In stock</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Full Moon over Noah’s Ark: An Odyssey to Mount...</td>
+      <td>full-moon-over-noahs-ark-an-odyssey-to-mount-a...</td>
+      <td>media/cache/57/77/57770cac1628f4407636635f4b85...</td>
+      <td>Four</td>
+      <td>£49.43</td>
+      <td>In stock</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>See America: A Celebration of Our National Par...</td>
+      <td>see-america-a-celebration-of-our-national-park...</td>
+      <td>media/cache/9a/7e/9a7e63f12829df4b43b31d110bf3...</td>
+      <td>Three</td>
+      <td>£48.87</td>
+      <td>In stock</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Vagabonding: An Uncommon Guide to the Art of L...</td>
+      <td>vagabonding-an-uncommon-guide-to-the-art-of-lo...</td>
+      <td>media/cache/d5/bf/d5bf0090470b0b8ea46d9c166f78...</td>
+      <td>Two</td>
+      <td>£36.94</td>
+      <td>In stock</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Under the Tuscan Sun</td>
+      <td>under-the-tuscan-sun_504/index.html</td>
+      <td>media/cache/98/c2/98c2e95c5fd1a4e7cd5f2b63c528...</td>
+      <td>Three</td>
+      <td>£37.33</td>
+      <td>In stock</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>A Summer In Europe</td>
+      <td>a-summer-in-europe_458/index.html</td>
+      <td>media/cache/4e/15/4e15150388702ebca2c5a523ac27...</td>
+      <td>Two</td>
+      <td>£44.34</td>
+      <td>In stock</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>The Great Railway Bazaar</td>
+      <td>the-great-railway-bazaar_446/index.html</td>
+      <td>media/cache/76/de/76de41867f323d7f1f4fbe2fdfc1...</td>
+      <td>One</td>
+      <td>£30.54</td>
+      <td>In stock</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>A Year in Provence (Provence #1)</td>
+      <td>a-year-in-provence-provence-1_421/index.html</td>
+      <td>media/cache/db/46/db46159b05faa5d95262112bf9c2...</td>
+      <td>Four</td>
+      <td>£56.88</td>
+      <td>In stock</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>The Road to Little Dribbling: Adventures of an...</td>
+      <td>the-road-to-little-dribbling-adventures-of-an-...</td>
+      <td>media/cache/e0/4f/e04f8eda2a2fa947aec17640202d...</td>
+      <td>One</td>
+      <td>£23.21</td>
+      <td>In stock</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Neither Here nor There: Travels in Europe</td>
+      <td>neither-here-nor-there-travels-in-europe_198/i...</td>
+      <td>media/cache/06/81/0681530a7bc301caf5c3257e1b0f...</td>
+      <td>Three</td>
+      <td>£38.95</td>
+      <td>In stock</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>1,000 Places to See Before You Die</td>
+      <td>1000-places-to-see-before-you-die_1/index.html</td>
+      <td>media/cache/d7/0f/d70f7edd92705c45a82118c3ff6c...</td>
+      <td>Five</td>
+      <td>£26.08</td>
+      <td>In stock</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Data extraction is complete. Next up is building an easy to use <strong><a href="https://safe-refuge-85400.herokuapp.com/">web application</a></strong>. Enter <a href="https://www.streamlit.io/">streamlit</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Sharing-Data-Apps">
+<a class="anchor" href="#Sharing-Data-Apps" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Sharing Data Apps</strong><a class="anchor-link" href="#Sharing-Data-Apps"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="https://www.streamlit.io/">streamlit</a> really makes building data apps easy, with a few lines of code.</p>
+<p>The code below is basic, but shows the power of streamlit. All we have to do is :</p>
+<ul>
+<li>Import streamlit, </li>
+<li>give our application a title, </li>
+<li>add our web scraping code, </li>
+<li>add a <a href="">sidebar</a> to select genres, and finally</li>
+<li>add a line of code to show the results. The entire code is listed below:</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import streamlit and other libraries</span>
+<span class="kn">import</span> <span class="nn">streamlit</span> <span class="k">as</span> <span class="nn">st</span>
+<span class="kn">from</span> <span class="nn">requests_html</span> <span class="kn">import</span> <span class="n">HTMLSession</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># give our application a title</span>
+<span class="n">st</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">"Real-time web scraper with Python"</span><span class="p">)</span>
+
+
+<span class="c1"># add our web scraping code</span>
+<span class="n">session</span> <span class="o">=</span> <span class="n">HTMLSession</span><span class="p">()</span>
+<span class="n">main_url</span> <span class="o">=</span> <span class="s2">"http://books.toscrape.com/"</span>
+<span class="n">main_page</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">main_url</span><span class="p">)</span>
+
+<span class="n">navlinks</span> <span class="o">=</span> <span class="s2">"div.side_categories&gt;ul.nav.nav-list&gt;li&gt;ul&gt;li&gt;a"</span>
+<span class="n">genres</span> <span class="o">=</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">main_page</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">navlinks</span><span class="p">)]</span>
+<span class="n">list_urls</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">main_url</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">element</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">'href'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">main_page</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">navlinks</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="n">genre_urls</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">genres</span><span class="p">,</span> <span class="n">list_urls</span><span class="p">))</span>
+
+
+<span class="nd">@st</span><span class="o">.</span><span class="n">cache</span>
+<span class="k">def</span> <span class="nf">data_extract</span><span class="p">(</span><span class="n">genre</span><span class="p">):</span>
+    <span class="n">webpage</span> <span class="o">=</span> <span class="n">genre_urls</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">genre</span><span class="p">)</span>
+    <span class="n">webpage</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">webpage</span><span class="p">)</span>
+    <span class="n">urls</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">element</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"href"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"../"</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">webpage</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">"div.image_container&gt;a"</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"title"</span><span class="p">]</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">webpage</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">"h3&gt;a"</span><span class="p">)]</span>
+
+    <span class="n">imgs</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">element</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"src"</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"../"</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">webpage</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">"div.image_container&gt;a&gt;img"</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="n">ratings</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">element</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">"class"</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">webpage</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">"p.star-rating"</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="n">prices</span> <span class="o">=</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">webpage</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">"p.price_color"</span><span class="p">)]</span>
+
+    <span class="n">availability</span> <span class="o">=</span> <span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">webpage</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">"p.instock"</span><span class="p">)]</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">Title</span><span class="o">=</span><span class="n">titles</span><span class="p">,</span>
+        <span class="n">URL</span><span class="o">=</span><span class="n">urls</span><span class="p">,</span>
+        <span class="n">SourceImage</span><span class="o">=</span><span class="n">imgs</span><span class="p">,</span>
+        <span class="n">Rating</span><span class="o">=</span><span class="n">ratings</span><span class="p">,</span>
+        <span class="n">Price</span><span class="o">=</span><span class="n">prices</span><span class="p">,</span>
+        <span class="n">Availability</span><span class="o">=</span><span class="n">availability</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">to_markdown</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="c1"># add a sidebar to select genre</span>
+<span class="n">option</span> <span class="o">=</span> <span class="n">st</span><span class="o">.</span><span class="n">sidebar</span><span class="o">.</span><span class="n">selectbox</span><span class="p">(</span><span class="s2">"Genres"</span><span class="p">,</span> <span class="n">genres</span><span class="p">)</span>
+
+<span class="c1"># add a line of code to show the result</span>
+<span class="n">st</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">data_extract</span><span class="p">(</span><span class="n">option</span><span class="p">),</span> <span class="n">unsafe_allow_html</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Easy. Of course, this is a very simple application; you can do so much more with streamlit. Have a look at the <a href="https://www.streamlit.io/gallery">streamlit gallery</a> for inspiration.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Summary">
+<a class="anchor" href="#Summary" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Summary</strong><a class="anchor-link" href="#Summary"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Web scraping and building data applications are easy to do in Python. Hopefully, this article gives you an idea of how to achieve this, the rest is up to you to go far and beyond.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="samukweku/data-wrangling-blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/data-wrangling-blog/python/streamlit/requests-html/requests/pandas/2020/12/16/Web-Scraping-in-Python.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/data-wrangling-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/data-wrangling-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Data Wrangling Blog.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/samukweku" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/samukweku" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
