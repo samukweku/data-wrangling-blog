@@ -17,7 +17,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-05-12T00:00:00-05:00" />
 <script type="application/ld+json">
-{"author":{"@type":"Person","name":"Samuel Oranyeli"},"description":"Extract data from spreadsheets with formats","dateModified":"2020-05-12T00:00:00-05:00","datePublished":"2020-05-12T00:00:00-05:00","headline":"SpreadSheet Munging Strategies in Python - Meaningful Formats","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/2020/05/12/Meaningful-Formats.html"},"image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","url":"https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/2020/05/12/Meaningful-Formats.html","@context":"https://schema.org"}</script>
+{"author":{"@type":"Person","name":"Samuel Oranyeli"},"description":"Extract data from spreadsheets with formats","@type":"BlogPosting","headline":"SpreadSheet Munging Strategies in Python - Meaningful Formats","dateModified":"2020-05-12T00:00:00-05:00","datePublished":"2020-05-12T00:00:00-05:00","image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","url":"https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/2020/05/12/Meaningful-Formats.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/2020/05/12/Meaningful-Formats.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/data-wrangling-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" /><link rel="shortcut icon" type="image/x-icon" href="/data-wrangling-blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>SpreadSheet Munging Strategies in Python - Meaningful Formats | Samuel Oranyeli</title>
@@ -34,7 +34,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-05-12T00:00:00-05:00" />
 <script type="application/ld+json">
-{"author":{"@type":"Person","name":"Samuel Oranyeli"},"description":"Extract data from spreadsheets with formats","dateModified":"2020-05-12T00:00:00-05:00","datePublished":"2020-05-12T00:00:00-05:00","headline":"SpreadSheet Munging Strategies in Python - Meaningful Formats","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/2020/05/12/Meaningful-Formats.html"},"image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","url":"https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/2020/05/12/Meaningful-Formats.html","@context":"https://schema.org"}</script>
+{"author":{"@type":"Person","name":"Samuel Oranyeli"},"description":"Extract data from spreadsheets with formats","@type":"BlogPosting","headline":"SpreadSheet Munging Strategies in Python - Meaningful Formats","dateModified":"2020-05-12T00:00:00-05:00","datePublished":"2020-05-12T00:00:00-05:00","image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","url":"https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/2020/05/12/Meaningful-Formats.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/2020/05/12/Meaningful-Formats.html"},"@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 <link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
@@ -285,6 +285,190 @@ window.onload = wrap_img;
 </div>
 </div>
 </div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">dir</span><span class="p">(</span><span class="n">ws</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>['BREAK_COLUMN',
+ 'BREAK_NONE',
+ 'BREAK_ROW',
+ 'HeaderFooter',
+ 'ORIENTATION_LANDSCAPE',
+ 'ORIENTATION_PORTRAIT',
+ 'PAPERSIZE_A3',
+ 'PAPERSIZE_A4',
+ 'PAPERSIZE_A4_SMALL',
+ 'PAPERSIZE_A5',
+ 'PAPERSIZE_EXECUTIVE',
+ 'PAPERSIZE_LEDGER',
+ 'PAPERSIZE_LEGAL',
+ 'PAPERSIZE_LETTER',
+ 'PAPERSIZE_LETTER_SMALL',
+ 'PAPERSIZE_STATEMENT',
+ 'PAPERSIZE_TABLOID',
+ 'SHEETSTATE_HIDDEN',
+ 'SHEETSTATE_VERYHIDDEN',
+ 'SHEETSTATE_VISIBLE',
+ '_WorkbookChild__title',
+ '__class__',
+ '__delattr__',
+ '__delitem__',
+ '__dict__',
+ '__dir__',
+ '__doc__',
+ '__eq__',
+ '__format__',
+ '__ge__',
+ '__getattribute__',
+ '__getitem__',
+ '__gt__',
+ '__hash__',
+ '__init__',
+ '__init_subclass__',
+ '__iter__',
+ '__le__',
+ '__lt__',
+ '__module__',
+ '__ne__',
+ '__new__',
+ '__reduce__',
+ '__reduce_ex__',
+ '__repr__',
+ '__setattr__',
+ '__setitem__',
+ '__sizeof__',
+ '__str__',
+ '__subclasshook__',
+ '__weakref__',
+ '_add_cell',
+ '_add_column',
+ '_add_row',
+ '_cells',
+ '_cells_by_col',
+ '_cells_by_row',
+ '_charts',
+ '_clean_merge_range',
+ '_comments',
+ '_current_row',
+ '_default_title',
+ '_drawing',
+ '_get_cell',
+ '_hyperlinks',
+ '_id',
+ '_images',
+ '_invalid_row',
+ '_move_cell',
+ '_move_cells',
+ '_parent',
+ '_path',
+ '_pivots',
+ '_print_area',
+ '_print_cols',
+ '_print_rows',
+ '_rel_type',
+ '_rels',
+ '_setup',
+ '_tables',
+ 'active_cell',
+ 'add_chart',
+ 'add_data_validation',
+ 'add_image',
+ 'add_pivot',
+ 'add_table',
+ 'append',
+ 'auto_filter',
+ 'calculate_dimension',
+ 'cell',
+ 'col_breaks',
+ 'column_dimensions',
+ 'columns',
+ 'conditional_formatting',
+ 'data_validations',
+ 'delete_cols',
+ 'delete_rows',
+ 'dimensions',
+ 'encoding',
+ 'evenFooter',
+ 'evenHeader',
+ 'firstFooter',
+ 'firstHeader',
+ 'formula_attributes',
+ 'freeze_panes',
+ 'insert_cols',
+ 'insert_rows',
+ 'iter_cols',
+ 'iter_rows',
+ 'legacy_drawing',
+ 'max_column',
+ 'max_row',
+ 'merge_cells',
+ 'merged_cell_ranges',
+ 'merged_cells',
+ 'mime_type',
+ 'min_column',
+ 'min_row',
+ 'move_range',
+ 'oddFooter',
+ 'oddHeader',
+ 'orientation',
+ 'page_breaks',
+ 'page_margins',
+ 'page_setup',
+ 'paper_size',
+ 'parent',
+ 'path',
+ 'print_area',
+ 'print_options',
+ 'print_title_cols',
+ 'print_title_rows',
+ 'print_titles',
+ 'protection',
+ 'row_breaks',
+ 'row_dimensions',
+ 'rows',
+ 'scenarios',
+ 'selected_cell',
+ 'set_printer_settings',
+ 'sheet_format',
+ 'sheet_properties',
+ 'sheet_state',
+ 'sheet_view',
+ 'show_gridlines',
+ 'show_summary_below',
+ 'show_summary_right',
+ 'tables',
+ 'title',
+ 'unmerge_cells',
+ 'values',
+ 'views']</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
     
     
 <div class="cell border-box-sizing code_cell rendered">
