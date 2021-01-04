@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Data Wrangling with Python Datatable - Replicate Pandas’ Map Function | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Data Wrangling with Python Datatable - Replicate Pandas’ Map Function" />
+<meta name="author" content="Samuel Oranyeli" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Replace values in a column with a dictionary" />
+<meta property="og:description" content="Replace values in a column with a dictionary" />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/01/03/Data-Wrangling-with-Python-Datatable-Replicate-Pandas'-map.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/01/03/Data-Wrangling-with-Python-Datatable-Replicate-Pandas'-map.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:image" content="https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-01-03T00:00:00-06:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Samuel Oranyeli"},"description":"Replace values in a column with a dictionary","@type":"BlogPosting","headline":"Data Wrangling with Python Datatable - Replicate Pandas’ Map Function","dateModified":"2021-01-03T00:00:00-06:00","datePublished":"2021-01-03T00:00:00-06:00","image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","url":"https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/01/03/Data-Wrangling-with-Python-Datatable-Replicate-Pandas'-map.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/01/03/Data-Wrangling-with-Python-Datatable-Replicate-Pandas'-map.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/data-wrangling-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" /><link rel="shortcut icon" type="image/x-icon" href="/data-wrangling-blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Data Wrangling with Python Datatable - Replicate Pandas’ Map Function | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Data Wrangling with Python Datatable - Replicate Pandas’ Map Function" />
+<meta name="author" content="Samuel Oranyeli" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Replace values in a column with a dictionary" />
+<meta property="og:description" content="Replace values in a column with a dictionary" />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/01/03/Data-Wrangling-with-Python-Datatable-Replicate-Pandas'-map.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/01/03/Data-Wrangling-with-Python-Datatable-Replicate-Pandas'-map.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:image" content="https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-01-03T00:00:00-06:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Samuel Oranyeli"},"description":"Replace values in a column with a dictionary","@type":"BlogPosting","headline":"Data Wrangling with Python Datatable - Replicate Pandas’ Map Function","dateModified":"2021-01-03T00:00:00-06:00","datePublished":"2021-01-03T00:00:00-06:00","image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","url":"https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/01/03/Data-Wrangling-with-Python-Datatable-Replicate-Pandas'-map.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/01/03/Data-Wrangling-with-Python-Datatable-Replicate-Pandas'-map.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+<script type="text/javascript">
+require.config({
+  paths: {
+    jquery: 'https://code.jquery.com/jquery-3.5.0.min',
+    plotly: 'https://cdn.plot.ly/plotly-latest.min'
+  },
+
+  shim: {
+    plotly: {
+      deps: ['jquery'],
+      exports: 'plotly'
+    }
+  }
+});
+</script>
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/data-wrangling-blog/">Samuel Oranyeli</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/data-wrangling-blog/about/">About Me</a><a class="page-link" href="/data-wrangling-blog/search/">Search</a><a class="page-link" href="/data-wrangling-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Data Wrangling with Python Datatable - Replicate Pandas&#39; Map Function</h1><p class="page-description">Replace values in a column with a dictionary</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-01-03T00:00:00-06:00" itemprop="datePublished">
+        Jan 3, 2021
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Samuel Oranyeli</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      1 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#python">python</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#pydatatable">pydatatable</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/samukweku/data-wrangling-blog/tree/master/_notebooks/2021-01-04 - Data Wrangling with Python Datatable - Replicate Pandas' map.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/data-wrangling-blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          
+          
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h4"><a href="#Link-to-Source-data">Link to Source data </a></li>
+<li class="toc-entry toc-h2"><a href="#Complete-Solution">Complete Solution </a></li>
+<li class="toc-entry toc-h2"><a href="#Breakdown-of-Solution">Breakdown of Solution </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021-01-04 - Data Wrangling with Python Datatable - Replicate Pandas' map.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Link-to-Source-data">
+<a class="anchor" href="#Link-to-Source-data" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="https://chrisalbon.com/python/data_wrangling/pandas_map_values_to_values/">Link to Source data</a><a class="anchor-link" href="#Link-to-Source-data"> </a>
+</h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Task: Create a new column by mapping the values in the <code>city</code> column to the <code>city_state</code> dictionary</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">datatable</span> <span class="kn">import</span> <span class="n">dt</span><span class="p">,</span> <span class="n">f</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">Frame</span><span class="p">({</span>
+    <span class="s2">"first_name"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Jason"</span><span class="p">,</span> <span class="s2">"Molly"</span><span class="p">,</span> <span class="s2">"Tina"</span><span class="p">,</span> <span class="s2">"Jake"</span><span class="p">,</span> <span class="s2">"Amy"</span><span class="p">],</span>
+    <span class="s2">"last_name"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Miller"</span><span class="p">,</span> <span class="s2">"Jacobson"</span><span class="p">,</span> <span class="s2">"Ali"</span><span class="p">,</span> <span class="s2">"Milner"</span><span class="p">,</span> <span class="s2">"Cooze"</span><span class="p">],</span>
+    <span class="s2">"age"</span><span class="p">:</span> <span class="p">[</span><span class="mi">42</span><span class="p">,</span> <span class="mi">52</span><span class="p">,</span> <span class="mi">36</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">73</span><span class="p">],</span>
+    <span class="s2">"city"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"San Francisco"</span><span class="p">,</span> <span class="s2">"Baltimore"</span><span class="p">,</span> <span class="s2">"Miami"</span><span class="p">,</span> <span class="s2">"Douglas"</span><span class="p">,</span> <span class="s2">"Boston"</span><span class="p">],</span>
+<span class="p">})</span>
+
+<span class="n">city_to_state</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"San Francisco"</span><span class="p">:</span> <span class="s2">"California"</span><span class="p">,</span>
+    <span class="s2">"Baltimore"</span><span class="p">:</span> <span class="s2">"Maryland"</span><span class="p">,</span>
+    <span class="s2">"Miami"</span><span class="p">:</span> <span class="s2">"Florida"</span><span class="p">,</span>
+    <span class="s2">"Douglas"</span><span class="p">:</span> <span class="s2">"Arizona"</span><span class="p">,</span>
+    <span class="s2">"Boston"</span><span class="p">:</span> <span class="s2">"Massachusetts"</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<style type="text/css">
+.datatable table.frame { margin-bottom: 0; }
+.datatable table.frame thead { border-bottom: none; }
+.datatable table.frame tr.coltypes td {  color: #FFFFFF;  line-height: 6px;  padding: 0 0.5em;}
+.datatable .bool    { background: #DDDD99; }
+.datatable .object  { background: #565656; }
+.datatable .int     { background: #5D9E5D; }
+.datatable .float   { background: #4040CC; }
+.datatable .str     { background: #CC4040; }
+.datatable .row_index {  background: var(--jp-border-color3);  border-right: 1px solid var(--jp-border-color0);  color: var(--jp-ui-font-color3);  font-size: 9px;}
+.datatable .frame tr.coltypes .row_index {  background: var(--jp-border-color0);}
+.datatable th:nth-child(2) { padding-left: 12px; }
+.datatable .hellipsis {  color: var(--jp-cell-editor-border-color);}
+.datatable .vellipsis {  background: var(--jp-layout-color0);  color: var(--jp-cell-editor-border-color);}
+.datatable .na {  color: var(--jp-cell-editor-border-color);  font-size: 80%;}
+.datatable .footer { font-size: 9px; }
+.datatable .frame_dimensions {  background: var(--jp-border-color3);  border-top: 1px solid var(--jp-border-color0);  color: var(--jp-ui-font-color3);  display: inline-block;  opacity: 0.6;  padding: 1px 10px 1px 5px;}
+</style>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>first_name</th>
+<th>last_name</th>
+<th>age</th>
+<th>city</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Jason</td>
+<td>Miller</td>
+<td>42</td>
+<td>San Francisco</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Molly</td>
+<td>Jacobson</td>
+<td>52</td>
+<td>Baltimore</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Tina</td>
+<td>Ali</td>
+<td>36</td>
+<td>Miami</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Jake</td>
+<td>Milner</td>
+<td>24</td>
+<td>Douglas</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Amy</td>
+<td>Cooze</td>
+<td>73</td>
+<td>Boston</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 4 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">city_to_state</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{'San Francisco': 'California',
+ 'Baltimore': 'Maryland',
+ 'Miami': 'Florida',
+ 'Douglas': 'Arizona',
+ 'Boston': 'Massachusetts'}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Complete-Solution">
+<a class="anchor" href="#Complete-Solution" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Complete Solution</strong><a class="anchor-link" href="#Complete-Solution"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"city"</span><span class="p">]</span>
+<span class="n">m</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">city_to_state</span><span class="p">)</span>
+
+<span class="n">df</span><span class="p">[</span><span class="s2">"state"</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span>
+<span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>first_name</th>
+<th>last_name</th>
+<th>age</th>
+<th>city</th>
+<th>state</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Jason</td>
+<td>Miller</td>
+<td>42</td>
+<td>San Francisco</td>
+<td>California</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Molly</td>
+<td>Jacobson</td>
+<td>52</td>
+<td>Baltimore</td>
+<td>Maryland</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Tina</td>
+<td>Ali</td>
+<td>36</td>
+<td>Miami</td>
+<td>Florida</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Jake</td>
+<td>Milner</td>
+<td>24</td>
+<td>Douglas</td>
+<td>Arizona</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Amy</td>
+<td>Cooze</td>
+<td>73</td>
+<td>Boston</td>
+<td>Massachusetts</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Breakdown-of-Solution">
+<a class="anchor" href="#Breakdown-of-Solution" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Breakdown of Solution</strong><a class="anchor-link" href="#Breakdown-of-Solution"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Step 1: Create a temporary column to hold the values in <code>city</code>.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'city'</span><span class="p">]</span>
+<span class="n">m</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>city</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>San Francisco</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Baltimore</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Miami</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Douglas</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Boston</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 1 column</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Step 2: Replace the values in <code>m</code> with <code>city_to_state</code>, by using the <a href="https://datatable.readthedocs.io/en/latest/api/frame/replace.html">replace</a> function. Note that the <a href="https://datatable.readthedocs.io/en/latest/api/frame/replace.html">replace</a> function does not require assignment, as the computation is done inplace:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">m</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">city_to_state</span><span class="p">)</span>
+<span class="n">m</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>city</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>California</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Maryland</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Florida</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Arizona</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Massachusetts</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 1 column</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Step 3: Assign <code>m</code> to new column <code>state</code> in <code>df</code>:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">"state"</span><span class="p">]</span> <span class="o">=</span> <span class="n">m</span>
+<span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>first_name</th>
+<th>last_name</th>
+<th>age</th>
+<th>city</th>
+<th>state</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Jason</td>
+<td>Miller</td>
+<td>42</td>
+<td>San Francisco</td>
+<td>California</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Molly</td>
+<td>Jacobson</td>
+<td>52</td>
+<td>Baltimore</td>
+<td>Maryland</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Tina</td>
+<td>Ali</td>
+<td>36</td>
+<td>Miami</td>
+<td>Florida</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Jake</td>
+<td>Milner</td>
+<td>24</td>
+<td>Douglas</td>
+<td>Arizona</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Amy</td>
+<td>Cooze</td>
+<td>73</td>
+<td>Boston</td>
+<td>Massachusetts</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="samukweku/data-wrangling-blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/data-wrangling-blog/python/pydatatable/2021/01/03/Data-Wrangling-with-Python-Datatable-Replicate-Pandas'-map.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/data-wrangling-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/data-wrangling-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Data Wrangling Blog.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/samukweku" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/samukweku" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
