@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Data Wrangling with Python Datatable - Row-wise Transformations | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Data Wrangling with Python Datatable - Row-wise Transformations" />
+<meta name="author" content="Samuel Oranyeli" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Transformations per row" />
+<meta property="og:description" content="Transformations per row" />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/01/07/Data-Wrangling-with-Python-Datatable-Row-wise-Transformations.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/01/07/Data-Wrangling-with-Python-Datatable-Row-wise-Transformations.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:image" content="https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-01-07T00:00:00-06:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Samuel Oranyeli"},"description":"Transformations per row","@type":"BlogPosting","headline":"Data Wrangling with Python Datatable - Row-wise Transformations","dateModified":"2021-01-07T00:00:00-06:00","datePublished":"2021-01-07T00:00:00-06:00","image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","url":"https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/01/07/Data-Wrangling-with-Python-Datatable-Row-wise-Transformations.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/01/07/Data-Wrangling-with-Python-Datatable-Row-wise-Transformations.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/data-wrangling-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" /><link rel="shortcut icon" type="image/x-icon" href="/data-wrangling-blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Data Wrangling with Python Datatable - Row-wise Transformations | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Data Wrangling with Python Datatable - Row-wise Transformations" />
+<meta name="author" content="Samuel Oranyeli" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Transformations per row" />
+<meta property="og:description" content="Transformations per row" />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/01/07/Data-Wrangling-with-Python-Datatable-Row-wise-Transformations.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/01/07/Data-Wrangling-with-Python-Datatable-Row-wise-Transformations.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:image" content="https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-01-07T00:00:00-06:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Samuel Oranyeli"},"description":"Transformations per row","@type":"BlogPosting","headline":"Data Wrangling with Python Datatable - Row-wise Transformations","dateModified":"2021-01-07T00:00:00-06:00","datePublished":"2021-01-07T00:00:00-06:00","image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","url":"https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/01/07/Data-Wrangling-with-Python-Datatable-Row-wise-Transformations.html","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/01/07/Data-Wrangling-with-Python-Datatable-Row-wise-Transformations.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+<script type="text/javascript">
+require.config({
+  paths: {
+    jquery: 'https://code.jquery.com/jquery-3.5.0.min',
+    plotly: 'https://cdn.plot.ly/plotly-latest.min'
+  },
+
+  shim: {
+    plotly: {
+      deps: ['jquery'],
+      exports: 'plotly'
+    }
+  }
+});
+</script>
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/data-wrangling-blog/">Samuel Oranyeli</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/data-wrangling-blog/about/">About Me</a><a class="page-link" href="/data-wrangling-blog/search/">Search</a><a class="page-link" href="/data-wrangling-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Data Wrangling with Python Datatable - Row-wise Transformations</h1><p class="page-description">Transformations per row</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-01-07T00:00:00-06:00" itemprop="datePublished">
+        Jan 7, 2021
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Samuel Oranyeli</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      1 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#python">python</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#pydatatable">pydatatable</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/samukweku/data-wrangling-blog/tree/master/_notebooks/2021-01-07-Data Wrangling with Python Datatable - Row-wise Transformations.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/data-wrangling-blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          
+          
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h4"><a href="#Link-to-Source-data">Link to Source data </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021-01-07-Data Wrangling with Python Datatable - Row-wise Transformations.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Link-to-Source-data">
+<a class="anchor" href="#Link-to-Source-data" aria-hidden="true"><span class="octicon octicon-link"></span></a><a href="hhttps://stackoverflow.com/questions/63025628/how-to-get-the-difference-of-the-max-and-min-of-the-row-and-input-as-series-for/63025709#63025709">Link to Source data</a><a class="anchor-link" href="#Link-to-Source-data"> </a>
+</h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Task: Get the difference between the maximum and minimum values per row for <code>Value</code> columns.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">datatable</span> <span class="kn">import</span> <span class="n">dt</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">update</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">Frame</span><span class="p">({</span><span class="s1">'Ind'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+               <span class="s1">'Department'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'Electronics'</span><span class="p">,</span> <span class="s1">'Clothing'</span><span class="p">,</span> <span class="s1">'Grocery'</span><span class="p">],</span>
+               <span class="s1">'Value1'</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+               <span class="s1">'Value2'</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+               <span class="s1">'Value3'</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+               <span class="s1">'Value4'</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]})</span>
+
+
+<span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<style type="text/css">
+.datatable table.frame { margin-bottom: 0; }
+.datatable table.frame thead { border-bottom: none; }
+.datatable table.frame tr.coltypes td {  color: #FFFFFF;  line-height: 6px;  padding: 0 0.5em;}
+.datatable .bool    { background: #DDDD99; }
+.datatable .object  { background: #565656; }
+.datatable .int     { background: #5D9E5D; }
+.datatable .float   { background: #4040CC; }
+.datatable .str     { background: #CC4040; }
+.datatable .row_index {  background: var(--jp-border-color3);  border-right: 1px solid var(--jp-border-color0);  color: var(--jp-ui-font-color3);  font-size: 9px;}
+.datatable .frame tr.coltypes .row_index {  background: var(--jp-border-color0);}
+.datatable th:nth-child(2) { padding-left: 12px; }
+.datatable .hellipsis {  color: var(--jp-cell-editor-border-color);}
+.datatable .vellipsis {  background: var(--jp-layout-color0);  color: var(--jp-cell-editor-border-color);}
+.datatable .na {  color: var(--jp-cell-editor-border-color);  font-size: 80%;}
+.datatable .footer { font-size: 9px; }
+.datatable .frame_dimensions {  background: var(--jp-border-color3);  border-top: 1px solid var(--jp-border-color0);  color: var(--jp-ui-font-color3);  display: inline-block;  opacity: 0.6;  padding: 1px 10px 1px 5px;}
+</style>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>Ind</th>
+<th>Department</th>
+<th>Value1</th>
+<th>Value2</th>
+<th>Value3</th>
+<th>Value4</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="int" title="int32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>1</td>
+<td>Electronics</td>
+<td>5</td>
+<td>4</td>
+<td>3</td>
+<td>2</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>2</td>
+<td>Clothing</td>
+<td>4</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>3</td>
+<td>Grocery</td>
+<td>3</td>
+<td>3</td>
+<td>5</td>
+<td>1</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">3 rows × 6 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>COMPLETE SOLUTION</strong></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">value_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">names</span> <span class="k">if</span> <span class="s2">"Value"</span> <span class="ow">in</span> <span class="n">name</span><span class="p">]</span>
+<span class="n">max_min_difference</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">rowmax</span><span class="p">(</span><span class="n">value_columns</span><span class="p">)</span> <span class="o">-</span> <span class="n">dt</span><span class="o">.</span><span class="n">rowmin</span><span class="p">(</span><span class="n">value_columns</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[:,</span> <span class="n">update</span><span class="p">(</span><span class="n">difference</span> <span class="o">=</span> <span class="n">max_min_difference</span><span class="p">)]</span>
+<span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>Ind</th>
+<th>Department</th>
+<th>Value1</th>
+<th>Value2</th>
+<th>Value3</th>
+<th>Value4</th>
+<th>difference</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="int" title="int32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>1</td>
+<td>Electronics</td>
+<td>5</td>
+<td>4</td>
+<td>3</td>
+<td>2</td>
+<td>3</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>2</td>
+<td>Clothing</td>
+<td>4</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+<td>3</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>3</td>
+<td>Grocery</td>
+<td>3</td>
+<td>3</td>
+<td>5</td>
+<td>1</td>
+<td>4</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">3 rows × 7 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>BREAKDOWN OF SOLUTION</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Step 1 : Filter for columns that start with <code>Value</code> and prefix with the <code>f</code> symbol</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">value_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">names</span> <span class="k">if</span> <span class="s2">"Value"</span> <span class="ow">in</span> <span class="n">name</span><span class="p">]</span>
+<span class="n">value_columns</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[FExpr&lt;f['Value1']&gt;,
+ FExpr&lt;f['Value2']&gt;,
+ FExpr&lt;f['Value3']&gt;,
+ FExpr&lt;f['Value4']&gt;]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Step 2 : Create an <code>f-expression</code> of the difference between the row maximum and row minimum of <code>value_columns</code>. Note that there is no execution at this point; the execution of a <code>f-expression</code> only occurs within the brackets of a datatable frame.</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">max_min_difference</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">rowmax</span><span class="p">(</span><span class="n">value_columns</span><span class="p">)</span> <span class="o">-</span> <span class="n">dt</span><span class="o">.</span><span class="n">rowmin</span><span class="p">(</span><span class="n">value_columns</span><span class="p">)</span>
+<span class="n">max_min_difference</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>FExpr&lt;(?) - (?)&gt;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Step 3: Apply <code>max_min_difference</code> to the datatable frame to get the results</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[:,</span> <span class="n">update</span><span class="p">(</span><span class="n">difference</span> <span class="o">=</span> <span class="n">max_min_difference</span><span class="p">)]</span>
+<span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>Ind</th>
+<th>Department</th>
+<th>Value1</th>
+<th>Value2</th>
+<th>Value3</th>
+<th>Value4</th>
+<th>difference</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="int" title="int32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+<td class="int" title="int32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>1</td>
+<td>Electronics</td>
+<td>5</td>
+<td>4</td>
+<td>3</td>
+<td>2</td>
+<td>3</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>2</td>
+<td>Clothing</td>
+<td>4</td>
+<td>3</td>
+<td>2</td>
+<td>1</td>
+<td>3</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>3</td>
+<td>Grocery</td>
+<td>3</td>
+<td>3</td>
+<td>5</td>
+<td>1</td>
+<td>4</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">3 rows × 7 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Resources:</p>
+<ul>
+<li>
+<p><a href="https://datatable.readthedocs.io/en/latest/api/dt/update.html#">update</a></p>
+</li>
+<li>
+<p><a href="https://datatable.readthedocs.io/en/latest/api/dt/rowmax.html">rowmax</a></p>
+</li>
+<li>
+<p><a href="https://datatable.readthedocs.io/en/latest/api/dt/rowmin.html">rowmin</a></p>
+</li>
+<li>
+<p><a href="https://datatable.readthedocs.io/en/latest/manual/row_functions.html">Documentation on row functions</a></p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="samukweku/data-wrangling-blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/data-wrangling-blog/python/pydatatable/2021/01/07/Data-Wrangling-with-Python-Datatable-Row-wise-Transformations.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/data-wrangling-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/data-wrangling-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Data Wrangling Blog.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/samukweku" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/samukweku" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
