@@ -183,7 +183,7 @@ window.onload = wrap_img;
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>This article highlights various ways to select columns in python datatable. The examples used here are based off the excellent <a href="https://suzan.rbind.io/2018/01/dplyr-tutorial-1/">article</a> by <a href="https://twitter.com/SuzanBaert">Susan Baert</a>.</p>
-<p>The data file can be accessed <a href="">here</a></p>
+<p>The data file can be accessed <a href="https://github.com/samukweku/data-wrangling-blog/raw/master/_notebooks/Data_files/msleep.txt">here</a></p>
 
 </div>
 </div>
@@ -216,7 +216,7 @@ window.onload = wrap_img;
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">datatable</span> <span class="kn">import</span> <span class="n">dt</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">ltype</span><span class="p">,</span> <span class="n">stype</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
-<span class="n">file_path</span> <span class="o">=</span> <span class="s2">"/home/sam/github_cloned_projects/data-wrangling-blog/_notebooks/Data_files/msleep.txt"</span>
+<span class="n">file_path</span> <span class="o">=</span> <span class="s2">"https://github.com/samukweku/data-wrangling-blog/raw/master/_notebooks/Data_files/msleep.txt"</span>
 <span class="n">DT</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">fread</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
 <span class="n">DT</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
@@ -382,7 +382,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You can select columns by name or position in the <code>i</code> section:</p>
+<p>You can select columns by name or position in the <code>j</code> section:</p>
 
 </div>
 </div>
@@ -465,7 +465,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span> <span class="c1"># Python is 0-based</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -1049,6 +1049,14 @@ window.onload = wrap_img;
 </div>
     
 
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Multiple chunk selection is possible:</p>
+
+</div>
+</div>
+</div>
     
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -2709,8 +2717,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">matching_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">frame</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">DT</span> <span class="k">if</span> <span class="n">frame</span><span class="o">.</span><span class="n">ltypes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ltype</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">ltype</span><span class="o">.</span><span class="n">int</span><span class="p">)]</span>
-<span class="n">DT</span><span class="p">[:,</span> <span class="n">matching_frames</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="n">matching_frames</span><span class="p">]</span>
 </pre></div>
 
     </div>
@@ -2955,7 +2962,8 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns_to_select</span> <span class="o">=</span> <span class="p">[</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># returns a list of booleans</span>
+<span class="n">columns_to_select</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">ltype</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ltype</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">ltype</span><span class="o">.</span><span class="n">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">DT</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">ltype</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">DT</span><span class="o">.</span><span class="n">names</span><span class="p">,</span> <span class="n">DT</span><span class="o">.</span><span class="n">ltypes</span><span class="p">)</span>
 <span class="p">]</span>
@@ -3041,6 +3049,104 @@ window.onload = wrap_img;
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The code above preselects the columns before passing it to datatable. Note the use of <code>[0,0]</code> to return a scalar value; this allows us to compare with the scalar value <code>10</code>.</p>
+<p>Alternatively, in the list comprehension, instead of a list of booleans, you could return the column names:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns_to_select</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">name</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">ltype</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">DT</span><span class="o">.</span><span class="n">names</span><span class="p">,</span> <span class="n">DT</span><span class="o">.</span><span class="n">ltypes</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ltype</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ltype</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">ltype</span><span class="o">.</span><span class="n">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">DT</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10</span>
+<span class="p">]</span>
+<span class="n">DT</span><span class="p">[:,</span> <span class="n">columns_to_select</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sleep_total</th>
+<th>awake</th>
+<th>bodywt</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>12.1</td>
+<td>11.9</td>
+<td>50</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>17</td>
+<td>7</td>
+<td>0.48</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>14.4</td>
+<td>9.6</td>
+<td>1.35</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>14.9</td>
+<td>9.1</td>
+<td>0.019</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>4</td>
+<td>20</td>
+<td>600</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 3 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <p>You could also iterate through the frame in a list comprehension and check each column, before recombining with <a href="https://datatable.readthedocs.io/en/latest/api/dt/cbind.html">cbind</a>:</p>
 
 </div>
@@ -3053,7 +3159,9 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">matching_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">frame</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">DT</span> <span class="k">if</span> <span class="n">frame</span><span class="o">.</span><span class="n">ltypes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ltype</span><span class="o">.</span><span class="n">int</span><span class="p">,</span> <span class="n">ltype</span><span class="o">.</span><span class="n">real</span><span class="p">)</span> <span class="ow">and</span> <span class="n">frame</span><span class="o">.</span><span class="n">mean</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">matching_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">frame</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">DT</span> 
+                    <span class="k">if</span> <span class="n">frame</span><span class="o">.</span><span class="n">ltypes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ltype</span><span class="o">.</span><span class="n">int</span><span class="p">,</span> <span class="n">ltype</span><span class="o">.</span><span class="n">real</span><span class="p">)</span> 
+                    <span class="ow">and</span> <span class="n">frame</span><span class="o">.</span><span class="n">mean</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">]</span>
 <span class="n">dt</span><span class="o">.</span><span class="n">cbind</span><span class="p">(</span><span class="n">matching_frames</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
@@ -3147,7 +3255,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="n">matching_frames</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span> <span class="c1"># usually faster than other methods</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="n">matching_frames</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -3422,6 +3530,14 @@ window.onload = wrap_img;
 </div>
     
 
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Or pass <code>matching_frames to the</code>j<code>section in</code>DT`:</p>
+
+</div>
+</div>
+</div>
     
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -4134,7 +4250,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>You can easily use python's string functions to reformat column names.</p>
+<p>You can use python's string functions to reformat column names.</p>
 <p>Let's convert all column names to uppercase:</p>
 
 </div>
