@@ -1,0 +1,4339 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Data Wrangling with Python Datatable - Selecting Columns | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Data Wrangling with Python Datatable - Selecting Columns" />
+<meta name="author" content="Samuel Oranyeli" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Various Ways to select Columns" />
+<meta property="og:description" content="Various Ways to select Columns" />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/02/09/Data-Wrangling-with-Python-Datatable-Selecting-Columns.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/02/09/Data-Wrangling-with-Python-Datatable-Selecting-Columns.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:image" content="https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-02-09T00:00:00-06:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Samuel Oranyeli"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/02/09/Data-Wrangling-with-Python-Datatable-Selecting-Columns.html"},"description":"Various Ways to select Columns","@type":"BlogPosting","url":"https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/02/09/Data-Wrangling-with-Python-Datatable-Selecting-Columns.html","headline":"Data Wrangling with Python Datatable - Selecting Columns","dateModified":"2021-02-09T00:00:00-06:00","datePublished":"2021-02-09T00:00:00-06:00","image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/data-wrangling-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" /><link rel="shortcut icon" type="image/x-icon" href="/data-wrangling-blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Data Wrangling with Python Datatable - Selecting Columns | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Data Wrangling with Python Datatable - Selecting Columns" />
+<meta name="author" content="Samuel Oranyeli" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Various Ways to select Columns" />
+<meta property="og:description" content="Various Ways to select Columns" />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/02/09/Data-Wrangling-with-Python-Datatable-Selecting-Columns.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/02/09/Data-Wrangling-with-Python-Datatable-Selecting-Columns.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:image" content="https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-02-09T00:00:00-06:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Samuel Oranyeli"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/02/09/Data-Wrangling-with-Python-Datatable-Selecting-Columns.html"},"description":"Various Ways to select Columns","@type":"BlogPosting","url":"https://samukweku.github.io/data-wrangling-blog/python/pydatatable/2021/02/09/Data-Wrangling-with-Python-Datatable-Selecting-Columns.html","headline":"Data Wrangling with Python Datatable - Selecting Columns","dateModified":"2021-02-09T00:00:00-06:00","datePublished":"2021-02-09T00:00:00-06:00","image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+<script type="text/javascript">
+require.config({
+  paths: {
+    jquery: 'https://code.jquery.com/jquery-3.5.0.min',
+    plotly: 'https://cdn.plot.ly/plotly-latest.min'
+  },
+
+  shim: {
+    plotly: {
+      deps: ['jquery'],
+      exports: 'plotly'
+    }
+  }
+});
+</script>
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/data-wrangling-blog/">Samuel Oranyeli</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/data-wrangling-blog/about/">About Me</a><a class="page-link" href="/data-wrangling-blog/search/">Search</a><a class="page-link" href="/data-wrangling-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Data Wrangling with Python Datatable - Selecting Columns</h1><p class="page-description">Various Ways to select Columns</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-02-09T00:00:00-06:00" itemprop="datePublished">
+        Feb 9, 2021
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Samuel Oranyeli</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      7 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#python">python</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#pydatatable">pydatatable</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/samukweku/data-wrangling-blog/tree/master/_notebooks/2021-02-09-Data Wrangling with Python Datatable - Selecting Columns.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/data-wrangling-blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          
+          
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#Selecting-Columns">Selecting Columns </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#The-Basics">The Basics </a></li>
+<li class="toc-entry toc-h3"><a href="#Selecting-Columns-based-on-Partial-Names">Selecting Columns based on Partial Names </a></li>
+<li class="toc-entry toc-h3"><a href="#Selecting-Columns-based-on-Regex">Selecting Columns based on Regex </a></li>
+<li class="toc-entry toc-h3"><a href="#Selecting-columns-by-their-data-type">Selecting columns by their data type </a></li>
+<li class="toc-entry toc-h3"><a href="#Selecting-columns-by-logical-expressions">Selecting columns by logical expressions </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#Reordering-Columns">Reordering Columns </a></li>
+<li class="toc-entry toc-h2"><a href="#Column-Names">Column Names </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#Renaming-Columns">Renaming Columns </a></li>
+<li class="toc-entry toc-h3"><a href="#Reformatting-all-Column-Names">Reformatting all Column Names </a></li>
+</ul>
+</li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021-02-09-Data Wrangling with Python Datatable - Selecting Columns.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This article highlights various ways to select columns in python datatable. The examples used here are based off the excellent <a href="https://suzan.rbind.io/2018/01/dplyr-tutorial-1/">article</a> by <a href="https://twitter.com/SuzanBaert">Susan Baert</a>.</p>
+<p>The data file can be accessed <a href="">here</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Selecting-Columns">
+<a class="anchor" href="#Selecting-Columns" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Selecting Columns</strong><a class="anchor-link" href="#Selecting-Columns"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="The-Basics">
+<a class="anchor" href="#The-Basics" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Basics<a class="anchor-link" href="#The-Basics"> </a>
+</h3>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">datatable</span> <span class="kn">import</span> <span class="n">dt</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">ltype</span><span class="p">,</span> <span class="n">stype</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="n">file_path</span> <span class="o">=</span> <span class="s2">"/home/sam/github_cloned_projects/data-wrangling-blog/_notebooks/Data_files/msleep.txt"</span>
+<span class="n">DT</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">fread</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+<span class="n">DT</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea ">
+<style type="text/css">
+.datatable table.frame { margin-bottom: 0; }
+.datatable table.frame thead { border-bottom: none; }
+.datatable table.frame tr.coltypes td {  color: #FFFFFF;  line-height: 6px;  padding: 0 0.5em;}
+.datatable .bool    { background: #DDDD99; }
+.datatable .object  { background: #565656; }
+.datatable .int     { background: #5D9E5D; }
+.datatable .float   { background: #4040CC; }
+.datatable .str     { background: #CC4040; }
+.datatable .row_index {  background: var(--jp-border-color3);  border-right: 1px solid var(--jp-border-color0);  color: var(--jp-ui-font-color3);  font-size: 9px;}
+.datatable .frame tr.coltypes .row_index {  background: var(--jp-border-color0);}
+.datatable th:nth-child(2) { padding-left: 12px; }
+.datatable .hellipsis {  color: var(--jp-cell-editor-border-color);}
+.datatable .vellipsis {  background: var(--jp-layout-color0);  color: var(--jp-cell-editor-border-color);}
+.datatable .na {  color: var(--jp-cell-editor-border-color);  font-size: 80%;}
+.datatable .footer { font-size: 9px; }
+.datatable .frame_dimensions {  background: var(--jp-border-color3);  border-top: 1px solid var(--jp-border-color0);  color: var(--jp-ui-font-color3);  display: inline-block;  opacity: 0.6;  padding: 1px 10px 1px 5px;}
+</style>
+
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>name</th>
+<th>genus</th>
+<th>vore</th>
+<th>order</th>
+<th>conservation</th>
+<th>sleep_total</th>
+<th>sleep_rem</th>
+<th>sleep_cycle</th>
+<th>awake</th>
+<th>brainwt</th>
+<th>bodywt</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Cheetah</td>
+<td>Acinonyx</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td>lc</td>
+<td>12.1</td>
+<td><span class="na">NA</span></td>
+<td><span class="na">NA</span></td>
+<td>11.9</td>
+<td><span class="na">NA</span></td>
+<td>50</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Owl monkey</td>
+<td>Aotus</td>
+<td>omni</td>
+<td>Primates</td>
+<td><span class="na">NA</span></td>
+<td>17</td>
+<td>1.8</td>
+<td><span class="na">NA</span></td>
+<td>7</td>
+<td>0.0155</td>
+<td>0.48</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Mountain beaver</td>
+<td>Aplodontia</td>
+<td>herbi</td>
+<td>Rodentia</td>
+<td>nt</td>
+<td>14.4</td>
+<td>2.4</td>
+<td><span class="na">NA</span></td>
+<td>9.6</td>
+<td><span class="na">NA</span></td>
+<td>1.35</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Greater short-tailed shrew</td>
+<td>Blarina</td>
+<td>omni</td>
+<td>Soricomorpha</td>
+<td>lc</td>
+<td>14.9</td>
+<td>2.3</td>
+<td>0.133333</td>
+<td>9.1</td>
+<td>0.00029</td>
+<td>0.019</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Cow</td>
+<td>Bos</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+<td>domesticated</td>
+<td>4</td>
+<td>0.7</td>
+<td>0.666667</td>
+<td>20</td>
+<td>0.423</td>
+<td>600</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 11 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can select columns by name or position in the <code>i</code> section:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="s1">'genus'</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>genus</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Acinonyx</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Aotus</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Aplodontia</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Blarina</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Bos</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 1 column</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span> <span class="c1"># Python is 0-based</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>genus</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Acinonyx</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Aotus</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Aplodontia</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Blarina</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Bos</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>Bradypus</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>Callorhinus</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>Calomys</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>Canis</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>Capreolus</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">10 rows × 1 column</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>genus</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Acinonyx</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Aotus</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Aplodontia</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Blarina</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Bos</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>Bradypus</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>Callorhinus</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>Calomys</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>Canis</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>Capreolus</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">10 rows × 1 column</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For the rest of this article, I will be focusing on column selection by name.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can select columns by passing a list/tuple of the column names:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns_to_select</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"genus"</span><span class="p">,</span> <span class="s2">"sleep_total"</span><span class="p">,</span> <span class="s2">"awake"</span><span class="p">]</span>
+<span class="n">DT</span><span class="p">[:,</span> <span class="n">columns_to_select</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>name</th>
+<th>genus</th>
+<th>sleep_total</th>
+<th>awake</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Cheetah</td>
+<td>Acinonyx</td>
+<td>12.1</td>
+<td>11.9</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Owl monkey</td>
+<td>Aotus</td>
+<td>17</td>
+<td>7</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Mountain beaver</td>
+<td>Aplodontia</td>
+<td>14.4</td>
+<td>9.6</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Greater short-tailed shrew</td>
+<td>Blarina</td>
+<td>14.9</td>
+<td>9.1</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Cow</td>
+<td>Bos</td>
+<td>4</td>
+<td>20</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 4 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can pass a list/tuple of booleans:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns_to_select</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">False</span><span class="p">]</span>
+<span class="n">DT</span><span class="p">[:,</span> <span class="n">columns_to_select</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>name</th>
+<th>genus</th>
+<th>sleep_total</th>
+<th>sleep_cycle</th>
+<th>awake</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Cheetah</td>
+<td>Acinonyx</td>
+<td>12.1</td>
+<td><span class="na">NA</span></td>
+<td>11.9</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Owl monkey</td>
+<td>Aotus</td>
+<td>17</td>
+<td><span class="na">NA</span></td>
+<td>7</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Mountain beaver</td>
+<td>Aplodontia</td>
+<td>14.4</td>
+<td><span class="na">NA</span></td>
+<td>9.6</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Greater short-tailed shrew</td>
+<td>Blarina</td>
+<td>14.9</td>
+<td>0.133333</td>
+<td>9.1</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Cow</td>
+<td>Bos</td>
+<td>4</td>
+<td>0.666667</td>
+<td>20</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can select chunks of columns using python's <a href="https://docs.python.org/3/library/functions.html#slice">slice</a> syntax or via the <code>start:end</code> shortcut:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="nb">slice</span><span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"order"</span><span class="p">)]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>name</th>
+<th>genus</th>
+<th>vore</th>
+<th>order</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Cheetah</td>
+<td>Acinonyx</td>
+<td>carni</td>
+<td>Carnivora</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Owl monkey</td>
+<td>Aotus</td>
+<td>omni</td>
+<td>Primates</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Mountain beaver</td>
+<td>Aplodontia</td>
+<td>herbi</td>
+<td>Rodentia</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Greater short-tailed shrew</td>
+<td>Blarina</td>
+<td>omni</td>
+<td>Soricomorpha</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Cow</td>
+<td>Bos</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 4 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="s2">"name"</span> <span class="p">:</span> <span class="s2">"order"</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>name</th>
+<th>genus</th>
+<th>vore</th>
+<th>order</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Cheetah</td>
+<td>Acinonyx</td>
+<td>carni</td>
+<td>Carnivora</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Owl monkey</td>
+<td>Aotus</td>
+<td>omni</td>
+<td>Primates</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Mountain beaver</td>
+<td>Aplodontia</td>
+<td>herbi</td>
+<td>Rodentia</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Greater short-tailed shrew</td>
+<td>Blarina</td>
+<td>omni</td>
+<td>Soricomorpha</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Cow</td>
+<td>Bos</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 4 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns_to_select</span> <span class="o">=</span> <span class="p">[</span><span class="nb">slice</span><span class="p">(</span><span class="s2">"name"</span><span class="p">,</span> <span class="s2">"order"</span><span class="p">),</span> <span class="nb">slice</span><span class="p">(</span><span class="s2">"sleep_total"</span><span class="p">,</span> <span class="s2">"sleep_cycle"</span><span class="p">)]</span>
+<span class="n">DT</span><span class="p">[:,</span> <span class="n">columns_to_select</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>name</th>
+<th>genus</th>
+<th>vore</th>
+<th>order</th>
+<th>sleep_total</th>
+<th>sleep_rem</th>
+<th>sleep_cycle</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Cheetah</td>
+<td>Acinonyx</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td>12.1</td>
+<td><span class="na">NA</span></td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Owl monkey</td>
+<td>Aotus</td>
+<td>omni</td>
+<td>Primates</td>
+<td>17</td>
+<td>1.8</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Mountain beaver</td>
+<td>Aplodontia</td>
+<td>herbi</td>
+<td>Rodentia</td>
+<td>14.4</td>
+<td>2.4</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Greater short-tailed shrew</td>
+<td>Blarina</td>
+<td>omni</td>
+<td>Soricomorpha</td>
+<td>14.9</td>
+<td>2.3</td>
+<td>0.133333</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Cow</td>
+<td>Bos</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+<td>4</td>
+<td>0.7</td>
+<td>0.666667</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 7 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For the shortcut notation, for multiple selections, it has to be prefixed with datatable's <a href="https://datatable.readthedocs.io/en/latest/manual/f-expressions.html">f</a> symbol:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns_to_select</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="s2">"name"</span> <span class="p">:</span> <span class="s2">"order"</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="s2">"sleep_total"</span> <span class="p">:</span> <span class="s2">"sleep_cycle"</span><span class="p">]]</span>
+<span class="n">DT</span><span class="p">[:,</span> <span class="n">columns_to_select</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>name</th>
+<th>genus</th>
+<th>vore</th>
+<th>order</th>
+<th>sleep_total</th>
+<th>sleep_rem</th>
+<th>sleep_cycle</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Cheetah</td>
+<td>Acinonyx</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td>12.1</td>
+<td><span class="na">NA</span></td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Owl monkey</td>
+<td>Aotus</td>
+<td>omni</td>
+<td>Primates</td>
+<td>17</td>
+<td>1.8</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Mountain beaver</td>
+<td>Aplodontia</td>
+<td>herbi</td>
+<td>Rodentia</td>
+<td>14.4</td>
+<td>2.4</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Greater short-tailed shrew</td>
+<td>Blarina</td>
+<td>omni</td>
+<td>Soricomorpha</td>
+<td>14.9</td>
+<td>2.3</td>
+<td>0.133333</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Cow</td>
+<td>Bos</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+<td>4</td>
+<td>0.7</td>
+<td>0.666667</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 7 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To deselect/drop columns you can use the <a href="https://datatable.readthedocs.io/en/latest/manual/f-expressions.html#modifying-a-columnset">remove</a> function:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns_to_remove</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="s2">"sleep_total"</span><span class="p">:</span><span class="s2">"awake"</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="s2">"conservation"</span><span class="p">]]</span>
+<span class="n">DT</span><span class="p">[:,</span> <span class="n">f</span><span class="p">[:]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">columns_to_remove</span><span class="p">)]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>name</th>
+<th>genus</th>
+<th>vore</th>
+<th>order</th>
+<th>brainwt</th>
+<th>bodywt</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Cheetah</td>
+<td>Acinonyx</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td><span class="na">NA</span></td>
+<td>50</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Owl monkey</td>
+<td>Aotus</td>
+<td>omni</td>
+<td>Primates</td>
+<td>0.0155</td>
+<td>0.48</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Mountain beaver</td>
+<td>Aplodontia</td>
+<td>herbi</td>
+<td>Rodentia</td>
+<td><span class="na">NA</span></td>
+<td>1.35</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Greater short-tailed shrew</td>
+<td>Blarina</td>
+<td>omni</td>
+<td>Soricomorpha</td>
+<td>0.00029</td>
+<td>0.019</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Cow</td>
+<td>Bos</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+<td>0.423</td>
+<td>600</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 6 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can deselect a whole chunk, and then re-add a column again; this combines the <a href="https://datatable.readthedocs.io/en/latest/manual/f-expressions.html#modifying-a-columnset">remove</a> and <a href="https://datatable.readthedocs.io/en/latest/manual/f-expressions.html#modifying-a-columnset">extend</a> functions:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="n">f</span><span class="p">[:]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s2">"name"</span> <span class="p">:</span> <span class="s2">"awake"</span><span class="p">])</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s2">"conservation"</span><span class="p">])]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>brainwt</th>
+<th>bodywt</th>
+<th>conservation</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td><span class="na">NA</span></td>
+<td>50</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>0.0155</td>
+<td>0.48</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td><span class="na">NA</span></td>
+<td>1.35</td>
+<td>nt</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>0.00029</td>
+<td>0.019</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>0.423</td>
+<td>600</td>
+<td>domesticated</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 3 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Selecting-Columns-based-on-Partial-Names">
+<a class="anchor" href="#Selecting-Columns-based-on-Partial-Names" aria-hidden="true"><span class="octicon octicon-link"></span></a>Selecting Columns based on Partial Names<a class="anchor-link" href="#Selecting-Columns-based-on-Partial-Names"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can use python's string functions to filter for columns with partial matching:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns_to_select</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"sleep"</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">DT</span><span class="o">.</span><span class="n">names</span><span class="p">]</span>
+<span class="n">DT</span><span class="p">[:,</span> <span class="n">columns_to_select</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sleep_total</th>
+<th>sleep_rem</th>
+<th>sleep_cycle</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>12.1</td>
+<td><span class="na">NA</span></td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>17</td>
+<td>1.8</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>14.4</td>
+<td>2.4</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>14.9</td>
+<td>2.3</td>
+<td>0.133333</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>4</td>
+<td>0.7</td>
+<td>0.666667</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 3 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns_to_select</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"eep"</span> <span class="ow">in</span> <span class="n">name</span> <span class="ow">or</span> <span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"wt"</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">DT</span><span class="o">.</span><span class="n">names</span><span class="p">]</span>
+<span class="n">DT</span><span class="p">[:,</span> <span class="n">columns_to_select</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sleep_total</th>
+<th>sleep_rem</th>
+<th>sleep_cycle</th>
+<th>brainwt</th>
+<th>bodywt</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>12.1</td>
+<td><span class="na">NA</span></td>
+<td><span class="na">NA</span></td>
+<td><span class="na">NA</span></td>
+<td>50</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>17</td>
+<td>1.8</td>
+<td><span class="na">NA</span></td>
+<td>0.0155</td>
+<td>0.48</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>14.4</td>
+<td>2.4</td>
+<td><span class="na">NA</span></td>
+<td><span class="na">NA</span></td>
+<td>1.35</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>14.9</td>
+<td>2.3</td>
+<td>0.133333</td>
+<td>0.00029</td>
+<td>0.019</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>4</td>
+<td>0.7</td>
+<td>0.666667</td>
+<td>0.423</td>
+<td>600</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Selecting-Columns-based-on-Regex">
+<a class="anchor" href="#Selecting-Columns-based-on-Regex" aria-hidden="true"><span class="octicon octicon-link"></span></a>Selecting Columns based on Regex<a class="anchor-link" href="#Selecting-Columns-based-on-Regex"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Python's <a href="https://docs.python.org/3/library/re.html">re</a> module can be used to select columns based on a regular expression:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># this returns a list of booleans</span>
+<span class="n">columns_to_select</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span> <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">r</span><span class="s2">"o.+er"</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="k">else</span> <span class="kc">False</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">DT</span><span class="o">.</span><span class="n">names</span><span class="p">]</span>
+<span class="n">DT</span><span class="p">[:,</span> <span class="n">columns_to_select</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>order</th>
+<th>conservation</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Carnivora</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Primates</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Rodentia</td>
+<td>nt</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Soricomorpha</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Artiodactyla</td>
+<td>domesticated</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 2 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Selecting-columns-by-their-data-type">
+<a class="anchor" href="#Selecting-columns-by-their-data-type" aria-hidden="true"><span class="octicon octicon-link"></span></a>Selecting columns by their data type<a class="anchor-link" href="#Selecting-columns-by-their-data-type"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can pass a data type in the <code>j</code> section:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="nb">str</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>name</th>
+<th>genus</th>
+<th>vore</th>
+<th>order</th>
+<th>conservation</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Cheetah</td>
+<td>Acinonyx</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Owl monkey</td>
+<td>Aotus</td>
+<td>omni</td>
+<td>Primates</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Mountain beaver</td>
+<td>Aplodontia</td>
+<td>herbi</td>
+<td>Rodentia</td>
+<td>nt</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Greater short-tailed shrew</td>
+<td>Blarina</td>
+<td>omni</td>
+<td>Soricomorpha</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Cow</td>
+<td>Bos</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+<td>domesticated</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can pass a list of data types:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sleep_total</th>
+<th>sleep_rem</th>
+<th>sleep_cycle</th>
+<th>awake</th>
+<th>brainwt</th>
+<th>bodywt</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>12.1</td>
+<td><span class="na">NA</span></td>
+<td><span class="na">NA</span></td>
+<td>11.9</td>
+<td><span class="na">NA</span></td>
+<td>50</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>17</td>
+<td>1.8</td>
+<td><span class="na">NA</span></td>
+<td>7</td>
+<td>0.0155</td>
+<td>0.48</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>14.4</td>
+<td>2.4</td>
+<td><span class="na">NA</span></td>
+<td>9.6</td>
+<td><span class="na">NA</span></td>
+<td>1.35</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>14.9</td>
+<td>2.3</td>
+<td>0.133333</td>
+<td>9.1</td>
+<td>0.00029</td>
+<td>0.019</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>4</td>
+<td>0.7</td>
+<td>0.666667</td>
+<td>20</td>
+<td>0.423</td>
+<td>600</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 6 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can also pass datatable's <a href="https://datatable.readthedocs.io/en/latest/api/stype.html#">stype</a> or <a href="https://datatable.readthedocs.io/en/latest/api/ltype.html#">ltype</a> data types:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="n">ltype</span><span class="o">.</span><span class="n">str</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>name</th>
+<th>genus</th>
+<th>vore</th>
+<th>order</th>
+<th>conservation</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Cheetah</td>
+<td>Acinonyx</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Owl monkey</td>
+<td>Aotus</td>
+<td>omni</td>
+<td>Primates</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Mountain beaver</td>
+<td>Aplodontia</td>
+<td>herbi</td>
+<td>Rodentia</td>
+<td>nt</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Greater short-tailed shrew</td>
+<td>Blarina</td>
+<td>omni</td>
+<td>Soricomorpha</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Cow</td>
+<td>Bos</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+<td>domesticated</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="n">stype</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sleep_total</th>
+<th>sleep_rem</th>
+<th>sleep_cycle</th>
+<th>awake</th>
+<th>brainwt</th>
+<th>bodywt</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>12.1</td>
+<td><span class="na">NA</span></td>
+<td><span class="na">NA</span></td>
+<td>11.9</td>
+<td><span class="na">NA</span></td>
+<td>50</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>17</td>
+<td>1.8</td>
+<td><span class="na">NA</span></td>
+<td>7</td>
+<td>0.0155</td>
+<td>0.48</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>14.4</td>
+<td>2.4</td>
+<td><span class="na">NA</span></td>
+<td>9.6</td>
+<td><span class="na">NA</span></td>
+<td>1.35</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>14.9</td>
+<td>2.3</td>
+<td>0.133333</td>
+<td>9.1</td>
+<td>0.00029</td>
+<td>0.019</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>4</td>
+<td>0.7</td>
+<td>0.666667</td>
+<td>20</td>
+<td>0.423</td>
+<td>600</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 6 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can remove columns based on their data type:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns_to_remove</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span>
+<span class="n">DT</span><span class="p">[:,</span> <span class="n">f</span><span class="p">[:]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">columns_to_remove</span><span class="p">)]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>name</th>
+<th>genus</th>
+<th>vore</th>
+<th>order</th>
+<th>conservation</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Cheetah</td>
+<td>Acinonyx</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Owl monkey</td>
+<td>Aotus</td>
+<td>omni</td>
+<td>Primates</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Mountain beaver</td>
+<td>Aplodontia</td>
+<td>herbi</td>
+<td>Rodentia</td>
+<td>nt</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Greater short-tailed shrew</td>
+<td>Blarina</td>
+<td>omni</td>
+<td>Soricomorpha</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Cow</td>
+<td>Bos</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+<td>domesticated</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>An alternative is to preselect the columns you intend to keep:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># creates a list of booleans</span>
+<span class="n">columns_to_select</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">dtype</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ltype</span><span class="o">.</span><span class="n">int</span><span class="p">,</span> <span class="n">ltype</span><span class="o">.</span><span class="n">real</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">DT</span><span class="o">.</span><span class="n">names</span><span class="p">,</span> <span class="n">DT</span><span class="o">.</span><span class="n">ltypes</span><span class="p">)</span> 
+<span class="p">]</span>
+
+<span class="n">DT</span><span class="p">[:,</span> <span class="n">columns_to_select</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>name</th>
+<th>genus</th>
+<th>vore</th>
+<th>order</th>
+<th>conservation</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Cheetah</td>
+<td>Acinonyx</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Owl monkey</td>
+<td>Aotus</td>
+<td>omni</td>
+<td>Primates</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Mountain beaver</td>
+<td>Aplodontia</td>
+<td>herbi</td>
+<td>Rodentia</td>
+<td>nt</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Greater short-tailed shrew</td>
+<td>Blarina</td>
+<td>omni</td>
+<td>Soricomorpha</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Cow</td>
+<td>Bos</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+<td>domesticated</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>Three-toed sloth</td>
+<td>Bradypus</td>
+<td>herbi</td>
+<td>Pilosa</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>Northern fur seal</td>
+<td>Callorhinus</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td>vu</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>Vesper mouse</td>
+<td>Calomys</td>
+<td><span class="na">NA</span></td>
+<td>Rodentia</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>Dog</td>
+<td>Canis</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td>domesticated</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>Roe deer</td>
+<td>Capreolus</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">10</td>
+<td>Goat</td>
+<td>Capri</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">11</td>
+<td>Guinea pig</td>
+<td>Cavis</td>
+<td>herbi</td>
+<td>Rodentia</td>
+<td>domesticated</td>
+</tr>
+    <tr>
+<td class="row_index">12</td>
+<td>Grivet</td>
+<td>Cercopithecus</td>
+<td>omni</td>
+<td>Primates</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">13</td>
+<td>Chinchilla</td>
+<td>Chinchilla</td>
+<td>herbi</td>
+<td>Rodentia</td>
+<td>domesticated</td>
+</tr>
+    <tr>
+<td class="row_index">14</td>
+<td>Star-nosed mole</td>
+<td>Condylura</td>
+<td>omni</td>
+<td>Soricomorpha</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+</tr>
+    <tr>
+<td class="row_index">78</td>
+<td>Tree shrew</td>
+<td>Tupaia</td>
+<td>omni</td>
+<td>Scandentia</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">79</td>
+<td>Bottle-nosed dolphin</td>
+<td>Tursiops</td>
+<td>carni</td>
+<td>Cetacea</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">80</td>
+<td>Genet</td>
+<td>Genetta</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">81</td>
+<td>Arctic fox</td>
+<td>Vulpes</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">82</td>
+<td>Red fox</td>
+<td>Vulpes</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td><span class="na">NA</span></td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">83 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You could also iterate through the frame and check each column's type, before recombining with <a href="https://datatable.readthedocs.io/en/latest/api/dt/cbind.html">cbind</a>:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">matching_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">frame</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">DT</span> <span class="k">if</span> <span class="n">frame</span><span class="o">.</span><span class="n">ltypes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ltype</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">ltype</span><span class="o">.</span><span class="n">int</span><span class="p">)]</span>
+<span class="n">dt</span><span class="o">.</span><span class="n">cbind</span><span class="p">(</span><span class="n">matching_frames</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>name</th>
+<th>genus</th>
+<th>vore</th>
+<th>order</th>
+<th>conservation</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Cheetah</td>
+<td>Acinonyx</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Owl monkey</td>
+<td>Aotus</td>
+<td>omni</td>
+<td>Primates</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Mountain beaver</td>
+<td>Aplodontia</td>
+<td>herbi</td>
+<td>Rodentia</td>
+<td>nt</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Greater short-tailed shrew</td>
+<td>Blarina</td>
+<td>omni</td>
+<td>Soricomorpha</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Cow</td>
+<td>Bos</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+<td>domesticated</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Each column in a frame is treated as a frame, allowing for the list comprehension above.</p>
+<p>You could also pass the <code>matching frames</code> to the <code>j</code> section of <code>DT</code>:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">matching_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">frame</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">DT</span> <span class="k">if</span> <span class="n">frame</span><span class="o">.</span><span class="n">ltypes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ltype</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">ltype</span><span class="o">.</span><span class="n">int</span><span class="p">)]</span>
+<span class="n">DT</span><span class="p">[:,</span> <span class="n">matching_frames</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>name</th>
+<th>genus</th>
+<th>vore</th>
+<th>order</th>
+<th>conservation</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Cheetah</td>
+<td>Acinonyx</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Owl monkey</td>
+<td>Aotus</td>
+<td>omni</td>
+<td>Primates</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Mountain beaver</td>
+<td>Aplodontia</td>
+<td>herbi</td>
+<td>Rodentia</td>
+<td>nt</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Greater short-tailed shrew</td>
+<td>Blarina</td>
+<td>omni</td>
+<td>Soricomorpha</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Cow</td>
+<td>Bos</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+<td>domesticated</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>Three-toed sloth</td>
+<td>Bradypus</td>
+<td>herbi</td>
+<td>Pilosa</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>Northern fur seal</td>
+<td>Callorhinus</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td>vu</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>Vesper mouse</td>
+<td>Calomys</td>
+<td><span class="na">NA</span></td>
+<td>Rodentia</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>Dog</td>
+<td>Canis</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td>domesticated</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>Roe deer</td>
+<td>Capreolus</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">10</td>
+<td>Goat</td>
+<td>Capri</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">11</td>
+<td>Guinea pig</td>
+<td>Cavis</td>
+<td>herbi</td>
+<td>Rodentia</td>
+<td>domesticated</td>
+</tr>
+    <tr>
+<td class="row_index">12</td>
+<td>Grivet</td>
+<td>Cercopithecus</td>
+<td>omni</td>
+<td>Primates</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">13</td>
+<td>Chinchilla</td>
+<td>Chinchilla</td>
+<td>herbi</td>
+<td>Rodentia</td>
+<td>domesticated</td>
+</tr>
+    <tr>
+<td class="row_index">14</td>
+<td>Star-nosed mole</td>
+<td>Condylura</td>
+<td>omni</td>
+<td>Soricomorpha</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+<td class="hellipsis">⋮</td>
+</tr>
+    <tr>
+<td class="row_index">78</td>
+<td>Tree shrew</td>
+<td>Tupaia</td>
+<td>omni</td>
+<td>Scandentia</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">79</td>
+<td>Bottle-nosed dolphin</td>
+<td>Tursiops</td>
+<td>carni</td>
+<td>Cetacea</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">80</td>
+<td>Genet</td>
+<td>Genetta</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">81</td>
+<td>Arctic fox</td>
+<td>Vulpes</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">82</td>
+<td>Red fox</td>
+<td>Vulpes</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td><span class="na">NA</span></td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">83 rows × 5 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Selecting-columns-by-logical-expressions">
+<a class="anchor" href="#Selecting-columns-by-logical-expressions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Selecting columns by logical expressions<a class="anchor-link" href="#Selecting-columns-by-logical-expressions"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The ideas expressed in the previous section allows for more nifty column selection.</p>
+<p>Say we wish to select columns that are numeric, and have a mean greater than 10:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns_to_select</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ltype</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ltype</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="n">ltype</span><span class="o">.</span><span class="n">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">DT</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">ltype</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">DT</span><span class="o">.</span><span class="n">names</span><span class="p">,</span> <span class="n">DT</span><span class="o">.</span><span class="n">ltypes</span><span class="p">)</span>
+<span class="p">]</span>
+<span class="n">DT</span><span class="p">[:,</span> <span class="n">columns_to_select</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sleep_total</th>
+<th>awake</th>
+<th>bodywt</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>12.1</td>
+<td>11.9</td>
+<td>50</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>17</td>
+<td>7</td>
+<td>0.48</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>14.4</td>
+<td>9.6</td>
+<td>1.35</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>14.9</td>
+<td>9.1</td>
+<td>0.019</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>4</td>
+<td>20</td>
+<td>600</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 3 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The code above preselects the columns before passing it to datatable. Note the use of <code>[0,0]</code> to return a scalar value; this allows us to compare with the scalar value <code>10</code>.</p>
+<p>You could also iterate through the frame in a list comprehension and check each column, before recombining with <a href="https://datatable.readthedocs.io/en/latest/api/dt/cbind.html">cbind</a>:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">matching_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">frame</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">DT</span> <span class="k">if</span> <span class="n">frame</span><span class="o">.</span><span class="n">ltypes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ltype</span><span class="o">.</span><span class="n">int</span><span class="p">,</span> <span class="n">ltype</span><span class="o">.</span><span class="n">real</span><span class="p">)</span> <span class="ow">and</span> <span class="n">frame</span><span class="o">.</span><span class="n">mean</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">]</span>
+<span class="n">dt</span><span class="o">.</span><span class="n">cbind</span><span class="p">(</span><span class="n">matching_frames</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sleep_total</th>
+<th>awake</th>
+<th>bodywt</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>12.1</td>
+<td>11.9</td>
+<td>50</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>17</td>
+<td>7</td>
+<td>0.48</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>14.4</td>
+<td>9.6</td>
+<td>1.35</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>14.9</td>
+<td>9.1</td>
+<td>0.019</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>4</td>
+<td>20</td>
+<td>600</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 3 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Instead of recombining with <a href="https://datatable.readthedocs.io/en/latest/api/dt/cbind.html">cbind</a>, you could pass the <code>matching_frames</code> to the <code>j</code> section:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="n">matching_frames</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span> <span class="c1"># usually faster than other methods</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sleep_total</th>
+<th>awake</th>
+<th>bodywt</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>12.1</td>
+<td>11.9</td>
+<td>50</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>17</td>
+<td>7</td>
+<td>0.48</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>14.4</td>
+<td>9.6</td>
+<td>1.35</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>14.9</td>
+<td>9.1</td>
+<td>0.019</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>4</td>
+<td>20</td>
+<td>600</td>
+</tr>
+    <tr>
+<td class="row_index">5</td>
+<td>14.4</td>
+<td>9.6</td>
+<td>3.85</td>
+</tr>
+    <tr>
+<td class="row_index">6</td>
+<td>8.7</td>
+<td>15.3</td>
+<td>20.49</td>
+</tr>
+    <tr>
+<td class="row_index">7</td>
+<td>7</td>
+<td>17</td>
+<td>0.045</td>
+</tr>
+    <tr>
+<td class="row_index">8</td>
+<td>10.1</td>
+<td>13.9</td>
+<td>14</td>
+</tr>
+    <tr>
+<td class="row_index">9</td>
+<td>3</td>
+<td>21</td>
+<td>14.8</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">10 rows × 3 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's look at another example, where we select only columns where the number of distinct values is less than 10:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># returns a list of booleans</span>
+<span class="n">columns_to_select</span> <span class="o">=</span> <span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">nunique</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">10</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">DT</span><span class="p">]</span>
+<span class="n">DT</span><span class="p">[:,</span> <span class="n">columns_to_select</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>vore</th>
+<th>conservation</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>carni</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>omni</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>herbi</td>
+<td>nt</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>omni</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>herbi</td>
+<td>domesticated</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 2 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">matching_frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">frame</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">DT</span> <span class="k">if</span> <span class="n">frame</span><span class="o">.</span><span class="n">nunique</span><span class="p">()[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">]</span>
+<span class="n">dt</span><span class="o">.</span><span class="n">cbind</span><span class="p">(</span><span class="n">matching_frames</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>vore</th>
+<th>conservation</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>carni</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>omni</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>herbi</td>
+<td>nt</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>omni</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>herbi</td>
+<td>domesticated</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 2 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="n">matching_frames</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>vore</th>
+<th>conservation</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>carni</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>omni</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>herbi</td>
+<td>nt</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>omni</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>herbi</td>
+<td>domesticated</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 2 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Reordering-Columns">
+<a class="anchor" href="#Reordering-Columns" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Reordering Columns</strong><a class="anchor-link" href="#Reordering-Columns"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can select columns in the order that you want:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns_to_select</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'conservation'</span><span class="p">,</span> <span class="s1">'sleep_total'</span><span class="p">,</span> <span class="s1">'name'</span><span class="p">]</span>
+<span class="n">DT</span><span class="p">[:,</span> <span class="n">columns_to_select</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>conservation</th>
+<th>sleep_total</th>
+<th>name</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>lc</td>
+<td>12.1</td>
+<td>Cheetah</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td><span class="na">NA</span></td>
+<td>17</td>
+<td>Owl monkey</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>nt</td>
+<td>14.4</td>
+<td>Mountain beaver</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>lc</td>
+<td>14.9</td>
+<td>Greater short-tailed shrew</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>domesticated</td>
+<td>4</td>
+<td>Cow</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 3 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To move some columns to the front, you could write a function to cover that:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">move_to_the_front</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">front_columns</span><span class="p">):</span>
+    <span class="n">column_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">names</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">front_columns</span><span class="p">:</span>
+        <span class="n">column_names</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">front_columns</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">column_names</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">front_columns</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="n">move_to_the_front</span><span class="p">(</span><span class="n">DT</span><span class="p">,</span> <span class="p">[</span><span class="s1">'conservation'</span><span class="p">,</span> <span class="s1">'sleep_total'</span><span class="p">])]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>conservation</th>
+<th>sleep_total</th>
+<th>name</th>
+<th>genus</th>
+<th>vore</th>
+<th>order</th>
+<th>sleep_rem</th>
+<th>sleep_cycle</th>
+<th>awake</th>
+<th>brainwt</th>
+<th>bodywt</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>lc</td>
+<td>12.1</td>
+<td>Cheetah</td>
+<td>Acinonyx</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td><span class="na">NA</span></td>
+<td><span class="na">NA</span></td>
+<td>11.9</td>
+<td><span class="na">NA</span></td>
+<td>50</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td><span class="na">NA</span></td>
+<td>17</td>
+<td>Owl monkey</td>
+<td>Aotus</td>
+<td>omni</td>
+<td>Primates</td>
+<td>1.8</td>
+<td><span class="na">NA</span></td>
+<td>7</td>
+<td>0.0155</td>
+<td>0.48</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>nt</td>
+<td>14.4</td>
+<td>Mountain beaver</td>
+<td>Aplodontia</td>
+<td>herbi</td>
+<td>Rodentia</td>
+<td>2.4</td>
+<td><span class="na">NA</span></td>
+<td>9.6</td>
+<td><span class="na">NA</span></td>
+<td>1.35</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>lc</td>
+<td>14.9</td>
+<td>Greater short-tailed shrew</td>
+<td>Blarina</td>
+<td>omni</td>
+<td>Soricomorpha</td>
+<td>2.3</td>
+<td>0.133333</td>
+<td>9.1</td>
+<td>0.00029</td>
+<td>0.019</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>domesticated</td>
+<td>4</td>
+<td>Cow</td>
+<td>Bos</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+<td>0.7</td>
+<td>0.666667</td>
+<td>20</td>
+<td>0.423</td>
+<td>600</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 11 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Column-Names">
+<a class="anchor" href="#Column-Names" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Column Names</strong><a class="anchor-link" href="#Column-Names"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Renaming-Columns">
+<a class="anchor" href="#Renaming-Columns" aria-hidden="true"><span class="octicon octicon-link"></span></a>Renaming Columns<a class="anchor-link" href="#Renaming-Columns"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Columns with new names can be created within the <code>j</code> section by passing a dictionary:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">new_names</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"animal"</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">"extinction_threat"</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">conservation</span><span class="p">}</span>
+<span class="n">DT</span><span class="p">[:,</span> <span class="n">f</span><span class="o">.</span><span class="n">sleep_total</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">new_names</span><span class="p">)]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>sleep_total</th>
+<th>animal</th>
+<th>extinction_threat</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>12.1</td>
+<td>Cheetah</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>17</td>
+<td>Owl monkey</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>14.4</td>
+<td>Mountain beaver</td>
+<td>nt</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>14.9</td>
+<td>Greater short-tailed shrew</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>4</td>
+<td>Cow</td>
+<td>domesticated</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 3 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can also rename the columns via a dictionary that maps the old column name to the new column name, and assign it to <code>DT.names</code>:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT_copy</span> <span class="o">=</span> <span class="n">DT</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">DT_copy</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"animal"</span><span class="p">,</span> <span class="s2">"conservation"</span><span class="p">:</span> <span class="s2">"extinction_threat"</span><span class="p">}</span>
+<span class="n">DT_copy</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">'animal'</span><span class="p">,</span> <span class="s1">'sleep_total'</span><span class="p">,</span> <span class="s1">'extinction_threat'</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>animal</th>
+<th>sleep_total</th>
+<th>extinction_threat</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Cheetah</td>
+<td>12.1</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Owl monkey</td>
+<td>17</td>
+<td><span class="na">NA</span></td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Mountain beaver</td>
+<td>14.4</td>
+<td>nt</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Greater short-tailed shrew</td>
+<td>14.9</td>
+<td>lc</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Cow</td>
+<td>4</td>
+<td>domesticated</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 3 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT_copy</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>animal</th>
+<th>genus</th>
+<th>vore</th>
+<th>order</th>
+<th>extinction_threat</th>
+<th>sleep_total</th>
+<th>sleep_rem</th>
+<th>sleep_cycle</th>
+<th>awake</th>
+<th>brainwt</th>
+<th>bodywt</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Cheetah</td>
+<td>Acinonyx</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td>lc</td>
+<td>12.1</td>
+<td><span class="na">NA</span></td>
+<td><span class="na">NA</span></td>
+<td>11.9</td>
+<td><span class="na">NA</span></td>
+<td>50</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Owl monkey</td>
+<td>Aotus</td>
+<td>omni</td>
+<td>Primates</td>
+<td><span class="na">NA</span></td>
+<td>17</td>
+<td>1.8</td>
+<td><span class="na">NA</span></td>
+<td>7</td>
+<td>0.0155</td>
+<td>0.48</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Mountain beaver</td>
+<td>Aplodontia</td>
+<td>herbi</td>
+<td>Rodentia</td>
+<td>nt</td>
+<td>14.4</td>
+<td>2.4</td>
+<td><span class="na">NA</span></td>
+<td>9.6</td>
+<td><span class="na">NA</span></td>
+<td>1.35</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Greater short-tailed shrew</td>
+<td>Blarina</td>
+<td>omni</td>
+<td>Soricomorpha</td>
+<td>lc</td>
+<td>14.9</td>
+<td>2.3</td>
+<td>0.133333</td>
+<td>9.1</td>
+<td>0.00029</td>
+<td>0.019</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Cow</td>
+<td>Bos</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+<td>domesticated</td>
+<td>4</td>
+<td>0.7</td>
+<td>0.666667</td>
+<td>20</td>
+<td>0.423</td>
+<td>600</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 11 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Reformatting-all-Column-Names">
+<a class="anchor" href="#Reformatting-all-Column-Names" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reformatting all Column Names<a class="anchor-link" href="#Reformatting-all-Column-Names"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can easily use python's string functions to reformat column names.</p>
+<p>Let's convert all column names to uppercase:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT_copy</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="n">name</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">DT</span><span class="o">.</span><span class="n">names</span><span class="p">]</span> <span class="c1"># or list(map(str.upper, DT.names))</span>
+<span class="n">DT_copy</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>NAME</th>
+<th>GENUS</th>
+<th>VORE</th>
+<th>ORDER</th>
+<th>CONSERVATION</th>
+<th>SLEEP_TOTAL</th>
+<th>SLEEP_REM</th>
+<th>SLEEP_CYCLE</th>
+<th>AWAKE</th>
+<th>BRAINWT</th>
+<th>BODYWT</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="str" title="str32">▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+<td class="float" title="float64">▪▪▪▪▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Cheetah</td>
+<td>Acinonyx</td>
+<td>carni</td>
+<td>Carnivora</td>
+<td>lc</td>
+<td>12.1</td>
+<td><span class="na">NA</span></td>
+<td><span class="na">NA</span></td>
+<td>11.9</td>
+<td><span class="na">NA</span></td>
+<td>50</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Owl monkey</td>
+<td>Aotus</td>
+<td>omni</td>
+<td>Primates</td>
+<td><span class="na">NA</span></td>
+<td>17</td>
+<td>1.8</td>
+<td><span class="na">NA</span></td>
+<td>7</td>
+<td>0.0155</td>
+<td>0.48</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Mountain beaver</td>
+<td>Aplodontia</td>
+<td>herbi</td>
+<td>Rodentia</td>
+<td>nt</td>
+<td>14.4</td>
+<td>2.4</td>
+<td><span class="na">NA</span></td>
+<td>9.6</td>
+<td><span class="na">NA</span></td>
+<td>1.35</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Greater short-tailed shrew</td>
+<td>Blarina</td>
+<td>omni</td>
+<td>Soricomorpha</td>
+<td>lc</td>
+<td>14.9</td>
+<td>2.3</td>
+<td>0.133333</td>
+<td>9.1</td>
+<td>0.00029</td>
+<td>0.019</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Cow</td>
+<td>Bos</td>
+<td>herbi</td>
+<td>Artiodactyla</td>
+<td>domesticated</td>
+<td>4</td>
+<td>0.7</td>
+<td>0.666667</td>
+<td>20</td>
+<td>0.423</td>
+<td>600</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 11 columns</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Resources:</p>
+<ul>
+<li><a href="https://datatable.readthedocs.io/en/latest/">datatable docs</a></li>
+</ul>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="samukweku/data-wrangling-blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/data-wrangling-blog/python/pydatatable/2021/02/09/Data-Wrangling-with-Python-Datatable-Selecting-Columns.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/data-wrangling-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/data-wrangling-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Data Wrangling Blog.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/samukweku" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/samukweku" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
