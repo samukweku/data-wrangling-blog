@@ -643,6 +643,85 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>If you are selecting a single column, you can pass it into the brackets without specifying the <code>i</code> section:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[</span><span class="s1">'genus'</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div class="datatable">
+  <table class="frame">
+  <thead>
+    <tr class="colnames">
+<td class="row_index"></td>
+<th>genus</th>
+</tr>
+    <tr class="coltypes">
+<td class="row_index"></td>
+<td class="str" title="str32">▪▪▪▪</td>
+</tr>
+  </thead>
+  <tbody>
+    <tr>
+<td class="row_index">0</td>
+<td>Acinonyx</td>
+</tr>
+    <tr>
+<td class="row_index">1</td>
+<td>Aotus</td>
+</tr>
+    <tr>
+<td class="row_index">2</td>
+<td>Aplodontia</td>
+</tr>
+    <tr>
+<td class="row_index">3</td>
+<td>Blarina</td>
+</tr>
+    <tr>
+<td class="row_index">4</td>
+<td>Bos</td>
+</tr>
+  </tbody>
+  </table>
+  <div class="footer">
+    <div class="frame_dimensions">5 rows × 1 column</div>
+  </div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <p>For the rest of this article, I will be focusing on column selection by name.</p>
 
 </div>
@@ -1186,7 +1265,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns_to_select</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="s2">"name"</span> <span class="p">:</span> <span class="s2">"order"</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="s2">"sleep_total"</span> <span class="p">:</span> <span class="s2">"sleep_cycle"</span><span class="p">]]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns_to_select</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="s2">"name"</span> <span class="p">:</span> <span class="s2">"order"</span><span class="p">,</span> <span class="s2">"sleep_total"</span> <span class="p">:</span> <span class="s2">"sleep_cycle"</span><span class="p">]]</span>
 <span class="n">DT</span><span class="p">[:,</span> <span class="n">columns_to_select</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
@@ -1308,7 +1387,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns_to_remove</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="s2">"sleep_total"</span><span class="p">:</span><span class="s2">"awake"</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="s2">"conservation"</span><span class="p">]]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns_to_remove</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="s2">"sleep_total"</span> <span class="p">:</span> <span class="s2">"awake"</span><span class="p">,</span> <span class="s2">"conservation"</span><span class="p">]]</span>
 <span class="n">DT</span><span class="p">[:,</span> <span class="n">f</span><span class="p">[:]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">columns_to_remove</span><span class="p">)]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
@@ -2259,7 +2338,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns_to_remove</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns_to_remove</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span>
 <span class="n">DT</span><span class="p">[:,</span> <span class="n">f</span><span class="p">[:]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">columns_to_remove</span><span class="p">)]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
@@ -2373,7 +2452,7 @@ window.onload = wrap_img;
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">DT</span><span class="o">.</span><span class="n">names</span><span class="p">,</span> <span class="n">DT</span><span class="o">.</span><span class="n">ltypes</span><span class="p">)</span> 
 <span class="p">]</span>
 
-<span class="n">DT</span><span class="p">[:,</span> <span class="n">columns_to_select</span><span class="p">]</span>
+<span class="n">DT</span><span class="p">[:,</span> <span class="n">columns_to_select</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -2448,138 +2527,10 @@ window.onload = wrap_img;
 <td>Artiodactyla</td>
 <td>domesticated</td>
 </tr>
-    <tr>
-<td class="row_index">5</td>
-<td>Three-toed sloth</td>
-<td>Bradypus</td>
-<td>herbi</td>
-<td>Pilosa</td>
-<td><span class="na">NA</span></td>
-</tr>
-    <tr>
-<td class="row_index">6</td>
-<td>Northern fur seal</td>
-<td>Callorhinus</td>
-<td>carni</td>
-<td>Carnivora</td>
-<td>vu</td>
-</tr>
-    <tr>
-<td class="row_index">7</td>
-<td>Vesper mouse</td>
-<td>Calomys</td>
-<td><span class="na">NA</span></td>
-<td>Rodentia</td>
-<td><span class="na">NA</span></td>
-</tr>
-    <tr>
-<td class="row_index">8</td>
-<td>Dog</td>
-<td>Canis</td>
-<td>carni</td>
-<td>Carnivora</td>
-<td>domesticated</td>
-</tr>
-    <tr>
-<td class="row_index">9</td>
-<td>Roe deer</td>
-<td>Capreolus</td>
-<td>herbi</td>
-<td>Artiodactyla</td>
-<td>lc</td>
-</tr>
-    <tr>
-<td class="row_index">10</td>
-<td>Goat</td>
-<td>Capri</td>
-<td>herbi</td>
-<td>Artiodactyla</td>
-<td>lc</td>
-</tr>
-    <tr>
-<td class="row_index">11</td>
-<td>Guinea pig</td>
-<td>Cavis</td>
-<td>herbi</td>
-<td>Rodentia</td>
-<td>domesticated</td>
-</tr>
-    <tr>
-<td class="row_index">12</td>
-<td>Grivet</td>
-<td>Cercopithecus</td>
-<td>omni</td>
-<td>Primates</td>
-<td>lc</td>
-</tr>
-    <tr>
-<td class="row_index">13</td>
-<td>Chinchilla</td>
-<td>Chinchilla</td>
-<td>herbi</td>
-<td>Rodentia</td>
-<td>domesticated</td>
-</tr>
-    <tr>
-<td class="row_index">14</td>
-<td>Star-nosed mole</td>
-<td>Condylura</td>
-<td>omni</td>
-<td>Soricomorpha</td>
-<td>lc</td>
-</tr>
-    <tr>
-<td class="row_index">⋮</td>
-<td class="hellipsis">⋮</td>
-<td class="hellipsis">⋮</td>
-<td class="hellipsis">⋮</td>
-<td class="hellipsis">⋮</td>
-<td class="hellipsis">⋮</td>
-</tr>
-    <tr>
-<td class="row_index">78</td>
-<td>Tree shrew</td>
-<td>Tupaia</td>
-<td>omni</td>
-<td>Scandentia</td>
-<td><span class="na">NA</span></td>
-</tr>
-    <tr>
-<td class="row_index">79</td>
-<td>Bottle-nosed dolphin</td>
-<td>Tursiops</td>
-<td>carni</td>
-<td>Cetacea</td>
-<td><span class="na">NA</span></td>
-</tr>
-    <tr>
-<td class="row_index">80</td>
-<td>Genet</td>
-<td>Genetta</td>
-<td>carni</td>
-<td>Carnivora</td>
-<td><span class="na">NA</span></td>
-</tr>
-    <tr>
-<td class="row_index">81</td>
-<td>Arctic fox</td>
-<td>Vulpes</td>
-<td>carni</td>
-<td>Carnivora</td>
-<td><span class="na">NA</span></td>
-</tr>
-    <tr>
-<td class="row_index">82</td>
-<td>Red fox</td>
-<td>Vulpes</td>
-<td>carni</td>
-<td>Carnivora</td>
-<td><span class="na">NA</span></td>
-</tr>
   </tbody>
   </table>
   <div class="footer">
-    <div class="frame_dimensions">83 rows × 5 columns</div>
+    <div class="frame_dimensions">5 rows × 5 columns</div>
   </div>
 </div>
 
@@ -2717,7 +2668,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="n">matching_frames</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="n">matching_frames</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -2792,138 +2743,10 @@ window.onload = wrap_img;
 <td>Artiodactyla</td>
 <td>domesticated</td>
 </tr>
-    <tr>
-<td class="row_index">5</td>
-<td>Three-toed sloth</td>
-<td>Bradypus</td>
-<td>herbi</td>
-<td>Pilosa</td>
-<td><span class="na">NA</span></td>
-</tr>
-    <tr>
-<td class="row_index">6</td>
-<td>Northern fur seal</td>
-<td>Callorhinus</td>
-<td>carni</td>
-<td>Carnivora</td>
-<td>vu</td>
-</tr>
-    <tr>
-<td class="row_index">7</td>
-<td>Vesper mouse</td>
-<td>Calomys</td>
-<td><span class="na">NA</span></td>
-<td>Rodentia</td>
-<td><span class="na">NA</span></td>
-</tr>
-    <tr>
-<td class="row_index">8</td>
-<td>Dog</td>
-<td>Canis</td>
-<td>carni</td>
-<td>Carnivora</td>
-<td>domesticated</td>
-</tr>
-    <tr>
-<td class="row_index">9</td>
-<td>Roe deer</td>
-<td>Capreolus</td>
-<td>herbi</td>
-<td>Artiodactyla</td>
-<td>lc</td>
-</tr>
-    <tr>
-<td class="row_index">10</td>
-<td>Goat</td>
-<td>Capri</td>
-<td>herbi</td>
-<td>Artiodactyla</td>
-<td>lc</td>
-</tr>
-    <tr>
-<td class="row_index">11</td>
-<td>Guinea pig</td>
-<td>Cavis</td>
-<td>herbi</td>
-<td>Rodentia</td>
-<td>domesticated</td>
-</tr>
-    <tr>
-<td class="row_index">12</td>
-<td>Grivet</td>
-<td>Cercopithecus</td>
-<td>omni</td>
-<td>Primates</td>
-<td>lc</td>
-</tr>
-    <tr>
-<td class="row_index">13</td>
-<td>Chinchilla</td>
-<td>Chinchilla</td>
-<td>herbi</td>
-<td>Rodentia</td>
-<td>domesticated</td>
-</tr>
-    <tr>
-<td class="row_index">14</td>
-<td>Star-nosed mole</td>
-<td>Condylura</td>
-<td>omni</td>
-<td>Soricomorpha</td>
-<td>lc</td>
-</tr>
-    <tr>
-<td class="row_index">⋮</td>
-<td class="hellipsis">⋮</td>
-<td class="hellipsis">⋮</td>
-<td class="hellipsis">⋮</td>
-<td class="hellipsis">⋮</td>
-<td class="hellipsis">⋮</td>
-</tr>
-    <tr>
-<td class="row_index">78</td>
-<td>Tree shrew</td>
-<td>Tupaia</td>
-<td>omni</td>
-<td>Scandentia</td>
-<td><span class="na">NA</span></td>
-</tr>
-    <tr>
-<td class="row_index">79</td>
-<td>Bottle-nosed dolphin</td>
-<td>Tursiops</td>
-<td>carni</td>
-<td>Cetacea</td>
-<td><span class="na">NA</span></td>
-</tr>
-    <tr>
-<td class="row_index">80</td>
-<td>Genet</td>
-<td>Genetta</td>
-<td>carni</td>
-<td>Carnivora</td>
-<td><span class="na">NA</span></td>
-</tr>
-    <tr>
-<td class="row_index">81</td>
-<td>Arctic fox</td>
-<td>Vulpes</td>
-<td>carni</td>
-<td>Carnivora</td>
-<td><span class="na">NA</span></td>
-</tr>
-    <tr>
-<td class="row_index">82</td>
-<td>Red fox</td>
-<td>Vulpes</td>
-<td>carni</td>
-<td>Carnivora</td>
-<td><span class="na">NA</span></td>
-</tr>
   </tbody>
   </table>
   <div class="footer">
-    <div class="frame_dimensions">83 rows × 5 columns</div>
+    <div class="frame_dimensions">5 rows × 5 columns</div>
   </div>
 </div>
 
@@ -3255,7 +3078,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="n">matching_frames</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">DT</span><span class="p">[:,</span> <span class="n">matching_frames</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -3316,40 +3139,10 @@ window.onload = wrap_img;
 <td>20</td>
 <td>600</td>
 </tr>
-    <tr>
-<td class="row_index">5</td>
-<td>14.4</td>
-<td>9.6</td>
-<td>3.85</td>
-</tr>
-    <tr>
-<td class="row_index">6</td>
-<td>8.7</td>
-<td>15.3</td>
-<td>20.49</td>
-</tr>
-    <tr>
-<td class="row_index">7</td>
-<td>7</td>
-<td>17</td>
-<td>0.045</td>
-</tr>
-    <tr>
-<td class="row_index">8</td>
-<td>10.1</td>
-<td>13.9</td>
-<td>14</td>
-</tr>
-    <tr>
-<td class="row_index">9</td>
-<td>3</td>
-<td>21</td>
-<td>14.8</td>
-</tr>
   </tbody>
   </table>
   <div class="footer">
-    <div class="frame_dimensions">10 rows × 3 columns</div>
+    <div class="frame_dimensions">5 rows × 3 columns</div>
   </div>
 </div>
 
@@ -4404,6 +4197,8 @@ window.onload = wrap_img;
 <p>Resources:</p>
 <ul>
 <li><a href="https://datatable.readthedocs.io/en/latest/">datatable docs</a></li>
+<li>I am using the latest dev version of datatable <code>1.0.0a0+build.1612992576</code>
+</li>
 </ul>
 
 </div>
