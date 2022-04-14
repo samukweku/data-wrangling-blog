@@ -114,7 +114,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      5 min read
+      4 min read
     
 </span></p>
 
@@ -225,7 +225,9 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># pip install pyjanitor</span>
+<span class="kn">import</span> <span class="nn">janitor</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 </pre></div>
 
@@ -243,8 +245,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#we'll use this filename for all the examples</span>
-<span class="n">filename</span> <span class="o">=</span> <span class="s2">"Data_files/worked-examples.xlsx"</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">excel_file</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelFile</span><span class="p">(</span><span class="s2">"Data_files/worked-examples.xlsx"</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">'openpyxl'</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -261,31 +262,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">openpyxl</span> <span class="kn">import</span> <span class="n">load_workbook</span>
-
-<span class="c1"># read in excel file</span>
-<span class="n">wb</span> <span class="o">=</span> <span class="n">load_workbook</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-
-<span class="c1"># access specific worksheet</span>
-<span class="n">ws</span> <span class="o">=</span> <span class="n">wb</span><span class="p">[</span><span class="s2">"small-multiples"</span><span class="p">]</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sheet</span> <span class="o">=</span> <span class="s2">"small-multiples"</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheet</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">'openpyxl'</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">excel_file</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sheet_name</span><span class="o">=</span><span class="s2">"small-multiples"</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">df</span>
 </pre></div>
 
@@ -450,23 +427,21 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,:</span><span class="mi">3</span><span class="p">],</span> <span class="c1">#get the first three columns before the completely null column</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,:</span><span class="mi">3</span><span class="p">],</span> <span class="c1">#get the first three columns before the completely null column</span>
                   <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">4</span><span class="p">:]</span> <span class="c1">#get the columns after the completely null column</span>
                   <span class="o">.</span><span class="n">set_axis</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
                 <span class="p">)</span>
-        <span class="o">.</span><span class="n">set_axis</span><span class="p">([</span><span class="s1">'Name'</span><span class="p">,</span><span class="s1">'Score'</span><span class="p">,</span><span class="s1">'Grade'</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'Name != "Name"'</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">'Name'</span><span class="p">])</span>
-        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">subject</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Score</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> 
-                                             <span class="n">x</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> 
-                                             <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-                 <span class="p">)</span>
-        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">subject</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">ffill</span><span class="p">())</span>
-        <span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-        <span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">'subject'</span><span class="p">,</span><span class="s1">'Name'</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="o">.</span><span class="n">set_axis</span><span class="p">([</span><span class="s1">'Name'</span><span class="p">,</span><span class="s1">'Score'</span><span class="p">,</span><span class="s1">'Grade'</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'Name != "Name"'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">'Name'</span><span class="p">])</span>
+<span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">subject</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Score</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> 
+                                        <span class="n">x</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> 
+                                        <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
         <span class="p">)</span>
-
-<span class="n">res</span>
+<span class="o">.</span><span class="n">fill_direction</span><span class="p">(</span><span class="n">subject</span> <span class="o">=</span> <span class="s1">'down'</span><span class="p">)</span> <span class="c1"># pyjanitor</span>
+<span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<span class="p">)</span>
 </pre></div>
 
     </div>
@@ -522,16 +497,16 @@ window.onload = wrap_img;
     <tr>
       <th>2</th>
       <td>Matilda</td>
-      <td>7</td>
-      <td>A</td>
-      <td>Drama</td>
+      <td>5</td>
+      <td>B</td>
+      <td>Music</td>
     </tr>
     <tr>
       <th>3</th>
       <td>Olivia</td>
-      <td>8</td>
-      <td>A</td>
-      <td>Drama</td>
+      <td>6</td>
+      <td>B</td>
+      <td>Music</td>
     </tr>
     <tr>
       <th>4</th>
@@ -550,16 +525,16 @@ window.onload = wrap_img;
     <tr>
       <th>6</th>
       <td>Matilda</td>
-      <td>5</td>
-      <td>B</td>
-      <td>Music</td>
+      <td>7</td>
+      <td>A</td>
+      <td>Drama</td>
     </tr>
     <tr>
       <th>7</th>
       <td>Olivia</td>
-      <td>6</td>
-      <td>B</td>
-      <td>Music</td>
+      <td>8</td>
+      <td>A</td>
+      <td>Drama</td>
     </tr>
   </tbody>
 </table>
@@ -612,7 +587,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>For this case, our data is in different worksheets. We'll create a function, apply it to each worksheet and combine the tables into one.</p>
+<p>For this case, our data is in different worksheets. We can iterate through each worksheet and combine the dataframes into one.</p>
 
 </div>
 </div>
@@ -624,64 +599,15 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">extract_data</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="n">sheet</span><span class="p">):</span>
-    <span class="c1">#the student names are the header row</span>
-    <span class="c1">#the subjects are the index</span>
-    <span class="c1">#the numbers are the scores</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> 
-                        <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheet</span><span class="p">,</span>
-                        <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-          <span class="c1">#we are assigning the final column names here</span>
-           <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">'student'</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="s1">'subject'</span><span class="p">)</span>
-           <span class="o">.</span><span class="n">stack</span><span class="p">()</span>
-           <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s1">'scores'</span><span class="p">)</span>
-          <span class="p">)</span>
-    <span class="k">return</span> <span class="n">df</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-<div class="cell border-box-sizing text_cell rendered">
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The image below illustrates the core concepts of the above function for one of the sheets:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/case2.jpg" alt='"function description for case 2"'></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's apply our function to each sheet and lump into one :</p>
-
-</div>
-</div>
-</div>
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sheets</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"humanities"</span><span class="p">,</span> <span class="s2">"performance"</span><span class="p">)</span>
-<span class="n">extract</span> <span class="o">=</span> <span class="p">(</span><span class="n">extract_data</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheet</span><span class="p">)</span> <span class="k">for</span> <span class="n">sheet</span> <span class="ow">in</span> <span class="n">sheets</span><span class="p">)</span>
-<span class="c1">#combine into one</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">extract</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">res</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">extract</span> <span class="o">=</span> <span class="p">[</span><span class="n">excel_file</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sheet_name</span><span class="o">=</span><span class="n">sheetname</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> 
+           <span class="k">for</span> <span class="n">sheetname</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"humanities"</span><span class="p">,</span> <span class="s2">"performance"</span><span class="p">)]</span>
+<span class="p">(</span><span class="n">pd</span>
+<span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">extract</span><span class="p">)</span>
+<span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="s1">'subject'</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">'student'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">stack</span><span class="p">()</span>
+<span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">'scores'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="p">)</span>
 </pre></div>
 
     </div>
@@ -783,6 +709,22 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p>The image below illustrates the core concepts of the above solution:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/case2.jpg" alt='"function description for case 2"'></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Case-3-:-Same-table-in-several-worksheets/files-but-in-different-positions">
 <a class="anchor" href="#Case-3-:-Same-table-in-several-worksheets/files-but-in-different-positions" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Case 3 : Same table in several worksheets/files but in different positions</strong><a class="anchor-link" href="#Case-3-:-Same-table-in-several-worksheets/files-but-in-different-positions"> </a>
 </h3>
@@ -802,7 +744,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This is similar to Case 2, with the core data been the same. Our function must be robust enough to exclude the irrelevant data</p>
+<p>This is similar to Case 2, with the core data been the same. Here we need to pick rows from <code>Subject</code> downwards only, as that is the only relevant data:</p>
 
 </div>
 </div>
@@ -814,73 +756,20 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">extract_data</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="n">sheet</span><span class="p">):</span>
-    <span class="c1">#the student names are the header row</span>
-    <span class="c1">#the subjects are the index</span>
-    <span class="c1">#the numbers are the scores</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> 
-                        <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheet</span><span class="p">,</span>
-                        <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="c1">#our header is not the first row and varies per sheet</span>
-                        <span class="n">index_col</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span><span class="c1">#set the first column as the index of the dataframe</span>
-           <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">'Subject'</span><span class="p">:]</span> <span class="c1">#picks data from the Subject index downwards, excluding the irrelevant data</span>
-          <span class="p">)</span>
-    
-    <span class="c1">#set columns equal to the 'Subject' index </span>
-    <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">'Subject'</span><span class="p">]</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
-           <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'Subject'</span><span class="p">)</span>
-           <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">'subject'</span><span class="p">,</span><span class="n">columns</span><span class="o">=</span><span class="s1">'student'</span><span class="p">)</span>
-           <span class="o">.</span><span class="n">stack</span><span class="p">()</span>
-           <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'scores'</span><span class="p">)</span>
-           <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">sex</span> <span class="o">=</span> <span class="n">sheet</span><span class="p">)</span>
-          <span class="p">)</span>
-    
-    <span class="k">return</span> <span class="n">df</span>
-</pre></div>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">extract</span> <span class="o">=</span> <span class="p">{</span><span class="n">sheetname</span> <span class="p">:</span> <span class="n">excel_file</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sheet_name</span><span class="o">=</span><span class="n">sheetname</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                                 <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">'Subject'</span><span class="p">:]</span>
+                                 <span class="c1"># use the subject row as column names</span>
+                                 <span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">set_axis</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">'Subject'</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">))</span>
+                                 <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">'Subject'</span><span class="p">)</span>
+                                 <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="s1">'subject'</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="s1">'student'</span><span class="p">)</span>
+           <span class="k">for</span> <span class="n">sheetname</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"female"</span><span class="p">,</span> <span class="s2">"male"</span><span class="p">)}</span>
 
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-<div class="cell border-box-sizing text_cell rendered">
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The image below explains the main concepts of the function :</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/case3.jpg" alt='"visual explanation of function for case3"'></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Same as in case 2, we'll apply the function to each sheet:</p>
-
-</div>
-</div>
-</div>
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sheets</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"female"</span><span class="p">,</span> <span class="s2">"male"</span><span class="p">)</span>
-<span class="n">extract</span> <span class="o">=</span> <span class="p">(</span><span class="n">extract_data</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheet</span><span class="p">)</span> <span class="k">for</span> <span class="n">sheet</span> <span class="ow">in</span> <span class="n">sheets</span><span class="p">)</span>
-<span class="c1">#combine into one</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">extract</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">res</span>
+<span class="p">(</span><span class="n">pd</span>
+<span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">extract</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">'sex'</span><span class="p">])</span>
+<span class="o">.</span><span class="n">stack</span><span class="p">()</span>
+<span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">'scores'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="p">)</span>
 </pre></div>
 
     </div>
@@ -912,68 +801,68 @@ window.onload = wrap_img;
   <thead>
     <tr style="text-align: right;">
       <th></th>
+      <th>sex</th>
       <th>subject</th>
       <th>student</th>
       <th>scores</th>
-      <th>sex</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
+      <td>female</td>
       <td>Classics</td>
       <td>Matilda</td>
       <td>1</td>
-      <td>female</td>
     </tr>
     <tr>
       <th>1</th>
+      <td>female</td>
       <td>Classics</td>
       <td>Olivia</td>
       <td>2</td>
-      <td>female</td>
     </tr>
     <tr>
       <th>2</th>
+      <td>female</td>
       <td>History</td>
       <td>Matilda</td>
       <td>3</td>
-      <td>female</td>
     </tr>
     <tr>
       <th>3</th>
+      <td>female</td>
       <td>History</td>
       <td>Olivia</td>
       <td>4</td>
-      <td>female</td>
     </tr>
     <tr>
       <th>4</th>
+      <td>male</td>
       <td>Classics</td>
       <td>Nicholas</td>
       <td>3</td>
-      <td>male</td>
     </tr>
     <tr>
       <th>5</th>
+      <td>male</td>
       <td>Classics</td>
       <td>Paul</td>
       <td>0</td>
-      <td>male</td>
     </tr>
     <tr>
       <th>6</th>
+      <td>male</td>
       <td>History</td>
       <td>Nicholas</td>
       <td>5</td>
-      <td>male</td>
     </tr>
     <tr>
       <th>7</th>
+      <td>male</td>
       <td>History</td>
       <td>Paul</td>
       <td>1</td>
-      <td>male</td>
     </tr>
   </tbody>
 </table>
@@ -988,6 +877,22 @@ window.onload = wrap_img;
 </div>
     
 
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The image below explains the main concepts of the solution above :</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="/data-wrangling-blog/images/copied_from_nb/Images/case3.jpg" alt='"visual explanation of function for case3"'></p>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -1015,11 +920,7 @@ The goal is to get the subjects,grades and scores per field, per student and com
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sheet</span> <span class="o">=</span> <span class="s2">"implied-multiples"</span>
-<span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span>
-                    <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheet</span><span class="p">,</span>
-                    <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-                    <span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">excel_file</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sheet_name</span><span class="o">=</span><span class="s1">'implied-multiples'</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
        <span class="o">.</span><span class="n">ffill</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
        <span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="p">:</span> <span class="s1">'field'</span><span class="p">})</span>
        <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -1034,7 +935,6 @@ The goal is to get the subjects,grades and scores per field, per student and com
        <span class="o">.</span><span class="n">bfill</span><span class="p">()</span>
        <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'Name != "Grade"'</span><span class="p">)</span>
        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'Name'</span><span class="p">:</span><span class="s1">'subject'</span><span class="p">})</span>
-       <span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">'field'</span><span class="p">,</span><span class="s1">'subject'</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
       <span class="p">)</span>
 <span class="n">df</span>
 </pre></div>
@@ -1085,14 +985,6 @@ The goal is to get the subjects,grades and scores per field, per student and com
       <td>F</td>
     </tr>
     <tr>
-      <th>1</th>
-      <td>Humanities</td>
-      <td>Classics</td>
-      <td>Olivia</td>
-      <td>2</td>
-      <td>D</td>
-    </tr>
-    <tr>
       <th>2</th>
       <td>Humanities</td>
       <td>History</td>
@@ -1101,31 +993,7 @@ The goal is to get the subjects,grades and scores per field, per student and com
       <td>D</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>Humanities</td>
-      <td>History</td>
-      <td>Olivia</td>
-      <td>4</td>
-      <td>C</td>
-    </tr>
-    <tr>
       <th>4</th>
-      <td>Performance</td>
-      <td>Drama</td>
-      <td>Matilda</td>
-      <td>7</td>
-      <td>A</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>Performance</td>
-      <td>Drama</td>
-      <td>Olivia</td>
-      <td>8</td>
-      <td>A</td>
-    </tr>
-    <tr>
-      <th>6</th>
       <td>Performance</td>
       <td>Music</td>
       <td>Matilda</td>
@@ -1133,12 +1001,44 @@ The goal is to get the subjects,grades and scores per field, per student and com
       <td>B</td>
     </tr>
     <tr>
-      <th>7</th>
+      <th>6</th>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>Matilda</td>
+      <td>7</td>
+      <td>A</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>Olivia</td>
+      <td>2</td>
+      <td>D</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>Olivia</td>
+      <td>4</td>
+      <td>C</td>
+    </tr>
+    <tr>
+      <th>12</th>
       <td>Performance</td>
       <td>Music</td>
       <td>Olivia</td>
       <td>6</td>
       <td>B</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>Olivia</td>
+      <td>8</td>
+      <td>A</td>
     </tr>
   </tbody>
 </table>
