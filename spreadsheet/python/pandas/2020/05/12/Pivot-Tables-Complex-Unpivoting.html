@@ -114,7 +114,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      7 min read
+      14 min read
     
 </span></p>
 
@@ -185,6 +185,14 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<p><em>updated : April 15, 2022</em></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <p>This is part of a series of blog posts about extracting data from spreadsheets using Python.  It is based on the <a href="https://nacnudus.github.io/spreadsheet-munging-strategies/index.html">book</a> written by <a href="https://twitter.com/nacnudus?lang=en">Duncan Garmonsway</a>, which was written primarily for R users. LInks to the other posts are on the <a href="https://samukweku.github.io/data-wrangling-blog/">homepage</a>.</p>
 
 </div>
@@ -228,7 +236,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The solution is to get the coordinates for the horizontal and vertical borders, and use that to correctly pair the header rows and header columns. <a href="https://openpyxl.readthedocs.io/en/stable/tutorial.html">Openpyxl</a> can get us the coordinates. Once we get the boundaries, and pair the header rows and columns, we'll create <a href="https://pandas.pydata.org/pandas-docs/stable/user_guide/advanced.html">MultiIndexes</a> for the rows and columns of the new dataframe. It'll be clearer with code.</p>
+<p>The solution is to get the coordinates for the horizontal and vertical borders, and use that to correctly pair the header rows and header columns. We'll use <a href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a> function from <a href="https://pyjanitor-devs.github.io/pyjanitor/">pyjanitor</a> to get the coordinates - under the hood, it uses <a href="https://openpyxl.readthedocs.io/en/stable/index.html">openpyxl</a>:</p>
 
 </div>
 </div>
@@ -240,11 +248,11 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># pip install git+https://github.com/pyjanitor-devs/pyjanitor.git</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">janitor</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
-<span class="kn">from</span> <span class="nn">openpyxl</span> <span class="kn">import</span> <span class="n">load_workbook</span>
+<span class="kn">from</span> <span class="nn">janitor</span> <span class="kn">import</span> <span class="n">xlsx_cells</span>
 </pre></div>
 
     </div>
@@ -261,7 +269,7 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="s2">"Data_files/worked-examples.xlsx"</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">excel_file</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelFile</span><span class="p">(</span><span class="s2">"Data_files/worked-examples.xlsx"</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -278,438 +286,8 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">wb</span> <span class="o">=</span> <span class="n">load_workbook</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-<span class="n">ws</span> <span class="o">=</span> <span class="n">wb</span><span class="p">[</span><span class="s2">"pivot-centre-aligned"</span><span class="p">]</span>
-
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
-<span class="n">hor</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span> <span class="c1">#horizontal borders</span>
-<span class="n">ver</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span> <span class="c1">#vertical borders</span>
-<span class="n">text</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">numbers</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">iter_rows</span><span class="p">(</span><span class="n">min_row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                        <span class="n">max_row</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_row</span><span class="p">,</span>
-                        <span class="n">min_col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                        <span class="n">max_col</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_column</span><span class="p">):</span>
-    
-    <span class="c1">#get the row/col numbers and add to hor/ver</span>
-    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
-        <span class="c1">#for this scenario, null values are not needed</span>
-        <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">border</span><span class="o">.</span><span class="n">bottom</span><span class="o">.</span><span class="n">style</span><span class="p">:</span> <span class="c1">#this gets us the boundaries for the header columns</span>
-            <span class="n">hor</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">row</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">#+1 cos we need values within the boundaries</span>
-        <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">border</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">style</span><span class="p">:</span> <span class="c1">#boundaries for the header rows</span>
-            <span class="n">ver</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">column</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="c1">#separate lists for texts and numbers</span>
-        <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s2">"s"</span><span class="p">:</span>
-            <span class="n">text</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cell</span><span class="o">.</span><span class="n">row</span><span class="p">,</span> <span class="n">cell</span><span class="o">.</span><span class="n">column</span><span class="p">,</span> <span class="n">cell</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s2">"n"</span> <span class="p">:</span> 
-            <span class="n">numbers</span><span class="p">[</span><span class="n">cell</span><span class="o">.</span><span class="n">row</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>        
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">hor</span><span class="p">,</span> <span class="n">ver</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>{9, 4, 12} {11, 4, 7}
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
-
-<span class="c1">#easy identifiers : </span>
-<span class="n">row</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">col</span> <span class="o">=</span> <span class="mi">1</span>
-
-<span class="c1">#extract gender</span>
-<span class="n">min_row</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">itemgetter</span><span class="p">(</span><span class="n">row</span><span class="p">),</span><span class="n">text</span><span class="p">))</span>
-<span class="n">gender</span> <span class="o">=</span> <span class="p">[</span><span class="n">entry</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">text</span> 
-          <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">==</span> <span class="n">min_row</span><span class="p">]</span>
-
-<span class="c1">#extract field</span>
-<span class="n">min_col</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">itemgetter</span><span class="p">(</span><span class="n">col</span><span class="p">),</span> <span class="n">text</span><span class="p">))</span>
-<span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="n">entry</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">text</span> 
-          <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">==</span> <span class="n">min_col</span><span class="p">]</span>
-
-<span class="c1">#remove gender and field from text</span>
-<span class="n">rest</span> <span class="o">=</span> <span class="p">[</span><span class="n">entry</span> <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">text</span> 
-        <span class="k">if</span> <span class="n">entry</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">!=</span> <span class="n">min_row</span> 
-        <span class="ow">and</span> <span class="n">entry</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">!=</span> <span class="n">min_col</span>
-       <span class="p">]</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#Get the sorted pairs for the boundaries </span>
-<span class="c1">#and pair the texts within the boundaries</span>
-<span class="k">def</span> <span class="nf">pair</span><span class="p">(</span><span class="n">seq</span><span class="p">):</span>
-    <span class="n">seq</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">zip</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">seq</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#extra identifier</span>
-<span class="n">word</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-
-<span class="c1">#get header columns - </span>
-<span class="c1">#this will be data within pair(hor)</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
-
-<span class="n">header_col</span> <span class="o">=</span> <span class="p">[(</span><span class="n">field</span><span class="p">[</span><span class="n">word</span><span class="p">],</span> <span class="n">subject</span><span class="p">[</span><span class="n">word</span><span class="p">])</span>
-              <span class="k">for</span> <span class="n">field</span><span class="p">,</span> <span class="n">subject</span><span class="p">,</span> <span class="n">bound</span> 
-              <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span><span class="n">rest</span><span class="p">,</span><span class="n">pair</span><span class="p">(</span><span class="n">hor</span><span class="p">))</span>
-              <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">*</span><span class="n">bound</span><span class="p">)</span> 
-              <span class="ow">and</span> <span class="n">subject</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">*</span><span class="n">bound</span><span class="p">)</span>
-             <span class="p">]</span>
-
-        
-<span class="c1">#get the header rows - </span>
-<span class="c1">#this will be data within pair(ver)</span>
-<span class="n">header_row</span> <span class="o">=</span> <span class="p">[(</span><span class="n">sex</span><span class="p">[</span><span class="n">word</span><span class="p">],</span> <span class="n">name</span><span class="p">[</span><span class="n">word</span><span class="p">])</span>
-              <span class="k">for</span> <span class="n">sex</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bound</span>
-              <span class="ow">in</span> <span class="n">product</span><span class="p">(</span><span class="n">gender</span><span class="p">,</span><span class="n">rest</span><span class="p">,</span><span class="n">pair</span><span class="p">(</span><span class="n">ver</span><span class="p">))</span>
-              <span class="k">if</span> <span class="n">sex</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">*</span><span class="n">bound</span><span class="p">)</span>
-              <span class="ow">and</span> <span class="n">name</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">*</span><span class="n">bound</span><span class="p">)</span>
-             <span class="p">]</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">header_row</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>[('Female', 'Leah'),
- ('Female', 'Matilda'),
- ('Female', 'Olivia'),
- ('Male', 'Lenny'),
- ('Male', 'Max'),
- ('Male', 'Nicholas'),
- ('Male', 'Paul')]</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">header_col</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-
-<div class="output_text output_subarea output_execute_result">
-<pre>[('Humanities', 'Classics'),
- ('Humanities', 'History'),
- ('Humanities', 'Literature'),
- ('Humanities', 'Philosophy'),
- ('Humanities', 'Languages'),
- ('Performance', 'Music'),
- ('Performance', 'Dance'),
- ('Performance', 'Drama')]</pre>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#create multiIndexes</span>
-<span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span><span class="n">header_col</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'field'</span><span class="p">,</span> <span class="s1">'subject'</span><span class="p">])</span>
-<span class="n">columns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_tuples</span><span class="p">(</span><span class="n">header_row</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'sex'</span><span class="p">,</span><span class="s1">'name'</span><span class="p">])</span>
-
-<span class="c1">#create dataframe, with the numbers list as the data</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">numbers</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> <span class="n">index</span> <span class="o">=</span> <span class="n">index</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="p">)</span>
-<span class="n">df</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead tr th {
-        text-align: left;
-    }
-
-    .dataframe thead tr:last-of-type th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr>
-      <th></th>
-      <th>sex</th>
-      <th colspan="3" halign="left">Female</th>
-      <th colspan="4" halign="left">Male</th>
-    </tr>
-    <tr>
-      <th></th>
-      <th>name</th>
-      <th>Leah</th>
-      <th>Matilda</th>
-      <th>Olivia</th>
-      <th>Lenny</th>
-      <th>Max</th>
-      <th>Nicholas</th>
-      <th>Paul</th>
-    </tr>
-    <tr>
-      <th>field</th>
-      <th>subject</th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th rowspan="5" valign="top">Humanities</th>
-      <th>Classics</th>
-      <td>3</td>
-      <td>1</td>
-      <td>2</td>
-      <td>4</td>
-      <td>3</td>
-      <td>3</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>History</th>
-      <td>8</td>
-      <td>3</td>
-      <td>4</td>
-      <td>7</td>
-      <td>5</td>
-      <td>5</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>Literature</th>
-      <td>1</td>
-      <td>1</td>
-      <td>9</td>
-      <td>3</td>
-      <td>12</td>
-      <td>7</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>Philosophy</th>
-      <td>5</td>
-      <td>10</td>
-      <td>10</td>
-      <td>8</td>
-      <td>2</td>
-      <td>5</td>
-      <td>12</td>
-    </tr>
-    <tr>
-      <th>Languages</th>
-      <td>5</td>
-      <td>4</td>
-      <td>5</td>
-      <td>9</td>
-      <td>8</td>
-      <td>3</td>
-      <td>8</td>
-    </tr>
-    <tr>
-      <th rowspan="3" valign="top">Performance</th>
-      <th>Music</th>
-      <td>4</td>
-      <td>10</td>
-      <td>10</td>
-      <td>2</td>
-      <td>4</td>
-      <td>5</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>Dance</th>
-      <td>4</td>
-      <td>5</td>
-      <td>6</td>
-      <td>4</td>
-      <td>12</td>
-      <td>9</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>Drama</th>
-      <td>2</td>
-      <td>7</td>
-      <td>8</td>
-      <td>6</td>
-      <td>1</td>
-      <td>12</td>
-      <td>3</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#the hard work is done - reshaping is much easier, and just a few lines : </span>
-
-<span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
-       <span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="s1">'sex'</span><span class="p">,</span> <span class="s1">'name'</span><span class="p">])</span>
-       <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'scores'</span><span class="p">)</span>
-       <span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s1">'scores'</span><span class="p">:</span><span class="s1">'uint8'</span><span class="p">})</span>
-      <span class="p">)</span>
-
-<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">excel_file</span><span class="p">,</span> <span class="n">sheetnames</span> <span class="o">=</span> <span class="s1">'pivot-centre-aligned'</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include_blank_cells</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">frame</span>
 </pre></div>
 
     </div>
@@ -741,52 +319,1402 @@ window.onload = wrap_img;
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>field</th>
-      <th>subject</th>
-      <th>sex</th>
-      <th>name</th>
+      <th>value</th>
+      <th>internal_value</th>
+      <th>coordinate</th>
+      <th>row</th>
+      <th>column</th>
+      <th>data_type</th>
+      <th>is_date</th>
+      <th>number_format</th>
+      <th>border</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Female</td>
+      <td>Female</td>
+      <td>E2</td>
+      <td>2</td>
+      <td>5</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'left': {'style': None, 'color': None}, 'righ...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Male</td>
+      <td>Male</td>
+      <td>I2</td>
+      <td>2</td>
+      <td>9</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'left': {'style': None, 'color': None}, 'righ...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Leah</td>
+      <td>Leah</td>
+      <td>D3</td>
+      <td>3</td>
+      <td>4</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'left': {'style': 'thin', 'color': None}, 'ri...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Matilda</td>
+      <td>Matilda</td>
+      <td>E3</td>
+      <td>3</td>
+      <td>5</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'left': {'style': None, 'color': None}, 'righ...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Olivia</td>
+      <td>Olivia</td>
+      <td>F3</td>
+      <td>3</td>
+      <td>6</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'left': {'style': None, 'color': None}, 'righ...</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>70</th>
+      <td>8</td>
+      <td>8</td>
+      <td>F11</td>
+      <td>11</td>
+      <td>6</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'left': {'style': None, 'color': None}, 'righ...</td>
+    </tr>
+    <tr>
+      <th>71</th>
+      <td>6</td>
+      <td>6</td>
+      <td>G11</td>
+      <td>11</td>
+      <td>7</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'left': {'style': 'thin', 'color': None}, 'ri...</td>
+    </tr>
+    <tr>
+      <th>72</th>
+      <td>1</td>
+      <td>1</td>
+      <td>H11</td>
+      <td>11</td>
+      <td>8</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'left': {'style': None, 'color': None}, 'righ...</td>
+    </tr>
+    <tr>
+      <th>73</th>
+      <td>12</td>
+      <td>12</td>
+      <td>I11</td>
+      <td>11</td>
+      <td>9</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'left': {'style': None, 'color': None}, 'righ...</td>
+    </tr>
+    <tr>
+      <th>74</th>
+      <td>3</td>
+      <td>3</td>
+      <td>J11</td>
+      <td>11</td>
+      <td>10</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'left': {'style': None, 'color': None}, 'righ...</td>
+    </tr>
+  </tbody>
+</table>
+<p>75 rows × 9 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can view a single row in the border column:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">frame</span><span class="o">.</span><span class="n">border</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{'left': {'style': None, 'color': None},
+ 'right': {'style': None, 'color': None},
+ 'top': {'style': 'thin', 'color': None},
+ 'bottom': {'style': None, 'color': None},
+ 'diagonal': {'style': None, 'color': None},
+ 'vertical': None,
+ 'horizontal': None,
+ 'diagonal_direction': None,
+ 'diagonalUp': False,
+ 'diagonalDown': False,
+ 'outline': True,
+ 'start': None,
+ 'end': None}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <code>fields</code> and <code>subjects</code> columns are in columns 2 and 3 respectively, the <code>gender</code> and <code>students</code> columns are in rows 2 and 3 respectively; the relevant borders top and left respectively.</p>
+<p>Once we have the relevant border coordinates, we can correctly link the <code>fields</code> and <code>subjects</code>, as well as the <code>gender</code> and <code>students</code> columns:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">frame</span><span class="p">[</span><span class="s1">'gender'</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">border</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'left'</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'style'</span><span class="p">)</span>
+<span class="n">frame</span><span class="p">[</span><span class="s1">'fields'</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">border</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'top'</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'style'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># the border is above the relevant sections, use that to our advantage to pull the relevant data</span>
+<span class="n">index</span> <span class="o">=</span> <span class="p">(</span><span class="n">frame</span>
+        <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="p">[</span><span class="s1">'value'</span><span class="p">,</span> <span class="s1">'row'</span><span class="p">,</span> <span class="s1">'column'</span><span class="p">,</span> <span class="s1">'fields'</span><span class="p">]]</span>
+        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">fields</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">df</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">df</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">fields</span><span class="p">))</span>
+        <span class="c1"># pyjanitor ... syntactic sugar for pd.Series.ffill</span>
+        <span class="o">.</span><span class="n">fill_direction</span><span class="p">(</span><span class="n">fields</span> <span class="o">=</span> <span class="s1">'down'</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s1">'thin'</span><span class="p">:</span><span class="kc">None</span><span class="p">})</span>
+        <span class="o">.</span><span class="n">fill_direction</span><span class="p">(</span><span class="n">fields</span> <span class="o">=</span> <span class="s1">'up'</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"value != fields"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'value'</span><span class="p">:</span><span class="s1">'subjects'</span><span class="p">})</span>
+        <span class="p">)</span>
+<span class="n">index</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>subjects</th>
+      <th>row</th>
+      <th>column</th>
+      <th>fields</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>9</th>
+      <td>Classics</td>
+      <td>4</td>
+      <td>3</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>History</td>
+      <td>5</td>
+      <td>3</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>Literature</td>
+      <td>6</td>
+      <td>3</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>Philosophy</td>
+      <td>7</td>
+      <td>3</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>Languages</td>
+      <td>8</td>
+      <td>3</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>Music</td>
+      <td>9</td>
+      <td>3</td>
+      <td>Performance</td>
+    </tr>
+    <tr>
+      <th>59</th>
+      <td>Dance</td>
+      <td>10</td>
+      <td>3</td>
+      <td>Performance</td>
+    </tr>
+    <tr>
+      <th>67</th>
+      <td>Drama</td>
+      <td>11</td>
+      <td>3</td>
+      <td>Performance</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Same idea used for the index is applied to the columns:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns</span> <span class="o">=</span> <span class="p">(</span><span class="n">frame</span>
+        <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="p">[</span><span class="s1">'value'</span><span class="p">,</span> <span class="s1">'row'</span><span class="p">,</span> <span class="s1">'column'</span><span class="p">,</span> <span class="s1">'gender'</span><span class="p">]]</span>
+        <span class="c1"># sorting ensures the right order</span>
+        <span class="c1"># to allow correct reshaping</span>
+        <span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">'column'</span><span class="p">,</span> <span class="s1">'row'</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">gender</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">df</span><span class="o">.</span><span class="n">gender</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">df</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">gender</span><span class="p">))</span>
+        <span class="o">.</span><span class="n">fill_direction</span><span class="p">(</span><span class="n">gender</span> <span class="o">=</span> <span class="s1">'down'</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s1">'thin'</span><span class="p">:</span><span class="kc">None</span><span class="p">})</span>
+        <span class="o">.</span><span class="n">fill_direction</span><span class="p">(</span><span class="n">gender</span> <span class="o">=</span> <span class="s1">'up'</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"value != gender"</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'value'</span><span class="p">:</span><span class="s1">'students'</span><span class="p">})</span>
+        <span class="p">)</span>
+<span class="n">columns</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>students</th>
+      <th>row</th>
+      <th>column</th>
+      <th>gender</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>Leah</td>
+      <td>3</td>
+      <td>4</td>
+      <td>Female</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Matilda</td>
+      <td>3</td>
+      <td>5</td>
+      <td>Female</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Olivia</td>
+      <td>3</td>
+      <td>6</td>
+      <td>Female</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Lenny</td>
+      <td>3</td>
+      <td>7</td>
+      <td>Male</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Max</td>
+      <td>3</td>
+      <td>8</td>
+      <td>Male</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Nicholas</td>
+      <td>3</td>
+      <td>9</td>
+      <td>Male</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Paul</td>
+      <td>3</td>
+      <td>10</td>
+      <td>Male</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">frame</span>
+        <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s1">'n'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'value'</span><span class="p">,</span> <span class="s1">'row'</span><span class="p">,</span> <span class="s1">'column'</span><span class="p">]]</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'value'</span><span class="p">:</span><span class="s1">'scores'</span><span class="p">})</span>
+        <span class="p">)</span>
+<span class="n">scores</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>scores</th>
+      <th>row</th>
+      <th>column</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>10</th>
+      <td>3</td>
+      <td>4</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>1</td>
+      <td>4</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2</td>
+      <td>4</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>4</td>
+      <td>4</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>3</td>
+      <td>4</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>3</td>
+      <td>4</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>0</td>
+      <td>4</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>8</td>
+      <td>5</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>3</td>
+      <td>5</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>4</td>
+      <td>5</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>7</td>
+      <td>5</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>5</td>
+      <td>5</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>5</td>
+      <td>5</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>1</td>
+      <td>5</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>1</td>
+      <td>6</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>1</td>
+      <td>6</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>9</td>
+      <td>6</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>3</td>
+      <td>6</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>12</td>
+      <td>6</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>7</td>
+      <td>6</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>5</td>
+      <td>6</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>5</td>
+      <td>7</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>10</td>
+      <td>7</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>10</td>
+      <td>7</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>8</td>
+      <td>7</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>2</td>
+      <td>7</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>5</td>
+      <td>7</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>12</td>
+      <td>7</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>5</td>
+      <td>8</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>4</td>
+      <td>8</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>5</td>
+      <td>8</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>46</th>
+      <td>9</td>
+      <td>8</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>47</th>
+      <td>8</td>
+      <td>8</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>3</td>
+      <td>8</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>49</th>
+      <td>8</td>
+      <td>8</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>51</th>
+      <td>4</td>
+      <td>9</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>10</td>
+      <td>9</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>53</th>
+      <td>10</td>
+      <td>9</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>54</th>
+      <td>2</td>
+      <td>9</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>55</th>
+      <td>4</td>
+      <td>9</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>56</th>
+      <td>5</td>
+      <td>9</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>57</th>
+      <td>6</td>
+      <td>9</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>60</th>
+      <td>4</td>
+      <td>10</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>61</th>
+      <td>5</td>
+      <td>10</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>62</th>
+      <td>6</td>
+      <td>10</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>63</th>
+      <td>4</td>
+      <td>10</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>64</th>
+      <td>12</td>
+      <td>10</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>65</th>
+      <td>9</td>
+      <td>10</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>66</th>
+      <td>2</td>
+      <td>10</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>68</th>
+      <td>2</td>
+      <td>11</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>69</th>
+      <td>7</td>
+      <td>11</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>70</th>
+      <td>8</td>
+      <td>11</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>71</th>
+      <td>6</td>
+      <td>11</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>72</th>
+      <td>1</td>
+      <td>11</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>73</th>
+      <td>12</td>
+      <td>11</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>74</th>
+      <td>3</td>
+      <td>11</td>
+      <td>10</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can merge the dataframes into one:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">index</span>
+<span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">'column'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">'row'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">columns</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">'row'</span><span class="p">),</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">'column'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">'students'</span><span class="p">,</span> <span class="s1">'gender'</span><span class="p">,</span> <span class="s1">'fields'</span><span class="p">,</span> <span class="s1">'subjects'</span><span class="p">,</span> <span class="s1">'scores'</span><span class="p">]]</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>students</th>
+      <th>gender</th>
+      <th>fields</th>
+      <th>subjects</th>
       <th>scores</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
+      <td>Leah</td>
+      <td>Female</td>
       <td>Humanities</td>
       <td>Classics</td>
-      <td>Female</td>
-      <td>Leah</td>
       <td>3</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>Humanities</td>
-      <td>Classics</td>
+      <td>Leah</td>
       <td>Female</td>
-      <td>Matilda</td>
-      <td>1</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>8</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>Humanities</td>
-      <td>Classics</td>
+      <td>Leah</td>
       <td>Female</td>
-      <td>Olivia</td>
-      <td>2</td>
+      <td>Humanities</td>
+      <td>Literature</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>3</th>
+      <td>Leah</td>
+      <td>Female</td>
       <td>Humanities</td>
-      <td>Classics</td>
-      <td>Male</td>
-      <td>Lenny</td>
-      <td>4</td>
+      <td>Philosophy</td>
+      <td>5</td>
     </tr>
     <tr>
       <th>4</th>
+      <td>Leah</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Languages</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Leah</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Leah</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Dance</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Leah</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Matilda</td>
+      <td>Female</td>
       <td>Humanities</td>
       <td>Classics</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Literature</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Philosophy</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Languages</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Dance</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Literature</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Philosophy</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Languages</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Dance</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>Lenny</td>
       <td>Male</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>Lenny</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>Lenny</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Literature</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>Lenny</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Philosophy</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>Lenny</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Languages</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>Lenny</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>Lenny</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Dance</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>Lenny</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>32</th>
       <td>Max</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>Max</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>Max</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Literature</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>Max</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Philosophy</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>Max</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Languages</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>Max</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>Max</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Dance</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>Max</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Literature</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Philosophy</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Languages</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>46</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Dance</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>47</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>49</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Literature</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>51</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Philosophy</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Languages</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>53</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>54</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Dance</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>55</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Drama</td>
       <td>3</td>
     </tr>
   </tbody>
@@ -823,6 +1751,14 @@ The index columns are clearly delineated; the pairing of subjects and names is a
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For this, we can use Pandas' directly, and take advantage of MultiIndexes:</p>
+
+</div>
+</div>
+</div>
     
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -830,216 +1766,16 @@ The index columns are clearly delineated; the pairing of subjects and names is a
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sheet</span> <span class="o">=</span> <span class="s2">"pivot-repeated-headers"</span>
-<span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheet_name</span> <span class="o">=</span> <span class="n">sheet</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-      <span class="c1">#remove completely empty rows and columns</span>
-      <span class="o">.</span><span class="n">remove_empty</span><span class="p">()</span>
-      <span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
-      <span class="c1">#replace remaining nulls with specific values</span>
-      <span class="o">.</span><span class="n">fillna</span><span class="p">({</span><span class="mi">1</span><span class="p">:</span><span class="s1">'subject'</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="s1">'student'</span><span class="p">})</span>
-      <span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-     <span class="p">)</span>
-<span class="n">df</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_html rendered_html output_subarea output_execute_result">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th></th>
-      <th>3</th>
-      <th>4</th>
-      <th>5</th>
-    </tr>
-    <tr>
-      <th>1</th>
-      <th>2</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>subject</th>
-      <th>student</th>
-      <td>Term 1</td>
-      <td>Term 2</td>
-      <td>Term 3</td>
-    </tr>
-    <tr>
-      <th rowspan="5" valign="top">Classics</th>
-      <th>Matilda</th>
-      <td>1</td>
-      <td>7</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>Nicholas</th>
-      <td>2</td>
-      <td>9</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>Olivia</th>
-      <td>8</td>
-      <td>4</td>
-      <td>9</td>
-    </tr>
-    <tr>
-      <th>Paul</th>
-      <td>9</td>
-      <td>4</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>Paul</th>
-      <td>Term 1</td>
-      <td>Term 2</td>
-      <td>Term 3</td>
-    </tr>
-    <tr>
-      <th rowspan="5" valign="top">History</th>
-      <th>Matilda</th>
-      <td>6</td>
-      <td>6</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>Nicholas</th>
-      <td>2</td>
-      <td>4</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>Olivia</th>
-      <td>5</td>
-      <td>0</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>Paul</th>
-      <td>2</td>
-      <td>6</td>
-      <td>7</td>
-    </tr>
-    <tr>
-      <th>Paul</th>
-      <td>Term 1</td>
-      <td>Term 2</td>
-      <td>Term 3</td>
-    </tr>
-    <tr>
-      <th rowspan="5" valign="top">Music</th>
-      <th>Matilda</th>
-      <td>0</td>
-      <td>5</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>Nicholas</th>
-      <td>1</td>
-      <td>1</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>Olivia</th>
-      <td>6</td>
-      <td>1</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>Paul</th>
-      <td>2</td>
-      <td>0</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>Paul</th>
-      <td>Term 1</td>
-      <td>Term 2</td>
-      <td>Term 3</td>
-    </tr>
-    <tr>
-      <th rowspan="4" valign="top">Drama</th>
-      <th>Matilda</th>
-      <td>4</td>
-      <td>3</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>Nicholas</th>
-      <td>9</td>
-      <td>3</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>Olivia</th>
-      <td>2</td>
-      <td>7</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>Paul</th>
-      <td>2</td>
-      <td>7</td>
-      <td>1</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#cleanup some more into tidy form </span>
-<span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">row_to_names</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-       <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'subject'</span><span class="p">,</span><span class="s1">'student'</span><span class="p">],</span>
-                    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Term'</span><span class="p">])</span>
-       <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'`Term 1` != "Term 1"'</span><span class="p">)</span>
-       <span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="s1">'Term'</span><span class="p">)</span>
-       <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'scores'</span><span class="p">)</span>
-      <span class="p">)</span>
-
-<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">excel_file</span>
+<span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sheet_name</span><span class="o">=</span> <span class="s2">"pivot-repeated-headers"</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">index_col</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">level</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">level</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"`Term 1` != 'Term 1'"</span><span class="p">)</span>
+<span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'subject'</span><span class="p">,</span> <span class="s1">'name'</span><span class="p">])</span>
+<span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">var_name</span> <span class="o">=</span> <span class="s1">'Term'</span><span class="p">,</span> <span class="n">value_name</span> <span class="o">=</span> <span class="s1">'scores'</span><span class="p">,</span> <span class="n">ignore_index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="o">.</span><span class="n">fill_direction</span><span class="p">(</span><span class="n">subject</span> <span class="o">=</span> <span class="s1">'down'</span><span class="p">)</span>
+<span class="p">)</span>
 </pre></div>
 
     </div>
@@ -1072,7 +1808,7 @@ The index columns are clearly delineated; the pairing of subjects and names is a
     <tr style="text-align: right;">
       <th></th>
       <th>subject</th>
-      <th>student</th>
+      <th>name</th>
       <th>Term</th>
       <th>scores</th>
     </tr>
@@ -1088,65 +1824,331 @@ The index columns are clearly delineated; the pairing of subjects and names is a
     <tr>
       <th>1</th>
       <td>Classics</td>
-      <td>Matilda</td>
-      <td>Term 2</td>
-      <td>7</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>Classics</td>
-      <td>Matilda</td>
-      <td>Term 3</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>Classics</td>
       <td>Nicholas</td>
       <td>Term 1</td>
       <td>2</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>Classics</td>
-      <td>Nicholas</td>
-      <td>Term 2</td>
-      <td>9</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>Classics</td>
-      <td>Nicholas</td>
-      <td>Term 3</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>6</th>
+      <th>2</th>
       <td>Classics</td>
       <td>Olivia</td>
       <td>Term 1</td>
       <td>8</td>
     </tr>
     <tr>
+      <th>3</th>
+      <td>Classics</td>
+      <td>Paul</td>
+      <td>Term 1</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>History</td>
+      <td>Matilda</td>
+      <td>Term 1</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>History</td>
+      <td>Nicholas</td>
+      <td>Term 1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>History</td>
+      <td>Olivia</td>
+      <td>Term 1</td>
+      <td>5</td>
+    </tr>
+    <tr>
       <th>7</th>
+      <td>History</td>
+      <td>Paul</td>
+      <td>Term 1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Music</td>
+      <td>Matilda</td>
+      <td>Term 1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Music</td>
+      <td>Nicholas</td>
+      <td>Term 1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Music</td>
+      <td>Olivia</td>
+      <td>Term 1</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Music</td>
+      <td>Paul</td>
+      <td>Term 1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Drama</td>
+      <td>Matilda</td>
+      <td>Term 1</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Drama</td>
+      <td>Nicholas</td>
+      <td>Term 1</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Drama</td>
+      <td>Olivia</td>
+      <td>Term 1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Drama</td>
+      <td>Paul</td>
+      <td>Term 1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Classics</td>
+      <td>Matilda</td>
+      <td>Term 2</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Classics</td>
+      <td>Nicholas</td>
+      <td>Term 2</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>18</th>
       <td>Classics</td>
       <td>Olivia</td>
       <td>Term 2</td>
       <td>4</td>
     </tr>
     <tr>
-      <th>8</th>
+      <th>19</th>
+      <td>Classics</td>
+      <td>Paul</td>
+      <td>Term 2</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>History</td>
+      <td>Matilda</td>
+      <td>Term 2</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>History</td>
+      <td>Nicholas</td>
+      <td>Term 2</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>History</td>
+      <td>Olivia</td>
+      <td>Term 2</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>History</td>
+      <td>Paul</td>
+      <td>Term 2</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>Music</td>
+      <td>Matilda</td>
+      <td>Term 2</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>Music</td>
+      <td>Nicholas</td>
+      <td>Term 2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>Music</td>
+      <td>Olivia</td>
+      <td>Term 2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>Music</td>
+      <td>Paul</td>
+      <td>Term 2</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>Drama</td>
+      <td>Matilda</td>
+      <td>Term 2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>Drama</td>
+      <td>Nicholas</td>
+      <td>Term 2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>Drama</td>
+      <td>Olivia</td>
+      <td>Term 2</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>Drama</td>
+      <td>Paul</td>
+      <td>Term 2</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>Classics</td>
+      <td>Matilda</td>
+      <td>Term 3</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>Classics</td>
+      <td>Nicholas</td>
+      <td>Term 3</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>34</th>
       <td>Classics</td>
       <td>Olivia</td>
       <td>Term 3</td>
       <td>9</td>
     </tr>
     <tr>
-      <th>9</th>
+      <th>35</th>
       <td>Classics</td>
       <td>Paul</td>
-      <td>Term 1</td>
-      <td>9</td>
+      <td>Term 3</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>History</td>
+      <td>Matilda</td>
+      <td>Term 3</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>History</td>
+      <td>Nicholas</td>
+      <td>Term 3</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>History</td>
+      <td>Olivia</td>
+      <td>Term 3</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>History</td>
+      <td>Paul</td>
+      <td>Term 3</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>Music</td>
+      <td>Matilda</td>
+      <td>Term 3</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>Music</td>
+      <td>Nicholas</td>
+      <td>Term 3</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>Music</td>
+      <td>Olivia</td>
+      <td>Term 3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>Music</td>
+      <td>Paul</td>
+      <td>Term 3</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>Drama</td>
+      <td>Matilda</td>
+      <td>Term 3</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>Drama</td>
+      <td>Nicholas</td>
+      <td>Term 3</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>46</th>
+      <td>Drama</td>
+      <td>Olivia</td>
+      <td>Term 3</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>47</th>
+      <td>Drama</td>
+      <td>Paul</td>
+      <td>Term 3</td>
+      <td>1</td>
     </tr>
   </tbody>
 </table>
@@ -1176,6 +2178,7 @@ The index columns are clearly delineated; the pairing of subjects and names is a
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>In this scenario, we have the subjects as a row header, mixed with the data. Note that the Term1,Term2,Term3 row is repeated.</p>
+<p>Just like in case 1, we can use <a href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a> to get the font data (specifically, the cells with bold font) and with that location, correctly align the data:</p>
 
 </div>
 </div>
@@ -1187,28 +2190,9 @@ The index columns are clearly delineated; the pairing of subjects and names is a
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> 
-                    <span class="n">sheet_name</span> <span class="o">=</span> <span class="s2">"pivot-header-within-data"</span><span class="p">,</span>
-                    <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
-      <span class="o">.</span><span class="n">remove_empty</span><span class="p">()</span>
-      <span class="c1">#extract subjects</span>
-      <span class="c1">#where the last column is null , get the entry in column 2</span>
-      <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">temp</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span>
-              <span class="n">subject</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">temp</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
-             <span class="p">)</span>
-      <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'temp'</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-      <span class="c1">#get rid of nulls in column 4</span>
-      <span class="c1">#gives the added advantage of </span>
-      <span class="c1">#removing the sujbects rows from column 2,</span>
-      <span class="c1">#as they are redundant</span>
-      <span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
-      <span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
-      <span class="c1">#fill the remaining null in column 1 with a relevant word</span>
-      <span class="o">.</span><span class="n">fillna</span><span class="p">({</span><span class="mi">1</span><span class="p">:</span><span class="s1">'student'</span><span class="p">})</span>
-      <span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="s1">'subject'</span><span class="p">])</span>
-     <span class="p">)</span>
-
-<span class="n">df</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">excel_file</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">"pivot-header-within-data"</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include_blank_cells</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">frame</span><span class="p">[</span><span class="s1">'bold'</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'b'</span><span class="p">)</span>
+<span class="n">frame</span>
 </pre></div>
 
     </div>
@@ -1240,156 +2224,342 @@ The index columns are clearly delineated; the pairing of subjects and names is a
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th></th>
-      <th>2</th>
-      <th>3</th>
-      <th>4</th>
-    </tr>
-    <tr>
-      <th>1</th>
-      <th>subject</th>
-      <th></th>
-      <th></th>
-      <th></th>
+      <th>value</th>
+      <th>internal_value</th>
+      <th>coordinate</th>
+      <th>row</th>
+      <th>column</th>
+      <th>data_type</th>
+      <th>is_date</th>
+      <th>number_format</th>
+      <th>font</th>
+      <th>bold</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>student</th>
-      <th>Classics</th>
-      <td>Term 1</td>
-      <td>Term 2</td>
-      <td>Term 3</td>
+      <th>0</th>
+      <td>Classics</td>
+      <td>Classics</td>
+      <td>C2</td>
+      <td>2</td>
+      <td>3</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+      <td>True</td>
     </tr>
     <tr>
-      <th>Matilda</th>
-      <th>Classics</th>
+      <th>1</th>
+      <td>Term 1</td>
+      <td>Term 1</td>
+      <td>C3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Term 2</td>
+      <td>Term 2</td>
+      <td>D3</td>
+      <td>3</td>
+      <td>4</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Term 3</td>
+      <td>Term 3</td>
+      <td>E3</td>
+      <td>3</td>
+      <td>5</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Matilda</td>
+      <td>Matilda</td>
+      <td>B4</td>
+      <td>4</td>
+      <td>2</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>75</th>
+      <td>3</td>
+      <td>3</td>
+      <td>E24</td>
+      <td>24</td>
+      <td>5</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>76</th>
+      <td>Paul</td>
+      <td>Paul</td>
+      <td>B25</td>
+      <td>25</td>
+      <td>2</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>77</th>
+      <td>5</td>
+      <td>5</td>
+      <td>C25</td>
+      <td>25</td>
+      <td>3</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>78</th>
+      <td>7</td>
+      <td>7</td>
+      <td>D25</td>
+      <td>25</td>
+      <td>4</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>79</th>
+      <td>2</td>
+      <td>2</td>
+      <td>E25</td>
+      <td>25</td>
+      <td>5</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+<p>80 rows × 10 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">name_subject</span> <span class="o">=</span> <span class="p">(</span><span class="n">frame</span>
+                <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">data_type</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">'s'</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">frame</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'Term'</span><span class="p">,</span> <span class="n">na</span> <span class="o">=</span> <span class="kc">False</span><span class="p">),</span> <span class="p">[</span><span class="s1">'value'</span><span class="p">,</span> <span class="s1">'bold'</span><span class="p">,</span> <span class="s1">'row'</span><span class="p">,</span> <span class="s1">'column'</span><span class="p">]]</span>
+                <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">subject</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">bold</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">))</span>
+                <span class="o">.</span><span class="n">fill_direction</span><span class="p">(</span><span class="n">subject</span> <span class="o">=</span> <span class="s1">'down'</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'value != subject'</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'value'</span><span class="p">:</span><span class="s1">'name'</span><span class="p">})</span>
+                <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="s1">'bold'</span><span class="p">)</span>
+                <span class="p">)</span>
+
+<span class="n">name_subject</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>row</th>
+      <th>column</th>
+      <th>subject</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4</th>
+      <td>Matilda</td>
+      <td>4</td>
+      <td>2</td>
+      <td>Classics</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Nicholas</td>
+      <td>5</td>
+      <td>2</td>
+      <td>Classics</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Olivia</td>
+      <td>6</td>
+      <td>2</td>
+      <td>Classics</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Paul</td>
       <td>7</td>
       <td>2</td>
-      <td>1</td>
+      <td>Classics</td>
     </tr>
     <tr>
-      <th>Nicholas</th>
-      <th>Classics</th>
-      <td>9</td>
-      <td>7</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>Olivia</th>
-      <th>Classics</th>
-      <td>5</td>
-      <td>9</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th rowspan="2" valign="top">Paul</th>
-      <th>Classics</th>
-      <td>1</td>
-      <td>4</td>
-      <td>9</td>
-    </tr>
-    <tr>
-      <th>History</th>
-      <td>Term 1</td>
-      <td>Term 2</td>
-      <td>Term 3</td>
-    </tr>
-    <tr>
-      <th>Matilda</th>
-      <th>History</th>
-      <td>0</td>
-      <td>0</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>Nicholas</th>
-      <th>History</th>
-      <td>4</td>
-      <td>5</td>
-      <td>9</td>
-    </tr>
-    <tr>
-      <th>Olivia</th>
-      <th>History</th>
-      <td>1</td>
-      <td>3</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th rowspan="2" valign="top">Paul</th>
-      <th>History</th>
-      <td>3</td>
-      <td>5</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>Music</th>
-      <td>Term 1</td>
-      <td>Term 2</td>
-      <td>Term 3</td>
-    </tr>
-    <tr>
-      <th>Matilda</th>
-      <th>Music</th>
-      <td>6</td>
+      <th>24</th>
+      <td>Matilda</td>
+      <td>10</td>
       <td>2</td>
-      <td>4</td>
+      <td>History</td>
     </tr>
     <tr>
-      <th>Nicholas</th>
-      <th>Music</th>
-      <td>5</td>
-      <td>7</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>Olivia</th>
-      <th>Music</th>
-      <td>1</td>
-      <td>6</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th rowspan="2" valign="top">Paul</th>
-      <th>Music</th>
-      <td>1</td>
-      <td>3</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>Drama</th>
-      <td>Term 1</td>
-      <td>Term 2</td>
-      <td>Term 3</td>
-    </tr>
-    <tr>
-      <th>Matilda</th>
-      <th>Drama</th>
-      <td>7</td>
-      <td>7</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>Nicholas</th>
-      <th>Drama</th>
-      <td>6</td>
-      <td>7</td>
-      <td>8</td>
-    </tr>
-    <tr>
-      <th>Olivia</th>
-      <th>Drama</th>
-      <td>1</td>
-      <td>3</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>Paul</th>
-      <th>Drama</th>
-      <td>5</td>
-      <td>7</td>
+      <th>28</th>
+      <td>Nicholas</td>
+      <td>11</td>
       <td>2</td>
+      <td>History</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>Olivia</td>
+      <td>12</td>
+      <td>2</td>
+      <td>History</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>Paul</td>
+      <td>13</td>
+      <td>2</td>
+      <td>History</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>Matilda</td>
+      <td>16</td>
+      <td>2</td>
+      <td>Music</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>Nicholas</td>
+      <td>17</td>
+      <td>2</td>
+      <td>Music</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>Olivia</td>
+      <td>18</td>
+      <td>2</td>
+      <td>Music</td>
+    </tr>
+    <tr>
+      <th>56</th>
+      <td>Paul</td>
+      <td>19</td>
+      <td>2</td>
+      <td>Music</td>
+    </tr>
+    <tr>
+      <th>64</th>
+      <td>Matilda</td>
+      <td>22</td>
+      <td>2</td>
+      <td>Drama</td>
+    </tr>
+    <tr>
+      <th>68</th>
+      <td>Nicholas</td>
+      <td>23</td>
+      <td>2</td>
+      <td>Drama</td>
+    </tr>
+    <tr>
+      <th>72</th>
+      <td>Olivia</td>
+      <td>24</td>
+      <td>2</td>
+      <td>Drama</td>
+    </tr>
+    <tr>
+      <th>76</th>
+      <td>Paul</td>
+      <td>25</td>
+      <td>2</td>
+      <td>Drama</td>
     </tr>
   </tbody>
 </table>
@@ -1404,6 +2574,14 @@ The index columns are clearly delineated; the pairing of subjects and names is a
 </div>
     
 
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Get the terms:</p>
+
+</div>
+</div>
+</div>
     
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -1411,17 +2589,55 @@ The index columns are clearly delineated; the pairing of subjects and names is a
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#final steps</span>
-<span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
-      <span class="o">.</span><span class="n">row_to_names</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-      <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span><span class="o">=</span> <span class="p">[</span><span class="s1">'student'</span><span class="p">,</span><span class="s1">'subject'</span><span class="p">],</span>
-                   <span class="n">columns</span><span class="o">=</span> <span class="p">[</span><span class="s1">'Term'</span><span class="p">])</span>
-      <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"`Term 1` != 'Term 1'"</span><span class="p">)</span>
-      <span class="o">.</span><span class="n">stack</span><span class="p">()</span>
-      <span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span> <span class="s1">'Scores'</span><span class="p">)</span>
-     <span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">terms</span> <span class="o">=</span> <span class="p">(</span><span class="n">frame</span>
+        <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">'Term'</span><span class="p">,</span> <span class="n">na</span> <span class="o">=</span> <span class="kc">False</span><span class="p">),</span> <span class="p">[</span><span class="s1">'value'</span><span class="p">,</span> <span class="s1">'column'</span><span class="p">]]</span>
+        <span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+        <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'column'</span><span class="p">)</span>
+        <span class="o">.</span><span class="n">value</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">'term'</span><span class="p">)</span>
+        <span class="p">)</span>
+<span class="n">terms</span>
+</pre></div>
 
-<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>column
+3    Term 1
+4    Term 2
+5    Term 3
+Name: term, dtype: object</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">frame</span>
+        <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s1">'n'</span><span class="p">,</span> <span class="p">[</span><span class="s1">'value'</span><span class="p">,</span> <span class="s1">'row'</span><span class="p">,</span> <span class="s1">'column'</span><span class="p">]]</span>
+        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'value'</span><span class="p">:</span><span class="s1">'scores'</span><span class="p">})</span>
+        <span class="p">)</span>
+<span class="n">scores</span>
 </pre></div>
 
     </div>
@@ -1453,10 +2669,369 @@ The index columns are clearly delineated; the pairing of subjects and names is a
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>student</th>
+      <th>scores</th>
+      <th>row</th>
+      <th>column</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>7</td>
+      <td>4</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2</td>
+      <td>4</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1</td>
+      <td>4</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>9</td>
+      <td>5</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>7</td>
+      <td>5</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>6</td>
+      <td>5</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>5</td>
+      <td>6</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>9</td>
+      <td>6</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>5</td>
+      <td>6</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>1</td>
+      <td>7</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>4</td>
+      <td>7</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>9</td>
+      <td>7</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>0</td>
+      <td>10</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>0</td>
+      <td>10</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>5</td>
+      <td>10</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>4</td>
+      <td>11</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>5</td>
+      <td>11</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>9</td>
+      <td>11</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>1</td>
+      <td>12</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>3</td>
+      <td>12</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>3</td>
+      <td>12</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>3</td>
+      <td>13</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>5</td>
+      <td>13</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>6</td>
+      <td>13</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>6</td>
+      <td>16</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>46</th>
+      <td>2</td>
+      <td>16</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>47</th>
+      <td>4</td>
+      <td>16</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>49</th>
+      <td>5</td>
+      <td>17</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>7</td>
+      <td>17</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>51</th>
+      <td>6</td>
+      <td>17</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>53</th>
+      <td>1</td>
+      <td>18</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>54</th>
+      <td>6</td>
+      <td>18</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>55</th>
+      <td>0</td>
+      <td>18</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>57</th>
+      <td>1</td>
+      <td>19</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>58</th>
+      <td>3</td>
+      <td>19</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>59</th>
+      <td>3</td>
+      <td>19</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>65</th>
+      <td>7</td>
+      <td>22</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>66</th>
+      <td>7</td>
+      <td>22</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>67</th>
+      <td>0</td>
+      <td>22</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>69</th>
+      <td>6</td>
+      <td>23</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>70</th>
+      <td>7</td>
+      <td>23</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>71</th>
+      <td>8</td>
+      <td>23</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>73</th>
+      <td>1</td>
+      <td>24</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>74</th>
+      <td>3</td>
+      <td>24</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>75</th>
+      <td>3</td>
+      <td>24</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>77</th>
+      <td>5</td>
+      <td>25</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>78</th>
+      <td>7</td>
+      <td>25</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>79</th>
+      <td>2</td>
+      <td>25</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Merge the dataframes into one:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">name_subject</span>
+<span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">'column'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">'row'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">term</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">terms</span><span class="p">))</span>
+<span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'row'</span><span class="p">,</span> <span class="s1">'column'</span><span class="p">])</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
       <th>subject</th>
-      <th>Term</th>
-      <th>Scores</th>
+      <th>scores</th>
+      <th>term</th>
     </tr>
   </thead>
   <tbody>
@@ -1464,71 +3039,337 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <th>0</th>
       <td>Matilda</td>
       <td>Classics</td>
-      <td>Term 1</td>
       <td>7</td>
+      <td>Term 1</td>
     </tr>
     <tr>
       <th>1</th>
       <td>Matilda</td>
       <td>Classics</td>
-      <td>Term 2</td>
       <td>2</td>
+      <td>Term 2</td>
     </tr>
     <tr>
       <th>2</th>
       <td>Matilda</td>
       <td>Classics</td>
-      <td>Term 3</td>
       <td>1</td>
+      <td>Term 3</td>
     </tr>
     <tr>
       <th>3</th>
       <td>Nicholas</td>
       <td>Classics</td>
-      <td>Term 1</td>
       <td>9</td>
+      <td>Term 1</td>
     </tr>
     <tr>
       <th>4</th>
       <td>Nicholas</td>
       <td>Classics</td>
-      <td>Term 2</td>
       <td>7</td>
+      <td>Term 2</td>
     </tr>
     <tr>
       <th>5</th>
       <td>Nicholas</td>
       <td>Classics</td>
-      <td>Term 3</td>
       <td>6</td>
+      <td>Term 3</td>
     </tr>
     <tr>
       <th>6</th>
       <td>Olivia</td>
       <td>Classics</td>
-      <td>Term 1</td>
       <td>5</td>
+      <td>Term 1</td>
     </tr>
     <tr>
       <th>7</th>
       <td>Olivia</td>
       <td>Classics</td>
-      <td>Term 2</td>
       <td>9</td>
+      <td>Term 2</td>
     </tr>
     <tr>
       <th>8</th>
       <td>Olivia</td>
       <td>Classics</td>
-      <td>Term 3</td>
       <td>5</td>
+      <td>Term 3</td>
     </tr>
     <tr>
       <th>9</th>
       <td>Paul</td>
       <td>Classics</td>
-      <td>Term 1</td>
       <td>1</td>
+      <td>Term 1</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Paul</td>
+      <td>Classics</td>
+      <td>4</td>
+      <td>Term 2</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Paul</td>
+      <td>Classics</td>
+      <td>9</td>
+      <td>Term 3</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Matilda</td>
+      <td>History</td>
+      <td>0</td>
+      <td>Term 1</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Matilda</td>
+      <td>History</td>
+      <td>0</td>
+      <td>Term 2</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Matilda</td>
+      <td>History</td>
+      <td>5</td>
+      <td>Term 3</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Nicholas</td>
+      <td>History</td>
+      <td>4</td>
+      <td>Term 1</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Nicholas</td>
+      <td>History</td>
+      <td>5</td>
+      <td>Term 2</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Nicholas</td>
+      <td>History</td>
+      <td>9</td>
+      <td>Term 3</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>Olivia</td>
+      <td>History</td>
+      <td>1</td>
+      <td>Term 1</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>Olivia</td>
+      <td>History</td>
+      <td>3</td>
+      <td>Term 2</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>Olivia</td>
+      <td>History</td>
+      <td>3</td>
+      <td>Term 3</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>Paul</td>
+      <td>History</td>
+      <td>3</td>
+      <td>Term 1</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>Paul</td>
+      <td>History</td>
+      <td>5</td>
+      <td>Term 2</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>Paul</td>
+      <td>History</td>
+      <td>6</td>
+      <td>Term 3</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>Matilda</td>
+      <td>Music</td>
+      <td>6</td>
+      <td>Term 1</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>Matilda</td>
+      <td>Music</td>
+      <td>2</td>
+      <td>Term 2</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>Matilda</td>
+      <td>Music</td>
+      <td>4</td>
+      <td>Term 3</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>Nicholas</td>
+      <td>Music</td>
+      <td>5</td>
+      <td>Term 1</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>Nicholas</td>
+      <td>Music</td>
+      <td>7</td>
+      <td>Term 2</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>Nicholas</td>
+      <td>Music</td>
+      <td>6</td>
+      <td>Term 3</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>Olivia</td>
+      <td>Music</td>
+      <td>1</td>
+      <td>Term 1</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>Olivia</td>
+      <td>Music</td>
+      <td>6</td>
+      <td>Term 2</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>Olivia</td>
+      <td>Music</td>
+      <td>0</td>
+      <td>Term 3</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>Paul</td>
+      <td>Music</td>
+      <td>1</td>
+      <td>Term 1</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>Paul</td>
+      <td>Music</td>
+      <td>3</td>
+      <td>Term 2</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>Paul</td>
+      <td>Music</td>
+      <td>3</td>
+      <td>Term 3</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>Matilda</td>
+      <td>Drama</td>
+      <td>7</td>
+      <td>Term 1</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>Matilda</td>
+      <td>Drama</td>
+      <td>7</td>
+      <td>Term 2</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>Matilda</td>
+      <td>Drama</td>
+      <td>0</td>
+      <td>Term 3</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>Nicholas</td>
+      <td>Drama</td>
+      <td>6</td>
+      <td>Term 1</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>Nicholas</td>
+      <td>Drama</td>
+      <td>7</td>
+      <td>Term 2</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>Nicholas</td>
+      <td>Drama</td>
+      <td>8</td>
+      <td>Term 3</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>Olivia</td>
+      <td>Drama</td>
+      <td>1</td>
+      <td>Term 1</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>Olivia</td>
+      <td>Drama</td>
+      <td>3</td>
+      <td>Term 2</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>Olivia</td>
+      <td>Drama</td>
+      <td>3</td>
+      <td>Term 3</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>Paul</td>
+      <td>Drama</td>
+      <td>5</td>
+      <td>Term 1</td>
+    </tr>
+    <tr>
+      <th>46</th>
+      <td>Paul</td>
+      <td>Drama</td>
+      <td>7</td>
+      <td>Term 2</td>
+    </tr>
+    <tr>
+      <th>47</th>
+      <td>Paul</td>
+      <td>Drama</td>
+      <td>2</td>
+      <td>Term 3</td>
     </tr>
   </tbody>
 </table>
