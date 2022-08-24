@@ -17,7 +17,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-05-19T00:00:00-05:00" />
 <script type="application/ld+json">
-{"headline":"Access Excel Tables with Python","dateModified":"2020-05-19T00:00:00-05:00","datePublished":"2020-05-19T00:00:00-05:00","author":{"@type":"Person","name":"Samuel Oranyeli"},"image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","description":"Extract data from a defined table in a spreadsheet","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/openpyxl/2020/05/19/Access-Tables-In-Excel.html"},"@type":"BlogPosting","url":"https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/openpyxl/2020/05/19/Access-Tables-In-Excel.html","@context":"https://schema.org"}</script>
+{"headline":"Access Excel Tables with Python","dateModified":"2020-05-19T00:00:00-05:00","datePublished":"2020-05-19T00:00:00-05:00","description":"Extract data from a defined table in a spreadsheet","author":{"@type":"Person","name":"Samuel Oranyeli"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/openpyxl/2020/05/19/Access-Tables-In-Excel.html"},"image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","@type":"BlogPosting","url":"https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/openpyxl/2020/05/19/Access-Tables-In-Excel.html","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/data-wrangling-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" /><link rel="shortcut icon" type="image/x-icon" href="/data-wrangling-blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
 <title>Access Excel Tables with Python | Samuel Oranyeli</title>
@@ -34,7 +34,7 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-05-19T00:00:00-05:00" />
 <script type="application/ld+json">
-{"headline":"Access Excel Tables with Python","dateModified":"2020-05-19T00:00:00-05:00","datePublished":"2020-05-19T00:00:00-05:00","author":{"@type":"Person","name":"Samuel Oranyeli"},"image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","description":"Extract data from a defined table in a spreadsheet","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/openpyxl/2020/05/19/Access-Tables-In-Excel.html"},"@type":"BlogPosting","url":"https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/openpyxl/2020/05/19/Access-Tables-In-Excel.html","@context":"https://schema.org"}</script>
+{"headline":"Access Excel Tables with Python","dateModified":"2020-05-19T00:00:00-05:00","datePublished":"2020-05-19T00:00:00-05:00","description":"Extract data from a defined table in a spreadsheet","author":{"@type":"Person","name":"Samuel Oranyeli"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/openpyxl/2020/05/19/Access-Tables-In-Excel.html"},"image":"https://samukweku.github.io/data-wrangling-blog/images/some_folder/your_image.png","@type":"BlogPosting","url":"https://samukweku.github.io/data-wrangling-blog/spreadsheet/python/pandas/openpyxl/2020/05/19/Access-Tables-In-Excel.html","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 <link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
@@ -114,7 +114,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      5 min read
+      6 min read
     
 </span></p>
 
@@ -157,6 +157,7 @@ window.onload = wrap_img;
 <ul>
 <li class="toc-entry toc-h3"><a href="#Option-1---The-Naive-way:">Option 1 - The Naive way: </a></li>
 <li class="toc-entry toc-h3"><a href="#Option-2---The-better-way-:">Option 2 - The better way : </a></li>
+<li class="toc-entry toc-h3"><a href="#Option-3---An-even-simpler-form-:">Option 3 - An even simpler form : </a></li>
 </ul>
 </li>
 </ul><!--
@@ -181,14 +182,6 @@ window.onload = wrap_img;
 <h2 id="Access-Excel-Tables-with-Python">
 <a class="anchor" href="#Access-Excel-Tables-with-Python" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Access Excel Tables with Python</strong><a class="anchor-link" href="#Access-Excel-Tables-with-Python"> </a>
 </h2>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p><em>Note : This post has an updated version <a href="https://samukweku.github.io/data-wrangling/python_pandas_access_excel_tables_with_python.html">here</a></em></p>
-
 </div>
 </div>
 </div>
@@ -498,13 +491,13 @@ Data Source : <a href="https://www.youtube.com/watch?v=nBu1Bqa1jjs&amp;t=1780s">
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#import library</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import library</span>
 <span class="kn">from</span> <span class="nn">openpyxl</span> <span class="kn">import</span> <span class="n">load_workbook</span>
 
-<span class="c1">#read file</span>
+<span class="c1"># read file</span>
 <span class="n">wb</span> <span class="o">=</span> <span class="n">load_workbook</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
-<span class="c1">#access specific sheet</span>
+<span class="c1"># access specific sheet</span>
 <span class="n">ws</span> <span class="o">=</span> <span class="n">wb</span><span class="p">[</span><span class="s2">"Tables"</span><span class="p">]</span>
 </pre></div>
 
@@ -916,6 +909,369 @@ Data Source : <a href="https://www.youtube.com/watch?v=nBu1Bqa1jjs&amp;t=1780s">
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Option-3---An-even-simpler-form-:">
+<a class="anchor" href="#Option-3---An-even-simpler-form-:" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Option 3 - An even simpler form :</strong><a class="anchor-link" href="#Option-3---An-even-simpler-form-:"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The steps above can be simplified by using the <a href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_table">xlsx_table</a> function from <a href="https://pyjanitor-devs.github.io/pyjanitor/">pyjanitor</a>. Simply install <a href="https://github.com/pyjanitor-devs/pyjanitor">pyjanitor</a> with pip, and read in the Excel table:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># pip install pyjanitor</span>
+<span class="kn">from</span> <span class="nn">janitor</span> <span class="kn">import</span> <span class="n">xlsx_table</span>
+
+<span class="c1"># read in the specific table:</span>
+<span class="n">xlsx_table</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetname</span><span class="o">=</span><span class="s1">'Tables'</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="s1">'dCategory'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CategoryID</th>
+      <th>Category</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Beginner</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Advanced</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Freestyle</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Competition</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Long Distance</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>All the tables can be read at once; it will be loaded as a dictionary, and the relevant table accessed:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tables</span> <span class="o">=</span> <span class="n">xlsx_table</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetname</span><span class="o">=</span><span class="s1">'Tables'</span><span class="p">)</span>
+
+<span class="c1"># view all the keys, which are the table names:</span>
+<span class="n">tables</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>dict_keys(['dSalesReps', 'dProduct', 'dCategory', 'dSupplier'])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Access a specific table, using Python's dictionary syntax:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tables</span><span class="p">[</span><span class="s1">'dSalesReps'</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>SalesRepID</th>
+      <th>SalesRep</th>
+      <th>Region</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Sioux Radcoolinator</td>
+      <td>NW</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Tyrone Smithe</td>
+      <td>NE</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Chantel Zoya</td>
+      <td>SW</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Chin Pham</td>
+      <td>SE</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Diego Vasque</td>
+      <td>MW</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>6</td>
+      <td>Vannessa Deloach</td>
+      <td>W</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>7</td>
+      <td>Shon Stein</td>
+      <td>NW</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>8</td>
+      <td>Tomi Benton</td>
+      <td>NE</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>9</td>
+      <td>Ghislaine Stidham</td>
+      <td>SW</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>10</td>
+      <td>Yoshiko Murillo</td>
+      <td>SE</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>11</td>
+      <td>Hoyt Potts</td>
+      <td>MW</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>12</td>
+      <td>Alysha Dewitt</td>
+      <td>W</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>13</td>
+      <td>Claudine Dupuis</td>
+      <td>NW</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>14</td>
+      <td>Shanta Spring</td>
+      <td>NE</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>15</td>
+      <td>Ramonita Babcock</td>
+      <td>SW</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>16</td>
+      <td>Janyce Betancourt</td>
+      <td>SE</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>17</td>
+      <td>Rhiannon Cathey</td>
+      <td>MW</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>18</td>
+      <td>Dominica Ordonez</td>
+      <td>W</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>19</td>
+      <td>Rana Burchfield</td>
+      <td>NW</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>20</td>
+      <td>Neida Ashe</td>
+      <td>NE</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>21</td>
+      <td>Marylouise Halverson</td>
+      <td>MW</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>22</td>
+      <td>Naoma Bloom</td>
+      <td>NW</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>23</td>
+      <td>JoJo Jones</td>
+      <td>W</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>24</td>
+      <td>Dean Washington</td>
+      <td>W</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>25</td>
+      <td>Kiki Lim</td>
+      <td>W</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
 </div>
 
 
