@@ -1752,7 +1752,8 @@ window.onload = wrap_img;
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">cmd</span> <span class="o">=</span> <span class="s2">"unzip -p Data_files/iris.zip |"</span>
-<span class="n">cmd</span> <span class="o">+=</span> <span class="s2">"""awk 'BEGIN {FS = ","};  {if($5=="virginica" ||  NR == 1) </span><span class="si">{print}</span><span class="s2">}'"""</span>
+<span class="n">cmd</span> <span class="o">+=</span> <span class="s2">"""awk 'BEGIN {FS = ","}; """</span>
+<span class="n">cmd</span> <span class="o">+=</span> <span class="s2">"""{if($5=="virginica" ||  NR == 1) </span><span class="si">{print}</span><span class="s2">}'"""</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">read_commandline</span><span class="p">(</span><span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span><span class="p">)</span>
 <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
