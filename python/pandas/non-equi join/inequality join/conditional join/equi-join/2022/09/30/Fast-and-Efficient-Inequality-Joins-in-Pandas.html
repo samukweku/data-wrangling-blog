@@ -2468,7 +2468,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>3.18 s ± 102 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<pre>3.09 s ± 15.7 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre>
 </div>
 </div>
@@ -2499,7 +2499,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>106 ms ± 4.9 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<pre>108 ms ± 6.54 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre>
 </div>
 </div>
@@ -2530,7 +2530,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>98.4 ms ± 3.27 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<pre>100 ms ± 1.84 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre>
 </div>
 </div>
@@ -2569,7 +2569,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>peak memory: 2666.80 MiB, increment: 1954.56 MiB
+<pre>peak memory: 2504.43 MiB, increment: 1829.38 MiB
 </pre>
 </div>
 </div>
@@ -2600,7 +2600,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>peak memory: 716.07 MiB, increment: -5.44 MiB
+<pre>peak memory: 520.52 MiB, increment: -5.43 MiB
 </pre>
 </div>
 </div>
@@ -2631,7 +2631,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>peak memory: 713.62 MiB, increment: -2.45 MiB
+<pre>peak memory: 518.07 MiB, increment: -2.45 MiB
 </pre>
 </div>
 </div>
@@ -2971,7 +2971,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>1.16 s ± 53.6 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<pre>1.2 s ± 101 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre>
 </div>
 </div>
@@ -3012,7 +3012,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>23.8 ms ± 1.48 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<pre>24.3 ms ± 1.15 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre>
 </div>
 </div>
@@ -3173,7 +3173,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>21.1 s ± 379 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<pre>21.2 s ± 226 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre>
 </div>
 </div>
@@ -3212,7 +3212,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>8.03 s ± 326 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<pre>8.09 s ± 357 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre>
 </div>
 </div>
@@ -3243,7 +3243,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>peak memory: 6943.05 MiB, increment: 6494.07 MiB
+<pre>peak memory: 6938.91 MiB, increment: 6489.89 MiB
 </pre>
 </div>
 </div>
@@ -3274,7 +3274,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>peak memory: 6495.96 MiB, increment: 6254.88 MiB
+<pre>peak memory: 6474.79 MiB, increment: 6233.82 MiB
 </pre>
 </div>
 </div>
@@ -3288,7 +3288,55 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> is faster; this might not be the case all the time. Let's see performance when it is just on non-equi joins:</p>
+<p><a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> is faster; this might not be the case all the time. Let's got nuts and see the performance when it is just on non-equi joins:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">d1</span>
+<span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
+    <span class="n">d2</span><span class="p">,</span> 
+    <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span> 
+    <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span> 
+    <span class="n">use_numba</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="o">.</span><span class="n">shape</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(267117635, 5)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Over 267 million rows. OK, how long does it take to process this?</p>
 
 </div>
 </div>
@@ -3320,7 +3368,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>30.8 s ± 1.27 s per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<pre>32.2 s ± 1.66 s per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre>
 </div>
 </div>
@@ -3358,7 +3406,69 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>16.8 s ± 760 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<pre>18 s ± 1.05 s per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.conditional_join(d2, ('start', 'pos1', '&lt;='), ('end', 'pos1', '&gt;='), use_numba=False)
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>peak memory: 6029.12 MiB, increment: 5832.51 MiB
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.conditional_join(d2, ('start', 'pos1', '&lt;='), ('end', 'pos1', '&gt;='), use_numba=True)
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>peak memory: 6007.36 MiB, increment: 5815.22 MiB
 </pre>
 </div>
 </div>
@@ -3372,7 +3482,8 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Where possible add an equi join to the non-equi join conditions for faster processing. Also note that your mileage may vary with these speed tests.</p>
+<p>How long do you think it'll take if a cartesian join was used instead?</p>
+<p>Performance wise, if you can modify the non-equi join logic so that an equi join is included in it, you are likely to see performance improvement. Also note that your mileage may vary with these speed tests.</p>
 
 </div>
 </div>
