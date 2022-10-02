@@ -1759,7 +1759,7 @@ window.onload = wrap_img;
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Problem statement, culled from the blog post:</p>
 <blockquote>
-<p>"Here's a simplified version of the issue I was facing:&gt;&gt; 1. The date in the left table was between two dates (a start and end date) in the second table</p>
+<p>Here's a simplified version of the issue I was facing:&gt;&gt; 1. The date in the left table was between two dates (a start and end date) in the second table</p>
 <ol>
 <li>...AND the values in two other columns matched each other, OR the column on the right table was equal to 'ANY' (aka a 'wildcard' value)</li>
 </ol>
@@ -1771,7 +1771,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Translating this into SQL is easy:</p>
+<p>Translating this into SQL is <a href="https://www.nelsontang.com/blog/2021-11-25-pandas-conditional-merging">easy</a>:</p>
 <div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span>
 <span class="k">FROM</span> <span class="n">sales_volume_table</span><span class="p">,</span> <span class="n">promos_table</span>
 <span class="k">WHERE</span> <span class="p">(</span><span class="n">sales_volume_table</span><span class="p">.</span><span class="n">brand</span><span class="o">=</span><span class="n">promos_table</span><span class="p">.</span><span class="n">brand</span> <span class="k">or</span> <span class="n">promos_table</span><span class="p">.</span><span class="n">brand</span><span class="o">=</span><span class="s1">'ANY'</span><span class="p">)</span>
@@ -1912,7 +1912,7 @@ window.onload = wrap_img;
 <h2 id="Performance">
 <a class="anchor" href="#Performance" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Performance</strong><a class="anchor-link" href="#Performance"> </a>
 </h2>
-<p>Why bother with <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a>? memory and speed efficiency. Let's see that in action, compared to a classic cartesian join:</p>
+<p>Why bother with <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a>? memory and speed efficiency. Let's see that in action, compared to a cartesian join:</p>
 
 </div>
 </div>
@@ -3001,7 +3001,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The cartesian join takes forever - the focus for this test will just be on <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> and performance when <a href="https://numba.readthedocs.io/en/stable/">numba</a> is used.</p>
+<p>The cartesian join takes a very long time - too long for us to test here. The focus for this test will just be on <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> and performance when <a href="https://numba.readthedocs.io/en/stable/">numba</a> is used.</p>
 
 </div>
 </div>
