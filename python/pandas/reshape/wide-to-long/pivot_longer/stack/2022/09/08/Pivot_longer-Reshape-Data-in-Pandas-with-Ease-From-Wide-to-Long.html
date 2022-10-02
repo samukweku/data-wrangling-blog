@@ -234,8 +234,8 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre> pandas version : 1.4.1 
- numpy version : 1.22.3 
+<pre> pandas version : 1.4.4 
+ numpy version : 1.22.4 
  python version : 3.9.12 | packaged by conda-forge | (main, Mar 24 2022, 23:23:20) 
 [Clang 12.0.1 ]
 </pre>
@@ -616,16 +616,16 @@ window.onload = wrap_img;
 <a class="anchor" href="#Basics" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Basics</strong><a class="anchor-link" href="#Basics"> </a>
 </h2>
 <p>Let's walk through some of the parameters in <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.pivot.pivot_longer">pivot_longer</a>:</p>
-
-<pre><code>    - index : These are the columns that will not be transformed to long form - the values are repeated as necessary.
-    - column_names: These are the columns that will be transformed to long form.
-    - names_to : These will be the new column names of the reshaped DataFrame.
-    - values_to: These will contain the values collated from the original DataFrame.
-    - names_sep: extract individual columns with a separator.
-    - names_pattern: extract individual columns with a regular expression, or a list of regular expressions.
-    - names_transform: efficiently convert the columns aggregated from the `column_names` from string to another dtype, as long as it is supported by `pd.astype`
-
-</code></pre>
+<ul>
+<li>index : These are the columns that will not be transformed to long form - the values are repeated as necessary.</li>
+<li>column_names: These are the columns that will be transformed to long form.</li>
+<li>names_to : These will be the new column names of the reshaped DataFrame.</li>
+<li>values_to: These will contain the values collated from the original DataFrame.</li>
+<li>names_sep: extract individual columns with a separator.</li>
+<li>names_pattern: extract individual columns with a regular expression, or a list of regular expressions.</li>
+<li>names_transform: efficiently convert the columns aggregated from the <code>column_names</code> from string to another dtype, as long as it is supported by <code>pd.astype</code>
+</li>
+</ul>
 <p>Keep in mind that <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.pivot.pivot_longer">pivot_longer</a> works on patterns - deciphering what pattern to use is the key to its simplicity.</p>
 <p>The rest of the article outlines the various patterns that <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.pivot.pivot_longer">pivot_longer</a> works with.</p>
 
@@ -4761,7 +4761,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>930 µs ± 97.5 µs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+<pre>863 µs ± 14.1 µs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
 </pre>
 </div>
 </div>
@@ -4792,7 +4792,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>1.08 ms ± 61.9 µs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+<pre>1.04 ms ± 64.7 µs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
 </pre>
 </div>
 </div>
@@ -5029,7 +5029,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>35.3 ms ± 2.31 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<pre>31.9 ms ± 1.22 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre>
 </div>
 </div>
@@ -5060,7 +5060,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>31.5 ms ± 1.25 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<pre>28 ms ± 357 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre>
 </div>
 </div>
@@ -5767,7 +5767,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>150 ms ± 11.2 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<pre>142 ms ± 6.62 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre>
 </div>
 </div>
@@ -5802,7 +5802,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>13.8 ms ± 540 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+<pre>15.2 ms ± 676 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 </pre>
 </div>
 </div>
@@ -5840,7 +5840,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>8.36 ms ± 137 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+<pre>8.28 ms ± 302 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 </pre>
 </div>
 </div>
@@ -5877,7 +5877,7 @@ window.onload = wrap_img;
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>8.28 ms ± 102 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+<pre>8.61 ms ± 624 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 </pre>
 </div>
 </div>
