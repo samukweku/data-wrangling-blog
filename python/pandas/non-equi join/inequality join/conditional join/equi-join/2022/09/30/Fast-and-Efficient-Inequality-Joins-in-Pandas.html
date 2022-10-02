@@ -583,20 +583,19 @@ window.onload = wrap_img;
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Let's walk through some of the parameters in <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a>:</p>
-
-<pre><code>    - df : Left DataFrame.
-    - right: Named Series or DataFrame to join to `df`.
-    - conditions : Variable argument of tuple(s) of the form `(left_on, right_on, op)`- 
-                   `left_on` is the column from `df`, `right_on` is the column from `right`, 
-                   while `op` is the join operator. For multiple conditions, the and(&amp;) operator
-                   is used to combine the results of the individual conditions.
-    - how: indicates the type of join to be performed. Can be one of `left`, `right`, or `inner`.
-    - use_numba: Whether to use `numba`, for possible performance increase. Applicable only to strictly non-equi joins.
-    - df_columns: Select columns from `df`.
-    - right_columns: Select columns from `right`.
-
-
-</code></pre>
+<ul>
+<li>df : Left DataFrame.</li>
+<li>right: Named Series or DataFrame to join to <code>df</code>.</li>
+<li>conditions : Variable argument of tuple(s) of the form <code>(left_on, right_on, op)</code>- 
+<pre><code>          `left_on` is the column from `df`, `right_on` is the column from `right`, 
+          while `op` is the join operator. For multiple conditions, the and(&amp;) operator
+          is used to combine the results of the individual conditions.</code></pre>
+</li>
+<li>how: indicates the type of join to be performed. Can be one of <code>left</code>, <code>right</code>, or <code>inner</code>.</li>
+<li>use_numba: Whether to use <code>numba</code>, for possible performance increase. Applicable only to strictly non-equi joins.</li>
+<li>df_columns: Select columns from <code>df</code>.</li>
+<li>right_columns: Select columns from <code>right</code>.</li>
+</ul>
 <p>Let's apply the <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> function to solve the non-equi joins earlier:</p>
 
 </div>
@@ -1758,13 +1757,15 @@ window.onload = wrap_img;
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Problem statement, culled from the blog post:</p>
-<blockquote>
-Here's a simplified version of the issue I was facing:
+<ol>
+<li>
+<p>The date in the left table was between two dates (a start and end date) in the second table</p>
+</li>
+<li>
+<p>...AND the values in two other columns matched each other, OR the column on the right table was equal to 'ANY' (aka a 'wildcard' value)</p>
+</li>
+</ol>
 
-1. The date in the left table was between two dates (a start and end date) in the second table
-
-2. ...AND the values in two other columns matched each other, OR the column on the right table was equal to 'ANY' (aka a 'wildcard' value)
-</blockquote>
 </div>
 </div>
 </div>
@@ -1912,7 +1913,7 @@ Here's a simplified version of the issue I was facing:
 <h2 id="Performance">
 <a class="anchor" href="#Performance" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Performance</strong><a class="anchor-link" href="#Performance"> </a>
 </h2>
-<p>Why bother with <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a>? memory and speed efficiency. Let's see that in action, compared to a cartesian join:</p>
+<p>Why bother with <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a>? memory and speed efficiency. Let's see that in action, compared to a cartesian join (the data used below is adapted from <a href="https://stackoverflow.com/a/25655497/7175713">here</a>):</p>
 
 </div>
 </div>
@@ -3209,7 +3210,7 @@ Here's a simplified version of the issue I was facing:
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>About 18 million rows returned; let's see how fast each function runs:</p>
+<p>About 18 million rows are returned; let's see how fast each function runs:</p>
 
 </div>
 </div>
