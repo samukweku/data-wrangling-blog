@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Dplyr’s across: Replicating within Pandas | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Dplyr’s across: Replicating within Pandas" />
+<meta name="author" content="Samuel Oranyeli" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Columnwise operations in Pandas - as simply as possible" />
+<meta property="og:description" content="Columnwise operations in Pandas - as simply as possible" />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/pandas/column-wise%20operations/dplyr/across/2022/09/30/dplyr's-across-in-Pandas.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/pandas/column-wise%20operations/dplyr/across/2022/09/30/dplyr's-across-in-Pandas.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-09-30T00:00:00-05:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Samuel Oranyeli"},"description":"Columnwise operations in Pandas - as simply as possible","@type":"BlogPosting","headline":"Dplyr’s across: Replicating within Pandas","dateModified":"2022-09-30T00:00:00-05:00","url":"https://samukweku.github.io/data-wrangling-blog/python/pandas/column-wise%20operations/dplyr/across/2022/09/30/dplyr's-across-in-Pandas.html","datePublished":"2022-09-30T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/pandas/column-wise%20operations/dplyr/across/2022/09/30/dplyr's-across-in-Pandas.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/data-wrangling-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" /><link rel="shortcut icon" type="image/x-icon" href="/data-wrangling-blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Dplyr’s across: Replicating within Pandas | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Dplyr’s across: Replicating within Pandas" />
+<meta name="author" content="Samuel Oranyeli" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Columnwise operations in Pandas - as simply as possible" />
+<meta property="og:description" content="Columnwise operations in Pandas - as simply as possible" />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/pandas/column-wise%20operations/dplyr/across/2022/09/30/dplyr's-across-in-Pandas.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/pandas/column-wise%20operations/dplyr/across/2022/09/30/dplyr's-across-in-Pandas.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-09-30T00:00:00-05:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Samuel Oranyeli"},"description":"Columnwise operations in Pandas - as simply as possible","@type":"BlogPosting","headline":"Dplyr’s across: Replicating within Pandas","dateModified":"2022-09-30T00:00:00-05:00","url":"https://samukweku.github.io/data-wrangling-blog/python/pandas/column-wise%20operations/dplyr/across/2022/09/30/dplyr's-across-in-Pandas.html","datePublished":"2022-09-30T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/pandas/column-wise%20operations/dplyr/across/2022/09/30/dplyr's-across-in-Pandas.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+<script type="text/javascript">
+require.config({
+  paths: {
+    jquery: 'https://code.jquery.com/jquery-3.5.0.min',
+    plotly: 'https://cdn.plot.ly/plotly-latest.min'
+  },
+
+  shim: {
+    plotly: {
+      deps: ['jquery'],
+      exports: 'plotly'
+    }
+  }
+});
+</script>
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/data-wrangling-blog/">Samuel Oranyeli</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/data-wrangling-blog/about/">About Me</a><a class="page-link" href="/data-wrangling-blog/search/">Search</a><a class="page-link" href="/data-wrangling-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Dplyr&#39;s across: Replicating within Pandas</h1><p class="page-description">Columnwise operations in Pandas - as simply as possible</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-09-30T00:00:00-05:00" itemprop="datePublished">
+        Sep 30, 2022
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Samuel Oranyeli</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      6 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#python">python</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#Pandas">Pandas</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#column-wise operations">column-wise operations</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#dplyr">dplyr</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#across">across</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/samukweku/data-wrangling-blog/tree/master/_notebooks/2022-09-30-dplyr's `across` in Pandas.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/data-wrangling-blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          
+          
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#Introduction">Introduction </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2022-09-30-dplyr's `across` in Pandas.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Introduction">
+<a class="anchor" href="#Introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Introduction</strong><a class="anchor-link" href="#Introduction"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="https://dplyr.tidyverse.org/index.html">dplyr</a> has the <a href="https://dplyr.tidyverse.org/reference/across.html">across</a> function, which is meant to make column wise processing easy. Pandas has always supported column-wise operations, and in a relatively simple manner.</p>
+<p>This article aims to replicate solutions in the dplyr <a href="https://dplyr.tidyverse.org/articles/colwise.html">column-wise operations</a> vignette with Pandas.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's load in the relevant libraries</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">" pandas version :"</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> 
+      <span class="s2">"numpy version :"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> 
+      <span class="s2">"python version :"</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre> pandas version : 1.4.4 
+ numpy version : 1.22.4 
+ python version : 3.9.12 | packaged by conda-forge | (main, Mar 24 2022, 23:23:20) 
+[Clang 12.0.1 ]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">"https://raw.githubusercontent.com/tidyverse/dplyr/main/data-raw/starwars.csv"</span>
+<span class="n">starwars</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">starwars</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>height</th>
+      <th>mass</th>
+      <th>hair_color</th>
+      <th>skin_color</th>
+      <th>eye_color</th>
+      <th>birth_year</th>
+      <th>sex</th>
+      <th>gender</th>
+      <th>homeworld</th>
+      <th>species</th>
+      <th>films</th>
+      <th>vehicles</th>
+      <th>starships</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Luke Skywalker</td>
+      <td>172.0</td>
+      <td>77.0</td>
+      <td>blond</td>
+      <td>fair</td>
+      <td>blue</td>
+      <td>19.0</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Tatooine</td>
+      <td>Human</td>
+      <td>The Empire Strikes Back, Revenge of the Sith, ...</td>
+      <td>Snowspeeder, Imperial Speeder Bike</td>
+      <td>X-wing, Imperial shuttle</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>C-3PO</td>
+      <td>167.0</td>
+      <td>75.0</td>
+      <td>NaN</td>
+      <td>gold</td>
+      <td>yellow</td>
+      <td>112.0</td>
+      <td>none</td>
+      <td>masculine</td>
+      <td>Tatooine</td>
+      <td>Droid</td>
+      <td>The Empire Strikes Back, Attack of the Clones,...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>R2-D2</td>
+      <td>96.0</td>
+      <td>32.0</td>
+      <td>NaN</td>
+      <td>white, blue</td>
+      <td>red</td>
+      <td>33.0</td>
+      <td>none</td>
+      <td>masculine</td>
+      <td>Naboo</td>
+      <td>Droid</td>
+      <td>The Empire Strikes Back, Attack of the Clones,...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Darth Vader</td>
+      <td>202.0</td>
+      <td>136.0</td>
+      <td>none</td>
+      <td>white</td>
+      <td>yellow</td>
+      <td>41.9</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Tatooine</td>
+      <td>Human</td>
+      <td>The Empire Strikes Back, Revenge of the Sith, ...</td>
+      <td>NaN</td>
+      <td>TIE Advanced x1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Leia Organa</td>
+      <td>150.0</td>
+      <td>49.0</td>
+      <td>brown</td>
+      <td>light</td>
+      <td>brown</td>
+      <td>19.0</td>
+      <td>female</td>
+      <td>feminine</td>
+      <td>Alderaan</td>
+      <td>Human</td>
+      <td>The Empire Strikes Back, Revenge of the Sith, ...</td>
+      <td>Imperial Speeder Bike</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># dplyr : </span>
+<span class="c1"># starwars %&gt;% </span>
+<span class="c1">#   summarise(across(where(is.character), n_distinct))</span>
+<span class="p">(</span><span class="n">starwars</span>
+<span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="s1">'object'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">nunique</span><span class="p">(</span><span class="n">dropna</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>name          87
+hair_color    13
+skin_color    31
+eye_color     15
+sex            5
+gender         3
+homeworld     49
+species       38
+films         24
+vehicles      11
+starships     17
+dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># dplyr :</span>
+<span class="c1"># starwars %&gt;% </span>
+<span class="c1">#   group_by(species) %&gt;% </span>
+<span class="c1">#   filter(n() &gt; 1) %&gt;% </span>
+<span class="c1">#   summarise(across(c(sex, gender, homeworld), n_distinct))</span>
+<span class="p">(</span><span class="n">starwars</span>
+<span class="o">.</span><span class="n">filter</span><span class="p">([</span><span class="s1">'species'</span><span class="p">,</span> <span class="s1">'sex'</span><span class="p">,</span> <span class="s1">'gender'</span><span class="p">,</span> <span class="s1">'homeworld'</span><span class="p">])</span>
+<span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'species'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">nunique</span><span class="p">(</span><span class="n">dropna</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)])</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sex</th>
+      <th>gender</th>
+      <th>homeworld</th>
+    </tr>
+    <tr>
+      <th>species</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Droid</th>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>Gungan</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Human</th>
+      <td>2</td>
+      <td>2</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>Kaminoan</th>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Mirialan</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Twi'lek</th>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Wookiee</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Zabrak</th>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The <a href="https://pandas.pydata.org/docs/reference/api/pandas.core.groupby.GroupBy.pipe.html">pipe</a> function comes in handy here, and allows reuse of the grouped object multiple times</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># dplyr : </span>
+<span class="c1"># starwars %&gt;% </span>
+<span class="c1">#   group_by(homeworld) %&gt;% </span>
+<span class="c1">#   filter(n() &gt; 1) %&gt;% </span>
+<span class="c1">#   summarise(across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))</span>
+<span class="p">(</span><span class="n">starwars</span>
+<span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'homeworld'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="s1">'number'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'homeworld'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)])</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>height</th>
+      <th>mass</th>
+      <th>birth_year</th>
+    </tr>
+    <tr>
+      <th>homeworld</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Alderaan</th>
+      <td>176.333333</td>
+      <td>64.000000</td>
+      <td>43.000000</td>
+    </tr>
+    <tr>
+      <th>Corellia</th>
+      <td>175.000000</td>
+      <td>78.500000</td>
+      <td>25.000000</td>
+    </tr>
+    <tr>
+      <th>Coruscant</th>
+      <td>173.666667</td>
+      <td>50.000000</td>
+      <td>91.000000</td>
+    </tr>
+    <tr>
+      <th>Kamino</th>
+      <td>208.333333</td>
+      <td>83.100000</td>
+      <td>31.500000</td>
+    </tr>
+    <tr>
+      <th>Kashyyyk</th>
+      <td>231.000000</td>
+      <td>124.000000</td>
+      <td>200.000000</td>
+    </tr>
+    <tr>
+      <th>Mirial</th>
+      <td>168.000000</td>
+      <td>53.100000</td>
+      <td>49.000000</td>
+    </tr>
+    <tr>
+      <th>Naboo</th>
+      <td>175.454545</td>
+      <td>64.166667</td>
+      <td>55.000000</td>
+    </tr>
+    <tr>
+      <th>Ryloth</th>
+      <td>179.000000</td>
+      <td>55.000000</td>
+      <td>48.000000</td>
+    </tr>
+    <tr>
+      <th>Tatooine</th>
+      <td>169.800000</td>
+      <td>85.375000</td>
+      <td>54.644444</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># dplyr:</span>
+<span class="c1"># starwars %&gt;% distinct(across(contains("color")))</span>
+<span class="n">starwars</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">like</span><span class="o">=</span><span class="s1">'color'</span><span class="p">)</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>hair_color</th>
+      <th>skin_color</th>
+      <th>eye_color</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>blond</td>
+      <td>fair</td>
+      <td>blue</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>NaN</td>
+      <td>gold</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>NaN</td>
+      <td>white, blue</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>none</td>
+      <td>white</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>brown</td>
+      <td>light</td>
+      <td>brown</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>79</th>
+      <td>none</td>
+      <td>pale</td>
+      <td>white</td>
+    </tr>
+    <tr>
+      <th>81</th>
+      <td>black</td>
+      <td>dark</td>
+      <td>dark</td>
+    </tr>
+    <tr>
+      <th>82</th>
+      <td>brown</td>
+      <td>light</td>
+      <td>hazel</td>
+    </tr>
+    <tr>
+      <th>84</th>
+      <td>none</td>
+      <td>none</td>
+      <td>black</td>
+    </tr>
+    <tr>
+      <th>85</th>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+    </tr>
+  </tbody>
+</table>
+<p>67 rows × 3 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># dplyr</span>
+<span class="c1"># starwars %&gt;% count(across(contains("color")), sort = TRUE)</span>
+<span class="n">starwars</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">like</span><span class="o">=</span><span class="s1">'color'</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">dropna</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>hair_color    skin_color  eye_color
+brown         light       brown        6
+              fair        blue         4
+none          grey        black        4
+black         dark        brown        3
+blond         fair        blue         3
+                                      ..
+none          dark        brown        1
+              green       black        1
+auburn, grey  fair        blue         1
+none          green       red          1
+NaN           white, red  red          1
+Length: 67, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># starwars %&gt;% </span>
+<span class="c1">#   filter(if_any(everything(), ~ !is.na(.x)))</span>
+<span class="n">starwars</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">starwars</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>height</th>
+      <th>mass</th>
+      <th>hair_color</th>
+      <th>skin_color</th>
+      <th>eye_color</th>
+      <th>birth_year</th>
+      <th>sex</th>
+      <th>gender</th>
+      <th>homeworld</th>
+      <th>species</th>
+      <th>films</th>
+      <th>vehicles</th>
+      <th>starships</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Luke Skywalker</td>
+      <td>172.0</td>
+      <td>77.0</td>
+      <td>blond</td>
+      <td>fair</td>
+      <td>blue</td>
+      <td>19.0</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Tatooine</td>
+      <td>Human</td>
+      <td>The Empire Strikes Back, Revenge of the Sith, ...</td>
+      <td>Snowspeeder, Imperial Speeder Bike</td>
+      <td>X-wing, Imperial shuttle</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>C-3PO</td>
+      <td>167.0</td>
+      <td>75.0</td>
+      <td>NaN</td>
+      <td>gold</td>
+      <td>yellow</td>
+      <td>112.0</td>
+      <td>none</td>
+      <td>masculine</td>
+      <td>Tatooine</td>
+      <td>Droid</td>
+      <td>The Empire Strikes Back, Attack of the Clones,...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>R2-D2</td>
+      <td>96.0</td>
+      <td>32.0</td>
+      <td>NaN</td>
+      <td>white, blue</td>
+      <td>red</td>
+      <td>33.0</td>
+      <td>none</td>
+      <td>masculine</td>
+      <td>Naboo</td>
+      <td>Droid</td>
+      <td>The Empire Strikes Back, Attack of the Clones,...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Darth Vader</td>
+      <td>202.0</td>
+      <td>136.0</td>
+      <td>none</td>
+      <td>white</td>
+      <td>yellow</td>
+      <td>41.9</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Tatooine</td>
+      <td>Human</td>
+      <td>The Empire Strikes Back, Revenge of the Sith, ...</td>
+      <td>NaN</td>
+      <td>TIE Advanced x1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Leia Organa</td>
+      <td>150.0</td>
+      <td>49.0</td>
+      <td>brown</td>
+      <td>light</td>
+      <td>brown</td>
+      <td>19.0</td>
+      <td>female</td>
+      <td>feminine</td>
+      <td>Alderaan</td>
+      <td>Human</td>
+      <td>The Empire Strikes Back, Revenge of the Sith, ...</td>
+      <td>Imperial Speeder Bike</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>82</th>
+      <td>Rey</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>brown</td>
+      <td>light</td>
+      <td>hazel</td>
+      <td>NaN</td>
+      <td>female</td>
+      <td>feminine</td>
+      <td>NaN</td>
+      <td>Human</td>
+      <td>The Force Awakens</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>83</th>
+      <td>Poe Dameron</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>brown</td>
+      <td>light</td>
+      <td>brown</td>
+      <td>NaN</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>NaN</td>
+      <td>Human</td>
+      <td>The Force Awakens</td>
+      <td>NaN</td>
+      <td>T-70 X-wing fighter</td>
+    </tr>
+    <tr>
+      <th>84</th>
+      <td>BB8</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>none</td>
+      <td>none</td>
+      <td>black</td>
+      <td>NaN</td>
+      <td>none</td>
+      <td>masculine</td>
+      <td>NaN</td>
+      <td>Droid</td>
+      <td>The Force Awakens</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>85</th>
+      <td>Captain Phasma</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>The Force Awakens</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>86</th>
+      <td>Padmé Amidala</td>
+      <td>165.0</td>
+      <td>45.0</td>
+      <td>brown</td>
+      <td>light</td>
+      <td>brown</td>
+      <td>46.0</td>
+      <td>female</td>
+      <td>feminine</td>
+      <td>Naboo</td>
+      <td>Human</td>
+      <td>Attack of the Clones, The Phantom Menace, Reve...</td>
+      <td>NaN</td>
+      <td>H-type Nubian yacht, Naboo star skiff, Naboo f...</td>
+    </tr>
+  </tbody>
+</table>
+<p>87 rows × 14 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># starwars %&gt;% </span>
+<span class="c1">#   filter(if_any(everything(), ~ !is.na(.x)))</span>
+<span class="n">starwars</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">starwars</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>height</th>
+      <th>mass</th>
+      <th>hair_color</th>
+      <th>skin_color</th>
+      <th>eye_color</th>
+      <th>birth_year</th>
+      <th>sex</th>
+      <th>gender</th>
+      <th>homeworld</th>
+      <th>species</th>
+      <th>films</th>
+      <th>vehicles</th>
+      <th>starships</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Luke Skywalker</td>
+      <td>172.0</td>
+      <td>77.0</td>
+      <td>blond</td>
+      <td>fair</td>
+      <td>blue</td>
+      <td>19.0</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Tatooine</td>
+      <td>Human</td>
+      <td>The Empire Strikes Back, Revenge of the Sith, ...</td>
+      <td>Snowspeeder, Imperial Speeder Bike</td>
+      <td>X-wing, Imperial shuttle</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Obi-Wan Kenobi</td>
+      <td>182.0</td>
+      <td>77.0</td>
+      <td>auburn, white</td>
+      <td>fair</td>
+      <td>blue-gray</td>
+      <td>57.0</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Stewjon</td>
+      <td>Human</td>
+      <td>The Empire Strikes Back, Attack of the Clones,...</td>
+      <td>Tribubble bongo</td>
+      <td>Jedi starfighter, Trade Federation cruiser, Na...</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Anakin Skywalker</td>
+      <td>188.0</td>
+      <td>84.0</td>
+      <td>blond</td>
+      <td>fair</td>
+      <td>blue</td>
+      <td>41.9</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Tatooine</td>
+      <td>Human</td>
+      <td>Attack of the Clones, The Phantom Menace, Reve...</td>
+      <td>Zephyr-G swoop bike, XJ-6 airspeeder</td>
+      <td>Trade Federation cruiser, Jedi Interceptor, Na...</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Chewbacca</td>
+      <td>228.0</td>
+      <td>112.0</td>
+      <td>brown</td>
+      <td>unknown</td>
+      <td>blue</td>
+      <td>200.0</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Kashyyyk</td>
+      <td>Wookiee</td>
+      <td>The Empire Strikes Back, Revenge of the Sith, ...</td>
+      <td>AT-ST</td>
+      <td>Millennium Falcon, Imperial shuttle</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Wedge Antilles</td>
+      <td>170.0</td>
+      <td>77.0</td>
+      <td>brown</td>
+      <td>fair</td>
+      <td>hazel</td>
+      <td>21.0</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Corellia</td>
+      <td>Human</td>
+      <td>The Empire Strikes Back, Return of the Jedi, A...</td>
+      <td>Snowspeeder</td>
+      <td>X-wing</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>Darth Maul</td>
+      <td>175.0</td>
+      <td>80.0</td>
+      <td>none</td>
+      <td>red</td>
+      <td>yellow</td>
+      <td>54.0</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Dathomir</td>
+      <td>Zabrak</td>
+      <td>The Phantom Menace</td>
+      <td>Sith speeder</td>
+      <td>Scimitar</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Output for the above is different from the vignette's because Pandas treats none as NaN, and dplyr does not (at least in the vignette)</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's look at another solution, from <a href="https://stackoverflow.com/questions/63200530/python-pandas-equivalent-to-dplyr-1-0-0-summarizeacross">Stack Overflow</a>:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">"https://gist.githubusercontent.com/seankross/a412dfbd88b3db70b74b/raw/5f23f993cd87c283ce766e7ac6b329ee7cc2e1d1/mtcars.csv"</span>
+<span class="n">cars</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">cars</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>mpg</th>
+      <th>cyl</th>
+      <th>disp</th>
+      <th>hp</th>
+      <th>drat</th>
+      <th>wt</th>
+      <th>qsec</th>
+      <th>vs</th>
+      <th>am</th>
+      <th>gear</th>
+      <th>carb</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Mazda RX4</td>
+      <td>21.0</td>
+      <td>6</td>
+      <td>160.0</td>
+      <td>110</td>
+      <td>3.90</td>
+      <td>2.620</td>
+      <td>16.46</td>
+      <td>0</td>
+      <td>1</td>
+      <td>4</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Mazda RX4 Wag</td>
+      <td>21.0</td>
+      <td>6</td>
+      <td>160.0</td>
+      <td>110</td>
+      <td>3.90</td>
+      <td>2.875</td>
+      <td>17.02</td>
+      <td>0</td>
+      <td>1</td>
+      <td>4</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Datsun 710</td>
+      <td>22.8</td>
+      <td>4</td>
+      <td>108.0</td>
+      <td>93</td>
+      <td>3.85</td>
+      <td>2.320</td>
+      <td>18.61</td>
+      <td>1</td>
+      <td>1</td>
+      <td>4</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Hornet 4 Drive</td>
+      <td>21.4</td>
+      <td>6</td>
+      <td>258.0</td>
+      <td>110</td>
+      <td>3.08</td>
+      <td>3.215</td>
+      <td>19.44</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Hornet Sportabout</td>
+      <td>18.7</td>
+      <td>8</td>
+      <td>360.0</td>
+      <td>175</td>
+      <td>3.15</td>
+      <td>3.440</td>
+      <td>17.02</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># dplyr:</span>
+<span class="c1"># dat &lt;- group_by(mtcars, cyl) </span>
+<span class="c1"># summarize(dat, across(ends_with('p'), sum), across(ends_with('t'), mean))</span>
+<span class="n">trim</span> <span class="o">=</span> <span class="n">cars</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">'cyl'</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">regex</span> <span class="o">=</span> <span class="s2">".+(p|t)$"</span><span class="p">)</span>
+<span class="n">dat</span> <span class="o">=</span> <span class="n">trim</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'cyl'</span><span class="p">)</span>
+<span class="n">dat</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span> <span class="p">:</span> <span class="n">dat</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> 
+       <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">'t'</span><span class="p">)</span> 
+       <span class="k">else</span> <span class="n">dat</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> 
+       <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">trim</span><span class="p">}</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dat</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>disp</th>
+      <th>hp</th>
+      <th>drat</th>
+      <th>wt</th>
+    </tr>
+    <tr>
+      <th>cyl</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4</th>
+      <td>1156.5</td>
+      <td>909</td>
+      <td>4.070909</td>
+      <td>2.285727</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1283.2</td>
+      <td>856</td>
+      <td>3.585714</td>
+      <td>3.117143</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>4943.4</td>
+      <td>2929</td>
+      <td>3.229286</td>
+      <td>3.999214</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="samukweku/data-wrangling-blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/data-wrangling-blog/python/pandas/column-wise%20operations/dplyr/across/2022/09/30/dplyr's-across-in-Pandas.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/data-wrangling-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/data-wrangling-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Data Wrangling Blog.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/samukweku" target="_blank" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/samukweku" target="_blank" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

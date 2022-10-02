@@ -1,0 +1,3317 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Fast and Efficient Inequality Joins in Pandas | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Fast and Efficient Inequality Joins in Pandas" />
+<meta name="author" content="Samuel Oranyeli" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Compute inequality joins better than a cross join or a naive nested loop." />
+<meta property="og:description" content="Compute inequality joins better than a cross join or a naive nested loop." />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/pandas/non-equi%20join/inequality%20join/conditional%20join/equi-join/2022/09/30/Fast-and-Efficient-Inequality-Joins-in-Pandas.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/pandas/non-equi%20join/inequality%20join/conditional%20join/equi-join/2022/09/30/Fast-and-Efficient-Inequality-Joins-in-Pandas.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-09-30T00:00:00-05:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Samuel Oranyeli"},"description":"Compute inequality joins better than a cross join or a naive nested loop.","@type":"BlogPosting","headline":"Fast and Efficient Inequality Joins in Pandas","dateModified":"2022-09-30T00:00:00-05:00","url":"https://samukweku.github.io/data-wrangling-blog/python/pandas/non-equi%20join/inequality%20join/conditional%20join/equi-join/2022/09/30/Fast-and-Efficient-Inequality-Joins-in-Pandas.html","datePublished":"2022-09-30T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/pandas/non-equi%20join/inequality%20join/conditional%20join/equi-join/2022/09/30/Fast-and-Efficient-Inequality-Joins-in-Pandas.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/data-wrangling-blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" /><link rel="shortcut icon" type="image/x-icon" href="/data-wrangling-blog/images/favicon.ico"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Fast and Efficient Inequality Joins in Pandas | Samuel Oranyeli</title>
+<meta name="generator" content="Jekyll v4.0.0" />
+<meta property="og:title" content="Fast and Efficient Inequality Joins in Pandas" />
+<meta name="author" content="Samuel Oranyeli" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Compute inequality joins better than a cross join or a naive nested loop." />
+<meta property="og:description" content="Compute inequality joins better than a cross join or a naive nested loop." />
+<link rel="canonical" href="https://samukweku.github.io/data-wrangling-blog/python/pandas/non-equi%20join/inequality%20join/conditional%20join/equi-join/2022/09/30/Fast-and-Efficient-Inequality-Joins-in-Pandas.html" />
+<meta property="og:url" content="https://samukweku.github.io/data-wrangling-blog/python/pandas/non-equi%20join/inequality%20join/conditional%20join/equi-join/2022/09/30/Fast-and-Efficient-Inequality-Joins-in-Pandas.html" />
+<meta property="og:site_name" content="Samuel Oranyeli" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2022-09-30T00:00:00-05:00" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Samuel Oranyeli"},"description":"Compute inequality joins better than a cross join or a naive nested loop.","@type":"BlogPosting","headline":"Fast and Efficient Inequality Joins in Pandas","dateModified":"2022-09-30T00:00:00-05:00","url":"https://samukweku.github.io/data-wrangling-blog/python/pandas/non-equi%20join/inequality%20join/conditional%20join/equi-join/2022/09/30/Fast-and-Efficient-Inequality-Joins-in-Pandas.html","datePublished":"2022-09-30T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://samukweku.github.io/data-wrangling-blog/python/pandas/non-equi%20join/inequality%20join/conditional%20join/equi-join/2022/09/30/Fast-and-Efficient-Inequality-Joins-in-Pandas.html"},"@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+<link href="https://unpkg.com/@primer/css/dist/primer.css" rel="stylesheet" />
+<link rel="stylesheet" href="//use.fontawesome.com/releases/v5.0.7/css/all.css"><link type="application/atom+xml" rel="alternate" href="https://samukweku.github.io/data-wrangling-blog/feed.xml" title="Samuel Oranyeli" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script>
+<script type="text/javascript">
+require.config({
+  paths: {
+    jquery: 'https://code.jquery.com/jquery-3.5.0.min',
+    plotly: 'https://cdn.plot.ly/plotly-latest.min'
+  },
+
+  shim: {
+    plotly: {
+      deps: ['jquery'],
+      exports: 'plotly'
+    }
+  }
+});
+</script>
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head><body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/data-wrangling-blog/">Samuel Oranyeli</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/data-wrangling-blog/about/">About Me</a><a class="page-link" href="/data-wrangling-blog/search/">Search</a><a class="page-link" href="/data-wrangling-blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Fast and Efficient Inequality Joins in Pandas</h1><p class="page-description">Compute inequality joins better than a cross join or a naive nested loop.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2022-09-30T00:00:00-05:00" itemprop="datePublished">
+        Sep 30, 2022
+      </time>• 
+          <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+            <span class="p-author h-card" itemprop="name">Samuel Oranyeli</span></span>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      14 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#python">python</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#Pandas">Pandas</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#non-equi join">non-equi join</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#inequality join">inequality join</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#conditional join">conditional join</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/data-wrangling-blog/categories/#equi-join">equi-join</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/samukweku/data-wrangling-blog/tree/master/_notebooks/2022-09-30-Fast and Efficient Inequality Joins in Pandas.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/data-wrangling-blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          
+          
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#Introduction">Introduction </a></li>
+<li class="toc-entry toc-h2"><a href="#Strictly-Non-equi-Joins">Strictly Non-equi Joins </a></li>
+<li class="toc-entry toc-h2"><a href="#Equi-and-Non-equi-Joins">Equi and Non-equi Joins </a></li>
+<li class="toc-entry toc-h2"><a href="#Non-equi-joins-with-OR">Non-equi joins with OR </a></li>
+<li class="toc-entry toc-h2"><a href="#Performance">Performance </a></li>
+<li class="toc-entry toc-h2"><a href="#Summary">Summary </a></li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2022-09-30-Fast and Efficient Inequality Joins in Pandas.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Introduction">
+<a class="anchor" href="#Introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Introduction</strong><a class="anchor-link" href="#Introduction"> </a>
+</h2>
+<p>Pandas supports <em>equi-join</em>, where the keys involved in the join are considered to be <em>equal</em>. This is implemented via the <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.merge.html">merge</a> and <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.join.html#pandas.DataFrame.join">join</a> functions. There are scenarios however, where the keys involved might not be equal; some other logical condition is involved in the join. This is known as a <em>non-equi join</em> or an <em>inequality join</em>.</p>
+<p>Let's look at some examples, culled from <a href="https://github.com/pandas-dev/pandas/issues/34543#issue-629846136">here</a>, that illustrate equi and non-equi joins:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'left'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">'col_a'</span><span class="p">:</span> <span class="p">[</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"B"</span><span class="p">,</span> <span class="s2">"C"</span><span class="p">]})</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'right'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">'col_b'</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Z"</span><span class="p">,</span> <span class="s2">"X"</span><span class="p">,</span> <span class="s2">"Y"</span><span class="p">]})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df1</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>left</th>
+      <th>col_a</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>A</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>B</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>C</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df2</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>right</th>
+      <th>col_b</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>Z</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Y</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Join based on the conditional <code>df1.left == df2.right</code> - this is an equi join, because the join operator is an <em>equality</em> operator, where df1.left is <em>equal to</em> df2.right:</p>
+<div class="highlight"><pre><span></span><span class="n">left</span> <span class="n">col_a</span>  <span class="n">right</span> <span class="n">col_b</span>
+<span class="mi">0</span>     <span class="mi">2</span>     <span class="n">B</span>      <span class="mi">2</span>     <span class="n">X</span>
+<span class="mi">1</span>     <span class="mi">3</span>     <span class="n">C</span>      <span class="mi">3</span>     <span class="n">Y</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Join based on the conditional <code>df1.left != df2.right</code> - this is an example of a non-equi join; it should return rows where df1.left <em>is not equal to</em> df2.right:</p>
+<div class="highlight"><pre><span></span><span class="n">left</span> <span class="n">col_a</span>  <span class="n">right</span> <span class="n">col_b</span>
+<span class="mi">0</span>     <span class="mi">1</span>     <span class="n">A</span>      <span class="mi">2</span>     <span class="n">X</span>
+<span class="mi">1</span>     <span class="mi">1</span>     <span class="n">A</span>      <span class="mi">3</span>     <span class="n">Y</span>
+<span class="mi">2</span>     <span class="mi">2</span>     <span class="n">B</span>      <span class="mi">3</span>     <span class="n">Y</span>
+<span class="mi">3</span>     <span class="mi">1</span>     <span class="n">A</span>      <span class="mi">0</span>     <span class="n">Z</span>
+<span class="mi">4</span>     <span class="mi">2</span>     <span class="n">B</span>      <span class="mi">0</span>     <span class="n">Z</span>
+<span class="mi">5</span>     <span class="mi">3</span>     <span class="n">C</span>      <span class="mi">0</span>     <span class="n">Z</span>
+<span class="mi">6</span>     <span class="mi">3</span>     <span class="n">C</span>      <span class="mi">2</span>     <span class="n">X</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Join based on the conditional <code>df1.left &gt; df2.right</code> - this is another example of a non-equi join; it should return rows where df1.left <em>is greater than</em> df2.right:</p>
+<div class="highlight"><pre><span></span><span class="n">left</span> <span class="n">col_a</span>  <span class="n">right</span> <span class="n">col_b</span>
+<span class="mi">0</span>     <span class="mi">1</span>     <span class="n">A</span>      <span class="mi">0</span>     <span class="n">Z</span>
+<span class="mi">1</span>     <span class="mi">2</span>     <span class="n">B</span>      <span class="mi">0</span>     <span class="n">Z</span>
+<span class="mi">2</span>     <span class="mi">3</span>     <span class="n">C</span>      <span class="mi">0</span>     <span class="n">Z</span>
+<span class="mi">3</span>     <span class="mi">3</span>     <span class="n">C</span>      <span class="mi">2</span>     <span class="n">X</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>non-equi joins are supported in SQL, and offer elegant solutions for specific uses cases. A good example is provided <a href="https://github.com/pandas-dev/pandas/issues/34543#issue-629846136">here</a> -</p>
+<p>Consider a dataframe <code>df_process</code> that contains <code>process_id</code>, <code>process_start_date</code> and <code>process_end_date</code> columns for some business process, and a second dataframe <code>df_events</code> that contains an <code>event_id</code> and an <code>event_date</code> column for particular events. If you want to find all events that occur during some business process, you can easily obtain these by applying the conditional join statement:</p>
+<p><code>df_event.event_date &gt;= df_process.process_start_date &amp; df_event.event_date &lt;= df_process.process_end_date</code></p>
+<p>The above scenario is an example of a range join, where the join is <em>between a range of values</em>. Currently in Pandas, to solve non-equi joins, a cartesian join is employed, where every row from the left dataframe is joined to every row from the right dataframe, before it is filtered with the non-equi joins:</p>
+<div class="highlight"><pre><span></span><span class="p">(</span><span class="n">df_event</span>
+<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_process</span><span class="p">,</span> <span class="n">how</span> <span class="o">=</span> <span class="s1">'cross'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'process_start_date &lt;= event_date &lt;= process_end_date'</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+<p>This is not an efficient way to deal with inequality joins, in terms of memory and speed, especially for large data. This is where the <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> function from <a href="https://pyjanitor-devs.github.io/pyjanitor/">pyjanitor</a> comes into play. It provides an efficient way to deal with non-equi joins, and does so in a more memory efficient way than cartesian joins, while still being performant. Under the hood it uses binary search, and in some special cases, such as range joins, it uses special algorithms to improve performance.</p>
+<p>We will be using the <a href="https://github.com/pyjanitor-devs/pyjanitor.git">dev</a> version in this article.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Strictly-Non-equi-Joins">
+<a class="anchor" href="#Strictly-Non-equi-Joins" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Strictly Non-equi Joins</strong><a class="anchor-link" href="#Strictly-Non-equi-Joins"> </a>
+</h2>
+<p>Let's load the <a href="https://pyjanitor-devs.github.io/pyjanitor/">pyjanitor</a> library:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># install the dev version</span>
+<span class="c1"># to access the latest developments</span>
+<span class="c1"># pip install git+https://github.com/pyjanitor-devs/pyjanitor.git</span>
+<span class="kn">import</span> <span class="nn">janitor</span> <span class="k">as</span> <span class="nn">jn</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">" pandas version :"</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> 
+      <span class="s2">"janitor version :"</span><span class="p">,</span> <span class="n">jn</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span>
+      <span class="s2">"python version :"</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre> pandas version : 1.4.4 
+ janitor version : 0.23.1 
+ python version : 3.9.12 | packaged by conda-forge | (main, Mar 24 2022, 23:23:20) 
+[Clang 12.0.1 ]
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's walk through some of the parameters in <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a>:</p>
+
+<pre><code>    - df : Left DataFrame.
+    - right: Named Series or DataFrame to join to `df`.
+    - conditions : Variable argument of tuple(s) of the form `(left_on, right_on, op)`- 
+                   `left_on` is the column from `df`, `right_on` is the column from `right`, 
+                   while `op` is the join operator. For multiple conditions, the and(&amp;) operator
+                   is used to combine the results of the individual conditions.
+    - how: indicates the type of join to be performed. Can be one of `left`, `right`, or `inner`.
+    - use_numba: Whether to use `numba`, for possible performance increase. Applicable only to strictly non-equi joins.
+    - df_columns: Select columns from `df`.
+    - right_columns: Select columns from `right`.
+
+
+</code></pre>
+<p>Let's apply the <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> function to solve the non-equi joins earlier:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df1</span><span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="p">(</span><span class="s1">'left'</span><span class="p">,</span> <span class="s1">'right'</span><span class="p">,</span> <span class="s1">'!='</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>left</th>
+      <th>col_a</th>
+      <th>right</th>
+      <th>col_b</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>A</td>
+      <td>2</td>
+      <td>X</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>A</td>
+      <td>3</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>B</td>
+      <td>3</td>
+      <td>Y</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>A</td>
+      <td>0</td>
+      <td>Z</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>B</td>
+      <td>0</td>
+      <td>Z</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>3</td>
+      <td>C</td>
+      <td>0</td>
+      <td>Z</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>3</td>
+      <td>C</td>
+      <td>2</td>
+      <td>X</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df1</span><span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="p">(</span><span class="s1">'left'</span><span class="p">,</span> <span class="s1">'right'</span><span class="p">,</span> <span class="s1">'&gt;'</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>left</th>
+      <th>col_a</th>
+      <th>right</th>
+      <th>col_b</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>A</td>
+      <td>0</td>
+      <td>Z</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>B</td>
+      <td>0</td>
+      <td>Z</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>C</td>
+      <td>0</td>
+      <td>Z</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>C</td>
+      <td>2</td>
+      <td>X</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For multiple non-equi conditions, the results of the individual conditions are combined with the and(&amp;) operator. Let's look at a range join, to see this in action - the example is adapted from <a href="http://da.qcri.org/ntang/pubs/vldbj2016.pdf">here</a>:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">east</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">103</span><span class="p">),</span> 
+            <span class="n">dur</span> <span class="o">=</span> <span class="p">[</span><span class="mi">140</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span> 
+            <span class="n">rev</span> <span class="o">=</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> 
+            <span class="n">cores</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+
+<span class="n">west</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">t_id</span> <span class="o">=</span> <span class="p">[</span><span class="mi">404</span><span class="p">,</span><span class="mi">498</span><span class="p">,</span> <span class="mi">676</span><span class="p">,</span> <span class="mi">742</span><span class="p">],</span> 
+            <span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span> 
+            <span class="n">cost</span> <span class="o">=</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> 
+            <span class="n">cores</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+
+<span class="n">east</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">east</span><span class="p">)</span>
+<span class="n">west</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">west</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">east</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>dur</th>
+      <th>rev</th>
+      <th>cores</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>100</td>
+      <td>140</td>
+      <td>9</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>101</td>
+      <td>100</td>
+      <td>12</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>102</td>
+      <td>90</td>
+      <td>5</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">west</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>t_id</th>
+      <th>time</th>
+      <th>cost</th>
+      <th>cores</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>404</td>
+      <td>100</td>
+      <td>6</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>498</td>
+      <td>140</td>
+      <td>11</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>676</td>
+      <td>80</td>
+      <td>10</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>742</td>
+      <td>90</td>
+      <td>5</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Task : Look for any customer from the West Coast who rented a virtual machine for more hours than any customer from the East Coast, but who paid less. Basically, get rows where <code>east.dur &lt; west.time</code> and <code>east.rev &gt; west.cost</code>.</p>
+<p>This is a range join, and is solved easily and efficiently with <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a>:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">east</span>
+<span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
+    <span class="n">west</span><span class="p">,</span> 
+    <span class="p">(</span><span class="s1">'dur'</span><span class="p">,</span> <span class="s1">'time'</span><span class="p">,</span> <span class="s1">'&lt;'</span><span class="p">),</span> 
+    <span class="p">(</span><span class="s1">'rev'</span><span class="p">,</span> <span class="s1">'cost'</span><span class="p">,</span> <span class="s1">'&gt;'</span><span class="p">),</span> 
+    <span class="n">df_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'dur'</span><span class="p">,</span> <span class="s1">'rev'</span><span class="p">],</span>
+    <span class="n">right_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'t_id'</span><span class="p">,</span> <span class="s1">'time'</span><span class="p">,</span> <span class="s1">'cost'</span><span class="p">]</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>dur</th>
+      <th>rev</th>
+      <th>t_id</th>
+      <th>time</th>
+      <th>cost</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>101</td>
+      <td>100</td>
+      <td>12</td>
+      <td>498</td>
+      <td>140</td>
+      <td>11</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For range joins, and when <code>use_numba = False</code>, <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> uses an algorithm based on this <a href="https://www.vertica.com/blog/what-is-a-range-join-and-why-is-it-so-fastba-p223413/">vertica blog post</a>.</p>
+<p>You might get more performance with <code>use_numba = True</code>. The implementation is based on the algorithm in this <a href="https://www.scitepress.org/papers/2018/68268/68268.pdf">publication</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Equi-and-Non-equi-Joins">
+<a class="anchor" href="#Equi-and-Non-equi-Joins" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Equi and Non-equi Joins</strong><a class="anchor-link" href="#Equi-and-Non-equi-Joins"> </a>
+</h2>
+<p><a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> also supports a combination of equi and non-equi join conditions - under the hood it uses Pandas' internal merge function to get the matching pairs, before pruning the non-equi joins to get the final dataframe. Depending on the size of the dataframes, this might offer more performance than the classic merge and filter approach:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> 
+                    <span class="s1">'value_1'</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]})</span>
+                    
+<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> 
+                    <span class="s1">'value_2A'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> 
+                    <span class="s1">'value_2B'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">3</span><span class="p">]})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df1</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>value_1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>3</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df2</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>value_2A</th>
+      <th>value_2B</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>3</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>7</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>12</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2</td>
+      <td>2</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>2</td>
+      <td>3</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>3</td>
+      <td>1</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Classic Pandas' merge and filter approach:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">df1</span>
+<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">'id'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'value_2A &lt;= value_1 &lt;= value_2B'</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>value_1</th>
+      <th>value_2A</th>
+      <th>value_2B</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>5</th>
+      <td>1</td>
+      <td>5</td>
+      <td>3</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>1</td>
+      <td>7</td>
+      <td>7</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>2</td>
+      <td>3</td>
+      <td>2</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>2</td>
+      <td>3</td>
+      <td>3</td>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>With <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a>:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">df1</span>
+<span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
+    <span class="n">df2</span><span class="p">,</span>
+    <span class="p">(</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'id'</span><span class="p">,</span> <span class="s1">'=='</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'value_1'</span><span class="p">,</span> <span class="s1">'value_2A'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'value_1'</span><span class="p">,</span> <span class="s1">'value_2B'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">)</span>
+<span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="2" halign="left">left</th>
+      <th colspan="3" halign="left">right</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>id</th>
+      <th>value_1</th>
+      <th>id</th>
+      <th>value_2A</th>
+      <th>value_2B</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>5</td>
+      <td>1</td>
+      <td>3</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>7</td>
+      <td>1</td>
+      <td>7</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>1</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2</td>
+      <td>3</td>
+      <td>2</td>
+      <td>2</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>3</td>
+      <td>2</td>
+      <td>3</td>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Note the above returned a MultiIndex column; if the columns from the left and right dataframes have something in common a MultiIndex column is returned. Of course, you can select/rename columns with <code>df_columns</code> and <code>right_columns</code> to get a single index column, if that is preferred.</p>
+<p>Note that there is no numba implementation when an equi join condition is present.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Non-equi-joins-with-OR">
+<a class="anchor" href="#Non-equi-joins-with-OR" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Non-equi joins with OR</strong><a class="anchor-link" href="#Non-equi-joins-with-OR"> </a>
+</h2>
+<p>For multiple non-equi joins, an and(&amp;) operator is applied, to combine the results of the individual conditions. There are scenarios however, where the join might have an <em>OR</em> condition. In this case, the joins are executed individually, and the resulting dataframes can then be concatenated into one. Let's look at an example from <a href="https://www.nelsontang.com/blog/2021-11-25-pandas-conditional-merging">Nelson Tang's blog post</a>:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sales_volume_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">([</span>
+    <span class="p">{</span><span class="s1">'date'</span><span class="p">:</span><span class="s1">'2021-11-15'</span><span class="p">,</span> <span class="s1">'quantity'</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'brand'</span><span class="p">:</span><span class="s1">'Outdoor'</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">'date'</span><span class="p">:</span><span class="s1">'2021-11-20'</span><span class="p">,</span> <span class="s1">'quantity'</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'brand'</span><span class="p">:</span><span class="s1">'Leisure'</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">'date'</span><span class="p">:</span><span class="s1">'2021-11-25'</span><span class="p">,</span> <span class="s1">'quantity'</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s1">'brand'</span><span class="p">:</span><span class="s1">'Athletic'</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">'date'</span><span class="p">:</span><span class="s1">'2021-11-26'</span><span class="p">,</span> <span class="s1">'quantity'</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'brand'</span><span class="p">:</span><span class="s1">'Outdoor'</span><span class="p">},</span>
+<span class="p">])</span>
+
+<span class="n">promos_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">([</span>
+    <span class="p">{</span><span class="s1">'start_date'</span><span class="p">:</span><span class="s1">'2021-11-01'</span><span class="p">,</span> <span class="s1">'end_date'</span><span class="p">:</span><span class="s1">'2021-11-25'</span><span class="p">,</span>
+    <span class="s1">'brand'</span><span class="p">:</span><span class="s1">'ANY'</span><span class="p">,</span> <span class="s1">'rebate_per_unit'</span><span class="p">:</span><span class="mi">3</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">'start_date'</span><span class="p">:</span><span class="s1">'2021-11-25'</span><span class="p">,</span> <span class="s1">'end_date'</span><span class="p">:</span><span class="s1">'2021-11-26'</span><span class="p">,</span>
+    <span class="s1">'brand'</span><span class="p">:</span><span class="s1">'Outdoor'</span><span class="p">,</span> <span class="s1">'rebate_per_unit'</span><span class="p">:</span><span class="mi">5</span><span class="p">},</span>
+<span class="p">])</span>
+
+<span class="n">sales_volume_table</span><span class="p">[</span><span class="s1">'date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">sales_volume_table</span><span class="p">[</span><span class="s1">'date'</span><span class="p">])</span>
+<span class="n">promos_table</span><span class="p">[</span><span class="s1">'start_date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">promos_table</span><span class="p">[</span><span class="s1">'start_date'</span><span class="p">])</span>
+<span class="n">promos_table</span><span class="p">[</span><span class="s1">'end_date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">promos_table</span><span class="p">[</span><span class="s1">'end_date'</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sales_volume_table</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>date</th>
+      <th>quantity</th>
+      <th>brand</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2021-11-15</td>
+      <td>1</td>
+      <td>Outdoor</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2021-11-20</td>
+      <td>2</td>
+      <td>Leisure</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2021-11-25</td>
+      <td>3</td>
+      <td>Athletic</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2021-11-26</td>
+      <td>2</td>
+      <td>Outdoor</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">promos_table</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>start_date</th>
+      <th>end_date</th>
+      <th>brand</th>
+      <th>rebate_per_unit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2021-11-01</td>
+      <td>2021-11-25</td>
+      <td>ANY</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2021-11-25</td>
+      <td>2021-11-26</td>
+      <td>Outdoor</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Problem statement, culled from the blog post:</p>
+<blockquote>
+<p>"Here's a simplified version of the issue I was facing:&gt; 1. The date in the left table was between two dates (a start and end date) in the second table&gt; 2. ...AND the values in two other columns matched each other, OR the column on the right table was equal to 'ANY' (aka a 'wildcard' value)</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Translating this into SQL is easy:</p>
+<div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span>
+<span class="k">FROM</span> <span class="n">sales_volume_table</span><span class="p">,</span> <span class="n">promos_table</span>
+<span class="k">WHERE</span> <span class="p">(</span><span class="n">sales_volume_table</span><span class="p">.</span><span class="n">brand</span><span class="o">=</span><span class="n">promos_table</span><span class="p">.</span><span class="n">brand</span> <span class="k">or</span> <span class="n">promos_table</span><span class="p">.</span><span class="n">brand</span><span class="o">=</span><span class="s1">'ANY'</span><span class="p">)</span>
+<span class="k">AND</span> <span class="p">(</span><span class="n">start_date</span> <span class="o">&lt;=</span> <span class="nb">date</span> <span class="k">AND</span> <span class="nb">date</span> <span class="o">&lt;=</span> <span class="n">end_date</span><span class="p">)</span>
+</pre></div>
+<p>Replicating this in Pandas is more involved but doable:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">top</span> <span class="o">=</span> <span class="p">(</span><span class="n">sales_volume_table</span>
+       <span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
+            <span class="n">promos_table</span><span class="p">,</span>
+            <span class="p">(</span><span class="s1">'brand'</span><span class="p">,</span> <span class="s1">'brand'</span><span class="p">,</span> <span class="s1">'=='</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">'date'</span><span class="p">,</span> <span class="s1">'start_date'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">'date'</span><span class="p">,</span> <span class="s1">'end_date'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">)</span>
+          <span class="p">)</span>
+    <span class="p">)</span>
+
+<span class="n">bottom</span> <span class="o">=</span> <span class="p">(</span><span class="n">sales_volume_table</span>
+          <span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
+               <span class="n">promos_table</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'brand == "ANY"'</span><span class="p">),</span>
+               <span class="p">(</span><span class="s1">'date'</span><span class="p">,</span> <span class="s1">'start_date'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span>
+               <span class="p">(</span><span class="s1">'date'</span><span class="p">,</span> <span class="s1">'end_date'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">)</span>
+               <span class="p">)</span>
+     <span class="p">)</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="3" halign="left">left</th>
+      <th colspan="4" halign="left">right</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>date</th>
+      <th>quantity</th>
+      <th>brand</th>
+      <th>start_date</th>
+      <th>end_date</th>
+      <th>brand</th>
+      <th>rebate_per_unit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>2021-11-26</td>
+      <td>2</td>
+      <td>Outdoor</td>
+      <td>2021-11-25</td>
+      <td>2021-11-26</td>
+      <td>Outdoor</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>2021-11-15</td>
+      <td>1</td>
+      <td>Outdoor</td>
+      <td>2021-11-01</td>
+      <td>2021-11-25</td>
+      <td>ANY</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2021-11-20</td>
+      <td>2</td>
+      <td>Leisure</td>
+      <td>2021-11-01</td>
+      <td>2021-11-25</td>
+      <td>ANY</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2021-11-25</td>
+      <td>3</td>
+      <td>Athletic</td>
+      <td>2021-11-01</td>
+      <td>2021-11-25</td>
+      <td>ANY</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Performance">
+<a class="anchor" href="#Performance" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Performance</strong><a class="anchor-link" href="#Performance"> </a>
+</h2>
+<p>Why bother with <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a>? memory and speed efficiency. Let's see that in action, compared to a classic cartesian join:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> memory_profiler
+<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">ascii_lowercase</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">2_000</span><span class="p">;</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">10_000</span>
+
+<span class="n">idx1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">idx2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">n</span><span class="p">)</span>
+
+<span class="n">d1</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">ascii_lowercase</span><span class="p">[:</span><span class="mi">5</span><span class="p">]),</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">),</span>
+          <span class="n">start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">idx1</span><span class="p">,</span> <span class="n">idx2</span><span class="p">),</span>
+          <span class="n">end</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">idx1</span><span class="p">,</span> <span class="n">idx2</span><span class="p">))</span>
+
+<span class="n">d2</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">ascii_lowercase</span><span class="p">[:</span><span class="mi">15</span><span class="p">]),</span> <span class="n">size</span><span class="o">=</span><span class="n">k</span><span class="p">),</span>
+          <span class="n">pos1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="mi">151</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">k</span><span class="p">))</span>
+
+<span class="n">d1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span>
+<span class="n">d2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">d1</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>x</th>
+      <th>start</th>
+      <th>end</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>c</td>
+      <td>37</td>
+      <td>61</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>d</td>
+      <td>12</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>b</td>
+      <td>72</td>
+      <td>79</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>c</td>
+      <td>9</td>
+      <td>74</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>d</td>
+      <td>75</td>
+      <td>76</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">d2</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>x</th>
+      <th>pos1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>f</td>
+      <td>126</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>m</td>
+      <td>121</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>o</td>
+      <td>128</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>a</td>
+      <td>96</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>n</td>
+      <td>61</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">d1</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(2000, 10000)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="n">d1</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">how</span> <span class="o">=</span> <span class="s1">'cross'</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"start &lt;= pos1 &lt;= end"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">filter</span><span class="p">([</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">])</span>
+    <span class="p">)</span>
+<span class="n">A</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(2740898, 3)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">A</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>start</th>
+      <th>end</th>
+      <th>pos1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4</th>
+      <td>37</td>
+      <td>61</td>
+      <td>61</td>
+    </tr>
+    <tr>
+      <th>53</th>
+      <td>37</td>
+      <td>61</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <th>74</th>
+      <td>37</td>
+      <td>61</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <th>104</th>
+      <td>37</td>
+      <td>61</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <th>105</th>
+      <td>37</td>
+      <td>61</td>
+      <td>60</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">B</span> <span class="o">=</span> <span class="p">(</span><span class="n">d1</span>
+    <span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
+        <span class="n">d2</span><span class="p">,</span> 
+        <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span> 
+        <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span> 
+        <span class="n">df_columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">],</span>
+        <span class="n">right_columns</span><span class="o">=</span><span class="s1">'pos1'</span><span class="p">,</span>
+        <span class="n">use_numba</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">)</span>
+<span class="n">B</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(2740898, 3)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">B</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>start</th>
+      <th>end</th>
+      <th>pos1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>37</td>
+      <td>61</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>37</td>
+      <td>61</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>37</td>
+      <td>61</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>37</td>
+      <td>61</td>
+      <td>60</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>37</td>
+      <td>61</td>
+      <td>60</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">C</span> <span class="o">=</span> <span class="p">(</span><span class="n">d1</span>
+    <span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
+        <span class="n">d2</span><span class="p">,</span> 
+        <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span> 
+        <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span> 
+        <span class="n">df_columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">],</span>
+        <span class="n">right_columns</span><span class="o">=</span><span class="s1">'pos1'</span><span class="p">,</span>
+        <span class="n">use_numba</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">)</span>
+<span class="n">C</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>OMP: Info #276: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(2740898, 3)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Check that the outputs match:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">]</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">A</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">B</span><span class="p">),</span> <span class="n">A</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">C</span><span class="p">),</span> <span class="n">B</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(True, True, True)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's compare the speed:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">timeit</span> d1.merge(d2, how = 'cross').query("start &lt;= pos1 &lt;= end")
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>3.15 s ± 41.2 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">timeit</span> d1.conditional_join(d2, ('start', 'pos1', '&lt;='), ('end', 'pos1', '&gt;='), use_numba=False)
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>104 ms ± 2.77 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">timeit</span> d1.conditional_join(d2, ('start', 'pos1', '&lt;='), ('end', 'pos1', '&gt;='), use_numba=True)
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>107 ms ± 8.39 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Compare memory usage:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.merge(d2, how = 'cross').query("start &lt;= pos1 &lt;= end")
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>peak memory: 2718.60 MiB, increment: 1983.99 MiB
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.conditional_join(d2, ('start', 'pos1', '&lt;='), ('end', 'pos1', '&gt;='), use_numba=False)
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>peak memory: 737.32 MiB, increment: -5.44 MiB
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.conditional_join(d2, ('start', 'pos1', '&lt;='), ('end', 'pos1', '&gt;='), use_numba=True)
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>peak memory: 734.72 MiB, increment: -2.59 MiB
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's run another performance test - the code below is a self join to find overlapping events in a 30,000 row DataFrame, and adapted from <a href="https://github.com/duckdb/duckdb/blob/master/benchmark/micro/join/iejoin_events.benchmark">DuckDB</a>:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s1">'https://github.com/samukweku/data-wrangling-blog/raw/master/_notebooks/Data_files/results.csv'</span>
+<span class="n">events</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">])</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
+<span class="n">events</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>name</th>
+      <th>audience</th>
+      <th>start</th>
+      <th>sponsor</th>
+      <th>end</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Event 1</td>
+      <td>1178</td>
+      <td>2022-11-19 10:00:00</td>
+      <td>Sponsor 2</td>
+      <td>2022-11-19 10:15:00</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Event 2</td>
+      <td>1446</td>
+      <td>2015-09-27 15:00:00</td>
+      <td>Sponsor 11</td>
+      <td>2015-09-27 15:11:00</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Event 3</td>
+      <td>2261</td>
+      <td>2019-11-12 18:00:00</td>
+      <td>Sponsor 10</td>
+      <td>2019-11-12 18:53:00</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Event 4</td>
+      <td>1471</td>
+      <td>2019-12-24 22:00:00</td>
+      <td>Sponsor 6</td>
+      <td>2019-12-24 22:11:00</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Event 5</td>
+      <td>2605</td>
+      <td>2028-06-20 12:00:00</td>
+      <td>Sponsor 8</td>
+      <td>2028-06-20 12:31:00</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">events</span>
+<span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
+    <span class="n">events</span><span class="p">,</span>
+    <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'id'</span><span class="p">,</span> <span class="s1">'!='</span><span class="p">),</span>
+    <span class="n">use_numba</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">df_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">],</span>
+    <span class="n">right_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">])</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="3" halign="left">left</th>
+      <th colspan="3" halign="left">right</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>id</th>
+      <th>start</th>
+      <th>end</th>
+      <th>id</th>
+      <th>start</th>
+      <th>end</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>10</td>
+      <td>1993-11-27 12:00:00</td>
+      <td>1993-11-27 12:37:00</td>
+      <td>2345</td>
+      <td>1993-11-27 10:00:00</td>
+      <td>1993-11-27 12:00:00</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>15</td>
+      <td>1993-04-04 16:00:00</td>
+      <td>1993-04-04 18:00:00</td>
+      <td>11178</td>
+      <td>1993-04-04 17:00:00</td>
+      <td>1993-04-04 17:22:00</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>17</td>
+      <td>2030-10-25 07:00:00</td>
+      <td>2030-10-25 07:27:00</td>
+      <td>19605</td>
+      <td>2030-10-25 06:00:00</td>
+      <td>2030-10-25 08:00:00</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>26</td>
+      <td>2005-10-04 17:00:00</td>
+      <td>2005-10-04 17:18:00</td>
+      <td>8218</td>
+      <td>2005-10-04 17:00:00</td>
+      <td>2005-10-04 17:27:00</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>35</td>
+      <td>2024-05-02 15:00:00</td>
+      <td>2024-05-02 15:35:00</td>
+      <td>6916</td>
+      <td>2024-05-02 15:00:00</td>
+      <td>2024-05-02 15:36:00</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>3697</th>
+      <td>29966</td>
+      <td>2000-08-26 11:00:00</td>
+      <td>2000-08-26 13:00:00</td>
+      <td>29375</td>
+      <td>2000-08-26 13:00:00</td>
+      <td>2000-08-26 13:53:00</td>
+    </tr>
+    <tr>
+      <th>3698</th>
+      <td>29971</td>
+      <td>2018-05-18 04:00:00</td>
+      <td>2018-05-18 04:18:00</td>
+      <td>24173</td>
+      <td>2018-05-18 04:00:00</td>
+      <td>2018-05-18 04:36:00</td>
+    </tr>
+    <tr>
+      <th>3699</th>
+      <td>29978</td>
+      <td>1992-06-07 22:00:00</td>
+      <td>1992-06-07 22:23:00</td>
+      <td>981</td>
+      <td>1992-06-07 22:00:00</td>
+      <td>1992-06-07 22:30:00</td>
+    </tr>
+    <tr>
+      <th>3700</th>
+      <td>29984</td>
+      <td>2025-06-05 03:00:00</td>
+      <td>2025-06-05 03:17:00</td>
+      <td>19051</td>
+      <td>2025-06-05 01:00:00</td>
+      <td>2025-06-05 03:00:00</td>
+    </tr>
+    <tr>
+      <th>3701</th>
+      <td>29995</td>
+      <td>2016-09-04 14:00:00</td>
+      <td>2016-09-04 14:32:00</td>
+      <td>12296</td>
+      <td>2016-09-04 14:00:00</td>
+      <td>2016-09-04 14:50:00</td>
+    </tr>
+  </tbody>
+</table>
+<p>3702 rows × 6 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The cartesian join takes forever - the focus for this test will just be on <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> and performance when <a href="https://numba.readthedocs.io/en/stable/">numba</a> is used.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>it
+<span class="p">(</span><span class="n">events</span>
+<span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
+    <span class="n">events</span><span class="p">,</span>
+    <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'id'</span><span class="p">,</span> <span class="s1">'!='</span><span class="p">),</span>
+    <span class="n">use_numba</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="n">df_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">],</span>
+    <span class="n">right_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">])</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>1.14 s ± 32.7 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>it
+<span class="p">(</span><span class="n">events</span>
+<span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
+    <span class="n">events</span><span class="p">,</span>
+    <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'id'</span><span class="p">,</span> <span class="s1">'!='</span><span class="p">),</span>
+    <span class="n">use_numba</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">df_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">],</span>
+    <span class="n">right_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">])</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>27.2 ms ± 728 µs per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's look at performance when an equi join is present:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">ascii_lowercase</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">20_000</span><span class="p">;</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">100_000</span>
+
+<span class="n">idx1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">idx2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">n</span><span class="p">)</span>
+
+<span class="n">d1</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">ascii_lowercase</span><span class="p">[:</span><span class="mi">5</span><span class="p">]),</span> <span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">),</span>
+          <span class="n">start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">idx1</span><span class="p">,</span> <span class="n">idx2</span><span class="p">),</span>
+          <span class="n">end</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">idx1</span><span class="p">,</span> <span class="n">idx2</span><span class="p">))</span>
+
+<span class="n">d2</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">ascii_lowercase</span><span class="p">[:</span><span class="mi">15</span><span class="p">]),</span> <span class="n">size</span><span class="o">=</span><span class="n">k</span><span class="p">),</span>
+          <span class="n">pos1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">low</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="mi">151</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">k</span><span class="p">))</span>
+
+<span class="n">d1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span>
+<span class="n">d2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">d1</span>
+       <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">'x'</span><span class="p">)</span>
+       <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'start &lt;= pos1 &lt;= end'</span><span class="p">)</span>
+       <span class="p">)</span>
+<span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(17792800, 4)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">d1</span>
+       <span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
+            <span class="n">d2</span><span class="p">,</span> 
+            <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span> 
+            <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span> 
+            <span class="p">(</span><span class="s1">'x'</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'=='</span><span class="p">),</span> 
+            <span class="n">use_numba</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">)</span>
+<span class="n">out</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(17792800, 5)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>About 18 million rows returned; let's see how fast each function runs:</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>it
+<span class="p">(</span><span class="n">d1</span>
+<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">'x'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'start &lt;= pos1 &lt;= end'</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>21.2 s ± 559 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>it
+<span class="p">(</span><span class="n">d1</span>
+<span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
+    <span class="n">d2</span><span class="p">,</span> 
+    <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span> 
+    <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span> 
+    <span class="p">(</span><span class="s1">'x'</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'=='</span><span class="p">),</span> 
+    <span class="n">use_numba</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>7.78 s ± 161 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.merge(d2, on = 'x').query('start &lt;= pos1 &lt;= end')
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>peak memory: 7090.79 MiB, increment: 6641.18 MiB
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.conditional_join(d2, ('start', 'pos1', '&lt;='), ('end', 'pos1', '&gt;='), ('x', 'x', '=='), use_numba=False)
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>peak memory: 6604.02 MiB, increment: 6362.65 MiB
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> is faster; this might not be the case all the time.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Summary">
+<a class="anchor" href="#Summary" aria-hidden="true"><span class="octicon octicon-link"></span></a><strong>Summary</strong><a class="anchor-link" href="#Summary"> </a>
+</h2>
+<p>This blog post shows how to efficiently join on non-equi conditions, using <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a>. If you are comfortable with SQL, you could get more performance with <a href="https://duckdb.org">DuckDB</a>, which supports non-equi joins as well, and has a <a href="https://duckdb.org/2022/05/27/iejoin.html">performant implementation</a> for range joins.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="samukweku/data-wrangling-blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/data-wrangling-blog/python/pandas/non-equi%20join/inequality%20join/conditional%20join/equi-join/2022/09/30/Fast-and-Efficient-Inequality-Joins-in-Pandas.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/data-wrangling-blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/data-wrangling-blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>Data Wrangling Blog.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/samukweku" target="_blank" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/samukweku" target="_blank" title="samukweku"><svg class="svg-icon grey"><use xlink:href="/data-wrangling-blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
