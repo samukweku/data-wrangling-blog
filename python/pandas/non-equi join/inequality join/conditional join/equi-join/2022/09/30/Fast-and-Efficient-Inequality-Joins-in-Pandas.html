@@ -587,10 +587,9 @@ window.onload = wrap_img;
 <li>df : Left DataFrame.</li>
 <li>right: Named Series or DataFrame to join to <code>df</code>.</li>
 <li>conditions : Variable argument of tuple(s) of the form <code>(left_on, right_on, op)</code>- 
-<pre><code>          `left_on` is the column from `df`, `right_on` is the column from `right`, 
-          while `op` is the join operator. For multiple conditions, the and(&amp;) operator
-          is used to combine the results of the individual conditions.</code></pre>
-</li>
+  <code>left_on</code> is the column from <code>df</code>, <code>right_on</code> is the column from <code>right</code>, 
+  while <code>op</code> is the join operator. For multiple conditions, the and(&amp;) operator
+  is used to combine the results of the individual conditions.</li>
 <li>how: indicates the type of join to be performed. Can be one of <code>left</code>, <code>right</code>, or <code>inner</code>.</li>
 <li>use_numba: Whether to use <code>numba</code>, for possible performance increase. Applicable only to strictly non-equi joins.</li>
 <li>df_columns: Select columns from <code>df</code>.</li>
@@ -3002,7 +3001,7 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The cartesian join takes a very long time - too long for us to test here. The focus for this test will just be on <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> and performance when <a href="https://numba.readthedocs.io/en/stable/">numba</a> is used.</p>
+<p>The cartesian join takes a very long time - too long for us to test here. The focus for this test will just be on <a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> and show where performance with <a href="https://numba.readthedocs.io/en/stable/">numba</a> might be better.</p>
 
 </div>
 </div>
@@ -3354,11 +3353,59 @@ window.onload = wrap_img;
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> is faster; this might not be the case all the time.</p>
+<p><a href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> is faster; this might not be the case all the time. Let's see performance when it is just on non-equi joins:</p>
 
 </div>
 </div>
 </div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>it
+<span class="p">(</span><span class="n">d1</span>
+<span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
+    <span class="n">d2</span><span class="p">,</span> 
+    <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span> 
+    <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span> 
+    <span class="n">use_numba</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>it
+<span class="p">(</span><span class="n">d1</span>
+<span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
+    <span class="n">d2</span><span class="p">,</span> 
+    <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span> 
+    <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span> 
+    <span class="n">use_numba</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
 <div class="cell border-box-sizing text_cell rendered">
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
