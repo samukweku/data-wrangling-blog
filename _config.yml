@@ -1,114 +1,39 @@
-# Welcome to Jekyll!
-#
-# This config file is meant for settings that affect your whole blog.
-#
-# If you need help with YAML syntax, here are some quick references for you: 
-# https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
-# https://learnxinyminutes.com/docs/yaml/
+# Book settings
+# Learn more at https://jupyterbook.org/customize/config.html
 
-title: Samuel Oranyeli
-description: Data Wrangling Blog.
-github_username: samukweku
-# you can comment the below line out if your repo name is not different than your baseurl
-github_repo: "data-wrangling-blog"
+title: Data Wrangling and Automation
+author: Samuel Oranyeli
+logo: ""
+# Patterns to skip when building the book. Can be glob-style (e.g. "*skip.ipynb")
+exclude_patterns            : [_build, Thumbs.db, .DS_Store, "**.ipynb_checkpoints"]
+# Auto-exclude files not in the toc
+only_build_toc_files        : true
 
-# OPTIONAL: override baseurl and url if using a custom domain
-# Note: leave out the trailing / from this value. 
-url: "https://samukweku.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+# Force re-execution of notebooks on each build.
+# See https://jupyterbook.org/content/execute.html
+execute:
+  execute_notebooks: cache
+  timeout: 100_000
 
-###########################################################
-#########  Special Instructions for baseurl ###############
-#
-#### Scenario One: If you do not have a Custom Domain #####
-#    -  if you are not using a custom domain, the baseurl *must* be set to your repo name
-# 
-####  Scenario Two: If you have a Custom Domain #####
-# 1. If your domain does NOT have a subpath, this leave this value as ""
-# 2. If your domain does have a subpath, you must preceed the value with a / and NOT have a / at the end.  
-#      For example: 
-#           "" is valid
-#           "/blog"        is valid
-#            "/blog/site/" is invalid  ( / at the end)
-#            "/blog/site"  is valid
-#            "blog/site"   is invalid  ( because doesn't begin with a /)
-#
-# 3. You must replace the parameter `baseurl` in _action_files/settings.ini with the same value as you set here but WITHOUT QUOTES.
-#
-baseurl: "/data-wrangling-blog" # the subpath of your site, e.g. "/blog".
+# Define the name of the latex output file for PDF builds
+latex:
+  latex_documents:
+    targetname: book.tex
 
-# Github and twitter are optional:
-minima:
-  social_links:
-    twitter: samukweku
-    github: samukweku
+# Add a bibtex file so that we can create citations
+bibtex_bibfiles:
+  - references.bib
 
-# Set this to true to get LaTeX math equation support
-use_math: 
+# Information about where the book exists on the web
+repository:
+  url: https://github.com/samukweku/data-wrangling-blog  # Online location of your book
+  path_to_book: ""  # Optional path to your book, relative to the repository root
+  branch: master  # Which branch of the repository should be used when creating links (optional)
 
-# Set this to true to display the summary of your blog post under your title on the Home page.
-show_description: true
-
-# Set this to true to display image previews on home page, if they exist
-show_image: false
-
-# Set this to true to display tags on each post
-show_tags: true
-
-# Add your Google Analytics ID here if you have one and want to use it
-google_analytics: 
-
-exclude:
-  - docker-compose.yml
-  - action.yml
-  - Makefile
-
-# this setting allows you to keep pages organized in the _pages folder
-include:
-  - _pages
-
-# This specifies what badges are turned on by default for notebook posts.
-default_badges:
-  github: true
-  binder: true
-  colab: true
-
-# Escape HTML in post descriptions
-html_escape:
-  description: false
-
-# Everything below here should be left alone. Modifications may break fastpages
-future: true
-theme: minima
-plugins:
-  - jekyll-feed
-  - jekyll-gist
-  - jekyll-octicons
-  - jekyll-toc
-  - jekyll-twitter-plugin
-  - jekyll-relative-links
-  - jekyll-seo-tag
-  - jekyll-remote-theme
-  - jekyll-paginate
-  - jekyll-sitemap
-  - jemoji
-
-# See https://jekyllrb.com/docs/pagination/
-# For pagination to work, you cannot have index.md at the root of your repo, instead you must rename this file to index.html
-paginate: 15
-paginate_path: /page:num/
-
-remote_theme: jekyll/minima
-
-titles_from_headings:
-  enabled:     true
-  strip_title: true
-  collections: true
-
-highlighter: rouge
-markdown: kramdown
-kramdown:
-  math_engine: katex
-  input: GFM
-  auto_ids: true
-  hard_wrap: false
-  syntax_highlighter: rouge
+# Add GitHub buttons to your book
+# See https://jupyterbook.org/customize/config.html#add-a-link-to-your-repository
+html:
+  use_issues_button: true
+  use_repository_button: true
+  comments:
+    utterances: false
