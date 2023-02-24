@@ -1,6 +1,6 @@
-numpy==1.22.0
-pandas==1.03
-openpyxl==3.0.3
-xlrd==1.2.0
+numpy
+pandas
+openpyxl
 datatable
 numba
+requests-html
