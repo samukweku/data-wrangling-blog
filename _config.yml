@@ -36,4 +36,5 @@ html:
   use_issues_button: true
   use_repository_button: true
   comments:
-    utterances: false
+    utterances:
+      repo: "samukweku/data-wrangling-blog"
