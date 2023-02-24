@@ -1,0 +1,1801 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Dplyr’s across: Replicating within Pandas &#8212; Data Wrangling and Automation</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Access Excel Tables with Python" href="Access-Tables-In-Excel.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Data Wrangling and Automation</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Data Wrangling Recipes
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="Meaningful-Formats.html">
+   SpreadSheet Munging Strategies in Python - Meaningful Formats
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Read-Multiple-Csv-Files-into-one-Table-in-Python.html">
+   Read Multiple CSV Files into one Frame in Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Conditional-Statements.html">
+   Data Wrangling with Python Datatable - Conditional Statements
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Fast-and-Efficient-Inequality-Joins-in-Pandas.html">
+   Fast and Efficient Inequality Joins in Pandas
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Row-wise-Transformations.html">
+   Data Wrangling with Python Datatable - Row-wise Transformations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Replicating-SD-in-python-datatable.html">
+   Replicating .SD in Python Datatable
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Pivot-Tables---Simple-Unpivoting.html">
+   SpreadSheet Munging Strategies in Python - Pivot Tables - Simple Unpivoting
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Select-Columns-by-Data-Type.html">
+   Data Wrangling with Python Datatable - Select Columns by Data Type
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Pivot_longer---Reshape-Data-in-Pandas-with-Ease-From-Wide-to-Long.html">
+   Pivot_longer : Reshape Data in Pandas Efficiently and with Ease from Wide to Long
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Replicate-Pandas-map.html">
+   Data Wrangling with Python Datatable - Replicate Pandas’ Map Function
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Pivot-Tables-Complex-Unpivoting.html">
+   SpreadSheet Munging Strategies in Python - Pivot Tables - Complex Unpivoting
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Filtering-Rows-in-Python-Datatable.html">
+   Filtering Rows in Datatable
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Selecting-and-Grouping-Data-with-Python-Datatable.html">
+   Selecting and Grouping Data with Python Datatable
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Extract-DataFrame-from-Compressed-Data-into-Pandas.html">
+   Extract DataFrame from Compressed Data into Pandas
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Web-Scraping-in-Python.html">
+   Easy Web Scraping with Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Selecting-Columns.html">
+   Data Wrangling with Python Datatable - Selecting Columns
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Extract-DataFrame-from-Compressed-Data-into-Python-Datatable.html">
+   Extract DataFrame from Compressed Data into Python Datatable
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Transformations-Within-a-GroupBy.html">
+   Data Wrangling with Python Datatable - Transformations Within a GroupBy
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Small-Multiples.html">
+   SpreadSheet Munging Strategies in Python - Small Multiples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable-Aggregation-on-Multiple-Columns.html">
+   Data Wrangling - Aggregation on Multiple Columns
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Access-Tables-In-Excel.html">
+   Access Excel Tables with Python
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Dplyr’s across: Replicating within Pandas
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/samukweku/data-wrangling-blog/master?urlpath=tree/notebooks/dplyr-across-in-Pandas.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/samukweku/data-wrangling-blog"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/samukweku/data-wrangling-blog/issues/new?title=Issue%20on%20page%20%2Fnotebooks/dplyr-across-in-Pandas.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/notebooks/dplyr-across-in-Pandas.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Dplyr’s across: Replicating within Pandas</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="dplyr-s-across-replicating-within-pandas">
+<h1>Dplyr’s across: Replicating within Pandas<a class="headerlink" href="#dplyr-s-across-replicating-within-pandas" title="Permalink to this headline">#</a></h1>
+<p><a class="reference external" href="https://dplyr.tidyverse.org/index.html">dplyr</a> has the <a class="reference external" href="https://dplyr.tidyverse.org/reference/across.html">across</a> function, which is meant to make column wise processing easy. Pandas has always supported column-wise operations, and in a relatively simple manner.</p>
+<p>This article aims to replicate solutions in the dplyr <a class="reference external" href="https://dplyr.tidyverse.org/articles/colwise.html">column-wise operations</a> vignette with Pandas.</p>
+<p>Let’s load in the relevant libraries</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; pandas version :&quot;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> 
+      <span class="s2">&quot;numpy version :&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> 
+      <span class="s2">&quot;python version :&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> pandas version : 1.5.3 
+ numpy version : 1.23.5 
+ python version : 3.9.16 | packaged by conda-forge | (main, Feb  1 2023, 21:39:03) 
+[GCC 11.3.0]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/tidyverse/dplyr/main/data-raw/starwars.csv&quot;</span>
+<span class="n">starwars</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">starwars</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>height</th>
+      <th>mass</th>
+      <th>hair_color</th>
+      <th>skin_color</th>
+      <th>eye_color</th>
+      <th>birth_year</th>
+      <th>sex</th>
+      <th>gender</th>
+      <th>homeworld</th>
+      <th>species</th>
+      <th>films</th>
+      <th>vehicles</th>
+      <th>starships</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Luke Skywalker</td>
+      <td>172.0</td>
+      <td>77.0</td>
+      <td>blond</td>
+      <td>fair</td>
+      <td>blue</td>
+      <td>19.0</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Tatooine</td>
+      <td>Human</td>
+      <td>The Empire Strikes Back, Revenge of the Sith, ...</td>
+      <td>Snowspeeder, Imperial Speeder Bike</td>
+      <td>X-wing, Imperial shuttle</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>C-3PO</td>
+      <td>167.0</td>
+      <td>75.0</td>
+      <td>NaN</td>
+      <td>gold</td>
+      <td>yellow</td>
+      <td>112.0</td>
+      <td>none</td>
+      <td>masculine</td>
+      <td>Tatooine</td>
+      <td>Droid</td>
+      <td>The Empire Strikes Back, Attack of the Clones,...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>R2-D2</td>
+      <td>96.0</td>
+      <td>32.0</td>
+      <td>NaN</td>
+      <td>white, blue</td>
+      <td>red</td>
+      <td>33.0</td>
+      <td>none</td>
+      <td>masculine</td>
+      <td>Naboo</td>
+      <td>Droid</td>
+      <td>The Empire Strikes Back, Attack of the Clones,...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Darth Vader</td>
+      <td>202.0</td>
+      <td>136.0</td>
+      <td>none</td>
+      <td>white</td>
+      <td>yellow</td>
+      <td>41.9</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Tatooine</td>
+      <td>Human</td>
+      <td>The Empire Strikes Back, Revenge of the Sith, ...</td>
+      <td>NaN</td>
+      <td>TIE Advanced x1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Leia Organa</td>
+      <td>150.0</td>
+      <td>49.0</td>
+      <td>brown</td>
+      <td>light</td>
+      <td>brown</td>
+      <td>19.0</td>
+      <td>female</td>
+      <td>feminine</td>
+      <td>Alderaan</td>
+      <td>Human</td>
+      <td>The Empire Strikes Back, Revenge of the Sith, ...</td>
+      <td>Imperial Speeder Bike</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dplyr : </span>
+<span class="c1"># starwars %&gt;% </span>
+<span class="c1">#   summarise(across(where(is.character), n_distinct))</span>
+<span class="p">(</span><span class="n">starwars</span>
+<span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="s1">&#39;object&#39;</span><span class="p">)</span>
+<span class="o">.</span><span class="n">nunique</span><span class="p">(</span><span class="n">dropna</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>name          87
+hair_color    13
+skin_color    31
+eye_color     15
+sex            5
+gender         3
+homeworld     49
+species       38
+films         24
+vehicles      11
+starships     17
+dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dplyr :</span>
+<span class="c1"># starwars %&gt;% </span>
+<span class="c1">#   group_by(species) %&gt;% </span>
+<span class="c1">#   filter(n() &gt; 1) %&gt;% </span>
+<span class="c1">#   summarise(across(c(sex, gender, homeworld), n_distinct))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get the grouper</span>
+<span class="n">grp</span> <span class="o">=</span> <span class="n">starwars</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;species&#39;</span><span class="p">)</span>
+<span class="c1"># get the size:</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">)</span>
+<span class="c1"># get the unique sizes for sex, gender, homeworld</span>
+<span class="n">nuniques</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[[</span><span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;homeworld&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="s1">&#39;nunique&#39;</span><span class="p">,</span> <span class="n">dropna</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="c1"># filter nuniques with the size:</span>
+<span class="n">nuniques</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">n</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sex</th>
+      <th>gender</th>
+      <th>homeworld</th>
+    </tr>
+    <tr>
+      <th>species</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Droid</th>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>Gungan</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Human</th>
+      <td>2</td>
+      <td>2</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>Kaminoan</th>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Mirialan</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Twi'lek</th>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Wookiee</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Zabrak</th>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>The <a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.core.groupby.GroupBy.pipe.html">pipe</a> function comes in handy here, and allows reuse of the grouped object multiple times; in my opinion, the previous solution is much clearer and likely more performant:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">starwars</span>
+<span class="o">.</span><span class="n">filter</span><span class="p">([</span><span class="s1">&#39;species&#39;</span><span class="p">,</span> <span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;homeworld&#39;</span><span class="p">])</span>
+<span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;species&#39;</span><span class="p">)</span>
+<span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">nunique</span><span class="p">(</span><span class="n">dropna</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)])</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sex</th>
+      <th>gender</th>
+      <th>homeworld</th>
+    </tr>
+    <tr>
+      <th>species</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Droid</th>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>Gungan</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Human</th>
+      <td>2</td>
+      <td>2</td>
+      <td>16</td>
+    </tr>
+    <tr>
+      <th>Kaminoan</th>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Mirialan</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Twi'lek</th>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Wookiee</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Zabrak</th>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dplyr : </span>
+<span class="c1"># starwars %&gt;% </span>
+<span class="c1">#   group_by(homeworld) %&gt;% </span>
+<span class="c1">#   filter(n() &gt; 1) %&gt;% </span>
+<span class="c1">#   summarise(across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get the grouper</span>
+<span class="n">grp</span> <span class="o">=</span> <span class="n">starwars</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;homeworld&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;homeworld&#39;</span><span class="p">)</span>
+<span class="c1"># get the size:</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">)</span>
+<span class="c1"># filter averages with the size:</span>
+<span class="n">grp</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">n</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>height</th>
+      <th>mass</th>
+      <th>birth_year</th>
+    </tr>
+    <tr>
+      <th>homeworld</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Alderaan</th>
+      <td>176.333333</td>
+      <td>64.000000</td>
+      <td>43.000000</td>
+    </tr>
+    <tr>
+      <th>Corellia</th>
+      <td>175.000000</td>
+      <td>78.500000</td>
+      <td>25.000000</td>
+    </tr>
+    <tr>
+      <th>Coruscant</th>
+      <td>173.666667</td>
+      <td>50.000000</td>
+      <td>91.000000</td>
+    </tr>
+    <tr>
+      <th>Kamino</th>
+      <td>208.333333</td>
+      <td>83.100000</td>
+      <td>31.500000</td>
+    </tr>
+    <tr>
+      <th>Kashyyyk</th>
+      <td>231.000000</td>
+      <td>124.000000</td>
+      <td>200.000000</td>
+    </tr>
+    <tr>
+      <th>Mirial</th>
+      <td>168.000000</td>
+      <td>53.100000</td>
+      <td>49.000000</td>
+    </tr>
+    <tr>
+      <th>Naboo</th>
+      <td>175.454545</td>
+      <td>64.166667</td>
+      <td>55.000000</td>
+    </tr>
+    <tr>
+      <th>Ryloth</th>
+      <td>179.000000</td>
+      <td>55.000000</td>
+      <td>48.000000</td>
+    </tr>
+    <tr>
+      <th>Tatooine</th>
+      <td>169.800000</td>
+      <td>85.375000</td>
+      <td>54.644444</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>With the <a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.core.groupby.GroupBy.pipe.html">pipe</a> function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">starwars</span>
+<span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;homeworld&#39;</span><span class="p">)</span>
+<span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">)</span>
+<span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;homeworld&#39;</span><span class="p">)</span>
+<span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)])</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>height</th>
+      <th>mass</th>
+      <th>birth_year</th>
+    </tr>
+    <tr>
+      <th>homeworld</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Alderaan</th>
+      <td>176.333333</td>
+      <td>64.000000</td>
+      <td>43.000000</td>
+    </tr>
+    <tr>
+      <th>Corellia</th>
+      <td>175.000000</td>
+      <td>78.500000</td>
+      <td>25.000000</td>
+    </tr>
+    <tr>
+      <th>Coruscant</th>
+      <td>173.666667</td>
+      <td>50.000000</td>
+      <td>91.000000</td>
+    </tr>
+    <tr>
+      <th>Kamino</th>
+      <td>208.333333</td>
+      <td>83.100000</td>
+      <td>31.500000</td>
+    </tr>
+    <tr>
+      <th>Kashyyyk</th>
+      <td>231.000000</td>
+      <td>124.000000</td>
+      <td>200.000000</td>
+    </tr>
+    <tr>
+      <th>Mirial</th>
+      <td>168.000000</td>
+      <td>53.100000</td>
+      <td>49.000000</td>
+    </tr>
+    <tr>
+      <th>Naboo</th>
+      <td>175.454545</td>
+      <td>64.166667</td>
+      <td>55.000000</td>
+    </tr>
+    <tr>
+      <th>Ryloth</th>
+      <td>179.000000</td>
+      <td>55.000000</td>
+      <td>48.000000</td>
+    </tr>
+    <tr>
+      <th>Tatooine</th>
+      <td>169.800000</td>
+      <td>85.375000</td>
+      <td>54.644444</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dplyr:</span>
+<span class="c1"># starwars %&gt;% distinct(across(contains(&quot;color&quot;)))</span>
+<span class="n">starwars</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">like</span><span class="o">=</span><span class="s1">&#39;color&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>hair_color</th>
+      <th>skin_color</th>
+      <th>eye_color</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>blond</td>
+      <td>fair</td>
+      <td>blue</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>NaN</td>
+      <td>gold</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>NaN</td>
+      <td>white, blue</td>
+      <td>red</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>none</td>
+      <td>white</td>
+      <td>yellow</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>brown</td>
+      <td>light</td>
+      <td>brown</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>79</th>
+      <td>none</td>
+      <td>pale</td>
+      <td>white</td>
+    </tr>
+    <tr>
+      <th>81</th>
+      <td>black</td>
+      <td>dark</td>
+      <td>dark</td>
+    </tr>
+    <tr>
+      <th>82</th>
+      <td>brown</td>
+      <td>light</td>
+      <td>hazel</td>
+    </tr>
+    <tr>
+      <th>84</th>
+      <td>none</td>
+      <td>none</td>
+      <td>black</td>
+    </tr>
+    <tr>
+      <th>85</th>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+    </tr>
+  </tbody>
+</table>
+<p>67 rows × 3 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dplyr</span>
+<span class="c1"># starwars %&gt;% count(across(contains(&quot;color&quot;)), sort = TRUE)</span>
+<span class="n">starwars</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">like</span><span class="o">=</span><span class="s1">&#39;color&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">dropna</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>hair_color    skin_color  eye_color
+brown         light       brown        6
+              fair        blue         4
+none          grey        black        4
+black         dark        brown        3
+blond         fair        blue         3
+                                      ..
+none          dark        brown        1
+              green       black        1
+auburn, grey  fair        blue         1
+none          green       red          1
+NaN           white, red  red          1
+Length: 67, dtype: int64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># starwars %&gt;% </span>
+<span class="c1">#   filter(if_any(everything(), ~ !is.na(.x)))</span>
+<span class="n">starwars</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">starwars</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_95963/810716597.py:3: FutureWarning: In a future version of pandas all arguments of DataFrame.any and Series.any will be keyword-only.
+  starwars.loc[starwars.notna().any(1)]
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>height</th>
+      <th>mass</th>
+      <th>hair_color</th>
+      <th>skin_color</th>
+      <th>eye_color</th>
+      <th>birth_year</th>
+      <th>sex</th>
+      <th>gender</th>
+      <th>homeworld</th>
+      <th>species</th>
+      <th>films</th>
+      <th>vehicles</th>
+      <th>starships</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Luke Skywalker</td>
+      <td>172.0</td>
+      <td>77.0</td>
+      <td>blond</td>
+      <td>fair</td>
+      <td>blue</td>
+      <td>19.0</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Tatooine</td>
+      <td>Human</td>
+      <td>The Empire Strikes Back, Revenge of the Sith, ...</td>
+      <td>Snowspeeder, Imperial Speeder Bike</td>
+      <td>X-wing, Imperial shuttle</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>C-3PO</td>
+      <td>167.0</td>
+      <td>75.0</td>
+      <td>NaN</td>
+      <td>gold</td>
+      <td>yellow</td>
+      <td>112.0</td>
+      <td>none</td>
+      <td>masculine</td>
+      <td>Tatooine</td>
+      <td>Droid</td>
+      <td>The Empire Strikes Back, Attack of the Clones,...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>R2-D2</td>
+      <td>96.0</td>
+      <td>32.0</td>
+      <td>NaN</td>
+      <td>white, blue</td>
+      <td>red</td>
+      <td>33.0</td>
+      <td>none</td>
+      <td>masculine</td>
+      <td>Naboo</td>
+      <td>Droid</td>
+      <td>The Empire Strikes Back, Attack of the Clones,...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Darth Vader</td>
+      <td>202.0</td>
+      <td>136.0</td>
+      <td>none</td>
+      <td>white</td>
+      <td>yellow</td>
+      <td>41.9</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Tatooine</td>
+      <td>Human</td>
+      <td>The Empire Strikes Back, Revenge of the Sith, ...</td>
+      <td>NaN</td>
+      <td>TIE Advanced x1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Leia Organa</td>
+      <td>150.0</td>
+      <td>49.0</td>
+      <td>brown</td>
+      <td>light</td>
+      <td>brown</td>
+      <td>19.0</td>
+      <td>female</td>
+      <td>feminine</td>
+      <td>Alderaan</td>
+      <td>Human</td>
+      <td>The Empire Strikes Back, Revenge of the Sith, ...</td>
+      <td>Imperial Speeder Bike</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>82</th>
+      <td>Rey</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>brown</td>
+      <td>light</td>
+      <td>hazel</td>
+      <td>NaN</td>
+      <td>female</td>
+      <td>feminine</td>
+      <td>NaN</td>
+      <td>Human</td>
+      <td>The Force Awakens</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>83</th>
+      <td>Poe Dameron</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>brown</td>
+      <td>light</td>
+      <td>brown</td>
+      <td>NaN</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>NaN</td>
+      <td>Human</td>
+      <td>The Force Awakens</td>
+      <td>NaN</td>
+      <td>T-70 X-wing fighter</td>
+    </tr>
+    <tr>
+      <th>84</th>
+      <td>BB8</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>none</td>
+      <td>none</td>
+      <td>black</td>
+      <td>NaN</td>
+      <td>none</td>
+      <td>masculine</td>
+      <td>NaN</td>
+      <td>Droid</td>
+      <td>The Force Awakens</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>85</th>
+      <td>Captain Phasma</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>The Force Awakens</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>86</th>
+      <td>Padmé Amidala</td>
+      <td>165.0</td>
+      <td>45.0</td>
+      <td>brown</td>
+      <td>light</td>
+      <td>brown</td>
+      <td>46.0</td>
+      <td>female</td>
+      <td>feminine</td>
+      <td>Naboo</td>
+      <td>Human</td>
+      <td>Attack of the Clones, The Phantom Menace, Reve...</td>
+      <td>NaN</td>
+      <td>H-type Nubian yacht, Naboo star skiff, Naboo f...</td>
+    </tr>
+  </tbody>
+</table>
+<p>87 rows × 14 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># starwars %&gt;% </span>
+<span class="c1">#   filter(if_any(everything(), ~ !is.na(.x)))</span>
+<span class="n">starwars</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">starwars</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>height</th>
+      <th>mass</th>
+      <th>hair_color</th>
+      <th>skin_color</th>
+      <th>eye_color</th>
+      <th>birth_year</th>
+      <th>sex</th>
+      <th>gender</th>
+      <th>homeworld</th>
+      <th>species</th>
+      <th>films</th>
+      <th>vehicles</th>
+      <th>starships</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Luke Skywalker</td>
+      <td>172.0</td>
+      <td>77.0</td>
+      <td>blond</td>
+      <td>fair</td>
+      <td>blue</td>
+      <td>19.0</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Tatooine</td>
+      <td>Human</td>
+      <td>The Empire Strikes Back, Revenge of the Sith, ...</td>
+      <td>Snowspeeder, Imperial Speeder Bike</td>
+      <td>X-wing, Imperial shuttle</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Obi-Wan Kenobi</td>
+      <td>182.0</td>
+      <td>77.0</td>
+      <td>auburn, white</td>
+      <td>fair</td>
+      <td>blue-gray</td>
+      <td>57.0</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Stewjon</td>
+      <td>Human</td>
+      <td>The Empire Strikes Back, Attack of the Clones,...</td>
+      <td>Tribubble bongo</td>
+      <td>Jedi starfighter, Trade Federation cruiser, Na...</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Anakin Skywalker</td>
+      <td>188.0</td>
+      <td>84.0</td>
+      <td>blond</td>
+      <td>fair</td>
+      <td>blue</td>
+      <td>41.9</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Tatooine</td>
+      <td>Human</td>
+      <td>Attack of the Clones, The Phantom Menace, Reve...</td>
+      <td>Zephyr-G swoop bike, XJ-6 airspeeder</td>
+      <td>Trade Federation cruiser, Jedi Interceptor, Na...</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Chewbacca</td>
+      <td>228.0</td>
+      <td>112.0</td>
+      <td>brown</td>
+      <td>unknown</td>
+      <td>blue</td>
+      <td>200.0</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Kashyyyk</td>
+      <td>Wookiee</td>
+      <td>The Empire Strikes Back, Revenge of the Sith, ...</td>
+      <td>AT-ST</td>
+      <td>Millennium Falcon, Imperial shuttle</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Wedge Antilles</td>
+      <td>170.0</td>
+      <td>77.0</td>
+      <td>brown</td>
+      <td>fair</td>
+      <td>hazel</td>
+      <td>21.0</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Corellia</td>
+      <td>Human</td>
+      <td>The Empire Strikes Back, Return of the Jedi, A...</td>
+      <td>Snowspeeder</td>
+      <td>X-wing</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>Darth Maul</td>
+      <td>175.0</td>
+      <td>80.0</td>
+      <td>none</td>
+      <td>red</td>
+      <td>yellow</td>
+      <td>54.0</td>
+      <td>male</td>
+      <td>masculine</td>
+      <td>Dathomir</td>
+      <td>Zabrak</td>
+      <td>The Phantom Menace</td>
+      <td>Sith speeder</td>
+      <td>Scimitar</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Output for the above is different from the vignette’s because Pandas treats none as NaN, and dplyr does not (at least in the vignette)</p>
+<p>Let’s look at another solution, from <a class="reference external" href="https://stackoverflow.com/questions/63200530/python-pandas-equivalent-to-dplyr-1-0-0-summarizeacross">Stack Overflow</a>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://gist.githubusercontent.com/seankross/a412dfbd88b3db70b74b/raw/5f23f993cd87c283ce766e7ac6b329ee7cc2e1d1/mtcars.csv&quot;</span>
+<span class="n">cars</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">cars</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>model</th>
+      <th>mpg</th>
+      <th>cyl</th>
+      <th>disp</th>
+      <th>hp</th>
+      <th>drat</th>
+      <th>wt</th>
+      <th>qsec</th>
+      <th>vs</th>
+      <th>am</th>
+      <th>gear</th>
+      <th>carb</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Mazda RX4</td>
+      <td>21.0</td>
+      <td>6</td>
+      <td>160.0</td>
+      <td>110</td>
+      <td>3.90</td>
+      <td>2.620</td>
+      <td>16.46</td>
+      <td>0</td>
+      <td>1</td>
+      <td>4</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Mazda RX4 Wag</td>
+      <td>21.0</td>
+      <td>6</td>
+      <td>160.0</td>
+      <td>110</td>
+      <td>3.90</td>
+      <td>2.875</td>
+      <td>17.02</td>
+      <td>0</td>
+      <td>1</td>
+      <td>4</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Datsun 710</td>
+      <td>22.8</td>
+      <td>4</td>
+      <td>108.0</td>
+      <td>93</td>
+      <td>3.85</td>
+      <td>2.320</td>
+      <td>18.61</td>
+      <td>1</td>
+      <td>1</td>
+      <td>4</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Hornet 4 Drive</td>
+      <td>21.4</td>
+      <td>6</td>
+      <td>258.0</td>
+      <td>110</td>
+      <td>3.08</td>
+      <td>3.215</td>
+      <td>19.44</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Hornet Sportabout</td>
+      <td>18.7</td>
+      <td>8</td>
+      <td>360.0</td>
+      <td>175</td>
+      <td>3.15</td>
+      <td>3.440</td>
+      <td>17.02</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dplyr:</span>
+<span class="c1"># dat &lt;- group_by(mtcars, cyl) </span>
+<span class="c1"># summarize(dat, across(ends_with(&#39;p&#39;), sum), across(ends_with(&#39;t&#39;), mean))</span>
+<span class="n">aggs</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span><span class="s2">&quot;mean&quot;</span> <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;sum&quot;</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">cars</span> <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">))}</span>
+<span class="n">cars</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;cyl&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">aggs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>disp</th>
+      <th>hp</th>
+      <th>drat</th>
+      <th>wt</th>
+    </tr>
+    <tr>
+      <th>cyl</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4</th>
+      <td>1156.5</td>
+      <td>909</td>
+      <td>4.070909</td>
+      <td>2.285727</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1283.2</td>
+      <td>856</td>
+      <td>3.585714</td>
+      <td>3.117143</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>4943.4</td>
+      <td>2929</td>
+      <td>3.229286</td>
+      <td>3.999214</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="Access-Tables-In-Excel.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Access Excel Tables with Python</p>
+        </div>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Samuel Oranyeli<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

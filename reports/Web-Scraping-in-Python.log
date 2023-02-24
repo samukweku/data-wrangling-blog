@@ -1,0 +1,271 @@
+Traceback (most recent call last):
+  File "/home/sam/miniforge3/envs/blogger/lib/python3.9/site-packages/jupyter_cache/executors/utils.py", line 51, in single_nb_execution
+    executenb(
+  File "/home/sam/miniforge3/envs/blogger/lib/python3.9/site-packages/nbclient/client.py", line 1204, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/home/sam/miniforge3/envs/blogger/lib/python3.9/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/home/sam/miniforge3/envs/blogger/lib/python3.9/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/home/sam/miniforge3/envs/blogger/lib/python3.9/asyncio/base_events.py", line 647, in run_until_complete
+    return future.result()
+  File "/home/sam/miniforge3/envs/blogger/lib/python3.9/site-packages/nbclient/client.py", line 663, in async_execute
+    await self.async_execute_cell(
+  File "/home/sam/miniforge3/envs/blogger/lib/python3.9/site-packages/nbclient/client.py", line 965, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/sam/miniforge3/envs/blogger/lib/python3.9/site-packages/nbclient/client.py", line 862, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# import streamlit and other libraries
+import streamlit as st
+from requests_html import HTMLSession
+import pandas as pd
+
+# give our application a title
+st.title("Real-time web scraper with Python")
+
+
+# add our web scraping code
+session = HTMLSession()
+main_url = "http://books.toscrape.com/"
+main_page = session.get(main_url)
+
+navlinks = "div.side_categories>ul.nav.nav-list>li>ul>li>a"
+genres = [element.text for element in main_page.html.find(navlinks)]
+list_urls = [
+    f"{main_url}/{element.attrs['href']}" for element in main_page.html.find(navlinks)
+]
+genre_urls = dict(zip(genres, list_urls))
+
+
+@st.cache
+def data_extract(genre):
+    webpage = genre_urls.get(genre)
+    webpage = session.get(webpage)
+    urls = [
+        element.attrs["href"].strip("../")
+        for element in webpage.html.find("div.image_container>a")
+    ]
+
+    titles = [element.attrs["title"] for element in webpage.html.find("h3>a")]
+
+    imgs = [
+        element.attrs["src"].strip("../")
+        for element in webpage.html.find("div.image_container>a>img")
+    ]
+
+    ratings = [
+        element.attrs["class"][-1] for element in webpage.html.find("p.star-rating")
+    ]
+
+    prices = [element.text for element in webpage.html.find("p.price_color")]
+
+    availability = [element.text for element in webpage.html.find("p.instock")]
+
+    data = dict(
+        Title=titles,
+        URL=urls,
+        SourceImage=imgs,
+        Rating=ratings,
+        Price=prices,
+        Availability=availability,
+    )
+
+    return pd.DataFrame(data).to_markdown(index=False)
+
+
+# add a sidebar to select genre
+option = st.sidebar.selectbox("Genres", genres)
+
+# add a line of code to show the result
+st.markdown(data_extract(option), unsafe_allow_html=True)
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mAttributeError[0m                            Traceback (most recent call last)
+File [0;32m~/miniforge3/envs/blogger/lib/python3.9/site-packages/streamlit/runtime/legacy_caching/hashing.py:360[0m, in [0;36m_CodeHasher.to_bytes[0;34m(self, obj, context)[0m
+[1;32m    358[0m [38;5;28;01mtry[39;00m:
+[1;32m    359[0m     [38;5;66;03m# Hash the input[39;00m
+[0;32m--> 360[0m     b [38;5;241m=[39m [38;5;124mb[39m[38;5;124m"[39m[38;5;132;01m%s[39;00m[38;5;124m:[39m[38;5;132;01m%s[39;00m[38;5;124m"[39m [38;5;241m%[39m (tname, [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_to_bytes[49m[43m([49m[43mobj[49m[43m,[49m[43m [49m[43mcontext[49m[43m)[49m)
+[1;32m    362[0m     [38;5;66;03m# Hmmm... It's possible that the size calculation is wrong. When we[39;00m
+[1;32m    363[0m     [38;5;66;03m# call to_bytes inside _to_bytes things get double-counted.[39;00m
+
+File [0;32m~/miniforge3/envs/blogger/lib/python3.9/site-packages/streamlit/runtime/legacy_caching/hashing.py:626[0m, in [0;36m_CodeHasher._to_bytes[0;34m(self, obj, context)[0m
+[1;32m    625[0m [38;5;28;01massert[39;00m code [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m
+[0;32m--> 626[0m [38;5;28;01mif[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_file_should_be_hashed[49m[43m([49m[43mcode[49m[38;5;241;43m.[39;49m[43mco_filename[49m[43m)[49m:
+[1;32m    627[0m     context [38;5;241m=[39m _get_context(obj)
+
+File [0;32m~/miniforge3/envs/blogger/lib/python3.9/site-packages/streamlit/runtime/legacy_caching/hashing.py:402[0m, in [0;36m_CodeHasher._file_should_be_hashed[0;34m(self, filename)[0m
+[1;32m    400[0m     [38;5;28;01mreturn[39;00m [38;5;28;01mFalse[39;00m
+[1;32m    401[0m [38;5;28;01mreturn[39;00m file_util[38;5;241m.[39mfile_is_in_folder_glob(
+[0;32m--> 402[0m     filepath, [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_get_main_script_directory[49m[43m([49m[43m)[49m
+[1;32m    403[0m ) [38;5;129;01mor[39;00m file_util[38;5;241m.[39mfile_in_pythonpath(filepath)
+
+File [0;32m~/miniforge3/envs/blogger/lib/python3.9/site-packages/streamlit/runtime/legacy_caching/hashing.py:714[0m, in [0;36m_CodeHasher._get_main_script_directory[0;34m()[0m
+[1;32m    712[0m [38;5;66;03m# This works because we set __main__.__file__ to the[39;00m
+[1;32m    713[0m [38;5;66;03m# script path in ScriptRunner.[39;00m
+[0;32m--> 714[0m abs_main_path [38;5;241m=[39m pathlib[38;5;241m.[39mPath([43m__main__[49m[38;5;241;43m.[39;49m[38;5;18;43m__file__[39;49m)[38;5;241m.[39mresolve()
+[1;32m    715[0m [38;5;28;01mreturn[39;00m [38;5;28mstr[39m(abs_main_path[38;5;241m.[39mparent)
+
+[0;31mAttributeError[0m: module '__main__' has no attribute '__file__'
+
+During handling of the above exception, another exception occurred:
+
+[0;31mInternalHashError[0m                         Traceback (most recent call last)
+Cell [0;32mIn[5], line 63[0m
+[1;32m     60[0m option [38;5;241m=[39m st[38;5;241m.[39msidebar[38;5;241m.[39mselectbox([38;5;124m"[39m[38;5;124mGenres[39m[38;5;124m"[39m, genres)
+[1;32m     62[0m [38;5;66;03m# add a line of code to show the result[39;00m
+[0;32m---> 63[0m st[38;5;241m.[39mmarkdown([43mdata_extract[49m[43m([49m[43moption[49m[43m)[49m, unsafe_allow_html[38;5;241m=[39m[38;5;28;01mTrue[39;00m)
+
+File [0;32m~/miniforge3/envs/blogger/lib/python3.9/site-packages/streamlit/runtime/legacy_caching/caching.py:715[0m, in [0;36mcache.<locals>.wrapped_func[0;34m(*args, **kwargs)[0m
+[1;32m    713[0m [38;5;28;01mif[39;00m show_spinner:
+[1;32m    714[0m     [38;5;28;01mwith[39;00m spinner(message):
+[0;32m--> 715[0m         [38;5;28;01mreturn[39;00m [43mget_or_create_cached_value[49m[43m([49m[43m)[49m
+[1;32m    716[0m [38;5;28;01melse[39;00m:
+[1;32m    717[0m     [38;5;28;01mreturn[39;00m get_or_create_cached_value()
+
+File [0;32m~/miniforge3/envs/blogger/lib/python3.9/site-packages/streamlit/runtime/legacy_caching/caching.py:637[0m, in [0;36mcache.<locals>.wrapped_func.<locals>.get_or_create_cached_value[0;34m()[0m
+[1;32m    630[0m [38;5;28;01mnonlocal[39;00m cache_key
+[1;32m    631[0m [38;5;28;01mif[39;00m cache_key [38;5;129;01mis[39;00m [38;5;28;01mNone[39;00m:
+[1;32m    632[0m     [38;5;66;03m# Delay generating the cache key until the first call.[39;00m
+[1;32m    633[0m     [38;5;66;03m# This way we can see values of globals, including functions[39;00m
+[1;32m    634[0m     [38;5;66;03m# defined after this one.[39;00m
+[1;32m    635[0m     [38;5;66;03m# If we generated the key earlier we would only hash those[39;00m
+[1;32m    636[0m     [38;5;66;03m# globals by name, and miss changes in their code or value.[39;00m
+[0;32m--> 637[0m     cache_key [38;5;241m=[39m [43m_hash_func[49m[43m([49m[43mnon_optional_func[49m[43m,[49m[43m [49m[43mhash_funcs[49m[43m)[49m
+[1;32m    639[0m [38;5;66;03m# First, get the cache that's attached to this function.[39;00m
+[1;32m    640[0m [38;5;66;03m# This cache's key is generated (above) from the function's code.[39;00m
+[1;32m    641[0m mem_cache [38;5;241m=[39m _mem_caches[38;5;241m.[39mget_cache(cache_key, max_entries, ttl)
+
+File [0;32m~/miniforge3/envs/blogger/lib/python3.9/site-packages/streamlit/runtime/legacy_caching/caching.py:767[0m, in [0;36m_hash_func[0;34m(func, hash_funcs)[0m
+[1;32m    756[0m update_hash(
+[1;32m    757[0m     (func[38;5;241m.[39m[38;5;18m__module__[39m, func[38;5;241m.[39m[38;5;18m__qualname__[39m),
+[1;32m    758[0m     hasher[38;5;241m=[39mfunc_hasher,
+[0;32m   (...)[0m
+[1;32m    761[0m     hash_source[38;5;241m=[39mfunc,
+[1;32m    762[0m )
+[1;32m    764[0m [38;5;66;03m# Include the function's body in the hash. We *do* pass hash_funcs here,[39;00m
+[1;32m    765[0m [38;5;66;03m# because this step will be hashing any objects referenced in the function[39;00m
+[1;32m    766[0m [38;5;66;03m# body.[39;00m
+[0;32m--> 767[0m [43mupdate_hash[49m[43m([49m
+[1;32m    768[0m [43m    [49m[43mfunc[49m[43m,[49m
+[1;32m    769[0m [43m    [49m[43mhasher[49m[38;5;241;43m=[39;49m[43mfunc_hasher[49m[43m,[49m
+[1;32m    770[0m [43m    [49m[43mhash_funcs[49m[38;5;241;43m=[39;49m[43mhash_funcs[49m[43m,[49m
+[1;32m    771[0m [43m    [49m[43mhash_reason[49m[38;5;241;43m=[39;49m[43mHashReason[49m[38;5;241;43m.[39;49m[43mCACHING_FUNC_BODY[49m[43m,[49m
+[1;32m    772[0m [43m    [49m[43mhash_source[49m[38;5;241;43m=[39;49m[43mfunc[49m[43m,[49m
+[1;32m    773[0m [43m[49m[43m)[49m
+[1;32m    774[0m cache_key [38;5;241m=[39m func_hasher[38;5;241m.[39mhexdigest()
+[1;32m    775[0m _LOGGER[38;5;241m.[39mdebug(
+[1;32m    776[0m     [38;5;124m"[39m[38;5;124mmem_cache key for [39m[38;5;132;01m%s[39;00m[38;5;124m.[39m[38;5;132;01m%s[39;00m[38;5;124m: [39m[38;5;132;01m%s[39;00m[38;5;124m"[39m, func[38;5;241m.[39m[38;5;18m__module__[39m, func[38;5;241m.[39m[38;5;18m__qualname__[39m, cache_key
+[1;32m    777[0m )
+
+File [0;32m~/miniforge3/envs/blogger/lib/python3.9/site-packages/streamlit/runtime/legacy_caching/hashing.py:108[0m, in [0;36mupdate_hash[0;34m(val, hasher, hash_reason, hash_source, context, hash_funcs)[0m
+[1;32m    105[0m hash_stacks[38;5;241m.[39mcurrent[38;5;241m.[39mhash_source [38;5;241m=[39m hash_source
+[1;32m    107[0m ch [38;5;241m=[39m _CodeHasher(hash_funcs)
+[0;32m--> 108[0m [43mch[49m[38;5;241;43m.[39;49m[43mupdate[49m[43m([49m[43mhasher[49m[43m,[49m[43m [49m[43mval[49m[43m,[49m[43m [49m[43mcontext[49m[43m)[49m
+
+File [0;32m~/miniforge3/envs/blogger/lib/python3.9/site-packages/streamlit/runtime/legacy_caching/hashing.py:385[0m, in [0;36m_CodeHasher.update[0;34m(self, hasher, obj, context)[0m
+[1;32m    383[0m [38;5;28;01mdef[39;00m [38;5;21mupdate[39m([38;5;28mself[39m, hasher, obj: Any, context: Optional[Context] [38;5;241m=[39m [38;5;28;01mNone[39;00m) [38;5;241m-[39m[38;5;241m>[39m [38;5;28;01mNone[39;00m:
+[1;32m    384[0m [38;5;250m    [39m[38;5;124;03m"""Update the provided hasher with the hash of an object."""[39;00m
+[0;32m--> 385[0m     b [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mto_bytes[49m[43m([49m[43mobj[49m[43m,[49m[43m [49m[43mcontext[49m[43m)[49m
+[1;32m    386[0m     hasher[38;5;241m.[39mupdate(b)
+
+File [0;32m~/miniforge3/envs/blogger/lib/python3.9/site-packages/streamlit/runtime/legacy_caching/hashing.py:374[0m, in [0;36m_CodeHasher.to_bytes[0;34m(self, obj, context)[0m
+[1;32m    371[0m     [38;5;28;01mraise[39;00m
+[1;32m    373[0m [38;5;28;01mexcept[39;00m [38;5;167;01mException[39;00m [38;5;28;01mas[39;00m ex:
+[0;32m--> 374[0m     [38;5;28;01mraise[39;00m InternalHashError(ex, obj)
+[1;32m    376[0m [38;5;28;01mfinally[39;00m:
+[1;32m    377[0m     [38;5;66;03m# In case an UnhashableTypeError (or other) error is thrown, clean up the[39;00m
+[1;32m    378[0m     [38;5;66;03m# stack so we don't get false positives in future hashing calls[39;00m
+[1;32m    379[0m     hash_stacks[38;5;241m.[39mcurrent[38;5;241m.[39mpop()
+
+File [0;32m~/miniforge3/envs/blogger/lib/python3.9/site-packages/streamlit/runtime/legacy_caching/hashing.py:360[0m, in [0;36m_CodeHasher.to_bytes[0;34m(self, obj, context)[0m
+[1;32m    356[0m hash_stacks[38;5;241m.[39mcurrent[38;5;241m.[39mpush(obj)
+[1;32m    358[0m [38;5;28;01mtry[39;00m:
+[1;32m    359[0m     [38;5;66;03m# Hash the input[39;00m
+[0;32m--> 360[0m     b [38;5;241m=[39m [38;5;124mb[39m[38;5;124m"[39m[38;5;132;01m%s[39;00m[38;5;124m:[39m[38;5;132;01m%s[39;00m[38;5;124m"[39m [38;5;241m%[39m (tname, [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_to_bytes[49m[43m([49m[43mobj[49m[43m,[49m[43m [49m[43mcontext[49m[43m)[49m)
+[1;32m    362[0m     [38;5;66;03m# Hmmm... It's possible that the size calculation is wrong. When we[39;00m
+[1;32m    363[0m     [38;5;66;03m# call to_bytes inside _to_bytes things get double-counted.[39;00m
+[1;32m    364[0m     [38;5;28mself[39m[38;5;241m.[39msize [38;5;241m+[39m[38;5;241m=[39m sys[38;5;241m.[39mgetsizeof(b)
+
+File [0;32m~/miniforge3/envs/blogger/lib/python3.9/site-packages/streamlit/runtime/legacy_caching/hashing.py:626[0m, in [0;36m_CodeHasher._to_bytes[0;34m(self, obj, context)[0m
+[1;32m    624[0m code [38;5;241m=[39m [38;5;28mgetattr[39m(obj, [38;5;124m"[39m[38;5;124m__code__[39m[38;5;124m"[39m, [38;5;28;01mNone[39;00m)
+[1;32m    625[0m [38;5;28;01massert[39;00m code [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m
+[0;32m--> 626[0m [38;5;28;01mif[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_file_should_be_hashed[49m[43m([49m[43mcode[49m[38;5;241;43m.[39;49m[43mco_filename[49m[43m)[49m:
+[1;32m    627[0m     context [38;5;241m=[39m _get_context(obj)
+[1;32m    628[0m     defaults [38;5;241m=[39m [38;5;28mgetattr[39m(obj, [38;5;124m"[39m[38;5;124m__defaults__[39m[38;5;124m"[39m, [38;5;28;01mNone[39;00m)
+
+File [0;32m~/miniforge3/envs/blogger/lib/python3.9/site-packages/streamlit/runtime/legacy_caching/hashing.py:402[0m, in [0;36m_CodeHasher._file_should_be_hashed[0;34m(self, filename)[0m
+[1;32m    399[0m [38;5;28;01mif[39;00m file_is_blacklisted:
+[1;32m    400[0m     [38;5;28;01mreturn[39;00m [38;5;28;01mFalse[39;00m
+[1;32m    401[0m [38;5;28;01mreturn[39;00m file_util[38;5;241m.[39mfile_is_in_folder_glob(
+[0;32m--> 402[0m     filepath, [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_get_main_script_directory[49m[43m([49m[43m)[49m
+[1;32m    403[0m ) [38;5;129;01mor[39;00m file_util[38;5;241m.[39mfile_in_pythonpath(filepath)
+
+File [0;32m~/miniforge3/envs/blogger/lib/python3.9/site-packages/streamlit/runtime/legacy_caching/hashing.py:714[0m, in [0;36m_CodeHasher._get_main_script_directory[0;34m()[0m
+[1;32m    710[0m [38;5;28;01mimport[39;00m [38;5;21;01m__main__[39;00m
+[1;32m    712[0m [38;5;66;03m# This works because we set __main__.__file__ to the[39;00m
+[1;32m    713[0m [38;5;66;03m# script path in ScriptRunner.[39;00m
+[0;32m--> 714[0m abs_main_path [38;5;241m=[39m pathlib[38;5;241m.[39mPath([43m__main__[49m[38;5;241;43m.[39;49m[38;5;18;43m__file__[39;49m)[38;5;241m.[39mresolve()
+[1;32m    715[0m [38;5;28;01mreturn[39;00m [38;5;28mstr[39m(abs_main_path[38;5;241m.[39mparent)
+
+[0;31mInternalHashError[0m: module '__main__' has no attribute '__file__'
+
+While caching the body of `data_extract()`, Streamlit encountered an
+object of type `builtins.function`, which it does not know how to hash.
+
+**In this specific case, it's very likely you found a Streamlit bug so please
+[file a bug report here.]
+(https://github.com/streamlit/streamlit/issues/new/choose)**
+
+In the meantime, you can try bypassing this error by registering a custom
+hash function via the `hash_funcs` keyword in @st.cache(). For example:
+
+```
+@st.cache(hash_funcs={builtins.function: my_hash_func})
+def my_func(...):
+    ...
+```
+
+If you don't know where the object of type `builtins.function` is coming
+from, try looking at the hash chain below for an object that you do recognize,
+then pass that to `hash_funcs` instead:
+
+```
+Object of type builtins.function: <function data_extract at 0x7f4620692ee0>
+```
+
+Please see the `hash_funcs` [documentation](https://docs.streamlit.io/library/advanced-features/caching#the-hash_funcs-parameter)
+for more details.
+            
+InternalHashError: module '__main__' has no attribute '__file__'
+
+While caching the body of `data_extract()`, Streamlit encountered an
+object of type `builtins.function`, which it does not know how to hash.
+
+**In this specific case, it's very likely you found a Streamlit bug so please
+[file a bug report here.]
+(https://github.com/streamlit/streamlit/issues/new/choose)**
+
+In the meantime, you can try bypassing this error by registering a custom
+hash function via the `hash_funcs` keyword in @st.cache(). For example:
+
+```
+@st.cache(hash_funcs={builtins.function: my_hash_func})
+def my_func(...):
+    ...
+```
+
+If you don't know where the object of type `builtins.function` is coming
+from, try looking at the hash chain below for an object that you do recognize,
+then pass that to `hash_funcs` instead:
+
+```
+Object of type builtins.function: <function data_extract at 0x7f4620692ee0>
+```
+
+Please see the `hash_funcs` [documentation](https://docs.streamlit.io/library/advanced-features/caching#the-hash_funcs-parameter)
+for more details.
+            
+

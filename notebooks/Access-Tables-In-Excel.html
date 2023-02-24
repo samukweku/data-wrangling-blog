@@ -1,0 +1,1333 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Access Excel Tables with Python &#8212; Data Wrangling and Automation</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Dplyr’s across: Replicating within Pandas" href="dplyr-across-in-Pandas.html" />
+    <link rel="prev" title="Data Wrangling - Aggregation on Multiple Columns" href="Data-Wrangling-with-Python-Datatable-Aggregation-on-Multiple-Columns.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Data Wrangling and Automation</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Data Wrangling Recipes
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="Meaningful-Formats.html">
+   SpreadSheet Munging Strategies in Python - Meaningful Formats
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Read-Multiple-Csv-Files-into-one-Table-in-Python.html">
+   Read Multiple CSV Files into one Frame in Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Conditional-Statements.html">
+   Data Wrangling with Python Datatable - Conditional Statements
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Fast-and-Efficient-Inequality-Joins-in-Pandas.html">
+   Fast and Efficient Inequality Joins in Pandas
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Row-wise-Transformations.html">
+   Data Wrangling with Python Datatable - Row-wise Transformations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Replicating-SD-in-python-datatable.html">
+   Replicating .SD in Python Datatable
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Pivot-Tables---Simple-Unpivoting.html">
+   SpreadSheet Munging Strategies in Python - Pivot Tables - Simple Unpivoting
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Select-Columns-by-Data-Type.html">
+   Data Wrangling with Python Datatable - Select Columns by Data Type
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Pivot_longer---Reshape-Data-in-Pandas-with-Ease-From-Wide-to-Long.html">
+   Pivot_longer : Reshape Data in Pandas Efficiently and with Ease from Wide to Long
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Replicate-Pandas-map.html">
+   Data Wrangling with Python Datatable - Replicate Pandas’ Map Function
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Pivot-Tables-Complex-Unpivoting.html">
+   SpreadSheet Munging Strategies in Python - Pivot Tables - Complex Unpivoting
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Filtering-Rows-in-Python-Datatable.html">
+   Filtering Rows in Datatable
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Selecting-and-Grouping-Data-with-Python-Datatable.html">
+   Selecting and Grouping Data with Python Datatable
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Extract-DataFrame-from-Compressed-Data-into-Pandas.html">
+   Extract DataFrame from Compressed Data into Pandas
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Web-Scraping-in-Python.html">
+   Easy Web Scraping with Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Selecting-Columns.html">
+   Data Wrangling with Python Datatable - Selecting Columns
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Extract-DataFrame-from-Compressed-Data-into-Python-Datatable.html">
+   Extract DataFrame from Compressed Data into Python Datatable
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Transformations-Within-a-GroupBy.html">
+   Data Wrangling with Python Datatable - Transformations Within a GroupBy
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Small-Multiples.html">
+   SpreadSheet Munging Strategies in Python - Small Multiples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable-Aggregation-on-Multiple-Columns.html">
+   Data Wrangling - Aggregation on Multiple Columns
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Access Excel Tables with Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dplyr-across-in-Pandas.html">
+   Dplyr’s across: Replicating within Pandas
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/samukweku/data-wrangling-blog/master?urlpath=tree/notebooks/Access-Tables-In-Excel.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/samukweku/data-wrangling-blog"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/samukweku/data-wrangling-blog/issues/new?title=Issue%20on%20page%20%2Fnotebooks/Access-Tables-In-Excel.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/notebooks/Access-Tables-In-Excel.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   <strong>
+    Access Excel Tables with Python
+   </strong>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#option-1-the-naive-way">
+     <strong>
+      Option 1 - The Naive way:
+     </strong>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#option-2-the-better-way">
+     <strong>
+      Option 2 - The better way :
+     </strong>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#option-3-an-even-simpler-form">
+     <strong>
+      Option 3 - An even simpler form :
+     </strong>
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Access Excel Tables with Python</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#id1">
+   <strong>
+    Access Excel Tables with Python
+   </strong>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#option-1-the-naive-way">
+     <strong>
+      Option 1 - The Naive way:
+     </strong>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#option-2-the-better-way">
+     <strong>
+      Option 2 - The better way :
+     </strong>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#option-3-an-even-simpler-form">
+     <strong>
+      Option 3 - An even simpler form :
+     </strong>
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="access-excel-tables-with-python">
+<h1>Access Excel Tables with Python<a class="headerlink" href="#access-excel-tables-with-python" title="Permalink to this headline">#</a></h1>
+<section id="id1">
+<h2><strong>Access Excel Tables with Python</strong><a class="headerlink" href="#id1" title="Permalink to this headline">#</a></h2>
+<p>This post is about extracting data from Excel tables into Python. Source data is with permission from <a class="reference external" href="https://www.youtube.com/watch?v=nBu1Bqa1jjs&amp;t=1780s">ExcelisFun</a></p>
+<p>Excel Tables are a great way of grouping related data, as it makes analysis easier. Usually, these tables will have names to identify them, as well as some other cool features. An example image is shown below:</p>
+<p><img alt="ExcelTables.png" src="../_images/image1.png" /><br>
+Source : <a class="reference external" href="https://support.office.com/en-us/article/overview-of-excel-tables-7ab0bb7d-3a9e-4b56-a3c9-6c94334e492c">support.office.com</a></p>
+<p><img alt="ExcelTables.png" src="../_images/image2.png" /><br>
+Data Source : <a class="reference external" href="https://www.youtube.com/watch?v=nBu1Bqa1jjs&amp;t=1780s">ExcelisFun</a></p>
+<p>In the image above, there are a couple of Excel tables, with defined names - SalesRep, Products, Category, and Supplier tables. How do we read this into Python?</p>
+<section id="option-1-the-naive-way">
+<h3><strong>Option 1 - The Naive way:</strong><a class="headerlink" href="#option-1-the-naive-way" title="Permalink to this headline">#</a></h3>
+<p>Let’s read it into pandas</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;Data_files/016-MSPTDA-Excel.xlsx&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheet_name</span> <span class="o">=</span> <span class="s2">&quot;Tables&quot;</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;openpyxl&#39;</span><span class="p">)</span>
+
+<span class="c1">#view the first five rows: </span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>SalesRepID</th>
+      <th>SalesRep</th>
+      <th>Region</th>
+      <th>Unnamed: 3</th>
+      <th>ProductID</th>
+      <th>Products</th>
+      <th>RetailPrice</th>
+      <th>CategoryID</th>
+      <th>SupplierID</th>
+      <th>Unnamed: 9</th>
+      <th>CategoryID.1</th>
+      <th>Category</th>
+      <th>Unnamed: 12</th>
+      <th>SupplierID.1</th>
+      <th>Supplier</th>
+      <th>City</th>
+      <th>State</th>
+      <th>E-mail</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Sioux Radcoolinator</td>
+      <td>NW</td>
+      <td>NaN</td>
+      <td>1.0</td>
+      <td>Quad</td>
+      <td>43.95</td>
+      <td>3.0</td>
+      <td>GB</td>
+      <td>NaN</td>
+      <td>1.0</td>
+      <td>Beginner</td>
+      <td>NaN</td>
+      <td>GB</td>
+      <td>Gel Boomerangs</td>
+      <td>Oakland</td>
+      <td>CA</td>
+      <td>gel@gel-boomerang.com</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Tyrone Smithe</td>
+      <td>NE</td>
+      <td>NaN</td>
+      <td>2.0</td>
+      <td>Yanaki</td>
+      <td>27.95</td>
+      <td>1.0</td>
+      <td>CO</td>
+      <td>NaN</td>
+      <td>2.0</td>
+      <td>Advanced</td>
+      <td>NaN</td>
+      <td>CO</td>
+      <td>Colorado Boomerangs</td>
+      <td>Gunnison</td>
+      <td>CO</td>
+      <td>Pollock@coloradoboomerang.com</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Chantel Zoya</td>
+      <td>SW</td>
+      <td>NaN</td>
+      <td>3.0</td>
+      <td>Eagle</td>
+      <td>19.95</td>
+      <td>2.0</td>
+      <td>CC</td>
+      <td>NaN</td>
+      <td>3.0</td>
+      <td>Freestyle</td>
+      <td>NaN</td>
+      <td>CC</td>
+      <td>Channel Craft</td>
+      <td>Richland</td>
+      <td>WA</td>
+      <td>Dino@CC.com</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Chin Pham</td>
+      <td>SE</td>
+      <td>NaN</td>
+      <td>4.0</td>
+      <td>Bellen</td>
+      <td>26.95</td>
+      <td>1.0</td>
+      <td>GB</td>
+      <td>NaN</td>
+      <td>4.0</td>
+      <td>Competition</td>
+      <td>NaN</td>
+      <td>DB</td>
+      <td>Darnell Booms</td>
+      <td>Burlington</td>
+      <td>VT</td>
+      <td>Darnell@Darnell.com</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Diego Vasque</td>
+      <td>MW</td>
+      <td>NaN</td>
+      <td>5.0</td>
+      <td>Aspen</td>
+      <td>24.95</td>
+      <td>1.0</td>
+      <td>CO</td>
+      <td>NaN</td>
+      <td>5.0</td>
+      <td>Long Distance</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Notice how Pandas did not identify the tables - it just pulled in everything, even the empty columns. Also note the mangling of column names(<em>SupplierID.1</em>, <em>CategoryID.1</em>). This is not good enough. Yes, we could fix it, probably use the empty rows as a means of splitting the dataframe into new dataframes, but that is not wise. How do we truly know where one table starts and the other ends? Surely there has to be a better way. Thankfully there is.</p>
+</section>
+<section id="option-2-the-better-way">
+<h3><strong>Option 2 - The better way :</strong><a class="headerlink" href="#option-2-the-better-way" title="Permalink to this headline">#</a></h3>
+<p>Check on <a class="reference external" href="https://stackoverflow.com/questions/48657867/manipulate-existing-excel-table-using-openpyxl">stackoverflow</a> and you’ll see solutions and conversations regarding this. The better way is via <a class="reference external" href="https://openpyxl.readthedocs.io/en/stable/usage.html">Openpyxl</a>, a python module dedicated to working with Excel files. It has a method - <code class="docutils literal notranslate"><span class="pre">.tables</span></code> that allows access to defined tables in the spreadsheet.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># import library</span>
+<span class="kn">from</span> <span class="nn">openpyxl</span> <span class="kn">import</span> <span class="n">load_workbook</span>
+
+<span class="c1"># read file</span>
+<span class="n">wb</span> <span class="o">=</span> <span class="n">load_workbook</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="c1"># access specific sheet</span>
+<span class="n">ws</span> <span class="o">=</span> <span class="n">wb</span><span class="p">[</span><span class="s2">&quot;Tables&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/sam/miniforge3/envs/blogger/lib/python3.9/site-packages/openpyxl/reader/drawings.py:63: UserWarning: wmf image format is not supported so the image is being dropped
+  warn(msg)
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can access the tables in the worksheet through the <code class="docutils literal notranslate"><span class="pre">tables</span></code> method - this returns a dictionary :</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">key</span> <span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">tables</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;dSalesReps&#39;: &#39;A1:C26&#39;,
+ &#39;dProduct&#39;: &#39;E1:I17&#39;,
+ &#39;dCategory&#39;: &#39;K1:L6&#39;,
+ &#39;dSupplier&#39;: &#39;N1:R5&#39;}
+</pre></div>
+</div>
+</div>
+</div>
+<p>From the result above, we can see the name of each table (<em>name=dSalesReps</em>) and the span of the data (<em>ref=’A1:C26</em>). Let’s get our data out :</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mapping</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="n">entry</span><span class="p">,</span> <span class="n">data_boundary</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">tables</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="c1">#parse the data within the ref boundary</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">ws</span><span class="p">[</span><span class="n">data_boundary</span><span class="p">]</span>
+    <span class="c1">#extract the data </span>
+    <span class="c1">#the inner list comprehension gets the values for each cell in the table</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="p">[[</span><span class="n">cell</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ent</span><span class="p">]</span> 
+               <span class="k">for</span> <span class="n">ent</span> <span class="ow">in</span> <span class="n">data</span>
+          <span class="p">]</span>
+    
+    <span class="n">header</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="c1">#the contents ... excluding the header</span>
+    <span class="n">rest</span> <span class="o">=</span> <span class="n">content</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    
+    <span class="c1">#create dataframe with the column names</span>
+    <span class="c1">#and pair table name with dataframe</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rest</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">header</span><span class="p">)</span>
+    <span class="n">mapping</span><span class="p">[</span><span class="n">entry</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mapping</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;dSalesReps&#39;:     SalesRepID              SalesRep Region
+ 0            1   Sioux Radcoolinator     NW
+ 1            2         Tyrone Smithe     NE
+ 2            3          Chantel Zoya     SW
+ 3            4             Chin Pham     SE
+ 4            5          Diego Vasque     MW
+ 5            6      Vannessa Deloach      W
+ 6            7            Shon Stein     NW
+ 7            8           Tomi Benton     NE
+ 8            9     Ghislaine Stidham     SW
+ 9           10       Yoshiko Murillo     SE
+ 10          11            Hoyt Potts     MW
+ 11          12         Alysha Dewitt      W
+ 12          13       Claudine Dupuis     NW
+ 13          14         Shanta Spring     NE
+ 14          15      Ramonita Babcock     SW
+ 15          16     Janyce Betancourt     SE
+ 16          17       Rhiannon Cathey     MW
+ 17          18      Dominica Ordonez      W
+ 18          19       Rana Burchfield     NW
+ 19          20            Neida Ashe     NE
+ 20          21  Marylouise Halverson     MW
+ 21          22           Naoma Bloom     NW
+ 22          23            JoJo Jones      W
+ 23          24       Dean Washington      W
+ 24          25              Kiki Lim      W,
+ &#39;dProduct&#39;:     ProductID      Products  RetailPrice  CategoryID SupplierID
+ 0           1          Quad        43.95           3         GB
+ 1           2        Yanaki        27.95           1         CO
+ 2           3         Eagle        19.95           2         CC
+ 3           4        Bellen        26.95           1         GB
+ 4           5         Aspen        24.95           1         CO
+ 5           6       Carlota        23.95           3         GB
+ 6           7      Sunshine        19.95           4         GB
+ 7           8        Sunset        22.95           4         GB
+ 8           9         Beaut        35.95           5         CO
+ 9          10      Kangaroo        25.00           2         CC
+ 10         11       Elevate        48.95           5         GB
+ 11         12       Flattop        25.95           2         CO
+ 12         13         Vrang        12.95           4         DB
+ 13         14        TriFly        21.95           3         DB
+ 14         15  NaturalElbow        35.00           4         DB
+ 15         16      LongRang        41.00           5         CC,
+ &#39;dCategory&#39;:    CategoryID       Category
+ 0           1       Beginner
+ 1           2       Advanced
+ 2           3      Freestyle
+ 3           4    Competition
+ 4           5  Long Distance,
+ &#39;dSupplier&#39;:   SupplierID             Supplier        City State  \
+ 0         GB       Gel Boomerangs     Oakland    CA   
+ 1         CO  Colorado Boomerangs    Gunnison    CO   
+ 2         CC        Channel Craft    Richland    WA   
+ 3         DB        Darnell Booms  Burlington    VT   
+ 
+                           E-mail  
+ 0          gel@gel-boomerang.com  
+ 1  Pollock@coloradoboomerang.com  
+ 2                    Dino@CC.com  
+ 3            Darnell@Darnell.com  }
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can safely extract our tables from the dictionary :</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dSalesReps</span><span class="p">,</span> <span class="n">dProduct</span><span class="p">,</span> <span class="n">dCategory</span><span class="p">,</span> <span class="n">dSupplier</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s view some of the dataframes</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dSalesReps</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>SalesRepID</th>
+      <th>SalesRep</th>
+      <th>Region</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Sioux Radcoolinator</td>
+      <td>NW</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Tyrone Smithe</td>
+      <td>NE</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Chantel Zoya</td>
+      <td>SW</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Chin Pham</td>
+      <td>SE</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Diego Vasque</td>
+      <td>MW</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dSupplier</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>SupplierID</th>
+      <th>Supplier</th>
+      <th>City</th>
+      <th>State</th>
+      <th>E-mail</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>GB</td>
+      <td>Gel Boomerangs</td>
+      <td>Oakland</td>
+      <td>CA</td>
+      <td>gel@gel-boomerang.com</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>CO</td>
+      <td>Colorado Boomerangs</td>
+      <td>Gunnison</td>
+      <td>CO</td>
+      <td>Pollock@coloradoboomerang.com</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>CC</td>
+      <td>Channel Craft</td>
+      <td>Richland</td>
+      <td>WA</td>
+      <td>Dino@CC.com</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>DB</td>
+      <td>Darnell Booms</td>
+      <td>Burlington</td>
+      <td>VT</td>
+      <td>Darnell@Darnell.com</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>There we have it, our excel tables successfully extracted and assigned to variables. We can proceed from here and run our computations in Pandas.</p>
+</section>
+<section id="option-3-an-even-simpler-form">
+<h3><strong>Option 3 - An even simpler form :</strong><a class="headerlink" href="#option-3-an-even-simpler-form" title="Permalink to this headline">#</a></h3>
+<p>The steps above can be simplified by using the <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_table">xlsx_table</a> function from <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/">pyjanitor</a>. Simply install <a class="reference external" href="https://github.com/pyjanitor-devs/pyjanitor">pyjanitor</a> with pip, and read in the Excel table:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pip install pyjanitor</span>
+<span class="kn">from</span> <span class="nn">janitor</span> <span class="kn">import</span> <span class="n">xlsx_table</span>
+
+<span class="c1"># read in the specific table:</span>
+<span class="n">xlsx_table</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetname</span><span class="o">=</span><span class="s1">&#39;Tables&#39;</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="s1">&#39;dCategory&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/sam/miniforge3/envs/blogger/lib/python3.9/site-packages/openpyxl/reader/drawings.py:63: UserWarning: wmf image format is not supported so the image is being dropped
+  warn(msg)
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CategoryID</th>
+      <th>Category</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Beginner</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Advanced</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Freestyle</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Competition</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Long Distance</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>All the tables can be read at once; it will be loaded as a dictionary, and the relevant table accessed:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tables</span> <span class="o">=</span> <span class="n">xlsx_table</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetname</span><span class="o">=</span><span class="s1">&#39;Tables&#39;</span><span class="p">)</span>
+
+<span class="c1"># view all the keys, which are the table names:</span>
+<span class="n">tables</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/sam/miniforge3/envs/blogger/lib/python3.9/site-packages/openpyxl/reader/drawings.py:63: UserWarning: wmf image format is not supported so the image is being dropped
+  warn(msg)
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>dict_keys([&#39;dSalesReps&#39;, &#39;dProduct&#39;, &#39;dCategory&#39;, &#39;dSupplier&#39;])
+</pre></div>
+</div>
+</div>
+</div>
+<p>Access a specific table, using Python’s dictionary syntax:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tables</span><span class="p">[</span><span class="s1">&#39;dSalesReps&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>SalesRepID</th>
+      <th>SalesRep</th>
+      <th>Region</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Sioux Radcoolinator</td>
+      <td>NW</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Tyrone Smithe</td>
+      <td>NE</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Chantel Zoya</td>
+      <td>SW</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Chin Pham</td>
+      <td>SE</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Diego Vasque</td>
+      <td>MW</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>6</td>
+      <td>Vannessa Deloach</td>
+      <td>W</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>7</td>
+      <td>Shon Stein</td>
+      <td>NW</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>8</td>
+      <td>Tomi Benton</td>
+      <td>NE</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>9</td>
+      <td>Ghislaine Stidham</td>
+      <td>SW</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>10</td>
+      <td>Yoshiko Murillo</td>
+      <td>SE</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>11</td>
+      <td>Hoyt Potts</td>
+      <td>MW</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>12</td>
+      <td>Alysha Dewitt</td>
+      <td>W</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>13</td>
+      <td>Claudine Dupuis</td>
+      <td>NW</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>14</td>
+      <td>Shanta Spring</td>
+      <td>NE</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>15</td>
+      <td>Ramonita Babcock</td>
+      <td>SW</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>16</td>
+      <td>Janyce Betancourt</td>
+      <td>SE</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>17</td>
+      <td>Rhiannon Cathey</td>
+      <td>MW</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>18</td>
+      <td>Dominica Ordonez</td>
+      <td>W</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>19</td>
+      <td>Rana Burchfield</td>
+      <td>NW</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>20</td>
+      <td>Neida Ashe</td>
+      <td>NE</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>21</td>
+      <td>Marylouise Halverson</td>
+      <td>MW</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>22</td>
+      <td>Naoma Bloom</td>
+      <td>NW</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>23</td>
+      <td>JoJo Jones</td>
+      <td>W</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>24</td>
+      <td>Dean Washington</td>
+      <td>W</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>25</td>
+      <td>Kiki Lim</td>
+      <td>W</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="Data-Wrangling-with-Python-Datatable-Aggregation-on-Multiple-Columns.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Data Wrangling - Aggregation on Multiple Columns</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="dplyr-across-in-Pandas.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Dplyr’s across: Replicating within Pandas</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Samuel Oranyeli<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

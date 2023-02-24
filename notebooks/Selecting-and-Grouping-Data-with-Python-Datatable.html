@@ -1,0 +1,2076 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Selecting and Grouping Data with Python Datatable &#8212; Data Wrangling and Automation</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Extract DataFrame from Compressed Data into Pandas" href="Extract-DataFrame-from-Compressed-Data-into-Pandas.html" />
+    <link rel="prev" title="Filtering Rows in Datatable" href="Filtering-Rows-in-Python-Datatable.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Data Wrangling and Automation</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Data Wrangling Recipes
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="Meaningful-Formats.html">
+   SpreadSheet Munging Strategies in Python - Meaningful Formats
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Read-Multiple-Csv-Files-into-one-Table-in-Python.html">
+   Read Multiple CSV Files into one Frame in Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Conditional-Statements.html">
+   Data Wrangling with Python Datatable - Conditional Statements
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Fast-and-Efficient-Inequality-Joins-in-Pandas.html">
+   Fast and Efficient Inequality Joins in Pandas
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Row-wise-Transformations.html">
+   Data Wrangling with Python Datatable - Row-wise Transformations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Replicating-SD-in-python-datatable.html">
+   Replicating .SD in Python Datatable
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Pivot-Tables---Simple-Unpivoting.html">
+   SpreadSheet Munging Strategies in Python - Pivot Tables - Simple Unpivoting
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Select-Columns-by-Data-Type.html">
+   Data Wrangling with Python Datatable - Select Columns by Data Type
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Pivot_longer---Reshape-Data-in-Pandas-with-Ease-From-Wide-to-Long.html">
+   Pivot_longer : Reshape Data in Pandas Efficiently and with Ease from Wide to Long
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Replicate-Pandas-map.html">
+   Data Wrangling with Python Datatable - Replicate Pandas’ Map Function
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Pivot-Tables-Complex-Unpivoting.html">
+   SpreadSheet Munging Strategies in Python - Pivot Tables - Complex Unpivoting
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Filtering-Rows-in-Python-Datatable.html">
+   Filtering Rows in Datatable
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Selecting and Grouping Data with Python Datatable
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Extract-DataFrame-from-Compressed-Data-into-Pandas.html">
+   Extract DataFrame from Compressed Data into Pandas
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Web-Scraping-in-Python.html">
+   Easy Web Scraping with Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Selecting-Columns.html">
+   Data Wrangling with Python Datatable - Selecting Columns
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Extract-DataFrame-from-Compressed-Data-into-Python-Datatable.html">
+   Extract DataFrame from Compressed Data into Python Datatable
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Transformations-Within-a-GroupBy.html">
+   Data Wrangling with Python Datatable - Transformations Within a GroupBy
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Small-Multiples.html">
+   SpreadSheet Munging Strategies in Python - Small Multiples
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable-Aggregation-on-Multiple-Columns.html">
+   Data Wrangling - Aggregation on Multiple Columns
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Access-Tables-In-Excel.html">
+   Access Excel Tables with Python
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="dplyr-across-in-Pandas.html">
+   Dplyr’s across: Replicating within Pandas
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/samukweku/data-wrangling-blog/master?urlpath=tree/notebooks/Selecting-and-Grouping-Data-with-Python-Datatable.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/samukweku/data-wrangling-blog"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/samukweku/data-wrangling-blog/issues/new?title=Issue%20on%20page%20%2Fnotebooks/Selecting-and-Grouping-Data-with-Python-Datatable.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/notebooks/Selecting-and-Grouping-Data-with-Python-Datatable.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#datatable">
+   <strong>
+    Datatable
+   </strong>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#datatable-syntax">
+     <strong>
+      Datatable syntax
+     </strong>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-i-part-subset-rows">
+     <strong>
+      The i part - Subset Rows
+     </strong>
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#select-the-first-three-rows">
+       <strong>
+        Select the first three rows
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#select-the-2nd-4th-and-8th-rows">
+       <strong>
+        Select the 2nd, 4th and 8th rows
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#find-rows-where-species-versicolor">
+       <strong>
+        Find rows where species == “versicolor”
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#find-rows-where-species-versicolor-and-sepal-length-7">
+       <strong>
+        Find rows where species == “versicolor” and sepal_length == 7
+       </strong>
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-j-part-columns">
+     <strong>
+      The j part - Columns
+     </strong>
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#select-species-petal-width-and-petal-length-columns">
+       <strong>
+        Select species, petal_width and petal_length columns
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#select-the-last-two-columns">
+       <strong>
+        Select the last two columns
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#select-only-columns-whose-names-end-with-length">
+       <strong>
+        Select only columns whose names end with
+        <code class="docutils literal notranslate">
+         <span class="pre">
+          length
+         </span>
+        </code>
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#calculate-the-mean-value-of-sepal-length">
+       <strong>
+        Calculate the mean value of sepal_length
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#select-only-species-and-petal-length-columns-for-rows-where-the-petal-length-is-greater-than-1-5">
+       <strong>
+        Select only species and petal_length columns for rows where the petal_length is greater than 1.5
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#select-only-string-columns">
+       <strong>
+        Select only string columns
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#convert-petal-length-from-float-to-integer">
+       <strong>
+        Convert petal_length from float to integer
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#multiply-petal-length-by-2-and-add-it-as-a-new-column-petal-double">
+       <strong>
+        Multiply petal_length by 2 and add it as a new column
+        <code class="docutils literal notranslate">
+         <span class="pre">
+          petal_double
+         </span>
+        </code>
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#drop-the-sepal-width-column-from-the-table">
+       <strong>
+        Drop the sepal_width column from the table
+       </strong>
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#extra-modifiers">
+     <strong>
+      Extra Modifiers
+     </strong>
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#sort-data-by-sepal-width">
+       <strong>
+        Sort data by sepal_width
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#sort-by-sepal-width-ascending-and-petal-width-descending">
+       <strong>
+        Sort by sepal_width ascending and petal_width descending
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#group-by-get-the-average-sepal-length-per-species">
+       <strong>
+        Group By - Get the average sepal length per species
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#group-by-get-the-average-sepal-length-and-petal-length-per-species">
+       <strong>
+        Group By - Get the average sepal length and petal length per species
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#group-by-filter-the-rows-for-sepal-width-greater-than-or-equal-to-3-then-get-the-average-sepal-length-and-petal-length-per-species">
+       <strong>
+        Group By - Filter the rows for sepal_width greater than or equal to 3, then get the average sepal length and petal length per species
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#group-by-get-the-average-sepal-length-and-group-on-sepal-width-greater-than-3">
+       <strong>
+        Group By - Get the average sepal length and group on sepal width greater than 3
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#group-by-get-the-count-of-each-species-and-label-the-aggregation-column-as-species-count">
+       <strong>
+        Group By - Get the count of each species, and label the aggregation column as
+        <code class="docutils literal notranslate">
+         <span class="pre">
+          species_count
+         </span>
+        </code>
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#group-by-get-the-count-of-each-species-where-the-sepal-width-is-greater-than-3">
+       <strong>
+        Group By - Get the count of each species where the sepal width is greater than 3
+       </strong>
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#summary">
+     <strong>
+      Summary
+     </strong>
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Selecting and Grouping Data with Python Datatable</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#datatable">
+   <strong>
+    Datatable
+   </strong>
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#datatable-syntax">
+     <strong>
+      Datatable syntax
+     </strong>
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-i-part-subset-rows">
+     <strong>
+      The i part - Subset Rows
+     </strong>
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#select-the-first-three-rows">
+       <strong>
+        Select the first three rows
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#select-the-2nd-4th-and-8th-rows">
+       <strong>
+        Select the 2nd, 4th and 8th rows
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#find-rows-where-species-versicolor">
+       <strong>
+        Find rows where species == “versicolor”
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#find-rows-where-species-versicolor-and-sepal-length-7">
+       <strong>
+        Find rows where species == “versicolor” and sepal_length == 7
+       </strong>
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#the-j-part-columns">
+     <strong>
+      The j part - Columns
+     </strong>
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#select-species-petal-width-and-petal-length-columns">
+       <strong>
+        Select species, petal_width and petal_length columns
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#select-the-last-two-columns">
+       <strong>
+        Select the last two columns
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#select-only-columns-whose-names-end-with-length">
+       <strong>
+        Select only columns whose names end with
+        <code class="docutils literal notranslate">
+         <span class="pre">
+          length
+         </span>
+        </code>
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#calculate-the-mean-value-of-sepal-length">
+       <strong>
+        Calculate the mean value of sepal_length
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#select-only-species-and-petal-length-columns-for-rows-where-the-petal-length-is-greater-than-1-5">
+       <strong>
+        Select only species and petal_length columns for rows where the petal_length is greater than 1.5
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#select-only-string-columns">
+       <strong>
+        Select only string columns
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#convert-petal-length-from-float-to-integer">
+       <strong>
+        Convert petal_length from float to integer
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#multiply-petal-length-by-2-and-add-it-as-a-new-column-petal-double">
+       <strong>
+        Multiply petal_length by 2 and add it as a new column
+        <code class="docutils literal notranslate">
+         <span class="pre">
+          petal_double
+         </span>
+        </code>
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#drop-the-sepal-width-column-from-the-table">
+       <strong>
+        Drop the sepal_width column from the table
+       </strong>
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#extra-modifiers">
+     <strong>
+      Extra Modifiers
+     </strong>
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#sort-data-by-sepal-width">
+       <strong>
+        Sort data by sepal_width
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#sort-by-sepal-width-ascending-and-petal-width-descending">
+       <strong>
+        Sort by sepal_width ascending and petal_width descending
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#group-by-get-the-average-sepal-length-per-species">
+       <strong>
+        Group By - Get the average sepal length per species
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#group-by-get-the-average-sepal-length-and-petal-length-per-species">
+       <strong>
+        Group By - Get the average sepal length and petal length per species
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#group-by-filter-the-rows-for-sepal-width-greater-than-or-equal-to-3-then-get-the-average-sepal-length-and-petal-length-per-species">
+       <strong>
+        Group By - Filter the rows for sepal_width greater than or equal to 3, then get the average sepal length and petal length per species
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#group-by-get-the-average-sepal-length-and-group-on-sepal-width-greater-than-3">
+       <strong>
+        Group By - Get the average sepal length and group on sepal width greater than 3
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#group-by-get-the-count-of-each-species-and-label-the-aggregation-column-as-species-count">
+       <strong>
+        Group By - Get the count of each species, and label the aggregation column as
+        <code class="docutils literal notranslate">
+         <span class="pre">
+          species_count
+         </span>
+        </code>
+       </strong>
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#group-by-get-the-count-of-each-species-where-the-sepal-width-is-greater-than-3">
+       <strong>
+        Group By - Get the count of each species where the sepal width is greater than 3
+       </strong>
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#summary">
+     <strong>
+      Summary
+     </strong>
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="selecting-and-grouping-data-with-python-datatable">
+<h1>Selecting and Grouping Data with Python Datatable<a class="headerlink" href="#selecting-and-grouping-data-with-python-datatable" title="Permalink to this headline">#</a></h1>
+<section id="datatable">
+<h2><strong>Datatable</strong><a class="headerlink" href="#datatable" title="Permalink to this headline">#</a></h2>
+<blockquote>
+<div><p>This is a Python package for manipulating 2-dimensional tabular data structures (aka data frames). It is close in spirit to <a class="reference external" href="https://pandas.pydata.org/pandas-docs/stable/index.html">pandas</a> or <a class="reference external" href="https://github.com/apple/turicreate">SFrame</a>; however we put specific emphasis on speed and big data support. As the name suggests, the package is closely related to R’s <a class="reference external" href="https://github.com/Rdatatable/data.table">data.table</a> and attempts to mimic its core algorithms and API.</p>
+</div></blockquote>
+<p>I like <code class="docutils literal notranslate"><span class="pre">datatable</span></code> primarily because of its simple syntax. Yes, there are significant speed gains, which is the primary aim of the package, but the simplicity is compelling.
+<br><br>Do note that <code class="docutils literal notranslate"><span class="pre">datatable</span></code> is in active development - more features will be added. Check out the <a class="reference external" href="https://datatable.readthedocs.io/en/latest/?badge=latest">documentation</a> for more information.
+<br><br>This introduction focuses on how to select rows, select and perform calculations on columns, and perform aggregations by group.</p>
+<section id="datatable-syntax">
+<h3><strong>Datatable syntax</strong><a class="headerlink" href="#datatable-syntax" title="Permalink to this headline">#</a></h3>
+<p><img alt="datatable_syntax.png" src="../_images/datatable_syntax.jpg" /></p>
+<p>Short syntax right? Let’s break it down :
+<br> - <code class="docutils literal notranslate"><span class="pre">DT</span></code> refers to the data frame. This is the fundamental building block in <code class="docutils literal notranslate"><span class="pre">datatable</span></code>. It is a 2-dimensional array with rows and columns, similar to an Excel/SQL table.
+<br> - The <code class="docutils literal notranslate"><span class="pre">i</span></code> part is used for subsetting on rows and shares a similar concept with SQL’s WHERE clause.
+<br> - The <code class="docutils literal notranslate"><span class="pre">j</span></code> part is used to select columns and act on them.
+<br> - <code class="docutils literal notranslate"><span class="pre">...</span></code> are for extra modifiers, e.g grouping, sorting, joining, etc.
+<br><br>Let’s dive into some examples to see how <code class="docutils literal notranslate"><span class="pre">datatable</span></code> works. Our data will be the <a class="reference external" href="https://notebooks.azure.com/kvp15comp/projects/FDPMLDS/html/iris.csv">iris</a> dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#import datatable</span>
+<span class="kn">from</span> <span class="nn">datatable</span> <span class="kn">import</span> <span class="n">dt</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">by</span>
+
+<span class="c1">#read in data</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">fread</span><span class="p">(</span><span class="s2">&quot;Data_files/iris.csv&quot;</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><style type='text/css'>
+.datatable table.frame { margin-bottom: 0; }
+.datatable table.frame thead { border-bottom: none; }
+.datatable table.frame tr.coltypes td {  color: #FFFFFF;  line-height: 6px;  padding: 0 0.5em;}
+.datatable .bool    { background: #DDDD99; }
+.datatable .object  { background: #565656; }
+.datatable .int     { background: #5D9E5D; }
+.datatable .float   { background: #4040CC; }
+.datatable .str     { background: #CC4040; }
+.datatable .time    { background: #40CC40; }
+.datatable .row_index {  background: var(--jp-border-color3);  border-right: 1px solid var(--jp-border-color0);  color: var(--jp-ui-font-color3);  font-size: 9px;}
+.datatable .frame tbody td { text-align: left; }
+.datatable .frame tr.coltypes .row_index {  background: var(--jp-border-color0);}
+.datatable th:nth-child(2) { padding-left: 12px; }
+.datatable .hellipsis {  color: var(--jp-cell-editor-border-color);}
+.datatable .vellipsis {  background: var(--jp-layout-color0);  color: var(--jp-cell-editor-border-color);}
+.datatable .na {  color: var(--jp-cell-editor-border-color);  font-size: 80%;}
+.datatable .sp {  opacity: 0.25;}
+.datatable .footer { font-size: 9px; }
+.datatable .frame_dimensions {  background: var(--jp-border-color3);  border-top: 1px solid var(--jp-border-color0);  color: var(--jp-ui-font-color3);  display: inline-block;  opacity: 0.6;  padding: 1px 10px 1px 5px;}
+</style>
+</div><div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>sepal_length</th><th>sepal_width</th><th>petal_length</th><th>petal_width</th><th>species</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>5.1</td><td>3.5</td><td>1.4</td><td>0.2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>1</td><td>4.9</td><td>3</td><td>1.4</td><td>0.2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>2</td><td>4.7</td><td>3.2</td><td>1.3</td><td>0.2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>3</td><td>4.6</td><td>3.1</td><td>1.5</td><td>0.2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>4</td><td>5</td><td>3.6</td><td>1.4</td><td>0.2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>5</td><td>5.4</td><td>3.9</td><td>1.7</td><td>0.4</td><td>setosa</td></tr>
+    <tr><td class='row_index'>6</td><td>4.6</td><td>3.4</td><td>1.4</td><td>0.3</td><td>setosa</td></tr>
+    <tr><td class='row_index'>7</td><td>5</td><td>3.4</td><td>1.5</td><td>0.2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>8</td><td>4.4</td><td>2.9</td><td>1.4</td><td>0.2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>9</td><td>4.9</td><td>3.1</td><td>1.5</td><td>0.1</td><td>setosa</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>10 rows &times; 5 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p><strong>Notes :</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dt</span></code> refers to the datatable module.</p></li>
+<li><p>All computations occur within the <code class="docutils literal notranslate"><span class="pre">[]</span></code> bracket.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dt.fread</span></code> is a powerful and very fast function for reading in various text files, zip archives, and urls. It can even read in data from the command line.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">by</span></code> is a function for grouping.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">f</span></code> is a variable that provides a convenient way to reference the data frame’s column within the square brackets. It is really useful when performing computations or creating expressions.</p></li>
+<li><p>In a jupyter notebook, the tab colours for the columns indicate various data types - <code class="docutils literal notranslate"><span class="pre">blue</span></code> is for float column, <code class="docutils literal notranslate"><span class="pre">green</span></code> is for integer column, <code class="docutils literal notranslate"><span class="pre">red</span></code> is for string column, <code class="docutils literal notranslate"><span class="pre">yellow</span></code> is for boolean, while <code class="docutils literal notranslate"><span class="pre">black</span></code> is for object column.</p></li>
+</ul>
+<p>Some basic information about the data frame :</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#shape of data</span>
+<span class="n">df</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(150, 5)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#column names</span>
+<span class="n">df</span><span class="o">.</span><span class="n">names</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;sepal_length&#39;, &#39;sepal_width&#39;, &#39;petal_length&#39;, &#39;petal_width&#39;, &#39;species&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#data types of the columns</span>
+<span class="n">df</span><span class="o">.</span><span class="n">stypes</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(stype.float64, stype.float64, stype.float64, stype.float64, stype.str32)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-i-part-subset-rows">
+<h3><strong>The i part - Subset Rows</strong><a class="headerlink" href="#the-i-part-subset-rows" title="Permalink to this headline">#</a></h3>
+<section id="select-the-first-three-rows">
+<h4><strong>Select the first three rows</strong><a class="headerlink" href="#select-the-first-three-rows" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#We can use python&#39;s slicing syntax to get the rows. </span>
+<span class="n">df</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>sepal_length</th><th>sepal_width</th><th>petal_length</th><th>petal_width</th><th>species</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>5.1</td><td>3.5</td><td>1.4</td><td>0.2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>1</td><td>4.9</td><td>3</td><td>1.4</td><td>0.2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>2</td><td>4.7</td><td>3.2</td><td>1.3</td><td>0.2</td><td>setosa</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>3 rows &times; 5 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p><strong>Notes :</strong></p>
+<ul class="simple">
+<li><p>No new syntax, just our knowledge of python’s sequence indexing.</p></li>
+<li><p>Note also that nothing was selected in the columns. Passing <code class="docutils literal notranslate"><span class="pre">None</span></code> or <code class="docutils literal notranslate"><span class="pre">...</span></code> in the j section will work as well.</p></li>
+</ul>
+</section>
+<section id="select-the-2nd-4th-and-8th-rows">
+<h4><strong>Select the 2nd, 4th and 8th rows</strong><a class="headerlink" href="#select-the-2nd-4th-and-8th-rows" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Python has a zero based indexing notation,</span>
+<span class="c1">#so, we will pass in a list [1,3,7]</span>
+
+<span class="n">df</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span> <span class="p">:]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>sepal_length</th><th>sepal_width</th><th>petal_length</th><th>petal_width</th><th>species</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>4.9</td><td>3</td><td>1.4</td><td>0.2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>1</td><td>4.6</td><td>3.1</td><td>1.5</td><td>0.2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>2</td><td>5</td><td>3.4</td><td>1.5</td><td>0.2</td><td>setosa</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>3 rows &times; 5 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+</section>
+<section id="find-rows-where-species-versicolor">
+<h4><strong>Find rows where species == “versicolor”</strong><a class="headerlink" href="#find-rows-where-species-versicolor" title="Permalink to this headline">#</a></h4>
+<p>This is an expression. How do we talk to the dataframe to filter for only rows where the <code class="docutils literal notranslate"><span class="pre">species</span></code> column is equal to <code class="docutils literal notranslate"><span class="pre">versicolor</span></code>? Through the <code class="docutils literal notranslate"><span class="pre">f</span></code> variable :</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">species</span> <span class="o">==</span> <span class="s2">&quot;versicolor&quot;</span><span class="p">,</span> <span class="p">:]</span>
+<span class="n">result</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>sepal_length</th><th>sepal_width</th><th>petal_length</th><th>petal_width</th><th>species</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>7</td><td>3.2</td><td>4.7</td><td>1.4</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>1</td><td>6.4</td><td>3.2</td><td>4.5</td><td>1.5</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>2</td><td>6.9</td><td>3.1</td><td>4.9</td><td>1.5</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>3</td><td>5.5</td><td>2.3</td><td>4</td><td>1.3</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>4</td><td>6.5</td><td>2.8</td><td>4.6</td><td>1.5</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>5</td><td>5.7</td><td>2.8</td><td>4.5</td><td>1.3</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>6</td><td>6.3</td><td>3.3</td><td>4.7</td><td>1.6</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>7</td><td>4.9</td><td>2.4</td><td>3.3</td><td>1</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>8</td><td>6.6</td><td>2.9</td><td>4.6</td><td>1.3</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>9</td><td>5.2</td><td>2.7</td><td>3.9</td><td>1.4</td><td>versicolor</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>10 rows &times; 5 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p><strong>Notes :</strong></p>
+<ul class="simple">
+<li><p>We create a boolean expression, using the <code class="docutils literal notranslate"><span class="pre">f</span></code> symbol, to select rows that match the condition.</p></li>
+</ul>
+</section>
+<section id="find-rows-where-species-versicolor-and-sepal-length-7">
+<h4><strong>Find rows where species == “versicolor” and sepal_length == 7</strong><a class="headerlink" href="#find-rows-where-species-versicolor-and-sepal-length-7" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[(</span><span class="n">f</span><span class="o">.</span><span class="n">species</span> <span class="o">==</span> <span class="s2">&quot;versicolor&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">sepal_length</span> <span class="o">==</span> <span class="mi">7</span><span class="p">),</span> <span class="p">:]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>sepal_length</th><th>sepal_width</th><th>petal_length</th><th>petal_width</th><th>species</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>7</td><td>3.2</td><td>4.7</td><td>1.4</td><td>versicolor</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>1 row &times; 5 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p><strong>Notes :</strong></p>
+<ul class="simple">
+<li><p>Again, a filter expression is needed -&gt; we use the <code class="docutils literal notranslate"><span class="pre">f</span></code> symbol to access the columns and create our expression.</p></li>
+<li><p>Note also that we have two conditions; as such, each condition is wrapped in parentheses to ensure the operator precedence.</p></li>
+<li><p>Operator <code class="docutils literal notranslate"><span class="pre">&amp;</span></code> for <code class="docutils literal notranslate"><span class="pre">and</span></code>, <code class="docutils literal notranslate"><span class="pre">|</span></code> for <code class="docutils literal notranslate"><span class="pre">or</span></code>.</p></li>
+<li><p>You can chain as many conditions as needed within the <code class="docutils literal notranslate"><span class="pre">i</span></code> section.</p></li>
+</ul>
+</section>
+</section>
+<section id="the-j-part-columns">
+<h3><strong>The j part - Columns</strong><a class="headerlink" href="#the-j-part-columns" title="Permalink to this headline">#</a></h3>
+<section id="select-species-petal-width-and-petal-length-columns">
+<h4><strong>Select species, petal_width and petal_length columns</strong><a class="headerlink" href="#select-species-petal-width-and-petal-length-columns" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Simply pass a list of the names in the j section </span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">&quot;species&quot;</span><span class="p">,</span><span class="s2">&quot;petal_width&quot;</span><span class="p">,</span><span class="s2">&quot;petal_length&quot;</span><span class="p">]]</span>
+
+<span class="n">result</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>species</th><th>petal_width</th><th>petal_length</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>setosa</td><td>0.2</td><td>1.4</td></tr>
+    <tr><td class='row_index'>1</td><td>setosa</td><td>0.2</td><td>1.4</td></tr>
+    <tr><td class='row_index'>2</td><td>setosa</td><td>0.2</td><td>1.3</td></tr>
+    <tr><td class='row_index'>3</td><td>setosa</td><td>0.2</td><td>1.5</td></tr>
+    <tr><td class='row_index'>4</td><td>setosa</td><td>0.2</td><td>1.4</td></tr>
+    <tr><td class='row_index'>5</td><td>setosa</td><td>0.4</td><td>1.7</td></tr>
+    <tr><td class='row_index'>6</td><td>setosa</td><td>0.3</td><td>1.4</td></tr>
+    <tr><td class='row_index'>7</td><td>setosa</td><td>0.2</td><td>1.5</td></tr>
+    <tr><td class='row_index'>8</td><td>setosa</td><td>0.2</td><td>1.4</td></tr>
+    <tr><td class='row_index'>9</td><td>setosa</td><td>0.1</td><td>1.5</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>10 rows &times; 3 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p><strong>Notes :</strong></p>
+<ul class="simple">
+<li><p>Note that we passed <code class="docutils literal notranslate"><span class="pre">:</span></code> in the <code class="docutils literal notranslate"><span class="pre">i</span></code> section to indicate that all rows will be selected. <code class="docutils literal notranslate"><span class="pre">None</span></code> or <code class="docutils literal notranslate"><span class="pre">...</span></code> works fine as well.</p></li>
+</ul>
+</section>
+<section id="select-the-last-two-columns">
+<h4><strong>Select the last two columns</strong><a class="headerlink" href="#select-the-last-two-columns" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Again, we use python&#39;s indexing syntax</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+
+<span class="n">result</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>petal_width</th><th>species</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>0.2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>1</td><td>0.2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>2</td><td>0.2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>3</td><td>0.2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>4</td><td>0.2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>5</td><td>0.4</td><td>setosa</td></tr>
+    <tr><td class='row_index'>6</td><td>0.3</td><td>setosa</td></tr>
+    <tr><td class='row_index'>7</td><td>0.2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>8</td><td>0.2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>9</td><td>0.1</td><td>setosa</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>10 rows &times; 2 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+</section>
+<section id="select-only-columns-whose-names-end-with-length">
+<h4><strong>Select only columns whose names end with <code class="docutils literal notranslate"><span class="pre">length</span></code></strong><a class="headerlink" href="#select-only-columns-whose-names-end-with-length" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:,</span> <span class="p">[</span><span class="n">col</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;length&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">names</span><span class="p">]]</span>
+
+<span class="n">result</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>sepal_length</th><th>petal_length</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>5.1</td><td>1.4</td></tr>
+    <tr><td class='row_index'>1</td><td>4.9</td><td>1.4</td></tr>
+    <tr><td class='row_index'>2</td><td>4.7</td><td>1.3</td></tr>
+    <tr><td class='row_index'>3</td><td>4.6</td><td>1.5</td></tr>
+    <tr><td class='row_index'>4</td><td>5</td><td>1.4</td></tr>
+    <tr><td class='row_index'>5</td><td>5.4</td><td>1.7</td></tr>
+    <tr><td class='row_index'>6</td><td>4.6</td><td>1.4</td></tr>
+    <tr><td class='row_index'>7</td><td>5</td><td>1.5</td></tr>
+    <tr><td class='row_index'>8</td><td>4.4</td><td>1.4</td></tr>
+    <tr><td class='row_index'>9</td><td>4.9</td><td>1.5</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>10 rows &times; 2 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p><strong>Notes:</strong></p>
+<ul class="simple">
+<li><p>For this, we pass a <a class="reference external" href="https://docs.python.org/3/tutorial/datastructures.html#list-comprehensions">list comprehension</a> to extract the matches. Again, we are using familar python constructs.</p></li>
+</ul>
+</section>
+<section id="calculate-the-mean-value-of-sepal-length">
+<h4><strong>Calculate the mean value of sepal_length</strong><a class="headerlink" href="#calculate-the-mean-value-of-sepal-length" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[:,</span> <span class="n">dt</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">sepal_length</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>sepal_length</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>5.84333</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>1 row &times; 1 column</div>
+  </div>
+</div>
+</div></div>
+</div>
+<ul class="simple">
+<li><p>Here, we have to compute a value, and as such, the <code class="docutils literal notranslate"><span class="pre">f</span></code> symbol comes into play.</p></li>
+<li><p>To get the average, we use the <code class="docutils literal notranslate"><span class="pre">mean</span></code> function from the datatable module.</p></li>
+</ul>
+<p><strong>REMEMBER</strong>: Any time you want to compute a value or create an expression, make use of the <code class="docutils literal notranslate"><span class="pre">f</span></code> symbol.</p>
+<p><strong>TIP</strong> : We can export the column names and use them, instead of the <code class="docutils literal notranslate"><span class="pre">f</span></code> symbol :</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sepal_length</span><span class="p">,</span>  <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">export_names</span><span class="p">()</span>
+
+<span class="c1">#calculate the mean value of sepal_length</span>
+<span class="n">df</span><span class="p">[:,</span>  <span class="n">dt</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">sepal_length</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>sepal_length</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>5.84333</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>1 row &times; 1 column</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p>We can also export only the names we need :</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">petal_width</span><span class="p">,</span> <span class="n">petal_length</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]]</span><span class="o">.</span><span class="n">export_names</span><span class="p">()</span>
+
+<span class="c1">#calculate mean value of petal_width and petal_length</span>
+<span class="n">df</span><span class="p">[:,</span> <span class="n">dt</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">petal_width</span><span class="p">,</span> <span class="n">petal_length</span><span class="p">])]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>petal_length</th><th>petal_width</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>3.758</td><td>1.19933</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>1 row &times; 2 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p><strong>Notes:</strong></p>
+<ul class="simple">
+<li><p>To get aggregates of more than one column, pass a list of column names prefixed with the <code class="docutils literal notranslate"><span class="pre">f</span></code> symbol to j.</p></li>
+<li><p>Alternatively, you can pass a dictionary of key - value pairs, where the keys will be the new column names, and the values are the computed columns.</p></li>
+</ul>
+<p>For the rest of the tutorial, I will continue using <code class="docutils literal notranslate"><span class="pre">f-expressions</span></code>, as they are convenient to use, without having to explicitly export column names.</p>
+</section>
+<section id="select-only-species-and-petal-length-columns-for-rows-where-the-petal-length-is-greater-than-1-5">
+<h4><strong>Select only species and petal_length columns for rows where the petal_length is greater than 1.5</strong><a class="headerlink" href="#select-only-species-and-petal-length-columns-for-rows-where-the-petal-length-is-greater-than-1-5" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">petal_length</span> <span class="o">&gt;</span> <span class="mf">1.5</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;species&quot;</span><span class="p">,</span> <span class="s2">&quot;petal_length&quot;</span><span class="p">]]</span>
+
+<span class="n">result</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>species</th><th>petal_length</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>setosa</td><td>1.7</td></tr>
+    <tr><td class='row_index'>1</td><td>setosa</td><td>1.6</td></tr>
+    <tr><td class='row_index'>2</td><td>setosa</td><td>1.7</td></tr>
+    <tr><td class='row_index'>3</td><td>setosa</td><td>1.7</td></tr>
+    <tr><td class='row_index'>4</td><td>setosa</td><td>1.7</td></tr>
+    <tr><td class='row_index'>5</td><td>setosa</td><td>1.9</td></tr>
+    <tr><td class='row_index'>6</td><td>setosa</td><td>1.6</td></tr>
+    <tr><td class='row_index'>7</td><td>setosa</td><td>1.6</td></tr>
+    <tr><td class='row_index'>8</td><td>setosa</td><td>1.6</td></tr>
+    <tr><td class='row_index'>9</td><td>setosa</td><td>1.6</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>10 rows &times; 2 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+</section>
+<section id="select-only-string-columns">
+<h4><strong>Select only string columns</strong><a class="headerlink" href="#select-only-string-columns" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:,</span> <span class="n">f</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
+<span class="n">result</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>species</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>setosa</td></tr>
+    <tr><td class='row_index'>1</td><td>setosa</td></tr>
+    <tr><td class='row_index'>2</td><td>setosa</td></tr>
+    <tr><td class='row_index'>3</td><td>setosa</td></tr>
+    <tr><td class='row_index'>4</td><td>setosa</td></tr>
+    <tr><td class='row_index'>5</td><td>setosa</td></tr>
+    <tr><td class='row_index'>6</td><td>setosa</td></tr>
+    <tr><td class='row_index'>7</td><td>setosa</td></tr>
+    <tr><td class='row_index'>8</td><td>setosa</td></tr>
+    <tr><td class='row_index'>9</td><td>setosa</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>10 rows &times; 1 column</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p><strong>Notes:</strong></p>
+<ul class="simple">
+<li><p>The above concept is applicable for any data type that we wish to include or exclude from the dataframe</p></li>
+</ul>
+</section>
+<section id="convert-petal-length-from-float-to-integer">
+<h4><strong>Convert petal_length from float to integer</strong><a class="headerlink" href="#convert-petal-length-from-float-to-integer" title="Permalink to this headline">#</a></h4>
+<ul class="simple">
+<li><p>Option 1. Direct assignment :</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">result</span><span class="p">[</span><span class="s2">&quot;petal_length&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">stype</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>stype.float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#change column type</span>
+<span class="n">result</span><span class="p">[</span><span class="s2">&quot;petal_length&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">int32</span>
+
+<span class="c1">#check new data type</span>
+<span class="n">result</span><span class="p">[:,</span> <span class="n">f</span><span class="o">.</span><span class="n">petal_length</span><span class="p">]</span><span class="o">.</span><span class="n">stype</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>stype.int32
+</pre></div>
+</div>
+</div>
+</div>
+<ul class="simple">
+<li><p>Option 2. Use the <code class="docutils literal notranslate"><span class="pre">update</span></code> method. The process is done in-place; no assignment is needed :</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">res</span><span class="p">[</span><span class="s2">&quot;petal_length&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">stype</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>stype.float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#update is an inplace operation</span>
+<span class="n">res</span><span class="p">[:,</span> <span class="n">dt</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">petal_length</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">petal_length</span><span class="p">))]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#check data type after update </span>
+<span class="n">res</span><span class="p">[</span><span class="s1">&#39;petal_length&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">stype</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>stype.int32
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>TIP</strong> : The <code class="docutils literal notranslate"><span class="pre">update</span></code> method allows creation of new columns, or updating existing ones.</p>
+</section>
+<section id="multiply-petal-length-by-2-and-add-it-as-a-new-column-petal-double">
+<h4><strong>Multiply petal_length by 2 and add it as a new column <code class="docutils literal notranslate"><span class="pre">petal_double</span></code></strong><a class="headerlink" href="#multiply-petal-length-by-2-and-add-it-as-a-new-column-petal-double" title="Permalink to this headline">#</a></h4>
+<ul class="simple">
+<li><p>Option 1. Direct Assignment :</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sol_1</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">sol_1</span><span class="p">[</span><span class="s2">&quot;petal_double&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sol_1</span><span class="p">[:,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">f</span><span class="o">.</span><span class="n">petal_length</span><span class="p">]</span>
+
+<span class="n">sol_1</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>sepal_length</th><th>sepal_width</th><th>petal_length</th><th>petal_width</th><th>species</th><th>petal_double</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>5.1</td><td>3.5</td><td>1.4</td><td>0.2</td><td>setosa</td><td>2.8</td></tr>
+    <tr><td class='row_index'>1</td><td>4.9</td><td>3</td><td>1.4</td><td>0.2</td><td>setosa</td><td>2.8</td></tr>
+    <tr><td class='row_index'>2</td><td>4.7</td><td>3.2</td><td>1.3</td><td>0.2</td><td>setosa</td><td>2.6</td></tr>
+    <tr><td class='row_index'>3</td><td>4.6</td><td>3.1</td><td>1.5</td><td>0.2</td><td>setosa</td><td>3</td></tr>
+    <tr><td class='row_index'>4</td><td>5</td><td>3.6</td><td>1.4</td><td>0.2</td><td>setosa</td><td>2.8</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>5 rows &times; 6 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+<ul class="simple">
+<li><p>Option 2. Use the <code class="docutils literal notranslate"><span class="pre">extend</span></code> method and pass in a dictionary of key value pairs, where the key is the new column name, and the value is the computed column:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sol_2</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1">#f[:] means the entire columns are selected</span>
+<span class="n">sol_2</span> <span class="o">=</span> <span class="n">sol_2</span><span class="p">[:,</span> <span class="n">f</span><span class="p">[:]</span><span class="o">.</span><span class="n">extend</span><span class="p">({</span><span class="s2">&quot;petal_double&quot;</span> <span class="p">:</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">f</span><span class="o">.</span><span class="n">petal_length</span><span class="p">})]</span>
+
+<span class="n">sol_2</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>sepal_length</th><th>sepal_width</th><th>petal_length</th><th>petal_width</th><th>species</th><th>petal_double</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>5.1</td><td>3.5</td><td>1.4</td><td>0.2</td><td>setosa</td><td>2.8</td></tr>
+    <tr><td class='row_index'>1</td><td>4.9</td><td>3</td><td>1.4</td><td>0.2</td><td>setosa</td><td>2.8</td></tr>
+    <tr><td class='row_index'>2</td><td>4.7</td><td>3.2</td><td>1.3</td><td>0.2</td><td>setosa</td><td>2.6</td></tr>
+    <tr><td class='row_index'>3</td><td>4.6</td><td>3.1</td><td>1.5</td><td>0.2</td><td>setosa</td><td>3</td></tr>
+    <tr><td class='row_index'>4</td><td>5</td><td>3.6</td><td>1.4</td><td>0.2</td><td>setosa</td><td>2.8</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>5 rows &times; 6 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+<ul class="simple">
+<li><p>Option 3. The <code class="docutils literal notranslate"><span class="pre">update</span></code> method :</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sol_3</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">sol_3</span><span class="p">[:,</span> <span class="n">dt</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">petal_double</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">f</span><span class="o">.</span><span class="n">petal_length</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sol_3</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>sepal_length</th><th>sepal_width</th><th>petal_length</th><th>petal_width</th><th>species</th><th>petal_double</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>5.1</td><td>3.5</td><td>1.4</td><td>0.2</td><td>setosa</td><td>2.8</td></tr>
+    <tr><td class='row_index'>1</td><td>4.9</td><td>3</td><td>1.4</td><td>0.2</td><td>setosa</td><td>2.8</td></tr>
+    <tr><td class='row_index'>2</td><td>4.7</td><td>3.2</td><td>1.3</td><td>0.2</td><td>setosa</td><td>2.6</td></tr>
+    <tr><td class='row_index'>3</td><td>4.6</td><td>3.1</td><td>1.5</td><td>0.2</td><td>setosa</td><td>3</td></tr>
+    <tr><td class='row_index'>4</td><td>5</td><td>3.6</td><td>1.4</td><td>0.2</td><td>setosa</td><td>2.8</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>5 rows &times; 6 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+</section>
+<section id="drop-the-sepal-width-column-from-the-table">
+<h4><strong>Drop the sepal_width column from the table</strong><a class="headerlink" href="#drop-the-sepal-width-column-from-the-table" title="Permalink to this headline">#</a></h4>
+<ul class="simple">
+<li><p>Option 1. Use the <code class="docutils literal notranslate"><span class="pre">del</span></code> keyword :</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">del</span> <span class="n">sol_1</span><span class="p">[</span><span class="s2">&quot;sepal_width&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sol_1</span><span class="o">.</span><span class="n">names</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;sepal_length&#39;, &#39;petal_length&#39;, &#39;petal_width&#39;, &#39;species&#39;, &#39;petal_double&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sol_1</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>sepal_length</th><th>petal_length</th><th>petal_width</th><th>species</th><th>petal_double</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>5.1</td><td>1.4</td><td>0.2</td><td>setosa</td><td>2.8</td></tr>
+    <tr><td class='row_index'>1</td><td>4.9</td><td>1.4</td><td>0.2</td><td>setosa</td><td>2.8</td></tr>
+    <tr><td class='row_index'>2</td><td>4.7</td><td>1.3</td><td>0.2</td><td>setosa</td><td>2.6</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>3 rows &times; 5 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p>Option 2. Use the <code class="docutils literal notranslate"><span class="pre">remove</span></code> method :</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sol_3</span> <span class="o">=</span> <span class="n">sol_3</span><span class="p">[:,</span> <span class="n">f</span><span class="p">[:]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">sepal_width</span><span class="p">)]</span>
+<span class="n">sol_3</span><span class="o">.</span><span class="n">names</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;sepal_length&#39;, &#39;petal_length&#39;, &#39;petal_width&#39;, &#39;species&#39;, &#39;petal_double&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sol_3</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>sepal_length</th><th>petal_length</th><th>petal_width</th><th>species</th><th>petal_double</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>5.1</td><td>1.4</td><td>0.2</td><td>setosa</td><td>2.8</td></tr>
+    <tr><td class='row_index'>1</td><td>4.9</td><td>1.4</td><td>0.2</td><td>setosa</td><td>2.8</td></tr>
+    <tr><td class='row_index'>2</td><td>4.7</td><td>1.3</td><td>0.2</td><td>setosa</td><td>2.6</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>3 rows &times; 5 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+</section>
+</section>
+<section id="extra-modifiers">
+<h3><strong>Extra Modifiers</strong><a class="headerlink" href="#extra-modifiers" title="Permalink to this headline">#</a></h3>
+<p><strong>Notes :</strong></p>
+<ul class="simple">
+<li><p>We will focus on <code class="docutils literal notranslate"><span class="pre">grouping</span></code> and <code class="docutils literal notranslate"><span class="pre">sorting</span></code>.</p></li>
+</ul>
+<section id="sort-data-by-sepal-width">
+<h4><strong>Sort data by sepal_width</strong><a class="headerlink" href="#sort-data-by-sepal-width" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">outcome</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">dt</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="s1">&#39;sepal_width&#39;</span><span class="p">)]</span>
+
+<span class="n">outcome</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>sepal_length</th><th>sepal_width</th><th>petal_length</th><th>petal_width</th><th>species</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>5</td><td>2</td><td>3.5</td><td>1</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>1</td><td>6</td><td>2.2</td><td>4</td><td>1</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>2</td><td>6.2</td><td>2.2</td><td>4.5</td><td>1.5</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>3</td><td>6</td><td>2.2</td><td>5</td><td>1.5</td><td>virginica</td></tr>
+    <tr><td class='row_index'>4</td><td>4.5</td><td>2.3</td><td>1.3</td><td>0.3</td><td>setosa</td></tr>
+    <tr><td class='row_index'>5</td><td>5.5</td><td>2.3</td><td>4</td><td>1.3</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>6</td><td>6.3</td><td>2.3</td><td>4.4</td><td>1.3</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>7</td><td>5</td><td>2.3</td><td>3.3</td><td>1</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>8</td><td>4.9</td><td>2.4</td><td>3.3</td><td>1</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>9</td><td>5.5</td><td>2.4</td><td>3.8</td><td>1.1</td><td>versicolor</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>10 rows &times; 5 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+<ul class="simple">
+<li><p>That’s all there is to it, just pass in the column name, either as a string or as an <code class="docutils literal notranslate"><span class="pre">f</span></code> expression.</p></li>
+<li><p>By default, sorting is in ascending order.</p></li>
+</ul>
+</section>
+<section id="sort-by-sepal-width-ascending-and-petal-width-descending">
+<h4><strong>Sort by sepal_width ascending and petal_width descending</strong><a class="headerlink" href="#sort-by-sepal-width-ascending-and-petal-width-descending" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">outcome</span> <span class="o">=</span> <span class="n">df</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">dt</span><span class="o">.</span><span class="n">sort</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">sepal_width</span><span class="p">,</span> <span class="o">-</span><span class="n">f</span><span class="o">.</span><span class="n">petal_width</span><span class="p">])]</span>
+
+<span class="n">outcome</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>sepal_length</th><th>sepal_width</th><th>petal_length</th><th>petal_width</th><th>species</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>5</td><td>2</td><td>3.5</td><td>1</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>1</td><td>6.2</td><td>2.2</td><td>4.5</td><td>1.5</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>2</td><td>6</td><td>2.2</td><td>5</td><td>1.5</td><td>virginica</td></tr>
+    <tr><td class='row_index'>3</td><td>6</td><td>2.2</td><td>4</td><td>1</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>4</td><td>5.5</td><td>2.3</td><td>4</td><td>1.3</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>5</td><td>6.3</td><td>2.3</td><td>4.4</td><td>1.3</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>6</td><td>5</td><td>2.3</td><td>3.3</td><td>1</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>7</td><td>4.5</td><td>2.3</td><td>1.3</td><td>0.3</td><td>setosa</td></tr>
+    <tr><td class='row_index'>8</td><td>5.5</td><td>2.4</td><td>3.8</td><td>1.1</td><td>versicolor</td></tr>
+    <tr><td class='row_index'>9</td><td>4.9</td><td>2.4</td><td>3.3</td><td>1</td><td>versicolor</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>10 rows &times; 5 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p><strong>Notes :</strong></p>
+<ul class="simple">
+<li><p>When sorting on multiple columns, pass a list of the column names to the <code class="docutils literal notranslate"><span class="pre">sort</span></code> function.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">-</span></code> sign in front of <code class="docutils literal notranslate"><span class="pre">petal_width</span></code> instructs data table to sort in descending order. The <code class="docutils literal notranslate"><span class="pre">-</span></code> is symbolic and no actual negation occurs; as such it can be used on string columns.</p></li>
+<li><p>Note that at this point, we had to switch to <code class="docutils literal notranslate"><span class="pre">f-expression</span></code> to get the desired result.</p></li>
+</ul>
+</section>
+<section id="group-by-get-the-average-sepal-length-per-species">
+<h4><strong>Group By - Get the average sepal length per species</strong><a class="headerlink" href="#group-by-get-the-average-sepal-length-per-species" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[:,</span> <span class="n">dt</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">sepal_length</span><span class="p">),</span> <span class="n">by</span><span class="p">(</span><span class="s2">&quot;species&quot;</span><span class="p">)]</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>species</th><th>sepal_length</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>setosa</td><td>5.006</td></tr>
+    <tr><td class='row_index'>1</td><td>versicolor</td><td>5.936</td></tr>
+    <tr><td class='row_index'>2</td><td>virginica</td><td>6.588</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>3 rows &times; 2 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p><strong>Notes :</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">by</span></code> is the primary way to group data in the datatable.</p></li>
+<li><p>Since we are computing a value (average), the <code class="docutils literal notranslate"><span class="pre">f</span></code> symbol is used.</p></li>
+</ul>
+</section>
+<section id="group-by-get-the-average-sepal-length-and-petal-length-per-species">
+<h4><strong>Group By - Get the average sepal length and petal length per species</strong><a class="headerlink" href="#group-by-get-the-average-sepal-length-and-petal-length-per-species" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[:,</span> <span class="n">dt</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">sepal_length</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">petal_length</span><span class="p">]),</span> <span class="n">by</span><span class="p">(</span><span class="s2">&quot;species&quot;</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>species</th><th>sepal_length</th><th>petal_length</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>setosa</td><td>5.006</td><td>1.462</td></tr>
+    <tr><td class='row_index'>1</td><td>versicolor</td><td>5.936</td><td>4.26</td></tr>
+    <tr><td class='row_index'>2</td><td>virginica</td><td>6.588</td><td>5.552</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>3 rows &times; 3 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+</section>
+<section id="group-by-filter-the-rows-for-sepal-width-greater-than-or-equal-to-3-then-get-the-average-sepal-length-and-petal-length-per-species">
+<h4><strong>Group By - Filter the rows for sepal_width greater than or equal to 3, then get the average sepal length and petal length per species</strong><a class="headerlink" href="#group-by-filter-the-rows-for-sepal-width-greater-than-or-equal-to-3-then-get-the-average-sepal-length-and-petal-length-per-species" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="n">f</span><span class="o">.</span><span class="n">sepal_width</span><span class="o">&gt;=</span><span class="mi">3</span><span class="p">,:][:,</span><span class="n">dt</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">f</span><span class="o">.</span><span class="n">sepal_length</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">petal_length</span><span class="p">]),</span> <span class="n">by</span><span class="p">(</span><span class="s2">&quot;species&quot;</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>species</th><th>sepal_length</th><th>petal_length</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>setosa</td><td>5.02917</td><td>1.46667</td></tr>
+    <tr><td class='row_index'>1</td><td>versicolor</td><td>6.21875</td><td>4.54375</td></tr>
+    <tr><td class='row_index'>2</td><td>virginica</td><td>6.76897</td><td>5.64138</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>3 rows &times; 3 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p><strong>Notes :</strong></p>
+<ul class="simple">
+<li><p>At the moment, computation on <code class="docutils literal notranslate"><span class="pre">i</span></code>, <code class="docutils literal notranslate"><span class="pre">j</span></code> and <code class="docutils literal notranslate"><span class="pre">by</span></code> at the same time is not yet implemented. As such, we have to break down the steps into two parts.</p></li>
+<li><p>This also shows the chaining capabilities of datatable; simply put the next <code class="docutils literal notranslate"><span class="pre">[]</span></code>, and <code class="docutils literal notranslate"><span class="pre">datatable</span></code> will compute the results from left to right.</p></li>
+</ul>
+</section>
+<section id="group-by-get-the-average-sepal-length-and-group-on-sepal-width-greater-than-3">
+<h4><strong>Group By - Get the average sepal length and group on sepal width greater than 3</strong><a class="headerlink" href="#group-by-get-the-average-sepal-length-and-group-on-sepal-width-greater-than-3" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[:,</span> <span class="n">dt</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">sepal_length</span><span class="p">),</span> <span class="n">by</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">sepal_width</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>C0</th><th>sepal_length</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='bool' title='bool8'>&#x25AA;</td><td class='float' title='float64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>0</td><td>5.97229</td></tr>
+    <tr><td class='row_index'>1</td><td>1</td><td>5.68358</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>2 rows &times; 2 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p><strong>Notes :</strong></p>
+<ul class="simple">
+<li><p>With <code class="docutils literal notranslate"><span class="pre">by</span></code>, you can group on boolean expressions. Note the use of <code class="docutils literal notranslate"><span class="pre">f-expression</span></code> in the <code class="docutils literal notranslate"><span class="pre">by</span></code> function.</p></li>
+<li><p>Integers <code class="docutils literal notranslate"><span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">1</span></code> signifiy <code class="docutils literal notranslate"><span class="pre">False</span></code> and <code class="docutils literal notranslate"><span class="pre">True</span></code> respectively.</p></li>
+</ul>
+</section>
+<section id="group-by-get-the-count-of-each-species-and-label-the-aggregation-column-as-species-count">
+<h4><strong>Group By - Get the count of each species, and label the aggregation column as <code class="docutils literal notranslate"><span class="pre">species_count</span></code></strong><a class="headerlink" href="#group-by-get-the-count-of-each-species-and-label-the-aggregation-column-as-species-count" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[:,</span> <span class="p">{</span><span class="s2">&quot;species_count&quot;</span> <span class="p">:</span> <span class="n">dt</span><span class="o">.</span><span class="n">count</span><span class="p">()},</span> <span class="n">by</span><span class="p">(</span><span class="s2">&quot;species&quot;</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>species</th><th>species_count</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='int' title='int64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>setosa</td><td>50</td></tr>
+    <tr><td class='row_index'>1</td><td>versicolor</td><td>50</td></tr>
+    <tr><td class='row_index'>2</td><td>virginica</td><td>50</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>3 rows &times; 2 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p><strong>Notes :</strong></p>
+<ul class="simple">
+<li><p>As with previous examples, a column can be renamed by passing a dictionary, where the key is the new column name and the value is the aggregation result.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">count</span></code> is another aggregation function within datatable.</p></li>
+</ul>
+</section>
+<section id="group-by-get-the-count-of-each-species-where-the-sepal-width-is-greater-than-3">
+<h4><strong>Group By - Get the count of each species where the sepal width is greater than 3</strong><a class="headerlink" href="#group-by-get-the-count-of-each-species-where-the-sepal-width-is-greater-than-3" title="Permalink to this headline">#</a></h4>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="p">[:,</span> <span class="n">dt</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="n">by</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">species</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">sepal_width</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div class='datatable'>
+  <table class='frame'>
+  <thead>
+    <tr class='colnames'><td class='row_index'></td><th>species</th><th>C0</th><th>count</th></tr>
+    <tr class='coltypes'><td class='row_index'></td><td class='str' title='str32'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td><td class='bool' title='bool8'>&#x25AA;</td><td class='int' title='int64'>&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;&#x25AA;</td></tr>
+  </thead>
+  <tbody>
+    <tr><td class='row_index'>0</td><td>setosa</td><td>0</td><td>8</td></tr>
+    <tr><td class='row_index'>1</td><td>setosa</td><td>1</td><td>42</td></tr>
+    <tr><td class='row_index'>2</td><td>versicolor</td><td>0</td><td>42</td></tr>
+    <tr><td class='row_index'>3</td><td>versicolor</td><td>1</td><td>8</td></tr>
+    <tr><td class='row_index'>4</td><td>virginica</td><td>0</td><td>33</td></tr>
+    <tr><td class='row_index'>5</td><td>virginica</td><td>1</td><td>17</td></tr>
+  </tbody>
+  </table>
+  <div class='footer'>
+    <div class='frame_dimensions'>6 rows &times; 3 columns</div>
+  </div>
+</div>
+</div></div>
+</div>
+<p><strong>Notes :</strong></p>
+<ul class="simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">by</span></code> function can take a combination of columns, including booleans.</p></li>
+</ul>
+</section>
+</section>
+<section id="summary">
+<h3><strong>Summary</strong><a class="headerlink" href="#summary" title="Permalink to this headline">#</a></h3>
+<p>This was an introduction to the syntax of python <code class="docutils literal notranslate"><span class="pre">datatable</span></code>. We will explore more features in subsequent blog posts.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="Filtering-Rows-in-Python-Datatable.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Filtering Rows in Datatable</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="Extract-DataFrame-from-Compressed-Data-into-Pandas.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Extract DataFrame from Compressed Data into Pandas</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Samuel Oranyeli<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
