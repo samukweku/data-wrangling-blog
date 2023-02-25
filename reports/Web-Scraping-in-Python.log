@@ -233,7 +233,7 @@ from, try looking at the hash chain below for an object that you do recognize,
 then pass that to `hash_funcs` instead:
 
 ```
-Object of type builtins.function: <function data_extract at 0x7f9663f2cee0>
+Object of type builtins.function: <function data_extract at 0x7f1064a7aee0>
 ```
 
 Please see the `hash_funcs` [documentation](https://docs.streamlit.io/library/advanced-features/caching#the-hash_funcs-parameter)
@@ -262,7 +262,7 @@ from, try looking at the hash chain below for an object that you do recognize,
 then pass that to `hash_funcs` instead:
 
 ```
-Object of type builtins.function: <function data_extract at 0x7f9663f2cee0>
+Object of type builtins.function: <function data_extract at 0x7f1064a7aee0>
 ```
 
 Please see the `hash_funcs` [documentation](https://docs.streamlit.io/library/advanced-features/caching#the-hash_funcs-parameter)
