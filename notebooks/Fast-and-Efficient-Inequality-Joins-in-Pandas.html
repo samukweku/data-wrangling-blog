@@ -823,7 +823,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> pandas version : 1.5.3 
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> pandas version : 2.0.2 
  janitor version : 0.24.0 
  python version : 3.9.16 | packaged by conda-forge | (main, Feb  1 2023, 21:39:03) 
 [GCC 11.3.0]
@@ -1441,6 +1441,97 @@ is used to combine the results of the individual conditions.</p></li>
     <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;==&#39;</span><span class="p">),</span>
     <span class="p">(</span><span class="s1">&#39;value_1&#39;</span><span class="p">,</span> <span class="s1">&#39;value_2A&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">),</span>
     <span class="p">(</span><span class="s1">&#39;value_1&#39;</span><span class="p">,</span> <span class="s1">&#39;value_2B&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">)</span>
+<span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead tr th {
+        text-align: left;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th colspan="2" halign="left">left</th>
+      <th colspan="3" halign="left">right</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>id</th>
+      <th>value_1</th>
+      <th>id</th>
+      <th>value_2A</th>
+      <th>value_2B</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>5</td>
+      <td>1</td>
+      <td>3</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>7</td>
+      <td>1</td>
+      <td>7</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>1</td>
+      <td>2</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>2</td>
+      <td>3</td>
+      <td>2</td>
+      <td>2</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>3</td>
+      <td>2</td>
+      <td>3</td>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>You can also use the <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.utils.col">col</a> function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">janitor</span> <span class="kn">import</span> <span class="n">col</span>
+
+<span class="p">(</span><span class="n">df1</span>
+<span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
+    <span class="n">df2</span><span class="p">,</span>
+    <span class="n">col</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">col</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">),</span>
+    <span class="n">col</span><span class="p">(</span><span class="s1">&#39;value_1&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">col</span><span class="p">(</span><span class="s1">&#39;value_2A&#39;</span><span class="p">),</span>
+    <span class="n">col</span><span class="p">(</span><span class="s1">&#39;value_1&#39;</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">col</span><span class="p">(</span><span class="s1">&#39;value_2B&#39;</span><span class="p">)</span>
 <span class="p">))</span>
 </pre></div>
 </div>
@@ -2159,7 +2250,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.39 s ± 7.13 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>921 ms ± 27.5 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2171,7 +2262,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>43.3 ms ± 107 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>32.7 ms ± 117 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -2183,7 +2274,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>33.2 ms ± 886 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>35 ms ± 416 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -2196,7 +2287,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 3007.86 MiB, increment: 2259.31 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 2661.23 MiB, increment: 1919.70 MiB
 </pre></div>
 </div>
 </div>
@@ -2208,7 +2299,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 748.75 MiB, increment: 0.00 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 741.60 MiB, increment: 0.00 MiB
 </pre></div>
 </div>
 </div>
@@ -2220,7 +2311,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 750.90 MiB, increment: 1.88 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 741.60 MiB, increment: 0.00 MiB
 </pre></div>
 </div>
 </div>
@@ -2228,7 +2319,7 @@ is used to combine the results of the individual conditions.</p></li>
 <p>Let’s run another performance test - the code below is a self join to find overlapping events in a 30,000 row DataFrame, and adapted from <a class="reference external" href="https://github.com/duckdb/duckdb/blob/master/benchmark/micro/join/iejoin_events.benchmark">DuckDB</a>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/samukweku/data-wrangling-blog/raw/master/_notebooks/Data_files/results.csv&#39;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/samukweku/data-wrangling-blog/master/notebooks/Data_files/results.csv&#39;</span>
 <span class="n">events</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
 <span class="n">events</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
@@ -2463,7 +2554,7 @@ is used to combine the results of the individual conditions.</p></li>
 <p>3702 rows × 6 columns</p>
 </div></div></div>
 </div>
-<p>The cartesian join takes a very long time - too long for us to test here. The focus for this test will just be on <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> and show where performance with <a class="reference external" href="https://numba.readthedocs.io/en/stable/">numba</a> might be better.</p>
+<p>The cartesian join takes a very long time - too long for us to test here. The focus for this test will just be on <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
@@ -2481,7 +2572,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>920 ms ± 6.02 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>21.3 ms ± 761 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -2503,7 +2594,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15 ms ± 201 µs per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>21.1 ms ± 1.78 ms per loop (mean ± std. dev. of 7 runs, 100 loops each)
 </pre></div>
 </div>
 </div>
@@ -2579,7 +2670,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5.9 s ± 72 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4.74 s ± 178 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2599,7 +2690,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.98 s ± 6.11 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.98 s ± 1e+03 µs per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2611,7 +2702,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 12158.91 MiB, increment: 11370.74 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 11024.00 MiB, increment: 10119.25 MiB
 </pre></div>
 </div>
 </div>
@@ -2623,7 +2714,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 6984.37 MiB, increment: 6254.66 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 7135.77 MiB, increment: 6243.02 MiB
 </pre></div>
 </div>
 </div>
@@ -2663,7 +2754,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>8.61 s ± 522 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>8.17 s ± 234 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2682,7 +2773,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>6.2 s ± 251 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>17.5 s ± 2.88 s per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2694,7 +2785,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 13368.89 MiB, increment: 13244.26 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 12695.15 MiB, increment: 12573.60 MiB
 </pre></div>
 </div>
 </div>
@@ -2706,7 +2797,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 13501.63 MiB, increment: 13371.84 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 12726.27 MiB, increment: 12599.82 MiB
 </pre></div>
 </div>
 </div>

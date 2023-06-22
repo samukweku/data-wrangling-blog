@@ -478,8 +478,8 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> pandas version : 1.5.3 
- numpy version : 1.23.5 
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> pandas version : 2.0.2 
+ numpy version : 1.24.3 
  python version : 3.9.16 | packaged by conda-forge | (main, Feb  1 2023, 21:39:03) 
 [GCC 11.3.0]
 </pre></div>
@@ -660,14 +660,12 @@ dtype: int64
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get the grouper</span>
-<span class="n">grp</span> <span class="o">=</span> <span class="n">starwars</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;species&#39;</span><span class="p">)</span>
-<span class="c1"># get the size:</span>
-<span class="n">n</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">)</span>
-<span class="c1"># get the unique sizes for sex, gender, homeworld</span>
-<span class="n">nuniques</span> <span class="o">=</span> <span class="n">grp</span><span class="p">[[</span><span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;homeworld&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="s1">&#39;nunique&#39;</span><span class="p">,</span> <span class="n">dropna</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="c1"># filter nuniques with the size:</span>
-<span class="n">nuniques</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">n</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grp</span> <span class="o">=</span> <span class="n">starwars</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;species&#39;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="n">grp</span><span class="p">[[</span><span class="s1">&#39;sex&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;homeworld&#39;</span><span class="p">]]</span>
+ <span class="o">.</span><span class="n">nunique</span><span class="p">(</span><span class="n">dropna</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+ <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">grp</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+ <span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -754,7 +752,7 @@ dtype: int64
 </table>
 </div></div></div>
 </div>
-<p>The <a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.core.groupby.GroupBy.pipe.html">pipe</a> function comes in handy here, and allows reuse of the grouped object multiple times; in my opinion, the previous solution is much clearer and likely more performant:</p>
+<p>Another approach is with the <a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.core.groupby.GroupBy.pipe.html">pipe</a> function:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">starwars</span>
@@ -864,7 +862,7 @@ dtype: int64
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get the grouper</span>
 <span class="n">grp</span> <span class="o">=</span> <span class="n">starwars</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;homeworld&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;homeworld&#39;</span><span class="p">)</span>
 <span class="c1"># get the size:</span>
-<span class="n">n</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
 <span class="c1"># filter averages with the size:</span>
 <span class="n">grp</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">n</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
 </pre></div>
@@ -968,6 +966,110 @@ dtype: int64
 <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;homeworld&#39;</span><span class="p">)</span>
 <span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)])</span>
 <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>height</th>
+      <th>mass</th>
+      <th>birth_year</th>
+    </tr>
+    <tr>
+      <th>homeworld</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Alderaan</th>
+      <td>176.333333</td>
+      <td>64.000000</td>
+      <td>43.000000</td>
+    </tr>
+    <tr>
+      <th>Corellia</th>
+      <td>175.000000</td>
+      <td>78.500000</td>
+      <td>25.000000</td>
+    </tr>
+    <tr>
+      <th>Coruscant</th>
+      <td>173.666667</td>
+      <td>50.000000</td>
+      <td>91.000000</td>
+    </tr>
+    <tr>
+      <th>Kamino</th>
+      <td>208.333333</td>
+      <td>83.100000</td>
+      <td>31.500000</td>
+    </tr>
+    <tr>
+      <th>Kashyyyk</th>
+      <td>231.000000</td>
+      <td>124.000000</td>
+      <td>200.000000</td>
+    </tr>
+    <tr>
+      <th>Mirial</th>
+      <td>168.000000</td>
+      <td>53.100000</td>
+      <td>49.000000</td>
+    </tr>
+    <tr>
+      <th>Naboo</th>
+      <td>175.454545</td>
+      <td>64.166667</td>
+      <td>55.000000</td>
+    </tr>
+    <tr>
+      <th>Ryloth</th>
+      <td>179.000000</td>
+      <td>55.000000</td>
+      <td>48.000000</td>
+    </tr>
+    <tr>
+      <th>Tatooine</th>
+      <td>169.800000</td>
+      <td>85.375000</td>
+      <td>54.644444</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>An alternate approach, where the groupby is reused, is with <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/">pyjanitor’s</a> <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.utils.get_columns">get_columns</a> function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">janitor</span> <span class="kn">import</span> <span class="n">get_columns</span>
+<span class="kn">from</span> <span class="nn">pandas.api.types</span> <span class="kn">import</span> <span class="n">is_numeric_dtype</span>
+
+<span class="n">grp</span> <span class="o">=</span> <span class="n">starwars</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;homeworld&#39;</span><span class="p">)</span>
+<span class="p">(</span><span class="n">grp</span>
+ <span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="n">get_columns</span><span class="p">,</span> <span class="n">is_numeric_dtype</span><span class="p">)</span>
+ <span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+ <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">grp</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+ <span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1185,7 +1287,7 @@ none          dark        brown        1
 auburn, grey  fair        blue         1
 none          green       red          1
 NaN           white, red  red          1
-Length: 67, dtype: int64
+Name: count, Length: 67, dtype: int64
 </pre></div>
 </div>
 </div>
@@ -1194,15 +1296,11 @@ Length: 67, dtype: int64
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># starwars %&gt;% </span>
 <span class="c1">#   filter(if_any(everything(), ~ !is.na(.x)))</span>
-<span class="n">starwars</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">starwars</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+<span class="n">starwars</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">starwars</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_95963/810716597.py:3: FutureWarning: In a future version of pandas all arguments of DataFrame.any and Series.any will be keyword-only.
-  starwars.loc[starwars.notna().any(1)]
-</pre></div>
-</div>
 <div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1434,7 +1532,7 @@ Length: 67, dtype: int64
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># starwars %&gt;% </span>
 <span class="c1">#   filter(if_any(everything(), ~ !is.na(.x)))</span>
-<span class="n">starwars</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">starwars</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
+<span class="n">starwars</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">starwars</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
 </pre></div>
 </div>
 </div>
@@ -1710,6 +1808,73 @@ Length: 67, dtype: int64
 <span class="c1"># summarize(dat, across(ends_with(&#39;p&#39;), sum), across(ends_with(&#39;t&#39;), mean))</span>
 <span class="n">aggs</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span><span class="s2">&quot;mean&quot;</span> <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;t&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;sum&quot;</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">cars</span> <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">))}</span>
 <span class="n">cars</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;cyl&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">aggs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>disp</th>
+      <th>hp</th>
+      <th>drat</th>
+      <th>wt</th>
+    </tr>
+    <tr>
+      <th>cyl</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4</th>
+      <td>1156.5</td>
+      <td>909</td>
+      <td>4.070909</td>
+      <td>2.285727</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1283.2</td>
+      <td>856</td>
+      <td>3.585714</td>
+      <td>3.117143</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>4943.4</td>
+      <td>2929</td>
+      <td>3.229286</td>
+      <td>3.999214</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>An alternate approach, where the groupby is reused, is with <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/">pyjanitor’s</a> <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.utils.get_columns">get_columns</a> function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grp</span> <span class="o">=</span> <span class="n">cars</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;cyl&#39;</span><span class="p">)</span>
+<span class="n">summary</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_columns</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="s1">&#39;*p&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="n">get_columns</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="s1">&#39;*t&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()]</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">summary</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
