@@ -1,47 +1,56 @@
 
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" data-content_root="../" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Fast and Efficient Inequality Joins in Pandas &#8212; Data Wrangling and Automation</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script kind="utterances">
 
     var commentsRunWhenDOMLoaded = cb => {
@@ -76,64 +85,117 @@ var addUtterances = () => {
 }
 commentsRunWhenDOMLoaded(addUtterances);
 </script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/Fast-and-Efficient-Inequality-Joins-in-Pandas';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Data Wrangling with Python Datatable - Row-wise Transformations" href="Data-Wrangling-with-Python-Datatable---Row-wise-Transformations.html" />
     <link rel="prev" title="Data Wrangling with Python Datatable - Conditional Statements" href="Data-Wrangling-with-Python-Datatable---Conditional-Statements.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
     
-    <div class="container-fluid" id="banner"></div>
-
     
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
 
-    <div class="container-xl">
-      <div class="row">
-          
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../index.html">
-      
-      
-      
-      <h1 class="site-logo" id="site-title">Data Wrangling and Automation</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Wrangling and Automation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
@@ -143,439 +205,245 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="Meaningful-Formats.html">
-   SpreadSheet Munging Strategies in Python - Meaningful Formats
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Read-Multiple-Csv-Files-into-one-Table-in-Python.html">
-   Read Multiple CSV Files into one Frame in Python
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Conditional-Statements.html">
-   Data Wrangling with Python Datatable - Conditional Statements
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Fast and Efficient Inequality Joins in Pandas
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Row-wise-Transformations.html">
-   Data Wrangling with Python Datatable - Row-wise Transformations
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Replicating-SD-in-python-datatable.html">
-   Replicating .SD in Python Datatable
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Pivot-Tables---Simple-Unpivoting.html">
-   SpreadSheet Munging Strategies in Python - Pivot Tables - Simple Unpivoting
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Select-Columns-by-Data-Type.html">
-   Data Wrangling with Python Datatable - Select Columns by Data Type
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Pivot_longer---Reshape-Data-in-Pandas-with-Ease-From-Wide-to-Long.html">
-   Pivot_longer : Reshape Data in Pandas Efficiently and with Ease from Wide to Long
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Replicate-Pandas-map.html">
-   Data Wrangling with Python Datatable - Replicate Pandas’ Map Function
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Pivot-Tables-Complex-Unpivoting.html">
-   SpreadSheet Munging Strategies in Python - Pivot Tables - Complex Unpivoting
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Filtering-Rows-in-Python-Datatable.html">
-   Filtering Rows in Datatable
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Selecting-and-Grouping-Data-with-Python-Datatable.html">
-   Selecting and Grouping Data with Python Datatable
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Extract-DataFrame-from-Compressed-Data-into-Pandas.html">
-   Extract DataFrame from Compressed Data into Pandas
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Web-Scraping-in-Python.html">
-   Easy Web Scraping with Python
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Selecting-Columns.html">
-   Data Wrangling with Python Datatable - Selecting Columns
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Extract-DataFrame-from-Compressed-Data-into-Python-Datatable.html">
-   Extract DataFrame from Compressed Data into Python Datatable
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Transformations-Within-a-GroupBy.html">
-   Data Wrangling with Python Datatable - Transformations Within a GroupBy
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Small-Multiples.html">
-   SpreadSheet Munging Strategies in Python - Small Multiples
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Data-Wrangling-with-Python-Datatable-Aggregation-on-Multiple-Columns.html">
-   Data Wrangling - Aggregation on Multiple Columns
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Access-Tables-In-Excel.html">
-   Access Excel Tables with Python
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="dplyr-across-in-Pandas.html">
-   Dplyr’s across: Replicating within Pandas
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="Meaningful-Formats.html">SpreadSheet Munging Strategies in Python - Meaningful Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Read-Multiple-Csv-Files-into-one-Table-in-Python.html">Read Multiple CSV Files into one Frame in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Conditional-Statements.html">Data Wrangling with Python Datatable - Conditional Statements</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Fast and Efficient Inequality Joins in Pandas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Row-wise-Transformations.html">Data Wrangling with Python Datatable - Row-wise Transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Replicating-SD-in-python-datatable.html">Replicating .SD in Python Datatable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Pivot-Tables---Simple-Unpivoting.html">SpreadSheet Munging Strategies in Python - Pivot Tables - Simple Unpivoting</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Select-Columns-by-Data-Type.html">Data Wrangling with Python Datatable - Select Columns by Data Type</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Pivot_longer---Reshape-Data-in-Pandas-with-Ease-From-Wide-to-Long.html">Pivot_longer : Reshape Data in Pandas Efficiently and with Ease from Wide to Long</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Replicate-Pandas-map.html">Data Wrangling with Python Datatable - Replicate Pandas’ Map Function</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Pivot-Tables-Complex-Unpivoting.html">SpreadSheet Munging Strategies in Python - Pivot Tables - Complex Unpivoting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Filtering-Rows-in-Python-Datatable.html">Filtering Rows in Datatable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Selecting-and-Grouping-Data-with-Python-Datatable.html">Selecting and Grouping Data with Python Datatable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Extract-DataFrame-from-Compressed-Data-into-Pandas.html">Extract DataFrame from Compressed Data into Pandas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Web-Scraping-in-Python.html">Easy Web Scraping with Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Selecting-Columns.html">Data Wrangling with Python Datatable - Selecting Columns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Extract-DataFrame-from-Compressed-Data-into-Python-Datatable.html">Extract DataFrame from Compressed Data into Python Datatable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Transformations-Within-a-GroupBy.html">Data Wrangling with Python Datatable - Transformations Within a GroupBy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Small-Multiples.html">SpreadSheet Munging Strategies in Python - Small Multiples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable-Aggregation-on-Multiple-Columns.html">Data Wrangling - Aggregation on Multiple Columns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Access-Tables-In-Excel.html">Access Excel Tables with Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dplyr-across-in-Pandas.html">Dplyr’s across: Replicating within Pandas</a></li>
 </ul>
 
     </div>
 </nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
     </div>
-    <div id="rtd-footer-container"></div>
-</div>
-
-
-          
-
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
-        
-
-
-
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
   
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
-    </div>
-    <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/samukweku/data-wrangling-blog/master?urlpath=tree/notebooks/notebooks/Fast-and-Efficient-Inequality-Joins-in-Pandas.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
   
-
-<span class="headerbtn__icon-container">
-  
-    <img src="../_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-    </ul>
+  <div class="sidebar-primary-items__end sidebar-primary__section">
   </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/samukweku/data-wrangling-blog" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/samukweku/data-wrangling-blog/issues/new?title=Issue%20on%20page%20%2Fnotebooks/Fast-and-Efficient-Inequality-Joins-in-Pandas.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
 </div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/Fast-and-Efficient-Inequality-Joins-in-Pandas.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
 
 <button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="bottom"
-title="Fullscreen mode"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-expand"></i>
   </span>
 
 </button>
 
-<div class="menu-dropdown menu-dropdown-repository-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Source repositories">
-      <i class="fab fa-github"></i>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://github.com/samukweku/data-wrangling-blog"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Source repository"
->
-  
+`);
+</script>
 
-<span class="headerbtn__icon-container">
-  <i class="fab fa-github"></i>
-  </span>
-<span class="headerbtn__text-container">repository</span>
-</a>
 
-      </li>
-      
-      <li>
-        <a href="https://github.com/samukweku/data-wrangling-blog/issues/new?title=Issue%20on%20page%20%2Fnotebooks/Fast-and-Efficient-Inequality-Joins-in-Pandas.html&body=Your%20issue%20content%20here."
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Open an issue"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-lightbulb"></i>
-  </span>
-<span class="headerbtn__text-container">open issue</span>
-</a>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="../_sources/notebooks/Fast-and-Efficient-Inequality-Joins-in-Pandas.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file"></i>
-  </span>
-<span class="headerbtn__text-container">.ipynb</span>
-</a>
-
-      </li>
-      
-      <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-file-pdf"></i>
-  </span>
-<span class="headerbtn__text-container">.pdf</span>
-</button>
-
-      </li>
-      
-    </ul>
-  </div>
-</div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
->
-  
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
-  </span>
-
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
 </label>
-
+</div></div>
+      
     </div>
+  
 </div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#introduction">
-   <strong>
-    Introduction
-   </strong>
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#strictly-non-equi-joins">
-   <strong>
-    Strictly Non-equi Joins
-   </strong>
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#equi-and-non-equi-joins">
-   <strong>
-    Equi and Non-equi Joins
-   </strong>
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#non-equi-joins-with-or">
-   <strong>
-    Non-equi joins with OR
-   </strong>
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#performance">
-   <strong>
-    Performance
-   </strong>
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#summary">
-   <strong>
-    Summary
-   </strong>
-  </a>
- </li>
-</ul>
-
-    </nav>
 </div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Fast and Efficient Inequality Joins in Pandas</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#introduction">
-   <strong>
-    Introduction
-   </strong>
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#strictly-non-equi-joins">
-   <strong>
-    Strictly Non-equi Joins
-   </strong>
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#equi-and-non-equi-joins">
-   <strong>
-    Equi and Non-equi Joins
-   </strong>
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#non-equi-joins-with-or">
-   <strong>
-    Non-equi joins with OR
-   </strong>
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#performance">
-   <strong>
-    Performance
-   </strong>
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#summary">
-   <strong>
-    Summary
-   </strong>
-  </a>
- </li>
-</ul>
+              
+              
 
-                        </nav>
-                    </div>
-                </div>
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Fast and Efficient Inequality Joins in Pandas</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
             </div>
-            <main id="main-content" role="main">
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction"><strong>Introduction</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#strictly-non-equi-joins"><strong>Strictly Non-equi Joins</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#equi-and-non-equi-joins"><strong>Equi and Non-equi Joins</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#non-equi-joins-with-or"><strong>Non-equi joins with OR</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance"><strong>Performance</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary"><strong>Summary</strong></a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
                 
-              <div>
-                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
   <section class="tex2jax_ignore mathjax_ignore" id="fast-and-efficient-inequality-joins-in-pandas">
-<h1>Fast and Efficient Inequality Joins in Pandas<a class="headerlink" href="#fast-and-efficient-inequality-joins-in-pandas" title="Permalink to this headline">#</a></h1>
+<h1>Fast and Efficient Inequality Joins in Pandas<a class="headerlink" href="#fast-and-efficient-inequality-joins-in-pandas" title="Link to this heading">#</a></h1>
 <section id="introduction">
-<h2><strong>Introduction</strong><a class="headerlink" href="#introduction" title="Permalink to this headline">#</a></h2>
+<h2><strong>Introduction</strong><a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
 <p>Pandas supports <em>equi-join</em>, where the keys involved in the join are considered to be <em>equal</em>. This is implemented via the <a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.merge.html">merge</a> and <a class="reference external" href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.join.html#pandas.DataFrame.join">join</a> functions. There are scenarios however, where the keys involved might not be equal; some other logical condition is involved in the join. This is known as a <em>non-equi join</em> or an <em>inequality join</em>.</p>
 <p>Let’s look at some examples, culled from <a class="reference external" href="https://github.com/pandas-dev/pandas/issues/34543#issue-629846136">here</a>, that illustrate equi and non-equi joins:</p>
 <div class="cell docutils container">
@@ -687,103 +555,103 @@ title="Print to PDF"
 </div></div></div>
 </div>
 <p>Join based on the condition <code class="docutils literal notranslate"><span class="pre">df1.left</span> <span class="pre">==</span> <span class="pre">df2.right</span></code> - this is an equi join, because the join operator is an <em>equality</em> operator, where df1.left is <em>equal to</em> df2.right:</p>
-<table class="colwidths-auto table">
+<table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>left</p></th>
-<th class="text-align:center head"><p>col_a</p></th>
-<th class="text-align:center head"><p>right</p></th>
-<th class="text-align:right head"><p>col_b</p></th>
+<th class="head text-center"><p>col_a</p></th>
+<th class="head text-center"><p>right</p></th>
+<th class="head text-right"><p>col_b</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>2</p></td>
-<td class="text-align:center"><p>B</p></td>
-<td class="text-align:center"><p>2</p></td>
-<td class="text-align:right"><p>X</p></td>
+<td class="text-center"><p>B</p></td>
+<td class="text-center"><p>2</p></td>
+<td class="text-right"><p>X</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
-<td class="text-align:center"><p>C</p></td>
-<td class="text-align:center"><p>3</p></td>
-<td class="text-align:right"><p>Y</p></td>
+<td class="text-center"><p>C</p></td>
+<td class="text-center"><p>3</p></td>
+<td class="text-right"><p>Y</p></td>
 </tr>
 </tbody>
 </table>
 <p>Join based on the condition <code class="docutils literal notranslate"><span class="pre">df1.left</span> <span class="pre">!=</span> <span class="pre">df2.right</span></code> - this is an example of a non-equi join; it should return rows where df1.left <em>is not equal to</em> df2.right:</p>
-<table class="colwidths-auto table">
+<table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>left</p></th>
-<th class="text-align:center head"><p>col_a</p></th>
-<th class="text-align:center head"><p>right</p></th>
-<th class="text-align:right head"><p>col_b</p></th>
+<th class="head text-center"><p>col_a</p></th>
+<th class="head text-center"><p>right</p></th>
+<th class="head text-right"><p>col_b</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>1</p></td>
-<td class="text-align:center"><p>A</p></td>
-<td class="text-align:center"><p>2</p></td>
-<td class="text-align:right"><p>X</p></td>
+<td class="text-center"><p>A</p></td>
+<td class="text-center"><p>2</p></td>
+<td class="text-right"><p>X</p></td>
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
-<td class="text-align:center"><p>A</p></td>
-<td class="text-align:center"><p>3</p></td>
-<td class="text-align:right"><p>Y</p></td>
+<td class="text-center"><p>A</p></td>
+<td class="text-center"><p>3</p></td>
+<td class="text-right"><p>Y</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
-<td class="text-align:center"><p>B</p></td>
-<td class="text-align:center"><p>3</p></td>
-<td class="text-align:right"><p>Y</p></td>
+<td class="text-center"><p>B</p></td>
+<td class="text-center"><p>3</p></td>
+<td class="text-right"><p>Y</p></td>
 </tr>
 <tr class="row-odd"><td><p>1</p></td>
-<td class="text-align:center"><p>A</p></td>
-<td class="text-align:center"><p>0</p></td>
-<td class="text-align:right"><p>Z</p></td>
+<td class="text-center"><p>A</p></td>
+<td class="text-center"><p>0</p></td>
+<td class="text-right"><p>Z</p></td>
 </tr>
 <tr class="row-even"><td><p>2</p></td>
-<td class="text-align:center"><p>B</p></td>
-<td class="text-align:center"><p>0</p></td>
-<td class="text-align:right"><p>Z</p></td>
+<td class="text-center"><p>B</p></td>
+<td class="text-center"><p>0</p></td>
+<td class="text-right"><p>Z</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
-<td class="text-align:center"><p>C</p></td>
-<td class="text-align:center"><p>0</p></td>
-<td class="text-align:right"><p>Z</p></td>
+<td class="text-center"><p>C</p></td>
+<td class="text-center"><p>0</p></td>
+<td class="text-right"><p>Z</p></td>
 </tr>
 <tr class="row-even"><td><p>3</p></td>
-<td class="text-align:center"><p>C</p></td>
-<td class="text-align:center"><p>2</p></td>
-<td class="text-align:right"><p>X</p></td>
+<td class="text-center"><p>C</p></td>
+<td class="text-center"><p>2</p></td>
+<td class="text-right"><p>X</p></td>
 </tr>
 </tbody>
 </table>
 <p>Join based on the condition <code class="docutils literal notranslate"><span class="pre">df1.left</span> <span class="pre">&gt;</span> <span class="pre">df2.right</span></code> - this is another example of a non-equi join; it should return rows where df1.left <em>is greater than</em> df2.right:</p>
-<table class="colwidths-auto table">
+<table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p>left</p></th>
-<th class="text-align:center head"><p>col_a</p></th>
-<th class="text-align:center head"><p>right</p></th>
-<th class="text-align:right head"><p>col_b</p></th>
+<th class="head text-center"><p>col_a</p></th>
+<th class="head text-center"><p>right</p></th>
+<th class="head text-right"><p>col_b</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>1</p></td>
-<td class="text-align:center"><p>A</p></td>
-<td class="text-align:center"><p>0</p></td>
-<td class="text-align:right"><p>Z</p></td>
+<td class="text-center"><p>A</p></td>
+<td class="text-center"><p>0</p></td>
+<td class="text-right"><p>Z</p></td>
 </tr>
 <tr class="row-odd"><td><p>2</p></td>
-<td class="text-align:center"><p>B</p></td>
-<td class="text-align:center"><p>0</p></td>
-<td class="text-align:right"><p>Z</p></td>
+<td class="text-center"><p>B</p></td>
+<td class="text-center"><p>0</p></td>
+<td class="text-right"><p>Z</p></td>
 </tr>
 <tr class="row-even"><td><p>3</p></td>
-<td class="text-align:center"><p>C</p></td>
-<td class="text-align:center"><p>0</p></td>
-<td class="text-align:right"><p>Z</p></td>
+<td class="text-center"><p>C</p></td>
+<td class="text-center"><p>0</p></td>
+<td class="text-right"><p>Z</p></td>
 </tr>
 <tr class="row-odd"><td><p>3</p></td>
-<td class="text-align:center"><p>C</p></td>
-<td class="text-align:center"><p>2</p></td>
-<td class="text-align:right"><p>X</p></td>
+<td class="text-center"><p>C</p></td>
+<td class="text-center"><p>2</p></td>
+<td class="text-right"><p>X</p></td>
 </tr>
 </tbody>
 </table>
@@ -802,7 +670,7 @@ Consider a dataframe `df_process` that contains `process_id`, `process_start_dat
 <p>This is not an efficient way to deal with inequality joins, in terms of memory and speed, especially for large data. This is where the <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> function from <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/">pyjanitor</a> comes into play. It provides an efficient way to deal with non-equi joins, and does so in a more memory efficient way than cartesian joins, while still being performant. Under the hood it uses binary search, and in some special cases, such as range joins, it uses special algorithms to improve performance.</p>
 </section>
 <section id="strictly-non-equi-joins">
-<h2><strong>Strictly Non-equi Joins</strong><a class="headerlink" href="#strictly-non-equi-joins" title="Permalink to this headline">#</a></h2>
+<h2><strong>Strictly Non-equi Joins</strong><a class="headerlink" href="#strictly-non-equi-joins" title="Link to this heading">#</a></h2>
 <p>Let’s load the <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/">pyjanitor</a> library:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -823,10 +691,10 @@ Consider a dataframe `df_process` that contains `process_id`, `process_start_dat
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> pandas version : 2.0.2 
- janitor version : 0.25.0 
- python version : 3.9.16 | packaged by conda-forge | (main, Feb  1 2023, 21:39:03) 
-[GCC 11.3.0]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> pandas version : 2.2.0 
+ janitor version : 0.26.0 
+ python version : 3.9.18 | packaged by conda-forge | (main, Dec 23 2023, 16:33:10) 
+[GCC 12.3.0]
 </pre></div>
 </div>
 </div>
@@ -1401,7 +1269,7 @@ is used to combine the results of the individual conditions.</p></li>
 <p>Note that non-equi join is supported only for numeric and date types.</p>
 </section>
 <section id="equi-and-non-equi-joins">
-<h2><strong>Equi and Non-equi Joins</strong><a class="headerlink" href="#equi-and-non-equi-joins" title="Permalink to this headline">#</a></h2>
+<h2><strong>Equi and Non-equi Joins</strong><a class="headerlink" href="#equi-and-non-equi-joins" title="Link to this heading">#</a></h2>
 <p><a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> also supports a combination of equi and non-equi join conditions - under the hood it uses Pandas’ internal merge function to get the matching pairs, before pruning the non-equi joins to get the final dataframe. Depending on the size of the dataframes, this might offer more performance than the classic merge and filter approach:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1818,7 +1686,7 @@ is used to combine the results of the individual conditions.</p></li>
 <p>Note the above returned a MultiIndex column; if the columns from the left and right dataframes have something in common a MultiIndex column is returned. Of course, you can select/rename columns with <code class="docutils literal notranslate"><span class="pre">df_columns</span></code> and <code class="docutils literal notranslate"><span class="pre">right_columns</span></code> to get a single index column, if that is preferred.</p>
 </section>
 <section id="non-equi-joins-with-or">
-<h2><strong>Non-equi joins with OR</strong><a class="headerlink" href="#non-equi-joins-with-or" title="Permalink to this headline">#</a></h2>
+<h2><strong>Non-equi joins with OR</strong><a class="headerlink" href="#non-equi-joins-with-or" title="Link to this heading">#</a></h2>
 <p>For multiple non-equi joins, an and(&amp;) operator is applied, to combine the results of the individual conditions. There are scenarios however, where the join might have an <em>OR</em> condition. In this case, the joins are executed individually, and the resulting dataframes can then be concatenated into one. Let’s look at an example from <a class="reference external" href="https://www.nelsontang.com/blog/2021-11-25-pandas-conditional-merging">Nelson Tang’s blog post</a>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1953,7 +1821,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div></div></div>
 </div>
 <p>Problem statement, culled from the blog post:</p>
-<ol class="simple">
+<ol class="arabic simple">
 <li><p>The date in the left table was between two dates (a start and end date) in the second table</p></li>
 <li><p>…AND the values in two other columns matched each other, OR the column on the right table was equal to ‘ANY’ (aka a ‘wildcard’ value)</p></li>
 </ol>
@@ -2068,7 +1936,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </section>
 <section id="performance">
-<h2><strong>Performance</strong><a class="headerlink" href="#performance" title="Permalink to this headline">#</a></h2>
+<h2><strong>Performance</strong><a class="headerlink" href="#performance" title="Link to this heading">#</a></h2>
 <p>Why bother with <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a>? simple syntax, memory and speed efficiency. Let’s see the memory and speed benefits, compared to a cartesian join (the data used below is adapted from <a class="reference external" href="https://stackoverflow.com/a/25655497/7175713">here</a>):</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2094,9 +1962,9 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/sam/miniforge3/envs/blogger/lib/python3.9/site-packages/memory_profiler.py:1136: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/sam/mambaforge/envs/jupyterbook/lib/python3.9/site-packages/memory_profiler.py:1136: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
   ipython_version = LooseVersion(IPython.__version__)
-/home/sam/miniforge3/envs/blogger/lib/python3.9/site-packages/setuptools/_distutils/version.py:345: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
+/home/sam/mambaforge/envs/jupyterbook/lib/python3.9/site-packages/setuptools/_distutils/version.py:345: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
   other = LooseVersion(other)
 </pre></div>
 </div>
@@ -2452,7 +2320,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>913 ms ± 4 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.3 s ± 95.7 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2464,7 +2332,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>34.5 ms ± 52.9 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>52.6 ms ± 104 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -2476,7 +2344,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>39.7 ms ± 1.57 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>67.5 ms ± 4.01 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -2489,7 +2357,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 2647.39 MiB, increment: 1899.16 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 3174.46 MiB, increment: 2459.45 MiB
 </pre></div>
 </div>
 </div>
@@ -2501,7 +2369,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 748.32 MiB, increment: 0.00 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 715.01 MiB, increment: 0.00 MiB
 </pre></div>
 </div>
 </div>
@@ -2513,7 +2381,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 748.32 MiB, increment: 0.00 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 715.01 MiB, increment: 0.00 MiB
 </pre></div>
 </div>
 </div>
@@ -2774,7 +2642,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>21.3 ms ± 99.5 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>23.5 ms ± 85 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 </pre></div>
 </div>
 </div>
@@ -2796,7 +2664,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>19.3 ms ± 387 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>28.2 ms ± 2.06 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -2806,7 +2674,7 @@ is used to combine the results of the individual conditions.</p></li>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">ascii_lowercase</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">n</span> <span class="o">=</span> <span class="mi">20_000</span><span class="p">;</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">100_000</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">20_000</span><span class="p">;</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">50_000</span>
 
 <span class="n">idx1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">n</span><span class="p">)</span>
 <span class="n">idx2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">n</span><span class="p">)</span>
@@ -2835,7 +2703,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(17792800, 4)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(8886840, 4)
 </pre></div>
 </div>
 </div>
@@ -2855,7 +2723,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(17792800, 5)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(8886840, 5)
 </pre></div>
 </div>
 </div>
@@ -2872,7 +2740,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7.31 s ± 797 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3.06 s ± 28.1 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2892,7 +2760,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4.94 s ± 300 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.21 s ± 9.06 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2904,7 +2772,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 10145.18 MiB, increment: 9754.21 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 5868.17 MiB, increment: 4803.89 MiB
 </pre></div>
 </div>
 </div>
@@ -2916,7 +2784,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 6463.99 MiB, increment: 6251.80 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 4137.93 MiB, increment: 3073.66 MiB
 </pre></div>
 </div>
 </div>
@@ -3038,31 +2906,31 @@ is used to combine the results of the individual conditions.</p></li>
     <tr>
       <th>0</th>
       <td>c</td>
-      <td>113</td>
+      <td>143</td>
       <td>2</td>
     </tr>
     <tr>
       <th>1</th>
       <td>i</td>
-      <td>82</td>
+      <td>85</td>
       <td>8</td>
     </tr>
     <tr>
       <th>2</th>
       <td>k</td>
-      <td>75</td>
+      <td>121</td>
       <td>10</td>
     </tr>
     <tr>
       <th>3</th>
       <td>m</td>
-      <td>90</td>
+      <td>68</td>
       <td>12</td>
     </tr>
     <tr>
       <th>4</th>
       <td>o</td>
-      <td>113</td>
+      <td>97</td>
       <td>14</td>
     </tr>
   </tbody>
@@ -3080,7 +2948,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1min 11s ± 12.2 s per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4.72 s ± 22 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -3100,7 +2968,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3.74 s ± 343 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.25 s ± 8.14 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -3120,7 +2988,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>463 ms ± 6.9 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>281 ms ± 5.05 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -3131,94 +2999,9 @@ is used to combine the results of the individual conditions.</p></li>
 <li><p>The columns in the equi join should be either numeric or datetime data types</p></li>
 <li><p>The columns in the equi join are duplicated with large ranges, but small unique values</p></li>
 </ul>
-<p>Let’s go nuts and see the performance when it is just on non-equi joins:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">d1</span>
-<span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
-    <span class="n">d2</span><span class="p">,</span> 
-    <span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">),</span> 
-    <span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">),</span> 
-    <span class="n">use_numba</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="o">.</span><span class="n">shape</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(267117635, 7)
-</pre></div>
-</div>
-</div>
-</div>
-<p>Over 267 million rows. OK, how long does it take to process this?</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="p">(</span><span class="n">d1</span>
-<span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
-    <span class="n">d2</span><span class="p">,</span> 
-    <span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">),</span> 
-    <span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">),</span> 
-    <span class="n">use_numba</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1min 48s ± 4.98 s per loop (mean ± std. dev. of 7 runs, 1 loop each)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="p">(</span><span class="n">d1</span>
-<span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
-    <span class="n">d2</span><span class="p">,</span> 
-    <span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">),</span> 
-    <span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">),</span> 
-    <span class="n">use_numba</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1min 33s ± 5.78 s per loop (mean ± std. dev. of 7 runs, 1 loop each)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.conditional_join(d2, (&#39;start&#39;, &#39;pos1&#39;, &#39;&lt;=&#39;), (&#39;end&#39;, &#39;pos1&#39;, &#39;&gt;=&#39;), use_numba=False)
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 11211.08 MiB, increment: 11036.01 MiB
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.conditional_join(d2, (&#39;start&#39;, &#39;pos1&#39;, &#39;&lt;=&#39;), (&#39;end&#39;, &#39;pos1&#39;, &#39;&gt;=&#39;), use_numba=True)
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 11508.83 MiB, increment: 11336.73 MiB
-</pre></div>
-</div>
-</div>
-</div>
-<p>How long do you think it’ll take if a cartesian join was used instead?</p>
-<p>If you can modify the non-equi join logic so that an equi join is included in it, you are likely to see performance improvement. Also note that your mileage may vary with these speed tests.</p>
 </section>
 <section id="summary">
-<h2><strong>Summary</strong><a class="headerlink" href="#summary" title="Permalink to this headline">#</a></h2>
+<h2><strong>Summary</strong><a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
 <p>This blog post shows how to efficiently join on non-equi conditions, using <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a>. If you are comfortable with SQL, you could get more performance with <a class="reference external" href="https://duckdb.org">DuckDB</a>, which allows querying Pandas DataFrames efficiently with SQL, supports non-equi joins as well, and has a <a class="reference external" href="https://duckdb.org/2022/05/27/iejoin.html">performant implementation</a> for range joins.</p>
 </section>
 </section>
@@ -3243,50 +3026,108 @@ is used to combine the results of the individual conditions.</p></li>
     </script>
     <script>kernelName = 'python3'</script>
 
-              </div>
+                </article>
               
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="Data-Wrangling-with-Python-Datatable---Conditional-Statements.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Data Wrangling with Python Datatable - Conditional Statements</p>
-        </div>
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Data-Wrangling-with-Python-Datatable---Conditional-Statements.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Data Wrangling with Python Datatable - Conditional Statements</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="Data-Wrangling-with-Python-Datatable---Row-wise-Transformations.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="Data-Wrangling-with-Python-Datatable---Row-wise-Transformations.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">Data Wrangling with Python Datatable - Row-wise Transformations</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
-            </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction"><strong>Introduction</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#strictly-non-equi-joins"><strong>Strictly Non-equi Joins</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#equi-and-non-equi-joins"><strong>Equi and Non-equi Joins</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#non-equi-joins-with-or"><strong>Non-equi joins with OR</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance"><strong>Performance</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary"><strong>Summary</strong></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
   
-    By Samuel Oranyeli<br/>
-  
-      &copy; Copyright 2022.<br/>
-</p>
-        </footer>
-    </div>
+  <div class="footer-item">
     
+<p class="component-author">
+By Samuel Oranyeli
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
 </div>
+          </footer>
+        
 
-
-      </div>
+      </main>
     </div>
+  </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
 
-
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>
