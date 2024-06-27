@@ -26,3 +26,4 @@ chapters:
 - file: notebooks/Data-Wrangling-with-Python-Datatable-Aggregation-on-Multiple-Columns
 - file: notebooks/Access-Tables-In-Excel
 - file: notebooks/dplyr-across-in-Pandas
+- file: notebooks/dplyr-across-in-Polars
