@@ -1,0 +1,737 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Dplyr’s across: Replicating within Polars &#8212; Data Wrangling and Automation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script kind="utterances">
+
+    var commentsRunWhenDOMLoaded = cb => {
+    if (document.readyState != 'loading') {
+        cb()
+    } else if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', cb)
+    } else {
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState == 'complete') cb()
+        })
+    }
+}
+
+var addUtterances = () => {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://utteranc.es/client.js";
+    script.async = "async";
+
+    script.setAttribute("repo", "samukweku/data-wrangling-blog");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("theme", "github-light");
+    script.setAttribute("label", "💬 comment");
+    script.setAttribute("crossorigin", "anonymous");
+
+    sections = document.querySelectorAll("div.section");
+    if (sections !== null) {
+        section = sections[sections.length-1];
+        section.appendChild(script);
+    }
+}
+commentsRunWhenDOMLoaded(addUtterances);
+</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/dplyr-across-in-Polars';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Dplyr’s across: Replicating within Pandas" href="dplyr-across-in-Pandas.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Wrangling and Automation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Data Wrangling Recipes
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Meaningful-Formats.html">SpreadSheet Munging Strategies in Python - Meaningful Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Read-Multiple-Csv-Files-into-one-Table-in-Python.html">Read Multiple CSV Files into one Frame in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Conditional-Statements.html">Data Wrangling with Python Datatable - Conditional Statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Fast-and-Efficient-Inequality-Joins-in-Pandas.html">Fast and Efficient Inequality Joins in Pandas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Row-wise-Transformations.html">Data Wrangling with Python Datatable - Row-wise Transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Replicating-SD-in-python-datatable.html">Replicating .SD in Python Datatable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Pivot-Tables---Simple-Unpivoting.html">SpreadSheet Munging Strategies in Python - Pivot Tables - Simple Unpivoting</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Select-Columns-by-Data-Type.html">Data Wrangling with Python Datatable - Select Columns by Data Type</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Pivot_longer---Reshape-Data-in-Pandas-with-Ease-From-Wide-to-Long.html">Pivot_longer : Reshape Data in Pandas Efficiently and with Ease from Wide to Long</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Replicate-Pandas-map.html">Data Wrangling with Python Datatable - Replicate Pandas’ Map Function</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Pivot-Tables-Complex-Unpivoting.html">SpreadSheet Munging Strategies in Python - Pivot Tables - Complex Unpivoting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Filtering-Rows-in-Python-Datatable.html">Filtering Rows in Datatable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Selecting-and-Grouping-Data-with-Python-Datatable.html">Selecting and Grouping Data with Python Datatable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Extract-DataFrame-from-Compressed-Data-into-Pandas.html">Extract DataFrame from Compressed Data into Pandas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Web-Scraping-in-Python.html">Easy Web Scraping with Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Selecting-Columns.html">Data Wrangling with Python Datatable - Selecting Columns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Extract-DataFrame-from-Compressed-Data-into-Python-Datatable.html">Extract DataFrame from Compressed Data into Python Datatable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Transformations-Within-a-GroupBy.html">Data Wrangling with Python Datatable - Transformations Within a GroupBy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Small-Multiples.html">SpreadSheet Munging Strategies in Python - Small Multiples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable-Aggregation-on-Multiple-Columns.html">Data Wrangling - Aggregation on Multiple Columns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Access-Tables-In-Excel.html">Access Excel Tables with Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dplyr-across-in-Pandas.html">Dplyr’s across: Replicating within Pandas</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Dplyr’s across: Replicating within Polars</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/samukweku/data-wrangling-blog" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/samukweku/data-wrangling-blog/issues/new?title=Issue%20on%20page%20%2Fnotebooks/dplyr-across-in-Polars.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/dplyr-across-in-Polars.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Dplyr’s across: Replicating within Polars</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="dplyr-s-across-replicating-within-polars">
+<h1>Dplyr’s across: Replicating within Polars<a class="headerlink" href="#dplyr-s-across-replicating-within-polars" title="Link to this heading">#</a></h1>
+<p><a class="reference external" href="https://dplyr.tidyverse.org/index.html">dplyr</a> has the <a class="reference external" href="https://dplyr.tidyverse.org/reference/across.html">across</a> function, which is meant to make column wise processing easy.
+This article aims to replicate solutions in the dplyr <a class="reference external" href="https://dplyr.tidyverse.org/articles/colwise.html">column-wise operations</a> vignette with Polars.</p>
+<p>Let’s load in the relevant libraries</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">polars</span> <span class="k">as</span> <span class="nn">pl</span>
+<span class="kn">import</span> <span class="nn">polars.selectors</span> <span class="k">as</span> <span class="nn">cs</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; polars version :&quot;</span><span class="p">,</span> <span class="n">pl</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;python version :&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> polars version : 1.7.1 
+ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:49) [Clang 16.0.6 ]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># https://raw.githubusercontent.com/tidyverse/dplyr/main/data-raw/starwars.csv</span>
+<span class="n">starwars</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;Data_files/starwars.csv&#39;</span><span class="p">)</span>
+<span class="n">starwars</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 14)</small><table border="1" class="dataframe"><thead><tr><th>name</th><th>height</th><th>mass</th><th>hair_color</th><th>skin_color</th><th>eye_color</th><th>birth_year</th><th>sex</th><th>gender</th><th>homeworld</th><th>species</th><th>films</th><th>vehicles</th><th>starships</th></tr><tr><td>str</td><td>f64</td><td>f64</td><td>str</td><td>str</td><td>str</td><td>f64</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>&quot;Luke Skywalker&quot;</td><td>172.0</td><td>77.0</td><td>&quot;blond&quot;</td><td>&quot;fair&quot;</td><td>&quot;blue&quot;</td><td>19.0</td><td>&quot;male&quot;</td><td>&quot;masculine&quot;</td><td>&quot;Tatooine&quot;</td><td>&quot;Human&quot;</td><td>&quot;A New Hope, The Empire Strikes…</td><td>&quot;Snowspeeder, Imperial Speeder …</td><td>&quot;X-wing, Imperial shuttle&quot;</td></tr><tr><td>&quot;C-3PO&quot;</td><td>167.0</td><td>75.0</td><td>null</td><td>&quot;gold&quot;</td><td>&quot;yellow&quot;</td><td>112.0</td><td>&quot;none&quot;</td><td>&quot;masculine&quot;</td><td>&quot;Tatooine&quot;</td><td>&quot;Droid&quot;</td><td>&quot;A New Hope, The Empire Strikes…</td><td>null</td><td>null</td></tr><tr><td>&quot;R2-D2&quot;</td><td>96.0</td><td>32.0</td><td>null</td><td>&quot;white, blue&quot;</td><td>&quot;red&quot;</td><td>33.0</td><td>&quot;none&quot;</td><td>&quot;masculine&quot;</td><td>&quot;Naboo&quot;</td><td>&quot;Droid&quot;</td><td>&quot;A New Hope, The Empire Strikes…</td><td>null</td><td>null</td></tr><tr><td>&quot;Darth Vader&quot;</td><td>202.0</td><td>136.0</td><td>&quot;none&quot;</td><td>&quot;white&quot;</td><td>&quot;yellow&quot;</td><td>41.9</td><td>&quot;male&quot;</td><td>&quot;masculine&quot;</td><td>&quot;Tatooine&quot;</td><td>&quot;Human&quot;</td><td>&quot;A New Hope, The Empire Strikes…</td><td>null</td><td>&quot;TIE Advanced x1&quot;</td></tr><tr><td>&quot;Leia Organa&quot;</td><td>150.0</td><td>49.0</td><td>&quot;brown&quot;</td><td>&quot;light&quot;</td><td>&quot;brown&quot;</td><td>19.0</td><td>&quot;female&quot;</td><td>&quot;feminine&quot;</td><td>&quot;Alderaan&quot;</td><td>&quot;Human&quot;</td><td>&quot;A New Hope, The Empire Strikes…</td><td>&quot;Imperial Speeder Bike&quot;</td><td>null</td></tr></tbody></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dplyr :</span>
+<span class="c1"># starwars %&gt;%</span>
+<span class="c1">#   summarise(across(where(is.character), n_distinct))</span>
+<span class="n">starwars</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">string</span><span class="p">()</span><span class="o">.</span><span class="n">n_unique</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (1, 11)</small><table border="1" class="dataframe"><thead><tr><th>name</th><th>hair_color</th><th>skin_color</th><th>eye_color</th><th>sex</th><th>gender</th><th>homeworld</th><th>species</th><th>films</th><th>vehicles</th><th>starships</th></tr><tr><td>u32</td><td>u32</td><td>u32</td><td>u32</td><td>u32</td><td>u32</td><td>u32</td><td>u32</td><td>u32</td><td>u32</td><td>u32</td></tr></thead><tbody><tr><td>87</td><td>12</td><td>31</td><td>15</td><td>5</td><td>3</td><td>49</td><td>38</td><td>24</td><td>11</td><td>16</td></tr></tbody></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dplyr :</span>
+<span class="c1"># starwars %&gt;%</span>
+<span class="c1">#   group_by(species) %&gt;%</span>
+<span class="c1">#   filter(n() &gt; 1) %&gt;%</span>
+<span class="c1">#   summarise(across(c(sex, gender, homeworld), n_distinct))</span>
+<span class="p">(</span><span class="n">starwars</span>
+ <span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;species&quot;</span><span class="p">)</span>
+ <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">n_unique</span><span class="p">(</span><span class="s2">&quot;sex&quot;</span><span class="p">,</span> <span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="s2">&quot;homeworld&quot;</span><span class="p">),</span> 
+      <span class="n">pl</span><span class="o">.</span><span class="n">len</span><span class="p">()</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (9, 4)</small><table border="1" class="dataframe"><thead><tr><th>species</th><th>sex</th><th>gender</th><th>homeworld</th></tr><tr><td>str</td><td>u32</td><td>u32</td><td>u32</td></tr></thead><tbody><tr><td>&quot;Kaminoan&quot;</td><td>2</td><td>2</td><td>1</td></tr><tr><td>null</td><td>1</td><td>1</td><td>3</td></tr><tr><td>&quot;Droid&quot;</td><td>1</td><td>2</td><td>3</td></tr><tr><td>&quot;Mirialan&quot;</td><td>1</td><td>1</td><td>1</td></tr><tr><td>&quot;Wookiee&quot;</td><td>1</td><td>1</td><td>1</td></tr><tr><td>&quot;Gungan&quot;</td><td>1</td><td>1</td><td>1</td></tr><tr><td>&quot;Twi&#x27;lek&quot;</td><td>2</td><td>2</td><td>1</td></tr><tr><td>&quot;Zabrak&quot;</td><td>1</td><td>1</td><td>2</td></tr><tr><td>&quot;Human&quot;</td><td>2</td><td>2</td><td>15</td></tr></tbody></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dplyr :</span>
+<span class="c1"># starwars %&gt;%</span>
+<span class="c1">#   group_by(homeworld) %&gt;%</span>
+<span class="c1">#   filter(n() &gt; 1) %&gt;%</span>
+<span class="c1">#   summarise(across(where(is.numeric), ~ mean(.x, na.rm = TRUE)))</span>
+<span class="p">(</span><span class="n">starwars</span>
+ <span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;homeworld&quot;</span><span class="p">)</span>
+ <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">numeric</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">pl</span><span class="o">.</span><span class="n">len</span><span class="p">()</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">))</span>
+ <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">))</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (10, 4)</small><table border="1" class="dataframe"><thead><tr><th>homeworld</th><th>height</th><th>mass</th><th>birth_year</th></tr><tr><td>str</td><td>f64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>&quot;Ryloth&quot;</td><td>179.0</td><td>55.0</td><td>48.0</td></tr><tr><td>&quot;Kashyyyk&quot;</td><td>231.0</td><td>124.0</td><td>200.0</td></tr><tr><td>&quot;Tatooine&quot;</td><td>169.8</td><td>85.375</td><td>54.644444</td></tr><tr><td>&quot;Kamino&quot;</td><td>208.333333</td><td>83.1</td><td>31.5</td></tr><tr><td>null</td><td>138.75</td><td>82.0</td><td>334.333333</td></tr><tr><td>&quot;Coruscant&quot;</td><td>173.666667</td><td>50.0</td><td>91.0</td></tr><tr><td>&quot;Alderaan&quot;</td><td>176.333333</td><td>64.0</td><td>43.0</td></tr><tr><td>&quot;Naboo&quot;</td><td>177.272727</td><td>64.166667</td><td>55.0</td></tr><tr><td>&quot;Corellia&quot;</td><td>175.0</td><td>78.5</td><td>25.0</td></tr><tr><td>&quot;Mirial&quot;</td><td>168.0</td><td>53.1</td><td>49.0</td></tr></tbody></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dplyr:</span>
+<span class="c1"># starwars %&gt;% distinct(across(contains(&quot;color&quot;)))</span>
+<span class="n">starwars</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">ends_with</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (67, 3)</small><table border="1" class="dataframe"><thead><tr><th>hair_color</th><th>skin_color</th><th>eye_color</th></tr><tr><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>null</td><td>&quot;gold&quot;</td><td>&quot;yellow&quot;</td></tr><tr><td>&quot;auburn, grey&quot;</td><td>&quot;fair&quot;</td><td>&quot;blue&quot;</td></tr><tr><td>&quot;none&quot;</td><td>&quot;orange&quot;</td><td>&quot;orange&quot;</td></tr><tr><td>&quot;none&quot;</td><td>&quot;brown, white&quot;</td><td>&quot;green, yellow&quot;</td></tr><tr><td>&quot;black&quot;</td><td>&quot;dark&quot;</td><td>&quot;dark&quot;</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>&quot;none&quot;</td><td>&quot;grey&quot;</td><td>&quot;orange&quot;</td></tr><tr><td>&quot;none&quot;</td><td>&quot;green&quot;</td><td>&quot;yellow&quot;</td></tr><tr><td>&quot;none&quot;</td><td>&quot;dark&quot;</td><td>&quot;brown&quot;</td></tr><tr><td>&quot;grey&quot;</td><td>&quot;pale&quot;</td><td>&quot;yellow&quot;</td></tr><tr><td>&quot;blond&quot;</td><td>&quot;fair&quot;</td><td>&quot;blue&quot;</td></tr></tbody></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dplyr</span>
+<span class="c1"># starwars %&gt;% count(across(contains(&quot;color&quot;)), sort = TRUE)</span>
+<span class="p">(</span><span class="n">starwars</span>
+ <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">struct</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">ends_with</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">value_counts</span><span class="p">())</span>
+ <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s1">&#39;hair_color&#39;</span><span class="p">)</span>
+ <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s1">&#39;hair_color&#39;</span><span class="p">)</span>
+ <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (67, 4)</small><table border="1" class="dataframe"><thead><tr><th>hair_color</th><th>skin_color</th><th>eye_color</th><th>count</th></tr><tr><td>str</td><td>str</td><td>str</td><td>u32</td></tr></thead><tbody><tr><td>&quot;black&quot;</td><td>&quot;tan&quot;</td><td>&quot;brown&quot;</td><td>2</td></tr><tr><td>&quot;none&quot;</td><td>&quot;grey, red&quot;</td><td>&quot;orange&quot;</td><td>1</td></tr><tr><td>&quot;none&quot;</td><td>&quot;blue&quot;</td><td>&quot;hazel&quot;</td><td>1</td></tr><tr><td>&quot;auburn, grey&quot;</td><td>&quot;fair&quot;</td><td>&quot;blue&quot;</td><td>1</td></tr><tr><td>&quot;brown&quot;</td><td>&quot;unknown&quot;</td><td>&quot;blue&quot;</td><td>1</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>&quot;blonde&quot;</td><td>&quot;fair, green, yellow&quot;</td><td>&quot;yellow&quot;</td><td>1</td></tr><tr><td>&quot;black&quot;</td><td>&quot;brown&quot;</td><td>&quot;brown&quot;</td><td>1</td></tr><tr><td>&quot;brown&quot;</td><td>&quot;light&quot;</td><td>&quot;blue&quot;</td><td>1</td></tr><tr><td>&quot;brown&quot;</td><td>&quot;fair&quot;</td><td>&quot;brown&quot;</td><td>2</td></tr><tr><td>&quot;black&quot;</td><td>&quot;light&quot;</td><td>&quot;brown&quot;</td><td>1</td></tr></tbody></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># starwars %&gt;%</span>
+<span class="c1">#   filter(if_any(everything(), ~ !is.na(.x)))</span>
+<span class="n">starwars</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">any_horizontal</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">is_not_null</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (87, 14)</small><table border="1" class="dataframe"><thead><tr><th>name</th><th>height</th><th>mass</th><th>hair_color</th><th>skin_color</th><th>eye_color</th><th>birth_year</th><th>sex</th><th>gender</th><th>homeworld</th><th>species</th><th>films</th><th>vehicles</th><th>starships</th></tr><tr><td>str</td><td>f64</td><td>f64</td><td>str</td><td>str</td><td>str</td><td>f64</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>&quot;Luke Skywalker&quot;</td><td>172.0</td><td>77.0</td><td>&quot;blond&quot;</td><td>&quot;fair&quot;</td><td>&quot;blue&quot;</td><td>19.0</td><td>&quot;male&quot;</td><td>&quot;masculine&quot;</td><td>&quot;Tatooine&quot;</td><td>&quot;Human&quot;</td><td>&quot;A New Hope, The Empire Strikes…</td><td>&quot;Snowspeeder, Imperial Speeder …</td><td>&quot;X-wing, Imperial shuttle&quot;</td></tr><tr><td>&quot;C-3PO&quot;</td><td>167.0</td><td>75.0</td><td>null</td><td>&quot;gold&quot;</td><td>&quot;yellow&quot;</td><td>112.0</td><td>&quot;none&quot;</td><td>&quot;masculine&quot;</td><td>&quot;Tatooine&quot;</td><td>&quot;Droid&quot;</td><td>&quot;A New Hope, The Empire Strikes…</td><td>null</td><td>null</td></tr><tr><td>&quot;R2-D2&quot;</td><td>96.0</td><td>32.0</td><td>null</td><td>&quot;white, blue&quot;</td><td>&quot;red&quot;</td><td>33.0</td><td>&quot;none&quot;</td><td>&quot;masculine&quot;</td><td>&quot;Naboo&quot;</td><td>&quot;Droid&quot;</td><td>&quot;A New Hope, The Empire Strikes…</td><td>null</td><td>null</td></tr><tr><td>&quot;Darth Vader&quot;</td><td>202.0</td><td>136.0</td><td>&quot;none&quot;</td><td>&quot;white&quot;</td><td>&quot;yellow&quot;</td><td>41.9</td><td>&quot;male&quot;</td><td>&quot;masculine&quot;</td><td>&quot;Tatooine&quot;</td><td>&quot;Human&quot;</td><td>&quot;A New Hope, The Empire Strikes…</td><td>null</td><td>&quot;TIE Advanced x1&quot;</td></tr><tr><td>&quot;Leia Organa&quot;</td><td>150.0</td><td>49.0</td><td>&quot;brown&quot;</td><td>&quot;light&quot;</td><td>&quot;brown&quot;</td><td>19.0</td><td>&quot;female&quot;</td><td>&quot;feminine&quot;</td><td>&quot;Alderaan&quot;</td><td>&quot;Human&quot;</td><td>&quot;A New Hope, The Empire Strikes…</td><td>&quot;Imperial Speeder Bike&quot;</td><td>null</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>&quot;Finn&quot;</td><td>null</td><td>null</td><td>&quot;black&quot;</td><td>&quot;dark&quot;</td><td>&quot;dark&quot;</td><td>null</td><td>&quot;male&quot;</td><td>&quot;masculine&quot;</td><td>null</td><td>&quot;Human&quot;</td><td>&quot;The Force Awakens&quot;</td><td>null</td><td>null</td></tr><tr><td>&quot;Rey&quot;</td><td>null</td><td>null</td><td>&quot;brown&quot;</td><td>&quot;light&quot;</td><td>&quot;hazel&quot;</td><td>null</td><td>&quot;female&quot;</td><td>&quot;feminine&quot;</td><td>null</td><td>&quot;Human&quot;</td><td>&quot;The Force Awakens&quot;</td><td>null</td><td>null</td></tr><tr><td>&quot;Poe Dameron&quot;</td><td>null</td><td>null</td><td>&quot;brown&quot;</td><td>&quot;light&quot;</td><td>&quot;brown&quot;</td><td>null</td><td>&quot;male&quot;</td><td>&quot;masculine&quot;</td><td>null</td><td>&quot;Human&quot;</td><td>&quot;The Force Awakens&quot;</td><td>null</td><td>&quot;X-wing&quot;</td></tr><tr><td>&quot;BB8&quot;</td><td>null</td><td>null</td><td>&quot;none&quot;</td><td>&quot;none&quot;</td><td>&quot;black&quot;</td><td>null</td><td>&quot;none&quot;</td><td>&quot;masculine&quot;</td><td>null</td><td>&quot;Droid&quot;</td><td>&quot;The Force Awakens&quot;</td><td>null</td><td>null</td></tr><tr><td>&quot;Captain Phasma&quot;</td><td>null</td><td>null</td><td>&quot;none&quot;</td><td>&quot;none&quot;</td><td>&quot;unknown&quot;</td><td>null</td><td>&quot;female&quot;</td><td>&quot;feminine&quot;</td><td>null</td><td>&quot;Human&quot;</td><td>&quot;The Force Awakens&quot;</td><td>null</td><td>null</td></tr></tbody></table></div></div></div>
+</div>
+<p>Let’s look at another solution, from <a class="reference external" href="https://stackoverflow.com/questions/63200530/python-pandas-equivalent-to-dplyr-1-0-0-summarizeacross">Stack Overflow</a>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># &quot;https://gist.githubusercontent.com/seankross/a412dfbd88b3db70b74b/raw/5f23f993cd87c283ce766e7ac6b329ee7cc2e1d1/mtcars.csv&quot;</span>
+<span class="n">cars</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;Data_files/cars.csv&#39;</span><span class="p">)</span>
+<span class="n">cars</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 12)</small><table border="1" class="dataframe"><thead><tr><th>model</th><th>mpg</th><th>cyl</th><th>disp</th><th>hp</th><th>drat</th><th>wt</th><th>qsec</th><th>vs</th><th>am</th><th>gear</th><th>carb</th></tr><tr><td>str</td><td>f64</td><td>i64</td><td>f64</td><td>i64</td><td>f64</td><td>f64</td><td>f64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Mazda RX4&quot;</td><td>21.0</td><td>6</td><td>160.0</td><td>110</td><td>3.9</td><td>2.62</td><td>16.46</td><td>0</td><td>1</td><td>4</td><td>4</td></tr><tr><td>&quot;Mazda RX4 Wag&quot;</td><td>21.0</td><td>6</td><td>160.0</td><td>110</td><td>3.9</td><td>2.875</td><td>17.02</td><td>0</td><td>1</td><td>4</td><td>4</td></tr><tr><td>&quot;Datsun 710&quot;</td><td>22.8</td><td>4</td><td>108.0</td><td>93</td><td>3.85</td><td>2.32</td><td>18.61</td><td>1</td><td>1</td><td>4</td><td>1</td></tr><tr><td>&quot;Hornet 4 Drive&quot;</td><td>21.4</td><td>6</td><td>258.0</td><td>110</td><td>3.08</td><td>3.215</td><td>19.44</td><td>1</td><td>0</td><td>3</td><td>1</td></tr><tr><td>&quot;Hornet Sportabout&quot;</td><td>18.7</td><td>8</td><td>360.0</td><td>175</td><td>3.15</td><td>3.44</td><td>17.02</td><td>0</td><td>0</td><td>3</td><td>2</td></tr></tbody></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dplyr:</span>
+<span class="c1"># dat &lt;- group_by(mtcars, cyl)</span>
+<span class="c1"># summarize(dat, across(ends_with(&#39;p&#39;), sum), across(ends_with(&#39;t&#39;), mean))</span>
+<span class="n">cars</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s1">&#39;cyl&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">ends_with</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">cs</span><span class="o">.</span><span class="n">ends_with</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (3, 5)</small><table border="1" class="dataframe"><thead><tr><th>cyl</th><th>disp</th><th>hp</th><th>drat</th><th>wt</th></tr><tr><td>i64</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>6</td><td>183.314286</td><td>122.285714</td><td>25.1</td><td>21.82</td></tr><tr><td>4</td><td>105.136364</td><td>82.636364</td><td>44.78</td><td>25.143</td></tr><tr><td>8</td><td>353.1</td><td>209.214286</td><td>45.21</td><td>55.989</td></tr></tbody></table></div></div></div>
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="dplyr-across-in-Pandas.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Dplyr’s across: Replicating within Pandas</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Samuel Oranyeli
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

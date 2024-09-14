@@ -1,0 +1,77 @@
+Traceback (most recent call last):
+  File "/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/nbclient/client.py", line 1204, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/nbclient/client.py", line 663, in async_execute
+    await self.async_execute_cell(
+  File "/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/nbclient/client.py", line 965, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/nbclient/client.py", line 862, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+headers = frame.loc[frame.row.eq(1), ['value', 'row', 'column']].rename(columns={'value':'measure'})
+students = frame.loc[frame.column.eq(1) & frame.row.gt(1), ['value', 'row', 'column']].rename(columns = {'value':'name'})
+numbers = frame.loc[frame.data_type == 'n', ['value', 'row', 'column', 'fill_colour']]
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mTypeError[0m                                 Traceback (most recent call last)
+Cell [0;32mIn[11], line 2[0m
+[1;32m      1[0m headers [38;5;241m=[39m frame[38;5;241m.[39mloc[frame[38;5;241m.[39mrow[38;5;241m.[39meq([38;5;241m1[39m), [[38;5;124m'[39m[38;5;124mvalue[39m[38;5;124m'[39m, [38;5;124m'[39m[38;5;124mrow[39m[38;5;124m'[39m, [38;5;124m'[39m[38;5;124mcolumn[39m[38;5;124m'[39m]][38;5;241m.[39mrename(columns[38;5;241m=[39m{[38;5;124m'[39m[38;5;124mvalue[39m[38;5;124m'[39m:[38;5;124m'[39m[38;5;124mmeasure[39m[38;5;124m'[39m})
+[0;32m----> 2[0m students [38;5;241m=[39m frame[38;5;241m.[39mloc[frame[38;5;241m.[39mcolumn[38;5;241m.[39meq([38;5;241m1[39m) [38;5;241m&[39m [43mframe[49m[38;5;241;43m.[39;49m[43mrow[49m[38;5;241;43m.[39;49m[43mgt[49m[43m([49m[38;5;241;43m1[39;49m[43m)[49m, [[38;5;124m'[39m[38;5;124mvalue[39m[38;5;124m'[39m, [38;5;124m'[39m[38;5;124mrow[39m[38;5;124m'[39m, [38;5;124m'[39m[38;5;124mcolumn[39m[38;5;124m'[39m]][38;5;241m.[39mrename(columns [38;5;241m=[39m {[38;5;124m'[39m[38;5;124mvalue[39m[38;5;124m'[39m:[38;5;124m'[39m[38;5;124mname[39m[38;5;124m'[39m})
+[1;32m      3[0m numbers [38;5;241m=[39m frame[38;5;241m.[39mloc[frame[38;5;241m.[39mdata_type [38;5;241m==[39m [38;5;124m'[39m[38;5;124mn[39m[38;5;124m'[39m, [[38;5;124m'[39m[38;5;124mvalue[39m[38;5;124m'[39m, [38;5;124m'[39m[38;5;124mrow[39m[38;5;124m'[39m, [38;5;124m'[39m[38;5;124mcolumn[39m[38;5;124m'[39m, [38;5;124m'[39m[38;5;124mfill_colour[39m[38;5;124m'[39m]]
+
+File [0;32m~/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas/core/series.py:6300[0m, in [0;36mSeries.gt[0;34m(self, other, level, fill_value, axis)[0m
+[1;32m   6298[0m [38;5;129m@Appender[39m(ops[38;5;241m.[39mmake_flex_doc([38;5;124m"[39m[38;5;124mgt[39m[38;5;124m"[39m, [38;5;124m"[39m[38;5;124mseries[39m[38;5;124m"[39m))
+[1;32m   6299[0m [38;5;28;01mdef[39;00m [38;5;21mgt[39m([38;5;28mself[39m, other, level[38;5;241m=[39m[38;5;28;01mNone[39;00m, fill_value[38;5;241m=[39m[38;5;28;01mNone[39;00m, axis: Axis [38;5;241m=[39m [38;5;241m0[39m) [38;5;241m-[39m[38;5;241m>[39m Series:
+[0;32m-> 6300[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_flex_method[49m[43m([49m
+[1;32m   6301[0m [43m        [49m[43mother[49m[43m,[49m[43m [49m[43moperator[49m[38;5;241;43m.[39;49m[43mgt[49m[43m,[49m[43m [49m[43mlevel[49m[38;5;241;43m=[39;49m[43mlevel[49m[43m,[49m[43m [49m[43mfill_value[49m[38;5;241;43m=[39;49m[43mfill_value[49m[43m,[49m[43m [49m[43maxis[49m[38;5;241;43m=[39;49m[43maxis[49m
+[1;32m   6302[0m [43m    [49m[43m)[49m
+
+File [0;32m~/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas/core/series.py:6260[0m, in [0;36mSeries._flex_method[0;34m(self, other, op, level, fill_value, axis)[0m
+[1;32m   6257[0m         [38;5;28;01mreturn[39;00m op([38;5;28mself[39m, fill_value)
+[1;32m   6258[0m     [38;5;28mself[39m [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39mfillna(fill_value)
+[0;32m-> 6260[0m [38;5;28;01mreturn[39;00m [43mop[49m[43m([49m[38;5;28;43mself[39;49m[43m,[49m[43m [49m[43mother[49m[43m)[49m
+
+File [0;32m~/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas/core/ops/common.py:76[0m, in [0;36m_unpack_zerodim_and_defer.<locals>.new_method[0;34m(self, other)[0m
+[1;32m     72[0m             [38;5;28;01mreturn[39;00m [38;5;28mNotImplemented[39m
+[1;32m     74[0m other [38;5;241m=[39m item_from_zerodim(other)
+[0;32m---> 76[0m [38;5;28;01mreturn[39;00m [43mmethod[49m[43m([49m[38;5;28;43mself[39;49m[43m,[49m[43m [49m[43mother[49m[43m)[49m
+
+File [0;32m~/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas/core/arraylike.py:56[0m, in [0;36mOpsMixin.__gt__[0;34m(self, other)[0m
+[1;32m     54[0m [38;5;129m@unpack_zerodim_and_defer[39m([38;5;124m"[39m[38;5;124m__gt__[39m[38;5;124m"[39m)
+[1;32m     55[0m [38;5;28;01mdef[39;00m [38;5;21m__gt__[39m([38;5;28mself[39m, other):
+[0;32m---> 56[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_cmp_method[49m[43m([49m[43mother[49m[43m,[49m[43m [49m[43moperator[49m[38;5;241;43m.[39;49m[43mgt[49m[43m)[49m
+
+File [0;32m~/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas/core/series.py:6119[0m, in [0;36mSeries._cmp_method[0;34m(self, other, op)[0m
+[1;32m   6116[0m lvalues [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39m_values
+[1;32m   6117[0m rvalues [38;5;241m=[39m extract_array(other, extract_numpy[38;5;241m=[39m[38;5;28;01mTrue[39;00m, extract_range[38;5;241m=[39m[38;5;28;01mTrue[39;00m)
+[0;32m-> 6119[0m res_values [38;5;241m=[39m [43mops[49m[38;5;241;43m.[39;49m[43mcomparison_op[49m[43m([49m[43mlvalues[49m[43m,[49m[43m [49m[43mrvalues[49m[43m,[49m[43m [49m[43mop[49m[43m)[49m
+[1;32m   6121[0m [38;5;28;01mreturn[39;00m [38;5;28mself[39m[38;5;241m.[39m_construct_result(res_values, name[38;5;241m=[39mres_name)
+
+File [0;32m~/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas/core/ops/array_ops.py:344[0m, in [0;36mcomparison_op[0;34m(left, right, op)[0m
+[1;32m    341[0m     [38;5;28;01mreturn[39;00m invalid_comparison(lvalues, rvalues, op)
+[1;32m    343[0m [38;5;28;01melif[39;00m lvalues[38;5;241m.[39mdtype [38;5;241m==[39m [38;5;28mobject[39m [38;5;129;01mor[39;00m [38;5;28misinstance[39m(rvalues, [38;5;28mstr[39m):
+[0;32m--> 344[0m     res_values [38;5;241m=[39m [43mcomp_method_OBJECT_ARRAY[49m[43m([49m[43mop[49m[43m,[49m[43m [49m[43mlvalues[49m[43m,[49m[43m [49m[43mrvalues[49m[43m)[49m
+[1;32m    346[0m [38;5;28;01melse[39;00m:
+[1;32m    347[0m     res_values [38;5;241m=[39m _na_arithmetic_op(lvalues, rvalues, op, is_cmp[38;5;241m=[39m[38;5;28;01mTrue[39;00m)
+
+File [0;32m~/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas/core/ops/array_ops.py:129[0m, in [0;36mcomp_method_OBJECT_ARRAY[0;34m(op, x, y)[0m
+[1;32m    127[0m     result [38;5;241m=[39m libops[38;5;241m.[39mvec_compare(x[38;5;241m.[39mravel(), y[38;5;241m.[39mravel(), op)
+[1;32m    128[0m [38;5;28;01melse[39;00m:
+[0;32m--> 129[0m     result [38;5;241m=[39m [43mlibops[49m[38;5;241;43m.[39;49m[43mscalar_compare[49m[43m([49m[43mx[49m[38;5;241;43m.[39;49m[43mravel[49m[43m([49m[43m)[49m[43m,[49m[43m [49m[43my[49m[43m,[49m[43m [49m[43mop[49m[43m)[49m
+[1;32m    130[0m [38;5;28;01mreturn[39;00m result[38;5;241m.[39mreshape(x[38;5;241m.[39mshape)
+
+File [0;32mops.pyx:107[0m, in [0;36mpandas._libs.ops.scalar_compare[0;34m()[0m
+
+[0;31mTypeError[0m: '>' not supported between instances of 'str' and 'int'
+TypeError: '>' not supported between instances of 'str' and 'int'
+
