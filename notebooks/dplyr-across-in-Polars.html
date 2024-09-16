@@ -51,7 +51,40 @@
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
-    <script async="async" kind="hypothesis" src="https://hypothes.is/embed.js"></script>
+    <script kind="utterances">
+
+    var commentsRunWhenDOMLoaded = cb => {
+    if (document.readyState != 'loading') {
+        cb()
+    } else if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', cb)
+    } else {
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState == 'complete') cb()
+        })
+    }
+}
+
+var addUtterances = () => {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://utteranc.es/client.js";
+    script.async = "async";
+
+    script.setAttribute("repo", "samukweku/data-wrangling-blog");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("theme", "github-light");
+    script.setAttribute("label", "💬 comment");
+    script.setAttribute("crossorigin", "anonymous");
+
+    sections = document.querySelectorAll("div.section");
+    if (sections !== null) {
+        section = sections[sections.length-1];
+        section.appendChild(script);
+    }
+}
+commentsRunWhenDOMLoaded(addUtterances);
+</script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
@@ -61,7 +94,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/dplyr-across-in-Polars';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="Dplyr’s across: Replicating within Pandas" href="dplyr-across-in-Pandas.html" />
+    <link rel="prev" title="Easy Web Scraping with Python" href="Web-Scraping-in-Python.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -173,30 +206,46 @@
                 </a>
             </li>
         </ul>
-        <ul class="current nav bd-sidenav">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Working with Spreadsheets</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Access-Tables-In-Excel.html">Access Excel Tables with Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Small-Multiples.html">SpreadSheet Munging Strategies in Python - Small Multiples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Meaningful-Formats.html">SpreadSheet Munging Strategies in Python - Meaningful Formats</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Read-Multiple-Csv-Files-into-one-Table-in-Python.html">Read Multiple CSV Files into one Frame in Python</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Conditional-Statements.html">Data Wrangling with Python Datatable - Conditional Statements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Fast-and-Efficient-Inequality-Joins-in-Pandas.html">Fast and Efficient Inequality Joins in Pandas</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Row-wise-Transformations.html">Data Wrangling with Python Datatable - Row-wise Transformations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Replicating-SD-in-python-datatable.html">Replicating .SD in Python Datatable</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Pivot-Tables---Simple-Unpivoting.html">SpreadSheet Munging Strategies in Python - Pivot Tables - Simple Unpivoting</a></li>
 
-<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Select-Columns-by-Data-Type.html">Data Wrangling with Python Datatable - Select Columns by Data Type</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Pivot_longer---Reshape-Data-in-Pandas-with-Ease-From-Wide-to-Long.html">Pivot_longer : Reshape Data in Pandas Efficiently and with Ease from Wide to Long</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Replicate-Pandas-map.html">Data Wrangling with Python Datatable - Replicate Pandas’ Map Function</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Pivot-Tables-Complex-Unpivoting.html">SpreadSheet Munging Strategies in Python - Pivot Tables - Complex Unpivoting</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Pydatatable</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Replicating-SD-in-python-datatable.html">Replicating .SD in Python Datatable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Conditional-Statements.html">Data Wrangling with Python Datatable - Conditional Statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Row-wise-Transformations.html">Data Wrangling with Python Datatable - Row-wise Transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Select-Columns-by-Data-Type.html">Data Wrangling with Python Datatable - Select Columns by Data Type</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Replicate-Pandas-map.html">Data Wrangling with Python Datatable - Replicate Pandas’ Map Function</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Filtering-Rows-in-Python-Datatable.html">Filtering Rows in Datatable</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Selecting-and-Grouping-Data-with-Python-Datatable.html">Selecting and Grouping Data with Python Datatable</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Extract-DataFrame-from-Compressed-Data-into-Pandas.html">Extract DataFrame from Compressed Data into Pandas</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Web-Scraping-in-Python.html">Easy Web Scraping with Python</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Selecting-Columns.html">Data Wrangling with Python Datatable - Selecting Columns</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Extract-DataFrame-from-Compressed-Data-into-Python-Datatable.html">Extract DataFrame from Compressed Data into Python Datatable</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Transformations-Within-a-GroupBy.html">Data Wrangling with Python Datatable - Transformations Within a GroupBy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Small-Multiples.html">SpreadSheet Munging Strategies in Python - Small Multiples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable-Aggregation-on-Multiple-Columns.html">Data Wrangling - Aggregation on Multiple Columns</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Access-Tables-In-Excel.html">Access Excel Tables with Python</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">CSVs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Read-Multiple-Csv-Files-into-one-Table-in-Python.html">Read Multiple CSV Files into one Frame in Python</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Pandas</span></p>
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="dplyr-across-in-Pandas.html">Dplyr’s across: Replicating within Pandas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Fast-and-Efficient-Inequality-Joins-in-Pandas.html">Fast and Efficient Inequality Joins in Pandas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Pivot_longer---Reshape-Data-in-Pandas-with-Ease-From-Wide-to-Long.html">Pivot_longer : Reshape Data in Pandas Efficiently and with Ease from Wide to Long</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Extract-DataFrame-from-Compressed-Data-into-Pandas.html">Extract DataFrame from Compressed Data into Pandas</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Web Scraping</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Web-Scraping-in-Python.html">Easy Web Scraping with Python</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Polars</span></p>
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Dplyr’s across: Replicating within Polars</a></li>
 </ul>
 
@@ -239,6 +288,53 @@
         <div class="header-article-item">
 
 <div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/samukweku/data-wrangling-blog" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/samukweku/data-wrangling-blog/issues/new?title=Issue%20on%20page%20%2Fnotebooks/dplyr-across-in-Polars.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
 
 
 
@@ -433,7 +529,7 @@ This article aims to replicate solutions in the dplyr <a class="reference extern
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (9, 4)</small><table border="1" class="dataframe"><thead><tr><th>species</th><th>sex</th><th>gender</th><th>homeworld</th></tr><tr><td>str</td><td>u32</td><td>u32</td><td>u32</td></tr></thead><tbody><tr><td>&quot;Kaminoan&quot;</td><td>2</td><td>2</td><td>1</td></tr><tr><td>null</td><td>1</td><td>1</td><td>3</td></tr><tr><td>&quot;Droid&quot;</td><td>1</td><td>2</td><td>3</td></tr><tr><td>&quot;Mirialan&quot;</td><td>1</td><td>1</td><td>1</td></tr><tr><td>&quot;Wookiee&quot;</td><td>1</td><td>1</td><td>1</td></tr><tr><td>&quot;Gungan&quot;</td><td>1</td><td>1</td><td>1</td></tr><tr><td>&quot;Twi&#x27;lek&quot;</td><td>2</td><td>2</td><td>1</td></tr><tr><td>&quot;Zabrak&quot;</td><td>1</td><td>1</td><td>2</td></tr><tr><td>&quot;Human&quot;</td><td>2</td><td>2</td><td>15</td></tr></tbody></table></div></div></div>
+<small>shape: (9, 4)</small><table border="1" class="dataframe"><thead><tr><th>species</th><th>sex</th><th>gender</th><th>homeworld</th></tr><tr><td>str</td><td>u32</td><td>u32</td><td>u32</td></tr></thead><tbody><tr><td>&quot;Wookiee&quot;</td><td>1</td><td>1</td><td>1</td></tr><tr><td>&quot;Mirialan&quot;</td><td>1</td><td>1</td><td>1</td></tr><tr><td>&quot;Human&quot;</td><td>2</td><td>2</td><td>15</td></tr><tr><td>&quot;Zabrak&quot;</td><td>1</td><td>1</td><td>2</td></tr><tr><td>&quot;Twi&#x27;lek&quot;</td><td>2</td><td>2</td><td>1</td></tr><tr><td>null</td><td>1</td><td>1</td><td>3</td></tr><tr><td>&quot;Droid&quot;</td><td>1</td><td>2</td><td>3</td></tr><tr><td>&quot;Gungan&quot;</td><td>1</td><td>1</td><td>1</td></tr><tr><td>&quot;Kaminoan&quot;</td><td>2</td><td>2</td><td>1</td></tr></tbody></table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -459,7 +555,7 @@ This article aims to replicate solutions in the dplyr <a class="reference extern
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (10, 4)</small><table border="1" class="dataframe"><thead><tr><th>homeworld</th><th>height</th><th>mass</th><th>birth_year</th></tr><tr><td>str</td><td>f64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>&quot;Ryloth&quot;</td><td>179.0</td><td>55.0</td><td>48.0</td></tr><tr><td>&quot;Kashyyyk&quot;</td><td>231.0</td><td>124.0</td><td>200.0</td></tr><tr><td>&quot;Tatooine&quot;</td><td>169.8</td><td>85.375</td><td>54.644444</td></tr><tr><td>&quot;Kamino&quot;</td><td>208.333333</td><td>83.1</td><td>31.5</td></tr><tr><td>null</td><td>138.75</td><td>82.0</td><td>334.333333</td></tr><tr><td>&quot;Coruscant&quot;</td><td>173.666667</td><td>50.0</td><td>91.0</td></tr><tr><td>&quot;Alderaan&quot;</td><td>176.333333</td><td>64.0</td><td>43.0</td></tr><tr><td>&quot;Naboo&quot;</td><td>177.272727</td><td>64.166667</td><td>55.0</td></tr><tr><td>&quot;Corellia&quot;</td><td>175.0</td><td>78.5</td><td>25.0</td></tr><tr><td>&quot;Mirial&quot;</td><td>168.0</td><td>53.1</td><td>49.0</td></tr></tbody></table></div></div></div>
+<small>shape: (10, 4)</small><table border="1" class="dataframe"><thead><tr><th>homeworld</th><th>height</th><th>mass</th><th>birth_year</th></tr><tr><td>str</td><td>f64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>&quot;Coruscant&quot;</td><td>173.666667</td><td>50.0</td><td>91.0</td></tr><tr><td>&quot;Mirial&quot;</td><td>168.0</td><td>53.1</td><td>49.0</td></tr><tr><td>&quot;Kamino&quot;</td><td>208.333333</td><td>83.1</td><td>31.5</td></tr><tr><td>&quot;Naboo&quot;</td><td>177.272727</td><td>64.166667</td><td>55.0</td></tr><tr><td>&quot;Tatooine&quot;</td><td>169.8</td><td>85.375</td><td>54.644444</td></tr><tr><td>null</td><td>138.75</td><td>82.0</td><td>334.333333</td></tr><tr><td>&quot;Ryloth&quot;</td><td>179.0</td><td>55.0</td><td>48.0</td></tr><tr><td>&quot;Alderaan&quot;</td><td>176.333333</td><td>64.0</td><td>43.0</td></tr><tr><td>&quot;Kashyyyk&quot;</td><td>231.0</td><td>124.0</td><td>200.0</td></tr><tr><td>&quot;Corellia&quot;</td><td>175.0</td><td>78.5</td><td>25.0</td></tr></tbody></table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -477,7 +573,7 @@ This article aims to replicate solutions in the dplyr <a class="reference extern
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (67, 3)</small><table border="1" class="dataframe"><thead><tr><th>hair_color</th><th>skin_color</th><th>eye_color</th></tr><tr><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>null</td><td>&quot;gold&quot;</td><td>&quot;yellow&quot;</td></tr><tr><td>&quot;auburn, grey&quot;</td><td>&quot;fair&quot;</td><td>&quot;blue&quot;</td></tr><tr><td>&quot;none&quot;</td><td>&quot;orange&quot;</td><td>&quot;orange&quot;</td></tr><tr><td>&quot;none&quot;</td><td>&quot;brown, white&quot;</td><td>&quot;green, yellow&quot;</td></tr><tr><td>&quot;black&quot;</td><td>&quot;dark&quot;</td><td>&quot;dark&quot;</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>&quot;none&quot;</td><td>&quot;grey&quot;</td><td>&quot;orange&quot;</td></tr><tr><td>&quot;none&quot;</td><td>&quot;green&quot;</td><td>&quot;yellow&quot;</td></tr><tr><td>&quot;none&quot;</td><td>&quot;dark&quot;</td><td>&quot;brown&quot;</td></tr><tr><td>&quot;grey&quot;</td><td>&quot;pale&quot;</td><td>&quot;yellow&quot;</td></tr><tr><td>&quot;blond&quot;</td><td>&quot;fair&quot;</td><td>&quot;blue&quot;</td></tr></tbody></table></div></div></div>
+<small>shape: (67, 3)</small><table border="1" class="dataframe"><thead><tr><th>hair_color</th><th>skin_color</th><th>eye_color</th></tr><tr><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>&quot;none&quot;</td><td>&quot;white, blue&quot;</td><td>&quot;black&quot;</td></tr><tr><td>&quot;brown, grey&quot;</td><td>&quot;light&quot;</td><td>&quot;blue&quot;</td></tr><tr><td>&quot;auburn, white&quot;</td><td>&quot;fair&quot;</td><td>&quot;blue-gray&quot;</td></tr><tr><td>&quot;none&quot;</td><td>&quot;grey, blue&quot;</td><td>&quot;unknown&quot;</td></tr><tr><td>&quot;none&quot;</td><td>&quot;pale&quot;</td><td>&quot;pink&quot;</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>&quot;blonde&quot;</td><td>&quot;fair, green, yellow&quot;</td><td>&quot;yellow&quot;</td></tr><tr><td>&quot;none&quot;</td><td>&quot;brown&quot;</td><td>&quot;yellow&quot;</td></tr><tr><td>&quot;black&quot;</td><td>&quot;tan&quot;</td><td>&quot;brown&quot;</td></tr><tr><td>&quot;brown&quot;</td><td>&quot;fair&quot;</td><td>&quot;brown&quot;</td></tr><tr><td>&quot;none&quot;</td><td>&quot;pale&quot;</td><td>&quot;orange&quot;</td></tr></tbody></table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -499,7 +595,7 @@ This article aims to replicate solutions in the dplyr <a class="reference extern
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (67, 4)</small><table border="1" class="dataframe"><thead><tr><th>hair_color</th><th>skin_color</th><th>eye_color</th><th>count</th></tr><tr><td>str</td><td>str</td><td>str</td><td>u32</td></tr></thead><tbody><tr><td>&quot;black&quot;</td><td>&quot;tan&quot;</td><td>&quot;brown&quot;</td><td>2</td></tr><tr><td>&quot;none&quot;</td><td>&quot;grey, red&quot;</td><td>&quot;orange&quot;</td><td>1</td></tr><tr><td>&quot;none&quot;</td><td>&quot;blue&quot;</td><td>&quot;hazel&quot;</td><td>1</td></tr><tr><td>&quot;auburn, grey&quot;</td><td>&quot;fair&quot;</td><td>&quot;blue&quot;</td><td>1</td></tr><tr><td>&quot;brown&quot;</td><td>&quot;unknown&quot;</td><td>&quot;blue&quot;</td><td>1</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>&quot;blonde&quot;</td><td>&quot;fair, green, yellow&quot;</td><td>&quot;yellow&quot;</td><td>1</td></tr><tr><td>&quot;black&quot;</td><td>&quot;brown&quot;</td><td>&quot;brown&quot;</td><td>1</td></tr><tr><td>&quot;brown&quot;</td><td>&quot;light&quot;</td><td>&quot;blue&quot;</td><td>1</td></tr><tr><td>&quot;brown&quot;</td><td>&quot;fair&quot;</td><td>&quot;brown&quot;</td><td>2</td></tr><tr><td>&quot;black&quot;</td><td>&quot;light&quot;</td><td>&quot;brown&quot;</td><td>1</td></tr></tbody></table></div></div></div>
+<small>shape: (67, 4)</small><table border="1" class="dataframe"><thead><tr><th>hair_color</th><th>skin_color</th><th>eye_color</th><th>count</th></tr><tr><td>str</td><td>str</td><td>str</td><td>u32</td></tr></thead><tbody><tr><td>&quot;black&quot;</td><td>&quot;dark&quot;</td><td>&quot;dark&quot;</td><td>1</td></tr><tr><td>null</td><td>&quot;white, red&quot;</td><td>&quot;red&quot;</td><td>1</td></tr><tr><td>&quot;none&quot;</td><td>&quot;none&quot;</td><td>&quot;unknown&quot;</td><td>1</td></tr><tr><td>&quot;brown&quot;</td><td>&quot;light&quot;</td><td>&quot;blue&quot;</td><td>1</td></tr><tr><td>&quot;none&quot;</td><td>&quot;red&quot;</td><td>&quot;yellow&quot;</td><td>1</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>&quot;none&quot;</td><td>&quot;white, blue&quot;</td><td>&quot;black&quot;</td><td>1</td></tr><tr><td>&quot;brown&quot;</td><td>&quot;fair&quot;</td><td>&quot;blue&quot;</td><td>4</td></tr><tr><td>&quot;none&quot;</td><td>&quot;green&quot;</td><td>&quot;yellow&quot;</td><td>1</td></tr><tr><td>null</td><td>&quot;gold&quot;</td><td>&quot;yellow&quot;</td><td>1</td></tr><tr><td>&quot;black&quot;</td><td>&quot;tan&quot;</td><td>&quot;brown&quot;</td><td>2</td></tr></tbody></table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -555,7 +651,7 @@ This article aims to replicate solutions in the dplyr <a class="reference extern
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (3, 5)</small><table border="1" class="dataframe"><thead><tr><th>cyl</th><th>disp</th><th>hp</th><th>drat</th><th>wt</th></tr><tr><td>i64</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>6</td><td>183.314286</td><td>122.285714</td><td>25.1</td><td>21.82</td></tr><tr><td>4</td><td>105.136364</td><td>82.636364</td><td>44.78</td><td>25.143</td></tr><tr><td>8</td><td>353.1</td><td>209.214286</td><td>45.21</td><td>55.989</td></tr></tbody></table></div></div></div>
+<small>shape: (3, 5)</small><table border="1" class="dataframe"><thead><tr><th>cyl</th><th>disp</th><th>hp</th><th>drat</th><th>wt</th></tr><tr><td>i64</td><td>f64</td><td>f64</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>4</td><td>105.136364</td><td>82.636364</td><td>44.78</td><td>25.143</td></tr><tr><td>8</td><td>353.1</td><td>209.214286</td><td>45.21</td><td>55.989</td></tr><tr><td>6</td><td>183.314286</td><td>122.285714</td><td>25.1</td><td>21.82</td></tr></tbody></table></div></div></div>
 </div>
 </section>
 
@@ -590,12 +686,12 @@ This article aims to replicate solutions in the dplyr <a class="reference extern
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="dplyr-across-in-Pandas.html"
+       href="Web-Scraping-in-Python.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Dplyr’s across: Replicating within Pandas</p>
+        <p class="prev-next-title">Easy Web Scraping with Python</p>
       </div>
     </a>
 </div>
