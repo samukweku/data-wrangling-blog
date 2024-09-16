@@ -1,7 +1,7 @@
 Data Wrangling Recipes
 =======================
 
-*Edited by Samuel Oranyeli*
+*Author: Samuel Oranyeli*
 
 *2021-02-11*
 
