@@ -29,9 +29,9 @@ url: "https://github.com/samukweku/samukweku.github.io/"
 html:
   use_issues_button: true
   use_repository_button: true
-  comments:
-    utterances:
-      repo: "samukweku/data-wrangling-blog"
+  # comments:
+  #   utterances:
+  #     repo: "samukweku/data-wrangling-blog"
 
 # sphinx:
 #   extensions: 
