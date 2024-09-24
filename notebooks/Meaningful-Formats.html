@@ -203,7 +203,7 @@ commentsRunWhenDOMLoaded(addUtterances);
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../intro.html">
-                    Data Wrangling Recipes
+                    Introduction
                 </a>
             </li>
         </ul>
@@ -248,6 +248,9 @@ commentsRunWhenDOMLoaded(addUtterances);
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Polars</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="dplyr-across-in-Polars.html">Dplyr’s across: Replicating within Polars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Reshape-Data-in-Polars-Wide-to_Long-Part-I.html">Reshape Data in Polars Efficiently from Wide to Long Form - Part I</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Reshape-Data-in-Polars-Wide-to_Long-Part-II.html">Reshape Data in Polars Efficiently from Wide to Long Form - Part II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Reshape-Data-in-Polars-Wide-to_Long-Part-III.html">Reshape Data in Polars Efficiently from Wide to Long Form - Part III</a></li>
 </ul>
 
     </div>
@@ -465,7 +468,7 @@ document.write(`
 <h1>SpreadSheet Munging Strategies in Python - Meaningful Formats<a class="headerlink" href="#spreadsheet-munging-strategies-in-python-meaningful-formats" title="Link to this heading">#</a></h1>
 <section id="meaningful-formats">
 <h2><strong>Meaningful Formats</strong><a class="headerlink" href="#meaningful-formats" title="Link to this heading">#</a></h2>
-<p><em>updated : April 15, 2022</em></p>
+<p><em>updated : September 24, 2024</em></p>
 <p>This is part of a series of blog posts about extracting data from spreadsheets using Python.  It is based on the <a class="reference external" href="https://nacnudus.github.io/spreadsheet-munging-strategies/index.html">book</a> written by <a class="reference external" href="https://twitter.com/nacnudus?lang=en">Duncan Garmonsway</a>, which was written primarily for R users. LInks to the other posts are on the <a class="reference external" href="https://samukweku.github.io/data-wrangling-blog/">homepage</a>.</p>
 <p>This is an excerpt from <a class="reference external" href="https://nacnudus.github.io/spreadsheet-munging-strategies/tidy-formatted-rows.html">Duncan’s book</a> regarding meaningful formats :</p>
 <blockquote>
@@ -478,9 +481,10 @@ document.write(`
 <p>The goal is to capture the color as part of our final output.  We’ll make use of the <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a> function from <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/">pyjanitor</a> - under the hood, it uses <a class="reference external" href="https://openpyxl.readthedocs.io/en/stable/index.html">openpyxl</a>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pip install git+https://github.com/pyjanitor-devs/pyjanitor.git</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pip install pyjanitor</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">janitor</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">janitor</span> <span class="kn">import</span> <span class="n">xlsx_cells</span>
 
@@ -491,7 +495,43 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetnames</span> <span class="o">=</span> <span class="s1">&#39;highlights&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">janitor</span><span class="o">.</span><span class="n">__version__</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;0.29.1&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">__version__</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;2.2.2&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sys</span><span class="o">.</span><span class="n">version</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:49) [Clang 16.0.6 ]&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;highlights&quot;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">frame</span>
 </pre></div>
 </div>
@@ -642,184 +682,75 @@ document.write(`
 </div>
 </div>
 </div>
-<p>The colour information can be accessed using panda’s string methods:</p>
+<p>Steps:</p>
+<ul class="simple">
+<li><p>get the headers</p></li>
+<li><p>get the data(numbers)</p></li>
+<li><p>get the colours</p></li>
+<li><p>combine to create the final DataFrame</p></li>
+</ul>
+<p>headers:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span><span class="p">[</span><span class="s1">&#39;fill_colour&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">fill</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fgColor&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rgb&#39;</span><span class="p">)</span>
-<span class="n">frame</span><span class="p">[</span><span class="s1">&#39;fill_colour&#39;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">headers</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">row</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">array</span>
+<span class="n">headers</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0    00000000
-1    00000000
-2    00000000
-3    00000000
-4    FFFFFF00
-5    FFFFFF00
-6    00000000
-7    00000000
-Name: fill_colour, dtype: object
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;NumpyExtensionArray&gt;
+[&#39;Age&#39;, &#39;Height&#39;]
+Length: 2, dtype: object
 </pre></div>
 </div>
 </div>
 </div>
+<p>data:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">headers</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;column&#39;</span><span class="p">)[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
-<span class="n">numbers</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">,</span> <span class="s1">&#39;fill_colour&#39;</span><span class="p">]]</span>
-<span class="c1"># remove duplicate rows, since the fill colour is the same per row,</span>
-<span class="n">fill_colour</span> <span class="o">=</span> <span class="n">numbers</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;fill_colour&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;row&#39;</span><span class="p">])</span>
-<span class="k">del</span> <span class="n">numbers</span><span class="p">[</span><span class="s1">&#39;fill_colour&#39;</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">headers</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s2">&quot;n&quot;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">array</span>
+<span class="c1"># There are only two columns in the spreadsheet;</span>
+<span class="c1"># we&#39;ll use that knowledge in reshaping the integer values:</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">data</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>column
-1       Age
-2    Height
-Name: value, dtype: object
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[1, 2],
+       [3, 4],
+       [5, 6]], dtype=int8)
 </pre></div>
 </div>
 </div>
 </div>
+<p>colours:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">numbers</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>value</th>
-      <th>row</th>
-      <th>column</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>2</th>
-      <td>1</td>
-      <td>2</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>2</td>
-      <td>2</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>3</td>
-      <td>3</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>4</td>
-      <td>3</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>5</td>
-      <td>4</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>6</td>
-      <td>4</td>
-      <td>2</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fill_colour</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fill_colour</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">fill</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fgColor&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rgb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">array</span>
+<span class="c1"># keep only rows related to the integers:</span>
+<span class="n">fill_colour</span> <span class="o">=</span> <span class="n">fill_colour</span><span class="p">[</span><span class="n">booleans</span><span class="p">]</span>
+<span class="c1"># the number of columns is 2,</span>
+<span class="c1"># so we only need to jump 2 steps</span>
+<span class="c1"># to get the corresponding colour per row</span>
+<span class="n">fill_colour</span> <span class="o">=</span> <span class="n">fill_colour</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">fill_colour</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>row</th>
-      <th>fill_colour</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>2</th>
-      <td>2</td>
-      <td>00000000</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>3</td>
-      <td>FFFFFF00</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>4</td>
-      <td>00000000</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;NumpyExtensionArray&gt;
+[&#39;00000000&#39;, &#39;FFFFFF00&#39;, &#39;00000000&#39;]
+Length: 3, dtype: object
+</pre></div>
 </div>
-<p>Some further reshaping to combine the headers, numbers and colour:</p>
+</div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">numbers</span>
-<span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">level</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
-<span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">fill_colour</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;row&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">)</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">outcome</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">fill_colour</span><span class="o">=</span><span class="n">fill_colour</span><span class="p">)</span>
+<span class="n">outcome</span>
 </pre></div>
 </div>
 </div>
@@ -872,13 +803,14 @@ Name: value, dtype: object
 </div>
 </section>
 <section id="case-2-meaningfully-formatted-cells">
-<h3><strong>Case 2 : Meaningfully Formatted Cells</strong><a class="headerlink" href="#case-2-meaningfully-formatted-cells" title="Link to this heading">#</a></h3>
+<span id="case-2"></span><h3><strong>Case 2 : Meaningfully Formatted Cells</strong><a class="headerlink" href="#case-2-meaningfully-formatted-cells" title="Link to this heading">#</a></h3>
 <p><img alt="meaningfully_formatted_cells.png" src="../_images/meaningfully_formatted_cells.png" /></p>
 <p>In the pic above, the table has different colors for different cells.  <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a> comes in handy again, and the focus here, just as in Case 1, is the cell’s fill attribute.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetnames</span> <span class="o">=</span> <span class="s1">&#39;annotations&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">frame</span><span class="p">[</span><span class="s1">&#39;fill_colour&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">fill</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fgColor&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rgb&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;annotations&quot;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;row&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">}</span>
+<span class="p">)</span>
 <span class="n">frame</span>
 </pre></div>
 </div>
@@ -911,7 +843,6 @@ Name: value, dtype: object
       <th>is_date</th>
       <th>number_format</th>
       <th>fill</th>
-      <th>fill_colour</th>
     </tr>
   </thead>
   <tbody>
@@ -926,7 +857,6 @@ Name: value, dtype: object
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>1</th>
@@ -939,7 +869,6 @@ Name: value, dtype: object
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>2</th>
@@ -952,7 +881,6 @@ Name: value, dtype: object
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>3</th>
@@ -965,7 +893,6 @@ Name: value, dtype: object
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>4</th>
@@ -978,7 +905,6 @@ Name: value, dtype: object
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>5</th>
@@ -991,7 +917,6 @@ Name: value, dtype: object
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>6</th>
@@ -1004,7 +929,6 @@ Name: value, dtype: object
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>7</th>
@@ -1017,7 +941,6 @@ Name: value, dtype: object
       <td>False</td>
       <td>General</td>
       <td>{'patternType': 'solid', 'fgColor': {'rgb': 'F...</td>
-      <td>FFFFFF00</td>
     </tr>
     <tr>
       <th>8</th>
@@ -1030,7 +953,6 @@ Name: value, dtype: object
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>9</th>
@@ -1043,7 +965,6 @@ Name: value, dtype: object
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>10</th>
@@ -1056,7 +977,6 @@ Name: value, dtype: object
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>11</th>
@@ -1069,79 +989,27 @@ Name: value, dtype: object
       <td>False</td>
       <td>General</td>
       <td>{'patternType': 'solid', 'fgColor': {'rgb': 'F...</td>
-      <td>FF92D050</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
+<p>Steps:</p>
+<ul class="simple">
+<li><p>get the headers</p></li>
+<li><p>get the data in separate columns(strings, numbers)</p></li>
+<li><p>get the colours</p></li>
+<li><p>combine to create the final DataFrame</p></li>
+</ul>
+<p>headers:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">headers</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;measure&#39;</span><span class="p">})</span>
-<span class="n">students</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;name&#39;</span><span class="p">})</span>
-<span class="n">numbers</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">,</span> <span class="s1">&#39;fill_colour&#39;</span><span class="p">]]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">headers</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;measure&#39;</span><span class="p">})</span>
-<span class="ne">----&gt; </span><span class="mi">2</span> <span class="n">students</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;name&#39;</span><span class="p">})</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">numbers</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">,</span> <span class="s1">&#39;fill_colour&#39;</span><span class="p">]]</span>
-
-<span class="nn">File ~/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas/core/series.py:6300,</span> in <span class="ni">Series.gt</span><span class="nt">(self, other, level, fill_value, axis)</span>
-<span class="g g-Whitespace">   </span><span class="mi">6298</span> <span class="nd">@Appender</span><span class="p">(</span><span class="n">ops</span><span class="o">.</span><span class="n">make_flex_doc</span><span class="p">(</span><span class="s2">&quot;gt&quot;</span><span class="p">,</span> <span class="s2">&quot;series&quot;</span><span class="p">))</span>
-<span class="g g-Whitespace">   </span><span class="mi">6299</span> <span class="k">def</span> <span class="nf">gt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axis</span><span class="p">:</span> <span class="n">Axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Series</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">6300</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_flex_method</span><span class="p">(</span>
-<span class="g g-Whitespace">   </span><span class="mi">6301</span>         <span class="n">other</span><span class="p">,</span> <span class="n">operator</span><span class="o">.</span><span class="n">gt</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">fill_value</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span>
-<span class="g g-Whitespace">   </span><span class="mi">6302</span>     <span class="p">)</span>
-
-<span class="nn">File ~/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas/core/series.py:6260,</span> in <span class="ni">Series._flex_method</span><span class="nt">(self, other, op, level, fill_value, axis)</span>
-<span class="g g-Whitespace">   </span><span class="mi">6257</span>         <span class="k">return</span> <span class="n">op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fill_value</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">6258</span>     <span class="bp">self</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">fill_value</span><span class="p">)</span>
-<span class="ne">-&gt; </span><span class="mi">6260</span> <span class="k">return</span> <span class="n">op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
-
-<span class="nn">File ~/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas/core/ops/common.py:76,</span> in <span class="ni">_unpack_zerodim_and_defer.&lt;locals&gt;.new_method</span><span class="nt">(self, other)</span>
-<span class="g g-Whitespace">     </span><span class="mi">72</span>             <span class="k">return</span> <span class="bp">NotImplemented</span>
-<span class="g g-Whitespace">     </span><span class="mi">74</span> <span class="n">other</span> <span class="o">=</span> <span class="n">item_from_zerodim</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">76</span> <span class="k">return</span> <span class="n">method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
-
-<span class="nn">File ~/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas/core/arraylike.py:56,</span> in <span class="ni">OpsMixin.__gt__</span><span class="nt">(self, other)</span>
-<span class="g g-Whitespace">     </span><span class="mi">54</span> <span class="nd">@unpack_zerodim_and_defer</span><span class="p">(</span><span class="s2">&quot;__gt__&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">55</span> <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
-<span class="ne">---&gt; </span><span class="mi">56</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cmp_method</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">operator</span><span class="o">.</span><span class="n">gt</span><span class="p">)</span>
-
-<span class="nn">File ~/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas/core/series.py:6119,</span> in <span class="ni">Series._cmp_method</span><span class="nt">(self, other, op)</span>
-<span class="g g-Whitespace">   </span><span class="mi">6116</span> <span class="n">lvalues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_values</span>
-<span class="g g-Whitespace">   </span><span class="mi">6117</span> <span class="n">rvalues</span> <span class="o">=</span> <span class="n">extract_array</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">extract_numpy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extract_range</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="ne">-&gt; </span><span class="mi">6119</span> <span class="n">res_values</span> <span class="o">=</span> <span class="n">ops</span><span class="o">.</span><span class="n">comparison_op</span><span class="p">(</span><span class="n">lvalues</span><span class="p">,</span> <span class="n">rvalues</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">6121</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_construct_result</span><span class="p">(</span><span class="n">res_values</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">res_name</span><span class="p">)</span>
-
-<span class="nn">File ~/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas/core/ops/array_ops.py:344,</span> in <span class="ni">comparison_op</span><span class="nt">(left, right, op)</span>
-<span class="g g-Whitespace">    </span><span class="mi">341</span>     <span class="k">return</span> <span class="n">invalid_comparison</span><span class="p">(</span><span class="n">lvalues</span><span class="p">,</span> <span class="n">rvalues</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">343</span> <span class="k">elif</span> <span class="n">lvalues</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="nb">object</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rvalues</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-<span class="ne">--&gt; </span><span class="mi">344</span>     <span class="n">res_values</span> <span class="o">=</span> <span class="n">comp_method_OBJECT_ARRAY</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">lvalues</span><span class="p">,</span> <span class="n">rvalues</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">346</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">347</span>     <span class="n">res_values</span> <span class="o">=</span> <span class="n">_na_arithmetic_op</span><span class="p">(</span><span class="n">lvalues</span><span class="p">,</span> <span class="n">rvalues</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">is_cmp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="nn">File ~/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas/core/ops/array_ops.py:129,</span> in <span class="ni">comp_method_OBJECT_ARRAY</span><span class="nt">(op, x, y)</span>
-<span class="g g-Whitespace">    </span><span class="mi">127</span>     <span class="n">result</span> <span class="o">=</span> <span class="n">libops</span><span class="o">.</span><span class="n">vec_compare</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">op</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">128</span> <span class="k">else</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">129</span>     <span class="n">result</span> <span class="o">=</span> <span class="n">libops</span><span class="o">.</span><span class="n">scalar_compare</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">y</span><span class="p">,</span> <span class="n">op</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">130</span> <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-
-<span class="nn">File ops.pyx:107,</span> in <span class="ni">pandas._libs.ops.scalar_compare</span><span class="nt">()</span>
-
-<span class="ne">TypeError</span>: &#39;&gt;&#39; not supported between instances of &#39;str&#39; and &#39;int&#39;
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">headers</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># all the headers are on the first row</span>
+<span class="c1"># retain the column positions,</span>
+<span class="c1"># so we can link them back to the data and colours</span>
+<span class="n">headers</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span>
+<span class="n">headers</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;measure&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]</span>
+<span class="n">headers</span>
 </pre></div>
 </div>
 </div>
@@ -1165,7 +1033,6 @@ Name: value, dtype: object
     <tr style="text-align: right;">
       <th></th>
       <th>measure</th>
-      <th>row</th>
       <th>column</th>
     </tr>
   </thead>
@@ -1174,19 +1041,73 @@ Name: value, dtype: object
       <th>0</th>
       <td>Name</td>
       <td>1</td>
-      <td>1</td>
     </tr>
     <tr>
       <th>1</th>
       <td>Age</td>
-      <td>1</td>
       <td>2</td>
     </tr>
     <tr>
       <th>2</th>
       <td>Height</td>
-      <td>1</td>
       <td>3</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>data:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># the string values have a data type of &#39;s&#39;</span>
+<span class="c1"># and the row numbers are greater than 1</span>
+<span class="c1"># we&#39;ll keep the row number so we can correctly</span>
+<span class="c1"># match with the measurements(age, height)</span>
+<span class="n">booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">frame</span><span class="o">.</span><span class="n">data_type</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">)</span>
+<span class="n">students</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">]]</span>
+<span class="n">students</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">]</span>
+<span class="n">students</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>row</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3</th>
+      <td>Matilda</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Nicholas</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Olivia</td>
+      <td>4</td>
     </tr>
   </tbody>
 </table>
@@ -1194,7 +1115,14 @@ Name: value, dtype: object
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">numbers</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># the scores values have a data type of &#39;n&#39;</span>
+<span class="c1"># and the row numbers are greater than 1</span>
+<span class="c1"># we&#39;ll keep the row and column columns</span>
+<span class="c1">#  so we can correctly</span>
+<span class="c1"># match with the student names</span>
+<span class="n">booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">frame</span><span class="o">.</span><span class="n">data_type</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span>
+<span class="n">numbers</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span>
+<span class="n">numbers</span>
 </pre></div>
 </div>
 </div>
@@ -1220,7 +1148,6 @@ Name: value, dtype: object
       <th>value</th>
       <th>row</th>
       <th>column</th>
-      <th>fill_colour</th>
     </tr>
   </thead>
   <tbody>
@@ -1229,109 +1156,74 @@ Name: value, dtype: object
       <td>1</td>
       <td>2</td>
       <td>2</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>5</th>
       <td>2</td>
       <td>2</td>
       <td>3</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>7</th>
       <td>3</td>
       <td>3</td>
       <td>2</td>
-      <td>FFFFFF00</td>
     </tr>
     <tr>
       <th>8</th>
       <td>4</td>
       <td>3</td>
       <td>3</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>10</th>
       <td>5</td>
       <td>4</td>
       <td>2</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>11</th>
       <td>6</td>
       <td>4</td>
       <td>3</td>
-      <td>FF92D050</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
+<p>colours:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">students</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fill_colour</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">fill</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fgColor&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rgb&quot;</span><span class="p">)</span>
+<span class="c1"># keep only rows for numbers:</span>
+<span class="n">fill_colour</span> <span class="o">=</span> <span class="n">fill_colour</span><span class="p">[</span><span class="n">booleans</span><span class="p">]</span>
+<span class="n">fill_colour</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>name</th>
-      <th>row</th>
-      <th>column</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>3</th>
-      <td>Matilda</td>
-      <td>2</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>Nicholas</td>
-      <td>3</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>Olivia</td>
-      <td>4</td>
-      <td>1</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4     00000000
+5     00000000
+7     FFFFFF00
+8     00000000
+10    00000000
+11    FF92D050
+Name: fill, dtype: object
+</pre></div>
 </div>
-<p>We can combine the dataframes into one, based on positions:</p>
+</div>
+</div>
+<p>combine into a single DataFrame:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">students</span>
-<span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">headers</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">),</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;column&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;measure&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;fill_colour&#39;</span><span class="p">]]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">outcome</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">numbers</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">fill_colour</span><span class="o">=</span><span class="n">fill_colour</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">students</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;row&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">headers</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;column&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;measure&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;fill_colour&quot;</span><span class="p">]]</span>
 <span class="p">)</span>
+
+<span class="n">outcome</span>
 </pre></div>
 </div>
 </div>
@@ -1370,30 +1262,30 @@ Name: value, dtype: object
     </tr>
     <tr>
       <th>1</th>
-      <td>Nicholas</td>
-      <td>Age</td>
-      <td>3</td>
-      <td>FFFFFF00</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>Olivia</td>
-      <td>Age</td>
-      <td>5</td>
-      <td>00000000</td>
-    </tr>
-    <tr>
-      <th>3</th>
       <td>Matilda</td>
       <td>Height</td>
       <td>2</td>
       <td>00000000</td>
     </tr>
     <tr>
-      <th>4</th>
+      <th>2</th>
+      <td>Nicholas</td>
+      <td>Age</td>
+      <td>3</td>
+      <td>FFFFFF00</td>
+    </tr>
+    <tr>
+      <th>3</th>
       <td>Nicholas</td>
       <td>Height</td>
       <td>4</td>
+      <td>00000000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Olivia</td>
+      <td>Age</td>
+      <td>5</td>
       <td>00000000</td>
     </tr>
     <tr>
@@ -1411,12 +1303,19 @@ Name: value, dtype: object
 <section id="case-3-layered-meaningful-formatting">
 <h3><strong>Case 3 : Layered Meaningful Formatting</strong><a class="headerlink" href="#case-3-layered-meaningful-formatting" title="Link to this heading">#</a></h3>
 <p><img alt="layered_meaningful_formatting.png" src="../_images/layered_meaningful_formatting.png" /></p>
-<p>In this case, we have formats for fill and font. <br>The format applies to the entire row.</p>
+<p>In this case, we have formats for fill and font.</p>
+<p>The format applies to the entire row.</p>
+<p>Steps:</p>
+<ul class="simple">
+<li><p>get the headers</p></li>
+<li><p>get the data in separate columns(kitchen_items, price, weight)</p></li>
+<li><p>get the colours (fill and font)</p></li>
+<li><p>combine to create the final DataFrame</p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetnames</span> <span class="o">=</span> <span class="s1">&#39;combined-highlights&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">font</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-<span class="n">frame</span><span class="p">[</span><span class="s1">&#39;fill_colour&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">fill</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fgColor&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rgb&#39;</span><span class="p">)</span>
-<span class="n">frame</span><span class="p">[</span><span class="s1">&#39;font_colour&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rgb&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;combined-highlights&quot;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s2">&quot;row&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">})</span>
 <span class="n">frame</span>
 </pre></div>
 </div>
@@ -1450,8 +1349,6 @@ Name: value, dtype: object
       <th>number_format</th>
       <th>fill</th>
       <th>font</th>
-      <th>fill_colour</th>
-      <th>font_colour</th>
     </tr>
   </thead>
   <tbody>
@@ -1467,8 +1364,6 @@ Name: value, dtype: object
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>00000000</td>
-      <td>FF000000</td>
     </tr>
     <tr>
       <th>1</th>
@@ -1482,8 +1377,6 @@ Name: value, dtype: object
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>00000000</td>
-      <td>FF000000</td>
     </tr>
     <tr>
       <th>2</th>
@@ -1497,8 +1390,6 @@ Name: value, dtype: object
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>00000000</td>
-      <td>FF000000</td>
     </tr>
     <tr>
       <th>3</th>
@@ -1512,8 +1403,6 @@ Name: value, dtype: object
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>00000000</td>
-      <td>FF000000</td>
     </tr>
     <tr>
       <th>4</th>
@@ -1527,8 +1416,6 @@ Name: value, dtype: object
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>00000000</td>
-      <td>FF000000</td>
     </tr>
     <tr>
       <th>5</th>
@@ -1542,8 +1429,6 @@ Name: value, dtype: object
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>00000000</td>
-      <td>FF000000</td>
     </tr>
     <tr>
       <th>6</th>
@@ -1557,8 +1442,6 @@ Name: value, dtype: object
       <td>General</td>
       <td>{'patternType': 'solid', 'fgColor': {'rgb': 'F...</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FFFFFF00</td>
-      <td>FF000000</td>
     </tr>
     <tr>
       <th>7</th>
@@ -1572,8 +1455,6 @@ Name: value, dtype: object
       <td>General</td>
       <td>{'patternType': 'solid', 'fgColor': {'rgb': 'F...</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FFFFFF00</td>
-      <td>None</td>
     </tr>
     <tr>
       <th>8</th>
@@ -1587,8 +1468,6 @@ Name: value, dtype: object
       <td>General</td>
       <td>{'patternType': 'solid', 'fgColor': {'rgb': 'F...</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FFFFFF00</td>
-      <td>None</td>
     </tr>
     <tr>
       <th>9</th>
@@ -1602,8 +1481,6 @@ Name: value, dtype: object
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>00000000</td>
-      <td>FFFF0000</td>
     </tr>
     <tr>
       <th>10</th>
@@ -1617,8 +1494,6 @@ Name: value, dtype: object
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>00000000</td>
-      <td>FFFF0000</td>
     </tr>
     <tr>
       <th>11</th>
@@ -1632,8 +1507,6 @@ Name: value, dtype: object
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>00000000</td>
-      <td>FFFF0000</td>
     </tr>
     <tr>
       <th>12</th>
@@ -1647,8 +1520,6 @@ Name: value, dtype: object
       <td>General</td>
       <td>{'patternType': 'solid', 'fgColor': {'rgb': 'F...</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FFFFFF00</td>
-      <td>FFFF0000</td>
     </tr>
     <tr>
       <th>13</th>
@@ -1662,8 +1533,6 @@ Name: value, dtype: object
       <td>General</td>
       <td>{'patternType': 'solid', 'fgColor': {'rgb': 'F...</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FFFFFF00</td>
-      <td>FFFF0000</td>
     </tr>
     <tr>
       <th>14</th>
@@ -1677,140 +1546,19 @@ Name: value, dtype: object
       <td>General</td>
       <td>{'patternType': 'solid', 'fgColor': {'rgb': 'F...</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FFFFFF00</td>
-      <td>FFFF0000</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
+<p>headers:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">headers</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;measure&#39;</span><span class="p">})</span>
-<span class="n">kitchen_items</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;kitchen_item&#39;</span><span class="p">})</span>
-<span class="n">numbers</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">,</span> <span class="s1">&#39;fill_colour&#39;</span><span class="p">,</span> <span class="s1">&#39;font_colour&#39;</span><span class="p">]]</span>
-<span class="c1"># drop duplicates, since the format applies across the row</span>
-<span class="n">colour</span> <span class="o">=</span> <span class="n">numbers</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;fill_colour&#39;</span><span class="p">,</span> <span class="s1">&#39;font_colour&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;row&#39;</span><span class="p">])</span>
-<span class="n">numbers</span> <span class="o">=</span> <span class="n">numbers</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fill_colour&#39;</span><span class="p">,</span> <span class="s1">&#39;font_colour&#39;</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">headers</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>measure</th>
-      <th>row</th>
-      <th>column</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>Name</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Weight</td>
-      <td>1</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>Price</td>
-      <td>1</td>
-      <td>3</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kitchen_items</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>kitchen_item</th>
-      <th>row</th>
-      <th>column</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>3</th>
-      <td>Knife</td>
-      <td>2</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>Fork</td>
-      <td>3</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>Spoon</td>
-      <td>4</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>Teaspoon</td>
-      <td>5</td>
-      <td>1</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">numbers</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># headers are on the first row</span>
+<span class="c1"># we&#39;ll rely on the `column` column</span>
+<span class="c1"># to align with the weight and price extracts</span>
+<span class="n">headers</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span>
+<span class="n">headers</span>
 </pre></div>
 </div>
 </div>
@@ -1834,134 +1582,131 @@ Name: value, dtype: object
     <tr style="text-align: right;">
       <th></th>
       <th>value</th>
-      <th>row</th>
       <th>column</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>4</th>
-      <td>7</td>
-      <td>2</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>8</td>
-      <td>2</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>5</td>
-      <td>3</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>6</td>
-      <td>3</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>3</td>
-      <td>4</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>11</th>
-      <td>4</td>
-      <td>4</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>13</th>
+      <th>0</th>
+      <td>Name</td>
       <td>1</td>
-      <td>5</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Weight</td>
       <td>2</td>
     </tr>
     <tr>
-      <th>14</th>
-      <td>2</td>
-      <td>5</td>
+      <th>2</th>
+      <td>Price</td>
       <td>3</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
+<p>data:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">colour</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># kitchen_items are string datatype</span>
+<span class="c1"># they are on rows &gt; 1</span>
+<span class="n">booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">frame</span><span class="o">.</span><span class="n">data_type</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">)</span>
+<span class="n">kitchen_items</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">array</span>
+<span class="n">kitchen_items</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>row</th>
-      <th>fill_colour</th>
-      <th>font_colour</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>4</th>
-      <td>2</td>
-      <td>00000000</td>
-      <td>FF000000</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>3</td>
-      <td>FFFFFF00</td>
-      <td>None</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>4</td>
-      <td>00000000</td>
-      <td>FFFF0000</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td>5</td>
-      <td>FFFFFF00</td>
-      <td>FFFF0000</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;NumpyExtensionArray&gt;
+[&#39;Knife&#39;, &#39;Fork&#39;, &#39;Spoon&#39;, &#39;Teaspoon&#39;]
+Length: 4, dtype: object
+</pre></div>
 </div>
-<p>We can combine the dataframes into one, based on positions:</p>
+</div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">kitchen_items</span>
-<span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">headers</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">),</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;column&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;kitchen_item&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;measure&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s1">&#39;kitchen_item&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">colour</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;row&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">)</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># price and weight are number datatypes</span>
+<span class="c1"># they are on rows &gt; 1</span>
+<span class="n">booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">frame</span><span class="o">.</span><span class="n">data_type</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span>
+<span class="c1"># retrieve column positions:</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]</span>
+<span class="n">numbers</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span><span class="o">.</span><span class="n">array</span>
+<span class="c1"># we know there are only two number columns - weight and price</span>
+<span class="c1"># we&#39;ll use that knowledge in reshaping:</span>
+<span class="n">numbers</span> <span class="o">=</span> <span class="n">numbers</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">numbers</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;NumpyExtensionArray&gt;
+[
+[np.int8(7), np.int8(8)],
+[np.int8(5), np.int8(6)],
+[np.int8(3), np.int8(4)],
+[np.int8(1), np.int8(2)]
+]
+Shape: (4, 2), dtype: int8
+</pre></div>
+</div>
+</div>
+</div>
+<p>colors:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fill_colour</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">fill</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fgColor&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rgb&quot;</span><span class="p">)</span>
+<span class="n">font_colour</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;color&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rgb&quot;</span><span class="p">)</span>
+<span class="c1"># keep only rows aligned with the numbers:</span>
+<span class="n">fill_colour</span> <span class="o">=</span> <span class="n">fill_colour</span><span class="p">[</span><span class="n">booleans</span><span class="p">]</span><span class="o">.</span><span class="n">array</span>
+<span class="n">font_colour</span> <span class="o">=</span> <span class="n">font_colour</span><span class="p">[</span><span class="n">booleans</span><span class="p">]</span><span class="o">.</span><span class="n">array</span>
+<span class="c1"># we know there are only two number columns</span>
+<span class="c1"># this means we only need to jump two steps per colour:</span>
+<span class="n">fill_colour</span> <span class="o">=</span> <span class="n">fill_colour</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">font_colour</span> <span class="o">=</span> <span class="n">font_colour</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fill_colour</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;NumpyExtensionArray&gt;
+[&#39;00000000&#39;, &#39;FFFFFF00&#39;, &#39;00000000&#39;, &#39;FFFFFF00&#39;]
+Length: 4, dtype: object
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">font_colour</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;NumpyExtensionArray&gt;
+[&#39;FF000000&#39;, None, &#39;FFFF0000&#39;, &#39;FFFF0000&#39;]
+Length: 4, dtype: object
+</pre></div>
+</div>
+</div>
+</div>
+<p>Combine into one DataFrame:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># filter headers for only rows</span>
+<span class="c1"># that align with the weight and price extracts</span>
+<span class="n">headers</span> <span class="o">=</span> <span class="n">headers</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">headers</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">columns</span><span class="p">),</span> <span class="s2">&quot;value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">array</span>
+<span class="n">outcome</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+<span class="n">outcome</span> <span class="o">=</span> <span class="n">outcome</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+    <span class="n">kitchen_item</span><span class="o">=</span><span class="n">kitchen_items</span><span class="p">,</span> <span class="n">fill_colour</span><span class="o">=</span><span class="n">fill_colour</span><span class="p">,</span> <span class="n">font_colour</span><span class="o">=</span><span class="n">font_colour</span>
+<span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">&quot;kitchen_item&quot;</span><span class="p">,</span> <span class="s2">&quot;Price&quot;</span><span class="p">,</span> <span class="s2">&quot;Weight&quot;</span><span class="p">,</span> <span class="s2">&quot;fill_colour&quot;</span><span class="p">,</span> <span class="s2">&quot;font_colour&quot;</span><span class="p">]]</span>
+<span class="n">outcome</span>
 </pre></div>
 </div>
 </div>
@@ -1994,19 +1739,19 @@ Name: value, dtype: object
   <tbody>
     <tr>
       <th>0</th>
-      <td>Fork</td>
-      <td>6</td>
-      <td>5</td>
-      <td>FFFFFF00</td>
-      <td>None</td>
-    </tr>
-    <tr>
-      <th>1</th>
       <td>Knife</td>
       <td>8</td>
       <td>7</td>
       <td>00000000</td>
       <td>FF000000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Fork</td>
+      <td>6</td>
+      <td>5</td>
+      <td>FFFFFF00</td>
+      <td>None</td>
     </tr>
     <tr>
       <th>2</th>
@@ -2028,6 +1773,7 @@ Name: value, dtype: object
 </table>
 </div></div></div>
 </div>
+<p>Note that an alternative would be to use the <code class="docutils literal notranslate"><span class="pre">row</span></code> and <code class="docutils literal notranslate"><span class="pre">column</span></code> positions to reshape the data - similar to the solution in <a class="reference internal" href="#case-2"><span class="std std-ref">case 2</span></a></p>
 </section>
 <section id="case-4-hierarchies-in-formatting">
 <h3><strong>Case 4 : Hierarchies in Formatting</strong><a class="headerlink" href="#case-4-hierarchies-in-formatting" title="Link to this heading">#</a></h3>
@@ -2043,9 +1789,8 @@ Again, the formatting is applied to the entire row.</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetnames</span> <span class="o">=</span> <span class="s2">&quot;highlight-hierarchy&quot;</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">frame</span><span class="p">[</span><span class="s1">&#39;bold&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
-<span class="n">frame</span><span class="p">[</span><span class="s1">&#39;italics&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;highlight-hierarchy&quot;</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s1">&#39;row&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">})</span>
 <span class="n">frame</span>
 </pre></div>
 </div>
@@ -2078,8 +1823,6 @@ Again, the formatting is applied to the entire row.</p></li>
       <th>is_date</th>
       <th>number_format</th>
       <th>font</th>
-      <th>bold</th>
-      <th>italics</th>
     </tr>
   </thead>
   <tbody>
@@ -2094,8 +1837,6 @@ Again, the formatting is applied to the entire row.</p></li>
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>True</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>1</th>
@@ -2108,8 +1849,6 @@ Again, the formatting is applied to the entire row.</p></li>
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>True</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>2</th>
@@ -2122,8 +1861,6 @@ Again, the formatting is applied to the entire row.</p></li>
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>False</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>3</th>
@@ -2136,8 +1873,6 @@ Again, the formatting is applied to the entire row.</p></li>
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>False</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>4</th>
@@ -2150,8 +1885,6 @@ Again, the formatting is applied to the entire row.</p></li>
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>False</td>
-      <td>True</td>
     </tr>
     <tr>
       <th>5</th>
@@ -2164,8 +1897,6 @@ Again, the formatting is applied to the entire row.</p></li>
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>False</td>
-      <td>True</td>
     </tr>
     <tr>
       <th>6</th>
@@ -2178,8 +1909,6 @@ Again, the formatting is applied to the entire row.</p></li>
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>True</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>7</th>
@@ -2192,8 +1921,6 @@ Again, the formatting is applied to the entire row.</p></li>
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>True</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>8</th>
@@ -2206,8 +1933,6 @@ Again, the formatting is applied to the entire row.</p></li>
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>True</td>
-      <td>True</td>
     </tr>
     <tr>
       <th>9</th>
@@ -2220,214 +1945,96 @@ Again, the formatting is applied to the entire row.</p></li>
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>True</td>
-      <td>True</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
+<p>Steps:</p>
+<ul class="simple">
+<li><p>get the data in separate columns(score, grade)</p></li>
+<li><p>get the fonts (bold, italics)</p></li>
+<li><p>combine to create the final DataFrame</p></li>
+</ul>
+<p>data:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">headers</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;measure&#39;</span><span class="p">})</span>
-<span class="n">students</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;name&#39;</span><span class="p">})</span>
-<span class="n">numbers</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">,</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="s1">&#39;italics&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;score&#39;</span><span class="p">})</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">headers</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>measure</th>
-      <th>row</th>
-      <th>column</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>Name</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Score</td>
-      <td>1</td>
-      <td>2</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">students</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">frame</span><span class="o">.</span><span class="n">data_type</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">)</span>
+<span class="n">students</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">array</span>
+<span class="n">students</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>name</th>
-      <th>row</th>
-      <th>column</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>2</th>
-      <td>Matilda</td>
-      <td>2</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>Nicholas</td>
-      <td>3</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>Olivia</td>
-      <td>4</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>Paul</td>
-      <td>5</td>
-      <td>1</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;NumpyExtensionArray&gt;
+[&#39;Matilda&#39;, &#39;Nicholas&#39;, &#39;Olivia&#39;, &#39;Paul&#39;]
+Length: 4, dtype: object
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">numbers</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">frame</span><span class="o">.</span><span class="n">data_type</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">&#39;n&#39;</span><span class="p">)</span>
+<span class="n">score</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span>
+<span class="n">score</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>score</th>
-      <th>row</th>
-      <th>column</th>
-      <th>bold</th>
-      <th>italics</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>3</th>
-      <td>7</td>
-      <td>2</td>
-      <td>2</td>
-      <td>False</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>5</td>
-      <td>3</td>
-      <td>2</td>
-      <td>False</td>
-      <td>True</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>3</td>
-      <td>4</td>
-      <td>2</td>
-      <td>True</td>
-      <td>False</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>1</td>
-      <td>5</td>
-      <td>2</td>
-      <td>True</td>
-      <td>True</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([7, 5, 3, 1], dtype=int8)
+</pre></div>
+</div>
+</div>
+</div>
+<p>fonts:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bold</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)[</span><span class="n">booleans</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">bold</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([False, False,  True,  True])
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">students</span>
-<span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">headers</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">),</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;column&#39;</span><span class="p">)</span>
-<span class="c1"># the case_when function is from pyjanitor</span>
-<span class="c1"># and is helpful for conditional evaluation</span>
-<span class="c1"># it is similar to np.select/np.where/python&#39;s ifelse</span>
-<span class="o">.</span><span class="n">case_when</span><span class="p">(</span>
-    <span class="s1">&#39;not bold and not italics&#39;</span><span class="p">,</span> <span class="s1">&#39;good&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;not bold and italics&#39;</span><span class="p">,</span> <span class="s1">&#39;satisfactory&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;bold and not italics&#39;</span><span class="p">,</span> <span class="s1">&#39;poor&#39;</span><span class="p">,</span> 
-    <span class="s1">&#39;fail&#39;</span><span class="p">,</span> <span class="c1"># default</span>
-    <span class="n">column_name</span> <span class="o">=</span> <span class="s1">&#39;grade&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="s1">&#39;italics&#39;</span><span class="p">,</span> <span class="s1">&#39;score&#39;</span><span class="p">,</span> <span class="s1">&#39;grade&#39;</span><span class="p">]]</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">italics</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">)[</span><span class="n">booleans</span><span class="p">][</span><span class="n">booleans</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">italics</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([False,  True, False,  True])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">condlist</span> <span class="o">=</span> <span class="p">[</span><span class="o">~</span><span class="n">bold</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">italics</span><span class="p">,</span> <span class="o">~</span><span class="n">bold</span> <span class="o">&amp;</span> <span class="n">italics</span><span class="p">,</span> <span class="n">bold</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">italics</span><span class="p">]</span>
+<span class="n">choicelist</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;good&#39;</span><span class="p">,</span><span class="s1">&#39;satisfactory&#39;</span><span class="p">,</span><span class="s1">&#39;poor&#39;</span><span class="p">]</span>
+<span class="n">grade</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">condlist</span><span class="p">,</span> <span class="n">choicelist</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;fail&#39;</span><span class="p">)</span>
+<span class="n">grade</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([&#39;good&#39;, &#39;satisfactory&#39;, &#39;poor&#39;, &#39;fail&#39;], dtype=&#39;&lt;U12&#39;)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Combine into a single DataFrame:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">outcome</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="n">students</span><span class="p">,</span> <span class="s1">&#39;bold&#39;</span><span class="p">:</span><span class="n">bold</span><span class="p">,</span><span class="s1">&#39;italics&#39;</span><span class="p">:</span><span class="n">italics</span><span class="p">,</span><span class="s1">&#39;score&#39;</span><span class="p">:</span><span class="n">score</span><span class="p">,</span><span class="s1">&#39;grade&#39;</span><span class="p">:</span><span class="n">grade</span><span class="p">}</span>
+<span class="n">outcome</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">outcome</span><span class="p">)</span>
+<span class="n">outcome</span>
 </pre></div>
 </div>
 </div>
@@ -2593,7 +2200,7 @@ By Samuel Oranyeli
 
   <p class="copyright">
     
-      © Copyright 2023.
+      © Copyright 2021.
       <br/>
     
   </p>

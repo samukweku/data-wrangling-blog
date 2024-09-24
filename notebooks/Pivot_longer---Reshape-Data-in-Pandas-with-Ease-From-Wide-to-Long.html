@@ -203,7 +203,7 @@ commentsRunWhenDOMLoaded(addUtterances);
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../intro.html">
-                    Data Wrangling Recipes
+                    Introduction
                 </a>
             </li>
         </ul>
@@ -248,6 +248,9 @@ commentsRunWhenDOMLoaded(addUtterances);
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Polars</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="dplyr-across-in-Polars.html">Dplyr’s across: Replicating within Polars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Reshape-Data-in-Polars-Wide-to_Long-Part-I.html">Reshape Data in Polars Efficiently from Wide to Long Form - Part I</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Reshape-Data-in-Polars-Wide-to_Long-Part-II.html">Reshape Data in Polars Efficiently from Wide to Long Form - Part II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Reshape-Data-in-Polars-Wide-to_Long-Part-III.html">Reshape Data in Polars Efficiently from Wide to Long Form - Part III</a></li>
 </ul>
 
     </div>
@@ -466,7 +469,7 @@ document.write(`
   <section class="tex2jax_ignore mathjax_ignore" id="pivot-longer-reshape-data-in-pandas-efficiently-and-with-ease-from-wide-to-long">
 <h1>Pivot_longer : Reshape Data in Pandas Efficiently and with Ease from Wide to Long<a class="headerlink" href="#pivot-longer-reshape-data-in-pandas-efficiently-and-with-ease-from-wide-to-long" title="Link to this heading">#</a></h1>
 <section id="introduction">
-<h2><strong>Introduction</strong><a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<span id="id1"></span><h2><strong>Introduction</strong><a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
 <p>You’ve got data in a wide form (lots of columns), and you wish to transform it into a long form (fewer columns, more rows). In pandas, depending on the form of the data, this can be achieved with either <code class="docutils literal notranslate"><span class="pre">pd.stack</span></code>, <code class="docutils literal notranslate"><span class="pre">pd.melt</span></code>, <code class="docutils literal notranslate"><span class="pre">pd.wide_to_long</span></code>, and sometimes require a bit of data massaging before arriving at the final, desired form.</p>
 <p>This article suggests a simple, efficient, opinionated way, that resolves most wide to long transformations, within a single function, using the <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.pivot.pivot_longer">pivot_longer</a> function from <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/">pyjanitor</a>.</p>
 <p>Let’s look at an example, based on real data - this is a subset of the <a class="reference external" href="https://github.com/tidyverse/tidyr/blob/main/data-raw/who.csv">who</a> data from R:</p>
@@ -476,9 +479,16 @@ document.write(`
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot; pandas version :&quot;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> 
-      <span class="s2">&quot;numpy version :&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> 
-      <span class="s2">&quot;python version :&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">&quot; pandas version :&quot;</span><span class="p">,</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
+    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;numpy version :&quot;</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span>
+    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;python version :&quot;</span><span class="p">,</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -492,7 +502,7 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;new_sp_m5564&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;newrel_f65&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">]})</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;new_sp_m5564&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;newrel_f65&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">]})</span>
 <span class="n">df</span>
 </pre></div>
 </div>
@@ -545,13 +555,13 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># split the columns using a regex, before stacking:</span>
-<span class="n">DF</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="n">DF</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
 <span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;new_?(.+)_(.)(\d+)&quot;</span>
 <span class="n">columns</span> <span class="o">=</span> <span class="n">DF</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
-<span class="n">new_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;diagnosis&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">]</span>
-<span class="n">columns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_frame</span><span class="p">(</span><span class="n">columns</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="n">new_names</span><span class="p">)</span>
+<span class="n">new_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;diagnosis&quot;</span><span class="p">,</span> <span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">]</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_frame</span><span class="p">(</span><span class="n">columns</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">new_names</span><span class="p">)</span>
 <span class="n">DF</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span>
-<span class="n">DF</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">new_names</span><span class="p">,</span><span class="n">future_stack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;count&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">DF</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">new_names</span><span class="p">,</span> <span class="n">future_stack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -605,9 +615,9 @@ document.write(`
 <p>With <code class="docutils literal notranslate"><span class="pre">pd.melt</span></code>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DF</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">DF</span><span class="o">.</span><span class="n">variable</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span><span class="o">.</span><span class="n">set_axis</span><span class="p">(</span><span class="n">new_names</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-<span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">DF</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;variable&#39;</span><span class="p">),</span> <span class="n">out</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DF</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">DF</span><span class="o">.</span><span class="n">variable</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span><span class="o">.</span><span class="n">set_axis</span><span class="p">(</span><span class="n">new_names</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">DF</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s2">&quot;variable&quot;</span><span class="p">),</span> <span class="n">out</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -663,11 +673,8 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pip install pyjanitor</span>
 <span class="kn">import</span> <span class="nn">janitor</span>
-<span class="n">df</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> 
-    <span class="n">names_to</span> <span class="o">=</span> <span class="n">new_names</span><span class="p">,</span> 
-    <span class="n">names_pattern</span> <span class="o">=</span> <span class="n">regex</span>
-    <span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="n">names_to</span><span class="o">=</span><span class="n">new_names</span><span class="p">,</span> <span class="n">names_pattern</span><span class="o">=</span><span class="n">regex</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -856,11 +863,7 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">religion</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-          <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;religion&#39;</span><span class="p">,</span> 
-          <span class="n">names_to</span> <span class="o">=</span> <span class="s1">&#39;income&#39;</span><span class="p">,</span> 
-          <span class="n">values_to</span> <span class="o">=</span> <span class="s1">&#39;count&#39;</span>
-          <span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">religion</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;religion&quot;</span><span class="p">,</span> <span class="n">names_to</span><span class="o">=</span><span class="s2">&quot;income&quot;</span><span class="p">,</span> <span class="n">values_to</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -960,10 +963,10 @@ document.write(`
 <p>180 rows × 3 columns</p>
 </div></div></div>
 </div>
-<p>If there are a lot of columns, we can dynamically select the <code class="docutils literal notranslate"><span class="pre">index</span></code>, or <code class="docutils literal notranslate"><span class="pre">column_names</span></code>, using the <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.select_columns.select_columns">janitor.select_columns</a> syntax. Let’s apply it to another <a class="reference internal" href="#"><span class="xref myst">dataset</span></a> related to billboard charts - original example is <a class="reference external" href="https://tidyr.tidyverse.org/articles/pivot.html#billboard">here</a>:</p>
+<p>If there are a lot of columns, we can dynamically select the <code class="docutils literal notranslate"><span class="pre">index</span></code>, or <code class="docutils literal notranslate"><span class="pre">column_names</span></code>, using the <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.select.select">janitor.select</a> syntax. Let’s apply it to another <a class="reference external" href="https://github.com/tidyverse/tidyr/blob/main/data-raw/billboard.csv">dataset</a> related to billboard charts - original example is <a class="reference external" href="https://tidyr.tidyverse.org/articles/pivot.html#billboard">here</a>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/tidyverse/tidyr/main/data-raw/billboard.csv&#39;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/tidyverse/tidyr/main/data-raw/billboard.csv&quot;</span>
 <span class="n">billboard</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
 <span class="n">billboard</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
@@ -1140,7 +1143,7 @@ document.write(`
 <p>The columns that will be flipped to long form are the columns that start with <code class="docutils literal notranslate"><span class="pre">wk</span></code> - these will be passed to the <code class="docutils literal notranslate"><span class="pre">column_names</span></code> parameter. That is a lot of columns. Let’s see how <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.pivot.pivot_longer">pivot_longer</a> simplifies this:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">billboard</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span><span class="n">column_names</span> <span class="o">=</span> <span class="s1">&#39;wk*&#39;</span><span class="p">,</span> <span class="n">names_to</span> <span class="o">=</span> <span class="s1">&#39;week&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">billboard</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span><span class="n">column_names</span><span class="o">=</span><span class="s2">&quot;wk*&quot;</span><span class="p">,</span> <span class="n">names_to</span><span class="o">=</span><span class="s2">&quot;week&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1291,7 +1294,7 @@ document.write(`
 <p>If we want to use the <code class="docutils literal notranslate"><span class="pre">index</span></code> parameter instead, that’s easy as well:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">billboard</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;date.entered&#39;</span><span class="p">),</span> <span class="n">names_to</span> <span class="o">=</span> <span class="s1">&#39;week&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">billboard</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;date.entered&quot;</span><span class="p">),</span> <span class="n">names_to</span><span class="o">=</span><span class="s2">&quot;week&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1441,18 +1444,20 @@ document.write(`
 </div>
 </section>
 <section id="pattern-2a-melt-into-multiple-columns-new-column-names">
-<h2><strong>Pattern 2A - Melt into multiple columns - new column names</strong><a class="headerlink" href="#pattern-2a-melt-into-multiple-columns-new-column-names" title="Link to this heading">#</a></h2>
-<p>There are scenarios where multiple variables are crammed into the column names - we had a look at that already with the <code class="docutils literal notranslate"><span class="pre">who</span></code> <a class="reference internal" href="##-Introduction-"><span class="xref myst">example</span></a>.</p>
+<span id="pattern-2a"></span><h2><strong>Pattern 2A - Melt into multiple columns - new column names</strong><a class="headerlink" href="#pattern-2a-melt-into-multiple-columns-new-column-names" title="Link to this heading">#</a></h2>
+<p>There are scenarios where multiple variables are crammed into the column names - we had a look at that already with the <code class="docutils literal notranslate"><span class="pre">who</span></code> <a class="reference internal" href="#introduction">example</a>.</p>
 <p>Let’s look at an example, adapted from <a class="reference external" href="https://rdatatable.gitlab.io/data.table/articles/datatable-reshape.html#a-enhanced-melt">data.table vignette</a>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-    <span class="p">{</span><span class="s1">&#39;Sepal.Length&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">5.1</span><span class="p">,</span> <span class="mf">5.9</span><span class="p">],</span>
-     <span class="s1">&#39;Sepal.Width&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">3.5</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span>
-     <span class="s1">&#39;Petal.Length&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.4</span><span class="p">,</span> <span class="mf">5.1</span><span class="p">],</span>
-     <span class="s1">&#39;Petal.Width&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">],</span>
-     <span class="s1">&#39;Species&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;setosa&#39;</span><span class="p">,</span> <span class="s1">&#39;virginica&#39;</span><span class="p">]}</span>
-    <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;Sepal.Length&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">5.1</span><span class="p">,</span> <span class="mf">5.9</span><span class="p">],</span>
+        <span class="s2">&quot;Sepal.Width&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">3.5</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span>
+        <span class="s2">&quot;Petal.Length&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.4</span><span class="p">,</span> <span class="mf">5.1</span><span class="p">],</span>
+        <span class="s2">&quot;Petal.Width&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">],</span>
+        <span class="s2">&quot;Species&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;setosa&quot;</span><span class="p">,</span> <span class="s2">&quot;virginica&quot;</span><span class="p">],</span>
+    <span class="p">}</span>
+<span class="p">)</span>
 
 <span class="n">iris</span>
 </pre></div>
@@ -1509,11 +1514,7 @@ document.write(`
 <p>In this case, we can use either the <code class="docutils literal notranslate"><span class="pre">names_sep</span></code> or the <code class="docutils literal notranslate"><span class="pre">names_pattern</span></code> parameter - for this particular scenario, the <code class="docutils literal notranslate"><span class="pre">names_sep</span></code> option is a better fit:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;Species&#39;</span><span class="p">,</span>
-        <span class="n">names_to</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;part&#39;</span><span class="p">,</span> <span class="s1">&#39;dimension&#39;</span><span class="p">],</span>
-        <span class="n">names_sep</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;.&#39;</span>
-        <span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;Species&quot;</span><span class="p">,</span> <span class="n">names_to</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;part&quot;</span><span class="p">,</span> <span class="s2">&quot;dimension&quot;</span><span class="p">],</span> <span class="n">names_sep</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1607,10 +1608,8 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;Species&#39;</span><span class="p">,</span>
-        <span class="n">names_to</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;part&#39;</span><span class="p">,</span> <span class="s1">&#39;dimension&#39;</span><span class="p">],</span>
-        <span class="n">names_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(.+)\.(.+)&#39;</span>
-        <span class="p">)</span>
+    <span class="n">index</span><span class="o">=</span><span class="s2">&quot;Species&quot;</span><span class="p">,</span> <span class="n">names_to</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;part&quot;</span><span class="p">,</span> <span class="s2">&quot;dimension&quot;</span><span class="p">],</span> <span class="n">names_pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;(.+)\.(.+)&quot;</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1708,26 +1707,26 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;family&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
-            <span class="s2">&quot;dob_child1&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="s2">&quot;1998-11-26&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;1996-06-22&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;2002-07-11&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;2004-10-10&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;2000-12-05&quot;</span><span class="p">,</span>
-            <span class="p">],</span>
-            <span class="s2">&quot;dob_child2&quot;</span><span class="p">:</span> <span class="p">[</span>
-                <span class="s2">&quot;2000-01-29&quot;</span><span class="p">,</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
-                <span class="s2">&quot;2004-04-05&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;2009-08-27&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;2005-02-28&quot;</span><span class="p">,</span>
-            <span class="p">],</span>
-            <span class="s2">&quot;gender_child1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
-            <span class="s2">&quot;gender_child2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
-        <span class="p">}</span>
-    <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;family&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+        <span class="s2">&quot;dob_child1&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;1998-11-26&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1996-06-22&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;2002-07-11&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;2004-10-10&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;2000-12-05&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;dob_child2&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="s2">&quot;2000-01-29&quot;</span><span class="p">,</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span>
+            <span class="s2">&quot;2004-04-05&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;2009-08-27&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;2005-02-28&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="s2">&quot;gender_child1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+        <span class="s2">&quot;gender_child2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="p">}</span>
+<span class="p">)</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -1807,11 +1806,7 @@ document.write(`
 <p>For the data above, we wish to keep <code class="docutils literal notranslate"><span class="pre">dob</span></code> and <code class="docutils literal notranslate"><span class="pre">gender</span></code> as column names, while moving <code class="docutils literal notranslate"><span class="pre">child1</span></code> and <code class="docutils literal notranslate"><span class="pre">child2</span></code> to a new column. How does <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.pivot.pivot_longer">pivot_longer</a> reshape this?</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;family&#39;</span><span class="p">,</span>
-    <span class="n">names_to</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;.value&#39;</span><span class="p">,</span> <span class="s1">&#39;child&#39;</span><span class="p">),</span>
-    <span class="n">names_sep</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="n">names_to</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;.value&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">),</span> <span class="n">names_sep</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1921,9 +1916,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;family&#39;</span><span class="p">,</span>
-    <span class="n">names_to</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;.value&#39;</span><span class="p">,</span> <span class="s1">&#39;child&#39;</span><span class="p">),</span>
-    <span class="n">names_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(.+)_child(\d)&quot;</span>
+    <span class="n">index</span><span class="o">=</span><span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="n">names_to</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;.value&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">),</span> <span class="n">names_pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;(.+)_child(\d)&quot;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -2032,10 +2025,10 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;family&#39;</span><span class="p">,</span>
-    <span class="n">names_to</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;.value&#39;</span><span class="p">,</span> <span class="s1">&#39;child&#39;</span><span class="p">),</span>
-    <span class="n">names_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(.+)_child(\d)&quot;</span><span class="p">,</span>
-    <span class="n">names_transform</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span>
+    <span class="n">index</span><span class="o">=</span><span class="s2">&quot;family&quot;</span><span class="p">,</span>
+    <span class="n">names_to</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;.value&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">),</span>
+    <span class="n">names_pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;(.+)_child(\d)&quot;</span><span class="p">,</span>
+    <span class="n">names_transform</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -2141,14 +2134,10 @@ document.write(`
 </div></div></div>
 </div>
 <p>The flexibility of <code class="docutils literal notranslate"><span class="pre">.value</span></code> means you can place it anywhere - you are not limited by position - as long as the right argument is passed to the <code class="docutils literal notranslate"><span class="pre">names_sep</span></code> or <code class="docutils literal notranslate"><span class="pre">names_pattern</span></code> parameter, your output should be fine.</p>
-<p>Let’s apply this to the <code class="docutils literal notranslate"><span class="pre">iris</span></code> <a class="reference internal" href="##-Pattern-2A---Melt-into-multiple-columns---new-column-names-"><span class="xref myst">dataset</span></a> to test the flexibility of <code class="docutils literal notranslate"><span class="pre">.value</span></code>:</p>
+<p>Let’s apply this to the <code class="docutils literal notranslate"><span class="pre">iris</span></code> <a class="reference internal" href="#pattern-2a">dataset</a> to test the flexibility of <code class="docutils literal notranslate"><span class="pre">.value</span></code>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;Species&#39;</span><span class="p">,</span>
-    <span class="n">names_to</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;part&#39;</span><span class="p">,</span> <span class="s1">&#39;.value&#39;</span><span class="p">),</span>
-    <span class="n">names_sep</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;Species&quot;</span><span class="p">,</span> <span class="n">names_to</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;part&quot;</span><span class="p">,</span> <span class="s2">&quot;.value&quot;</span><span class="p">),</span> <span class="n">names_sep</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2214,20 +2203,21 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-            <span class="p">[</span>
-                <span class="p">{</span>
-                    <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                    <span class="s2">&quot;DateRange1Start&quot;</span><span class="p">:</span> <span class="s2">&quot;1/1/90&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;DateRange1End&quot;</span><span class="p">:</span> <span class="s2">&quot;3/1/90&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Value1&quot;</span><span class="p">:</span> <span class="mf">4.4</span><span class="p">,</span>
-                    <span class="s2">&quot;DateRange2Start&quot;</span><span class="p">:</span> <span class="s2">&quot;4/5/91&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;DateRange2End&quot;</span><span class="p">:</span> <span class="s2">&quot;6/7/91&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Value2&quot;</span><span class="p">:</span> <span class="mf">6.2</span><span class="p">,</span>
-                    <span class="s2">&quot;DateRange3Start&quot;</span><span class="p">:</span> <span class="s2">&quot;5/5/95&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;DateRange3End&quot;</span><span class="p">:</span> <span class="s2">&quot;6/6/96&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Value3&quot;</span><span class="p">:</span> <span class="mf">3.3</span><span class="p">,</span>
-                <span class="p">}</span>
-            <span class="p">])</span>
+    <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;ID&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;DateRange1Start&quot;</span><span class="p">:</span> <span class="s2">&quot;1/1/90&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;DateRange1End&quot;</span><span class="p">:</span> <span class="s2">&quot;3/1/90&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Value1&quot;</span><span class="p">:</span> <span class="mf">4.4</span><span class="p">,</span>
+            <span class="s2">&quot;DateRange2Start&quot;</span><span class="p">:</span> <span class="s2">&quot;4/5/91&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;DateRange2End&quot;</span><span class="p">:</span> <span class="s2">&quot;6/7/91&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Value2&quot;</span><span class="p">:</span> <span class="mf">6.2</span><span class="p">,</span>
+            <span class="s2">&quot;DateRange3Start&quot;</span><span class="p">:</span> <span class="s2">&quot;5/5/95&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;DateRange3End&quot;</span><span class="p">:</span> <span class="s2">&quot;6/6/96&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Value3&quot;</span><span class="p">:</span> <span class="mf">3.3</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">)</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -2284,11 +2274,7 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;ID&#39;</span><span class="p">,</span> 
-    <span class="n">names_to</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;.value&#39;</span><span class="p">,</span> <span class="s1">&#39;.value&#39;</span><span class="p">),</span>
-    <span class="n">names_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(.+)\d(.*)&quot;</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;ID&quot;</span><span class="p">,</span> <span class="n">names_to</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;.value&quot;</span><span class="p">,</span> <span class="s2">&quot;.value&quot;</span><span class="p">),</span> <span class="n">names_pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;(.+)\d(.*)&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2439,9 +2425,9 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-    <span class="n">names_to</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Manufacturer&quot;</span><span class="p">,</span> <span class="s2">&quot;Device&quot;</span><span class="p">,</span> <span class="s2">&quot;.value&quot;</span><span class="p">),</span>
-    <span class="n">names_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;(.+)\|(.+)\|(.+)\|.*&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="n">names_to</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Manufacturer&quot;</span><span class="p">,</span> <span class="s2">&quot;Device&quot;</span><span class="p">,</span> <span class="s2">&quot;.value&quot;</span><span class="p">),</span>
+    <span class="n">names_pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;(.+)\s\|(.+)\s\|(.+)\s\|.*&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2550,15 +2536,19 @@ document.write(`
 </div>
 </section>
 <section id="pattern-3a-group-similar-columns-together">
-<h2><strong>Pattern 3A - Group similar columns together</strong><a class="headerlink" href="#pattern-3a-group-similar-columns-together" title="Link to this heading">#</a></h2>
+<span id="pattern-3a"></span><h2><strong>Pattern 3A - Group similar columns together</strong><a class="headerlink" href="#pattern-3a-group-similar-columns-together" title="Link to this heading">#</a></h2>
 <p>This is best explained with an example:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_mean</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;x_1_mean&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span>
-                   <span class="s1">&#39;x_2_mean&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">],</span>
-                   <span class="s1">&#39;y_1_mean&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">30</span><span class="p">],</span>
-                   <span class="s1">&#39;y_2_mean&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">40</span><span class="p">],</span>
-                   <span class="s1">&#39;unit&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">]})</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_mean</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;x_1_mean&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span>
+        <span class="s2">&quot;x_2_mean&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">],</span>
+        <span class="s2">&quot;y_1_mean&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">30</span><span class="p">],</span>
+        <span class="s2">&quot;y_2_mean&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">40</span><span class="p">],</span>
+        <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">],</span>
+    <span class="p">}</span>
+<span class="p">)</span>
 
 <span class="n">df_mean</span>
 </pre></div>
@@ -2608,9 +2598,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_mean</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;unit&#39;</span><span class="p">,</span> 
-    <span class="n">names_to</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x_mean&#39;</span><span class="p">,</span> <span class="s1">&#39;y_mean&#39;</span><span class="p">],</span>
-    <span class="n">names_pattern</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]</span>
+    <span class="n">index</span><span class="o">=</span><span class="s2">&quot;unit&quot;</span><span class="p">,</span> <span class="n">names_to</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x_mean&quot;</span><span class="p">,</span> <span class="s2">&quot;y_mean&quot;</span><span class="p">],</span> <span class="n">names_pattern</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">]</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -2784,9 +2772,9 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">movies</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">),</span>
-    <span class="n">names_to</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;director&#39;</span><span class="p">,</span> <span class="s1">&#39;director_fb_likes&#39;</span><span class="p">,</span> <span class="s1">&#39;actor&#39;</span><span class="p">,</span> <span class="s1">&#39;actor_fb_likes&#39;</span><span class="p">],</span>
-    <span class="n">names_pattern</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;director_</span><span class="se">\\</span><span class="s1">d$&#39;</span><span class="p">,</span> <span class="s1">&#39;director_fb_likes&#39;</span><span class="p">,</span> <span class="s1">&#39;actor_</span><span class="se">\\</span><span class="s1">d$&#39;</span><span class="p">,</span> <span class="s1">&#39;actor.+&#39;</span><span class="p">]</span>
+    <span class="n">index</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;duration&quot;</span><span class="p">),</span>
+    <span class="n">names_to</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;director&quot;</span><span class="p">,</span> <span class="s2">&quot;director_fb_likes&quot;</span><span class="p">,</span> <span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;actor_fb_likes&quot;</span><span class="p">],</span>
+    <span class="n">names_pattern</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;director_</span><span class="se">\\</span><span class="s2">d$&quot;</span><span class="p">,</span> <span class="s2">&quot;director_fb_likes&quot;</span><span class="p">,</span> <span class="s2">&quot;actor_</span><span class="se">\\</span><span class="s2">d$&quot;</span><span class="p">,</span> <span class="s2">&quot;actor.+&quot;</span><span class="p">],</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -2951,11 +2939,10 @@ document.write(`
 <p>This could also have been solved using the <code class="docutils literal notranslate"><span class="pre">.value</span></code> approach:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">movies</span>
-<span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">),</span>
-    <span class="n">names_to</span> <span class="o">=</span> <span class="s2">&quot;.value&quot;</span><span class="p">,</span>
-    <span class="n">names_pattern</span> <span class="o">=</span> <span class="s2">&quot;(.+)_</span><span class="se">\\</span><span class="s2">d&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">movies</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
+        <span class="n">index</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;duration&quot;</span><span class="p">),</span> <span class="n">names_to</span><span class="o">=</span><span class="s2">&quot;.value&quot;</span><span class="p">,</span> <span class="n">names_pattern</span><span class="o">=</span><span class="s2">&quot;(.+)_</span><span class="se">\\</span><span class="s2">d&quot;</span>
+    <span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -3120,14 +3107,15 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">NA</span>
+
 <span class="n">treatments</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
-  <span class="nb">id</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">6</span><span class="p">),</span>
-  <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="n">NA</span><span class="p">),</span>
-  <span class="n">A_date</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="n">NA</span><span class="p">),</span>
-  <span class="n">B</span> <span class="o">=</span> <span class="p">(</span><span class="n">NA</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="n">NA</span><span class="p">),</span>
-  <span class="n">B_date</span> <span class="o">=</span> <span class="p">(</span><span class="n">NA</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="n">NA</span><span class="p">),</span>
-  <span class="n">other</span> <span class="o">=</span> <span class="p">(</span><span class="n">NA</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">),</span>
-  <span class="n">other_date</span> <span class="o">=</span> <span class="p">(</span><span class="n">NA</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="nb">id</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+    <span class="n">A</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="n">NA</span><span class="p">),</span>
+    <span class="n">A_date</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="n">NA</span><span class="p">),</span>
+    <span class="n">B</span><span class="o">=</span><span class="p">(</span><span class="n">NA</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="n">NA</span><span class="p">),</span>
+    <span class="n">B_date</span><span class="o">=</span><span class="p">(</span><span class="n">NA</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="n">NA</span><span class="p">),</span>
+    <span class="n">other</span><span class="o">=</span><span class="p">(</span><span class="n">NA</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">),</span>
+    <span class="n">other_date</span><span class="o">=</span><span class="p">(</span><span class="n">NA</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="n">NA</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
 <span class="p">)</span>
 <span class="n">treatments</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">treatments</span><span class="p">)</span>
 <span class="n">treatments</span>
@@ -3221,10 +3209,10 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">treatments</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> 
-    <span class="n">names_to</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;treatment&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">],</span>
-    <span class="n">names_pattern</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A$|B$|other$&#39;</span><span class="p">,</span> <span class="s1">&#39;.+date$&#39;</span><span class="p">],</span>
-    <span class="n">dropna</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">index</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+    <span class="n">names_to</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;treatment&quot;</span><span class="p">,</span> <span class="s2">&quot;date&quot;</span><span class="p">],</span>
+    <span class="n">names_pattern</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;A$|B$|other$&quot;</span><span class="p">,</span> <span class="s2">&quot;.+date$&quot;</span><span class="p">],</span>
+    <span class="n">dropna</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -3298,10 +3286,10 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">treatments</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> 
-    <span class="n">names_to</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;treatment&#39;</span><span class="p">],</span>
-    <span class="n">names_pattern</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;.+date$&#39;</span><span class="p">,</span> <span class="s1">&#39;.+&#39;</span><span class="p">],</span>
-    <span class="n">dropna</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">index</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+    <span class="n">names_to</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;treatment&quot;</span><span class="p">],</span>
+    <span class="n">names_pattern</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;.+date$&quot;</span><span class="p">,</span> <span class="s2">&quot;.+&quot;</span><span class="p">],</span>
+    <span class="n">dropna</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -3377,15 +3365,19 @@ document.write(`
 <p>This is best illustrated with an <a class="reference external" href="https://stackoverflow.com/q/51519101/7175713">example</a>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;City&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Houston&#39;</span><span class="p">,</span> <span class="s1">&#39;Austin&#39;</span><span class="p">,</span> <span class="s1">&#39;Hoover&#39;</span><span class="p">],</span>
-                   <span class="s1">&#39;State&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Texas&#39;</span><span class="p">,</span> <span class="s1">&#39;Texas&#39;</span><span class="p">,</span> <span class="s1">&#39;Alabama&#39;</span><span class="p">],</span>
-                   <span class="s1">&#39;Name&#39;</span><span class="p">:[</span><span class="s1">&#39;Aria&#39;</span><span class="p">,</span> <span class="s1">&#39;Penelope&#39;</span><span class="p">,</span> <span class="s1">&#39;Niko&#39;</span><span class="p">],</span>
-                   <span class="s1">&#39;Mango&#39;</span><span class="p">:[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span>
-                   <span class="s1">&#39;Orange&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span> 
-                   <span class="s1">&#39;Watermelon&#39;</span><span class="p">:[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">99</span><span class="p">,</span> <span class="mi">43</span><span class="p">],</span>
-                   <span class="s1">&#39;Gin&#39;</span><span class="p">:[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">34</span><span class="p">],</span>
-                   <span class="s1">&#39;Vodka&#39;</span><span class="p">:[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">18</span><span class="p">]},</span>
-                 <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;City&#39;</span><span class="p">,</span> <span class="s1">&#39;State&#39;</span><span class="p">,</span> <span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Mango&#39;</span><span class="p">,</span> <span class="s1">&#39;Orange&#39;</span><span class="p">,</span> <span class="s1">&#39;Watermelon&#39;</span><span class="p">,</span> <span class="s1">&#39;Gin&#39;</span><span class="p">,</span> <span class="s1">&#39;Vodka&#39;</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;City&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Houston&quot;</span><span class="p">,</span> <span class="s2">&quot;Austin&quot;</span><span class="p">,</span> <span class="s2">&quot;Hoover&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;State&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Texas&quot;</span><span class="p">,</span> <span class="s2">&quot;Texas&quot;</span><span class="p">,</span> <span class="s2">&quot;Alabama&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Aria&quot;</span><span class="p">,</span> <span class="s2">&quot;Penelope&quot;</span><span class="p">,</span> <span class="s2">&quot;Niko&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;Mango&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span>
+        <span class="s2">&quot;Orange&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span>
+        <span class="s2">&quot;Watermelon&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">99</span><span class="p">,</span> <span class="mi">43</span><span class="p">],</span>
+        <span class="s2">&quot;Gin&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">34</span><span class="p">],</span>
+        <span class="s2">&quot;Vodka&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">18</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;City&quot;</span><span class="p">,</span> <span class="s2">&quot;State&quot;</span><span class="p">,</span> <span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Mango&quot;</span><span class="p">,</span> <span class="s2">&quot;Orange&quot;</span><span class="p">,</span> <span class="s2">&quot;Watermelon&quot;</span><span class="p">,</span> <span class="s2">&quot;Gin&quot;</span><span class="p">,</span> <span class="s2">&quot;Vodka&quot;</span><span class="p">],</span>
+<span class="p">)</span>
 
 
 <span class="n">df</span>
@@ -3459,7 +3451,7 @@ document.write(`
 </table>
 </div></div></div>
 </div>
-<p>The goal in this case is to group similar columns <strong>and</strong> values together - group the drinks into one column, group the fruits into another column. When that is done, group the values for the drinks into one column, and the values for the fruits into another column. That’s the pattern, and for this pattern we continue with the idea from <a class="reference internal" href="##-Pattern-3A---Group-similar-columns-together-"><span class="xref myst">earlier</span></a>, by passing a list of regular expressions to <code class="docutils literal notranslate"><span class="pre">names_pattern</span></code>, an equal number of names to <code class="docutils literal notranslate"><span class="pre">names_to</span></code>, <strong>and</strong> an equal number of names to <code class="docutils literal notranslate"><span class="pre">values_to</span></code>:</p>
+<p>The goal in this case is to group similar columns <strong>and</strong> values together - group the drinks into one column, group the fruits into another column. When that is done, group the values for the drinks into one column, and the values for the fruits into another column. That’s the pattern, and for this pattern we continue with the idea from <a class="reference internal" href="#pattern-3a">earlier</a>, by passing a list of regular expressions to <code class="docutils literal notranslate"><span class="pre">names_pattern</span></code>, an equal number of names to <code class="docutils literal notranslate"><span class="pre">names_to</span></code>, <strong>and</strong> an equal number of names to <code class="docutils literal notranslate"><span class="pre">values_to</span></code>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
@@ -3468,7 +3460,7 @@ document.write(`
     <span class="n">names_to</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Fruit&quot;</span><span class="p">,</span> <span class="s2">&quot;Drink&quot;</span><span class="p">),</span>
     <span class="n">values_to</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Pounds&quot;</span><span class="p">,</span> <span class="s2">&quot;Ounces&quot;</span><span class="p">),</span>
     <span class="n">names_pattern</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s2">&quot;M|O|W&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;G|V&quot;</span><span class="p">],</span>
-   <span class="p">)</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -3588,17 +3580,19 @@ document.write(`
 <p>Simple, straightforward, to the point, and efficient. Let’s look at another <a class="reference external" href="https://stackoverflow.com/q/37422487/7175713">example</a>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;State&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;CA&#39;</span><span class="p">,</span> <span class="s1">&#39;CA&#39;</span><span class="p">,</span> <span class="s1">&#39;FL&#39;</span><span class="p">,</span> <span class="s1">&#39;FL&#39;</span><span class="p">],</span>
- <span class="s1">&#39;ItemN&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
- <span class="s1">&#39;x1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
- <span class="s1">&#39;x2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
- <span class="s1">&#39;x3&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
- <span class="s1">&#39;y1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span>
- <span class="s1">&#39;y2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span>
- <span class="s1">&#39;y3&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span>
- <span class="s1">&#39;z1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span>
- <span class="s1">&#39;z2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
- <span class="s1">&#39;z3&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">]}</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;State&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CA&quot;</span><span class="p">,</span> <span class="s2">&quot;CA&quot;</span><span class="p">,</span> <span class="s2">&quot;FL&quot;</span><span class="p">,</span> <span class="s2">&quot;FL&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;ItemN&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+    <span class="s2">&quot;x1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
+    <span class="s2">&quot;x2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+    <span class="s2">&quot;x3&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+    <span class="s2">&quot;y1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">16</span><span class="p">],</span>
+    <span class="s2">&quot;y2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span>
+    <span class="s2">&quot;y3&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span>
+    <span class="s2">&quot;z1&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">],</span>
+    <span class="s2">&quot;z2&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+    <span class="s2">&quot;z3&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+<span class="p">}</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 
@@ -3703,10 +3697,10 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;State&#39;</span><span class="p">,</span> <span class="s1">&#39;ItemN&#39;</span><span class="p">],</span> 
-    <span class="n">names_to</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">],</span> 
-    <span class="n">values_to</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;xvalue&#39;</span><span class="p">,</span> <span class="s1">&#39;yvalue&#39;</span><span class="p">,</span> <span class="s1">&#39;zvalue&#39;</span><span class="p">],</span> 
-    <span class="n">names_pattern</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">],</span> 
+    <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;State&quot;</span><span class="p">,</span> <span class="s2">&quot;ItemN&quot;</span><span class="p">],</span>
+    <span class="n">names_to</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">],</span>
+    <span class="n">values_to</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;xvalue&quot;</span><span class="p">,</span> <span class="s2">&quot;yvalue&quot;</span><span class="p">,</span> <span class="s2">&quot;zvalue&quot;</span><span class="p">],</span>
+    <span class="n">names_pattern</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">],</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -3888,7 +3882,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>499 μs ± 10.8 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>488 μs ± 18 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
 </pre></div>
 </div>
 </div>
@@ -3900,10 +3894,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>600 μs ± 2.32 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>573 μs ± 3.03 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
 </pre></div>
 </div>
 </div>
@@ -3911,7 +3902,7 @@ document.write(`
 <p><a class="reference external" href="https://grantmcdermott.com/reshape-benchmarks/">Sample data</a>, using 1000 columns (you can personally increase the number of columns to 1e6 or 1e8, depending on the power of your CPU):</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sparse_wide</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;Data_files/sparse-wide.csv&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sparse_wide</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;Data_files/sparse-wide.csv&quot;</span><span class="p">)</span>
 <span class="n">sparse_wide</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -4091,7 +4082,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>51.2 ms ± 390 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>50 ms ± 313 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -4103,7 +4094,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15.7 ms ± 183 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>15.4 ms ± 65 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 </pre></div>
 </div>
 </div>
@@ -4112,11 +4103,12 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wl</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">wide_to_long</span><span class="p">(</span>
-            <span class="n">movies</span><span class="p">,</span> 
-            <span class="n">stubnames</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;director&#39;</span><span class="p">,</span> <span class="s1">&#39;director_fb_likes&#39;</span><span class="p">,</span> <span class="s1">&#39;actor&#39;</span><span class="p">,</span> <span class="s1">&#39;actor_fb_likes&#39;</span><span class="p">],</span> 
-            <span class="n">i</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;rating&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">],</span> 
-            <span class="n">j</span> <span class="o">=</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span> 
-            <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;_&#39;</span><span class="p">)</span>
+    <span class="n">movies</span><span class="p">,</span>
+    <span class="n">stubnames</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;director&quot;</span><span class="p">,</span> <span class="s2">&quot;director_fb_likes&quot;</span><span class="p">,</span> <span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;actor_fb_likes&quot;</span><span class="p">],</span>
+    <span class="n">i</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;rating&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;duration&quot;</span><span class="p">],</span>
+    <span class="n">j</span><span class="o">=</span><span class="s2">&quot;num&quot;</span><span class="p">,</span>
+    <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="n">wl</span>
 </pre></div>
 </div>
@@ -4267,11 +4259,11 @@ document.write(`
 <p>A more efficient approach than <code class="docutils literal notranslate"><span class="pre">pd.wide_to_long</span></code>, using <code class="docutils literal notranslate"><span class="pre">pd.stack</span></code>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;rating&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;rating&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;duration&quot;</span><span class="p">]</span>
 <span class="n">vid</span> <span class="o">=</span> <span class="n">movies</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
-<span class="n">vid</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">vid</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">expand</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-<span class="n">vid</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;num&#39;</span><span class="p">]</span>
-<span class="n">vid</span> <span class="o">=</span> <span class="n">vid</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">level</span> <span class="o">=</span> <span class="s1">&#39;num&#39;</span><span class="p">,</span> <span class="n">future_stack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">vid</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">vid</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">vid</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;num&quot;</span><span class="p">]</span>
+<span class="n">vid</span> <span class="o">=</span> <span class="n">vid</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s2">&quot;num&quot;</span><span class="p">,</span> <span class="n">future_stack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">vid</span>
 </pre></div>
 </div>
@@ -4421,13 +4413,12 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">movies</span>
-        <span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-            <span class="n">index</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="s1">&#39;duration&#39;</span><span class="p">),</span>
-            <span class="n">names_to</span> <span class="o">=</span> <span class="s2">&quot;.value&quot;</span><span class="p">,</span>
-            <span class="n">names_pattern</span> <span class="o">=</span> <span class="s2">&quot;(.+)_</span><span class="se">\\</span><span class="s2">d&quot;</span><span class="p">,</span>
-            <span class="n">sort_by_appearance</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-        <span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="n">movies</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
+    <span class="n">index</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;duration&quot;</span><span class="p">),</span>
+    <span class="n">names_to</span><span class="o">=</span><span class="s2">&quot;.value&quot;</span><span class="p">,</span>
+    <span class="n">names_pattern</span><span class="o">=</span><span class="s2">&quot;(.+)_</span><span class="se">\\</span><span class="s2">d&quot;</span><span class="p">,</span>
+    <span class="n">sort_by_appearance</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="n">out</span>
 </pre></div>
@@ -4591,7 +4582,7 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wl</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="s1">&#39;num&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wl</span> <span class="o">=</span> <span class="n">wl</span><span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="s2">&quot;num&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 <span class="n">wl</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -4604,11 +4595,11 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vid</span> <span class="o">=</span> <span class="p">(</span><span class="n">vid</span>
-        <span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="s1">&#39;num&#39;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;director&#39;</span><span class="p">,</span> <span class="s1">&#39;director_fb_likes&#39;</span><span class="p">,</span> <span class="s1">&#39;actor&#39;</span><span class="p">,</span> <span class="s1">&#39;actor_fb_likes&#39;</span><span class="p">]]</span>
-        <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-        <span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vid</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">vid</span><span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="s2">&quot;num&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">&quot;director&quot;</span><span class="p">,</span> <span class="s2">&quot;director_fb_likes&quot;</span><span class="p">,</span> <span class="s2">&quot;actor&quot;</span><span class="p">,</span> <span class="s2">&quot;actor_fb_likes&quot;</span><span class="p">]]</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="p">)</span>
 
 <span class="n">wl</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">vid</span><span class="p">)</span>
 </pre></div>
@@ -4645,7 +4636,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>53.1 ms ± 302 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>51.8 ms ± 293 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -4661,7 +4652,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5.16 ms ± 305 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5.15 ms ± 174 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 </pre></div>
 </div>
 </div>
@@ -4680,7 +4671,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.77 ms ± 100 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.66 ms ± 56.9 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
 </pre></div>
 </div>
 </div>
@@ -4698,7 +4689,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.02 ms ± 48.9 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.9 ms ± 65.4 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
 </pre></div>
 </div>
 </div>
@@ -4707,7 +4698,7 @@ document.write(`
 </section>
 <section id="summary">
 <h2><strong>Summary</strong><a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
-<p>This blog post shows various ways to reshape data into long form, using <code class="docutils literal notranslate"><span class="pre">pivot_longer</span></code>, based on some common patterns. Once the pattern is identified, use the appropriate syntax for <code class="docutils literal notranslate"><span class="pre">pivot_longer</span></code>. It is meant to be simple, straightforward, and efficient.</p>
+<p>This blog post shows various ways to reshape data into long form, using <code class="docutils literal notranslate"><span class="pre">pivot_longer</span></code>, based on some common patterns. Once the pattern is identified, use the appropriate syntax for <code class="docutils literal notranslate"><span class="pre">pivot_longer</span></code>. It is meant to be simple, straightforward, and efficient. For more control, have a look at the <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.pivot.pivot_longer_spec">pivot_longer_spec</a></p>
 </section>
 </section>
 
@@ -4808,7 +4799,7 @@ By Samuel Oranyeli
 
   <p class="copyright">
     
-      © Copyright 2023.
+      © Copyright 2021.
       <br/>
     
   </p>

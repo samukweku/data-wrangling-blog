@@ -203,7 +203,7 @@ commentsRunWhenDOMLoaded(addUtterances);
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
                 <a class="reference internal" href="../intro.html">
-                    Data Wrangling Recipes
+                    Introduction
                 </a>
             </li>
         </ul>
@@ -248,6 +248,8 @@ commentsRunWhenDOMLoaded(addUtterances);
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Polars</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="dplyr-across-in-Polars.html">Dplyr’s across: Replicating within Polars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Reshape-Data-in-Polars-Wide-to_Long-Part-I.html">Reshape Data in Polars Efficiently from Wide to Long Form - Part I</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Reshape-Data-in-Polars-Wide-to_Long-Part-II.html">Reshape Data in Polars Efficiently from Wide to Long Form - Part II</a></li>
 </ul>
 
     </div>
@@ -700,36 +702,22 @@ Consider a dataframe `df_process` that contains `process_id`, `process_start_dat
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pip install pyjanitor</span>
 <span class="kn">import</span> <span class="nn">janitor</span> <span class="k">as</span> <span class="nn">jn</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">janitor</span> <span class="kn">import</span> <span class="n">col</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ImportError</span><span class="g g-Whitespace">                               </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">line</span> <span class="mi">4</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">janitor</span> <span class="k">as</span> <span class="nn">jn</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">import</span> <span class="nn">sys</span>
-<span class="ne">----&gt; </span><span class="mi">4</span> <span class="kn">from</span> <span class="nn">janitor</span> <span class="kn">import</span> <span class="n">col</span>
-
-<span class="ne">ImportError</span>: cannot import name &#39;col&#39; from &#39;janitor&#39; (/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/janitor/__init__.py)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot; pandas version :&quot;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> 
-      <span class="s2">&quot;janitor version :&quot;</span><span class="p">,</span> <span class="n">jn</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
-      <span class="s2">&quot;python version :&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;pandas version :&quot;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;janitor version :&quot;</span><span class="p">,</span> <span class="n">jn</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;python version :&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> pandas version : 2.2.0 
- janitor version : 0.26.0 
- python version : 3.9.18 | packaged by conda-forge | (main, Dec 23 2023, 16:33:10) 
-[GCC 12.3.0]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pandas version : 2.2.2
+janitor version : 0.28.1
+python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:49) [Clang 16.0.6 ]
 </pre></div>
 </div>
 </div>
@@ -836,156 +824,6 @@ is used to combine the results of the individual conditions.</p></li>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span><span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>left</th>
-      <th>col_a</th>
-      <th>right</th>
-      <th>col_b</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1</td>
-      <td>A</td>
-      <td>0</td>
-      <td>Z</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>2</td>
-      <td>B</td>
-      <td>0</td>
-      <td>Z</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>3</td>
-      <td>C</td>
-      <td>0</td>
-      <td>Z</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>3</td>
-      <td>C</td>
-      <td>2</td>
-      <td>X</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<p>You can also use the <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.utils.col">col</a> function:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span><span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="n">col</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">col</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>left</th>
-      <th>col_a</th>
-      <th>right</th>
-      <th>col_b</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1</td>
-      <td>A</td>
-      <td>2</td>
-      <td>X</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1</td>
-      <td>A</td>
-      <td>3</td>
-      <td>Y</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>2</td>
-      <td>B</td>
-      <td>3</td>
-      <td>Y</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>1</td>
-      <td>A</td>
-      <td>0</td>
-      <td>Z</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>2</td>
-      <td>B</td>
-      <td>0</td>
-      <td>Z</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>3</td>
-      <td>C</td>
-      <td>0</td>
-      <td>Z</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>3</td>
-      <td>C</td>
-      <td>2</td>
-      <td>X</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span><span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="n">col</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">col</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1196,61 +1034,6 @@ is used to combine the results of the individual conditions.</p></li>
     <span class="n">west</span><span class="p">,</span> 
     <span class="p">(</span><span class="s1">&#39;dur&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;&#39;</span><span class="p">),</span> 
     <span class="p">(</span><span class="s1">&#39;rev&#39;</span><span class="p">,</span> <span class="s1">&#39;cost&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">),</span> 
-    <span class="n">df_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;dur&#39;</span><span class="p">,</span> <span class="s1">&#39;rev&#39;</span><span class="p">],</span>
-    <span class="n">right_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;t_id&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;cost&#39;</span><span class="p">]</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>id</th>
-      <th>dur</th>
-      <th>rev</th>
-      <th>t_id</th>
-      <th>time</th>
-      <th>cost</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>101</td>
-      <td>100</td>
-      <td>12</td>
-      <td>498</td>
-      <td>140</td>
-      <td>11</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">east</span>
-<span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
-    <span class="n">west</span><span class="p">,</span> 
-    <span class="n">col</span><span class="p">(</span><span class="s1">&#39;dur&#39;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">col</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">),</span>
-    <span class="n">col</span><span class="p">(</span><span class="s1">&#39;rev&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">col</span><span class="p">(</span><span class="s1">&#39;cost&#39;</span><span class="p">),</span>
     <span class="n">df_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;dur&#39;</span><span class="p">,</span> <span class="s1">&#39;rev&#39;</span><span class="p">],</span>
     <span class="n">right_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;t_id&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;cost&#39;</span><span class="p">]</span>
     <span class="p">)</span>
@@ -1629,95 +1412,6 @@ is used to combine the results of the individual conditions.</p></li>
 </table>
 </div></div></div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">df1</span>
-<span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
-    <span class="n">df2</span><span class="p">,</span>
-    <span class="n">col</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">col</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">),</span>
-    <span class="n">col</span><span class="p">(</span><span class="s1">&#39;value_1&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">col</span><span class="p">(</span><span class="s1">&#39;value_2A&#39;</span><span class="p">),</span>
-    <span class="n">col</span><span class="p">(</span><span class="s1">&#39;value_1&#39;</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">col</span><span class="p">(</span><span class="s1">&#39;value_2B&#39;</span><span class="p">)</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead tr th {
-        text-align: left;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr>
-      <th></th>
-      <th colspan="2" halign="left">left</th>
-      <th colspan="3" halign="left">right</th>
-    </tr>
-    <tr>
-      <th></th>
-      <th>id</th>
-      <th>value_1</th>
-      <th>id</th>
-      <th>value_2A</th>
-      <th>value_2B</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1</td>
-      <td>5</td>
-      <td>1</td>
-      <td>3</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1</td>
-      <td>7</td>
-      <td>1</td>
-      <td>7</td>
-      <td>9</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>2</td>
-      <td>1</td>
-      <td>2</td>
-      <td>0</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>2</td>
-      <td>3</td>
-      <td>2</td>
-      <td>2</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>2</td>
-      <td>3</td>
-      <td>2</td>
-      <td>3</td>
-      <td>6</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
 <p>Note the above returned a MultiIndex column; if the columns from the left and right dataframes have something in common a MultiIndex column is returned. Of course, you can select/rename columns with <code class="docutils literal notranslate"><span class="pre">df_columns</span></code> and <code class="docutils literal notranslate"><span class="pre">right_columns</span></code> to get a single index column, if that is preferred.</p>
 </section>
 <section id="non-equi-joins-with-or">
@@ -1997,9 +1691,9 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/sam/mambaforge/envs/jupyterbook/lib/python3.9/site-packages/memory_profiler.py:1136: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/memory_profiler.py:1136: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
   ipython_version = LooseVersion(IPython.__version__)
-/home/sam/mambaforge/envs/jupyterbook/lib/python3.9/site-packages/setuptools/_distutils/version.py:345: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
+/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/setuptools/_distutils/version.py:337: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
   other = LooseVersion(other)
 </pre></div>
 </div>
@@ -2355,7 +2049,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.36 s ± 92.5 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.11 s ± 31.6 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2367,7 +2061,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>57.8 ms ± 1.48 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>38.9 ms ± 401 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -2379,7 +2073,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>74.8 ms ± 3.79 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>40.4 ms ± 1.03 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -2392,7 +2086,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 3396.63 MiB, increment: 2683.73 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 3844.30 MiB, increment: 0.14 MiB
 </pre></div>
 </div>
 </div>
@@ -2404,7 +2098,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 713.18 MiB, increment: 0.00 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 3844.30 MiB, increment: 0.00 MiB
 </pre></div>
 </div>
 </div>
@@ -2416,7 +2110,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 725.80 MiB, increment: 12.62 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 3844.30 MiB, increment: 0.00 MiB
 </pre></div>
 </div>
 </div>
@@ -2677,7 +2371,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>26.2 ms ± 961 µs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>19.6 ms ± 2.99 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -2699,7 +2393,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>31.3 ms ± 3.81 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>22.2 ms ± 2 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2775,7 +2469,23 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3.17 s ± 24.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.65 s ± 51.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<span class="p">(</span><span class="n">d1</span>
+<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">le</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">pos1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">df</span><span class="o">.</span><span class="n">pos1</span><span class="o">.</span><span class="n">le</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">end</span><span class="p">)]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.56 s ± 50.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2795,7 +2505,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.33 s ± 40.3 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.74 s ± 39.5 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2807,7 +2517,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 5829.88 MiB, increment: 4767.70 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 7749.67 MiB, increment: 1846.95 MiB
 </pre></div>
 </div>
 </div>
@@ -2819,12 +2529,12 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 4135.80 MiB, increment: 3073.66 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 5711.58 MiB, increment: 0.00 MiB
 </pre></div>
 </div>
 </div>
 </div>
-<p><a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> is faster; this might not be the case all the time.</p>
+<p><a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> is slightly faster; this might not be the case all the time.</p>
 <p>Depending on the distribution of data, using <code class="docutils literal notranslate"><span class="pre">numba</span></code> where an equi-join is present can give significant performance speedups:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2983,7 +2693,23 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4.97 s ± 47 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4.44 s ± 222 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<span class="p">(</span><span class="n">d1</span>
+<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;xx&#39;</span><span class="p">)</span>
+<span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">le</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">pos1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">df</span><span class="o">.</span><span class="n">pos1</span><span class="o">.</span><span class="n">le</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">end</span><span class="p">)]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4.23 s ± 156 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -3003,7 +2729,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.45 s ± 34 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.76 s ± 3.24 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -3023,7 +2749,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>324 ms ± 11.1 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>159 ms ± 638 μs per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -3135,7 +2861,7 @@ By Samuel Oranyeli
 
   <p class="copyright">
     
-      © Copyright 2023.
+      © Copyright 2021.
       <br/>
     
   </p>

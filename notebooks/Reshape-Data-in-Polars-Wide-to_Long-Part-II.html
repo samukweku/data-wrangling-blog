@@ -1,0 +1,1312 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Reshape Data in Polars Efficiently from Wide to Long Form - Part II &#8212; Data Wrangling and Automation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script kind="utterances">
+
+    var commentsRunWhenDOMLoaded = cb => {
+    if (document.readyState != 'loading') {
+        cb()
+    } else if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', cb)
+    } else {
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState == 'complete') cb()
+        })
+    }
+}
+
+var addUtterances = () => {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://utteranc.es/client.js";
+    script.async = "async";
+
+    script.setAttribute("repo", "samukweku/data-wrangling-blog");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("theme", "github-light");
+    script.setAttribute("label", "💬 comment");
+    script.setAttribute("crossorigin", "anonymous");
+
+    sections = document.querySelectorAll("div.section");
+    if (sections !== null) {
+        section = sections[sections.length-1];
+        section.appendChild(script);
+    }
+}
+commentsRunWhenDOMLoaded(addUtterances);
+</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/Reshape-Data-in-Polars-Wide-to_Long-Part-II';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Reshape Data in Polars Efficiently from Wide to Long Form - Part III" href="Reshape-Data-in-Polars-Wide-to_Long-Part-III.html" />
+    <link rel="prev" title="Reshape Data in Polars Efficiently from Wide to Long Form - Part I" href="Reshape-Data-in-Polars-Wide-to_Long-Part-I.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Data Wrangling and Automation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Working with Spreadsheets</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Access-Tables-In-Excel.html">Access Excel Tables with Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Small-Multiples.html">SpreadSheet Munging Strategies in Python - Small Multiples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Meaningful-Formats.html">SpreadSheet Munging Strategies in Python - Meaningful Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Pivot-Tables---Simple-Unpivoting.html">SpreadSheet Munging Strategies in Python - Pivot Tables - Simple Unpivoting</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="Pivot-Tables-Complex-Unpivoting.html">SpreadSheet Munging Strategies in Python - Pivot Tables - Complex Unpivoting</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Pydatatable</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Replicating-SD-in-python-datatable.html">Replicating .SD in Python Datatable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Conditional-Statements.html">Data Wrangling with Python Datatable - Conditional Statements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Row-wise-Transformations.html">Data Wrangling with Python Datatable - Row-wise Transformations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Select-Columns-by-Data-Type.html">Data Wrangling with Python Datatable - Select Columns by Data Type</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Replicate-Pandas-map.html">Data Wrangling with Python Datatable - Replicate Pandas’ Map Function</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Filtering-Rows-in-Python-Datatable.html">Filtering Rows in Datatable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Selecting-and-Grouping-Data-with-Python-Datatable.html">Selecting and Grouping Data with Python Datatable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Selecting-Columns.html">Data Wrangling with Python Datatable - Selecting Columns</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Extract-DataFrame-from-Compressed-Data-into-Python-Datatable.html">Extract DataFrame from Compressed Data into Python Datatable</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable---Transformations-Within-a-GroupBy.html">Data Wrangling with Python Datatable - Transformations Within a GroupBy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Data-Wrangling-with-Python-Datatable-Aggregation-on-Multiple-Columns.html">Data Wrangling - Aggregation on Multiple Columns</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">CSVs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Read-Multiple-Csv-Files-into-one-Table-in-Python.html">Read Multiple CSV Files into one Frame in Python</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Pandas</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="dplyr-across-in-Pandas.html">Dplyr’s across: Replicating within Pandas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Fast-and-Efficient-Inequality-Joins-in-Pandas.html">Fast and Efficient Inequality Joins in Pandas</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Pivot_longer---Reshape-Data-in-Pandas-with-Ease-From-Wide-to-Long.html">Pivot_longer : Reshape Data in Pandas Efficiently and with Ease from Wide to Long</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Extract-DataFrame-from-Compressed-Data-into-Pandas.html">Extract DataFrame from Compressed Data into Pandas</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Web Scraping</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Web-Scraping-in-Python.html">Easy Web Scraping with Python</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Polars</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="dplyr-across-in-Polars.html">Dplyr’s across: Replicating within Polars</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Reshape-Data-in-Polars-Wide-to_Long-Part-I.html">Reshape Data in Polars Efficiently from Wide to Long Form - Part I</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Reshape Data in Polars Efficiently from Wide to Long Form - Part II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Reshape-Data-in-Polars-Wide-to_Long-Part-III.html">Reshape Data in Polars Efficiently from Wide to Long Form - Part III</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/samukweku/data-wrangling-blog" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/samukweku/data-wrangling-blog/issues/new?title=Issue%20on%20page%20%2Fnotebooks/Reshape-Data-in-Polars-Wide-to_Long-Part-II.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/Reshape-Data-in-Polars-Wide-to_Long-Part-II.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Reshape Data in Polars Efficiently from Wide to Long Form - Part II</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction"><strong>Introduction</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#many-variables-in-column-names"><strong>Many variables in column names</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-observations-per-row"><strong>Multiple observations per row</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary"><strong>Summary</strong></a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="reshape-data-in-polars-efficiently-from-wide-to-long-form-part-ii">
+<h1>Reshape Data in Polars Efficiently from Wide to Long Form - Part II<a class="headerlink" href="#reshape-data-in-polars-efficiently-from-wide-to-long-form-part-ii" title="Link to this heading">#</a></h1>
+<section id="introduction">
+<h2><strong>Introduction</strong><a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
+<p>In a <a class="reference internal" href="Reshape-Data-in-Polars-Wide-to_Long-Part-I.html"><span class="std std-doc">previous blogpost</span></a>, we explored various scenarios when reshaping a DataFrame from wide to long form.</p>
+<p>This article focuses on reshaping efficiently, especially for large datasets, where some post processing is done after <a class="reference external" href="https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.unpivot.html#polars.DataFrame.unpivot">unpivoting</a>.</p>
+<p>For the most part, we will reuse the datasets used in the <a class="reference internal" href="Reshape-Data-in-Polars-Wide-to_Long-Part-I.html"><span class="std std-doc">previous blogpost</span></a>.</p>
+<p>Polars’ <a class="reference external" href="https://docs.pola.rs/api/python/stable/reference/dataframe/index.html">eager API</a> is used in the examples below; for more performance, or in production mode, it is recommended to use the <a class="reference external" href="https://docs.pola.rs/api/python/stable/reference/lazyframe/index.html">lazy API</a>.</p>
+<p>The examples are broken down in a line by line approach, instead of a chainable form, for illustration purposes - this way we can clearly identify what sections of the code have the biggest impact on performance.</p>
+<p>Caveat: Do not optimise prematurely, or rather optimise only if you need to.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">polars</span> <span class="k">as</span> <span class="nn">pl</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;polars version :&quot;</span><span class="p">,</span> <span class="n">pl</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;python version :&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>polars version : 1.7.1
+python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:49) [Clang 16.0.6 ]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="many-variables-in-column-names">
+<span id="id1"></span><h2><strong>Many variables in column names</strong><a class="headerlink" href="#many-variables-in-column-names" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">who</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./Data_files/who.csv&quot;</span><span class="p">,</span> <span class="n">null_values</span><span class="o">=</span><span class="s2">&quot;NA&quot;</span><span class="p">)</span>
+<span class="n">who</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (7_240, 60)</small><table border="1" class="dataframe"><thead><tr><th>country</th><th>iso2</th><th>iso3</th><th>year</th><th>new_sp_m014</th><th>new_sp_m1524</th><th>new_sp_m2534</th><th>new_sp_m3544</th><th>new_sp_m4554</th><th>new_sp_m5564</th><th>new_sp_m65</th><th>new_sp_f014</th><th>new_sp_f1524</th><th>new_sp_f2534</th><th>new_sp_f3544</th><th>new_sp_f4554</th><th>new_sp_f5564</th><th>new_sp_f65</th><th>new_sn_m014</th><th>new_sn_m1524</th><th>new_sn_m2534</th><th>new_sn_m3544</th><th>new_sn_m4554</th><th>new_sn_m5564</th><th>new_sn_m65</th><th>new_sn_f014</th><th>new_sn_f1524</th><th>new_sn_f2534</th><th>new_sn_f3544</th><th>new_sn_f4554</th><th>new_sn_f5564</th><th>new_sn_f65</th><th>new_ep_m014</th><th>new_ep_m1524</th><th>new_ep_m2534</th><th>new_ep_m3544</th><th>new_ep_m4554</th><th>new_ep_m5564</th><th>new_ep_m65</th><th>new_ep_f014</th><th>new_ep_f1524</th><th>new_ep_f2534</th><th>new_ep_f3544</th><th>new_ep_f4554</th><th>new_ep_f5564</th><th>new_ep_f65</th><th>newrel_m014</th><th>newrel_m1524</th><th>newrel_m2534</th><th>newrel_m3544</th><th>newrel_m4554</th><th>newrel_m5564</th><th>newrel_m65</th><th>newrel_f014</th><th>newrel_f1524</th><th>newrel_f2534</th><th>newrel_f3544</th><th>newrel_f4554</th><th>newrel_f5564</th><th>newrel_f65</th></tr><tr><td>str</td><td>str</td><td>str</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Afghanistan&quot;</td><td>&quot;AF&quot;</td><td>&quot;AFG&quot;</td><td>1980</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td></tr><tr><td>&quot;Afghanistan&quot;</td><td>&quot;AF&quot;</td><td>&quot;AFG&quot;</td><td>1981</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td></tr><tr><td>&quot;Afghanistan&quot;</td><td>&quot;AF&quot;</td><td>&quot;AFG&quot;</td><td>1982</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td></tr><tr><td>&quot;Afghanistan&quot;</td><td>&quot;AF&quot;</td><td>&quot;AFG&quot;</td><td>1983</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td></tr><tr><td>&quot;Afghanistan&quot;</td><td>&quot;AF&quot;</td><td>&quot;AFG&quot;</td><td>1984</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>&quot;Zimbabwe&quot;</td><td>&quot;ZW&quot;</td><td>&quot;ZWE&quot;</td><td>2009</td><td>125</td><td>578</td><td>null</td><td>3471</td><td>681</td><td>293</td><td>192</td><td>180</td><td>873</td><td>null</td><td>3028</td><td>419</td><td>229</td><td>126</td><td>1560</td><td>860</td><td>null</td><td>6496</td><td>1655</td><td>882</td><td>861</td><td>1425</td><td>1334</td><td>null</td><td>7023</td><td>1551</td><td>729</td><td>514</td><td>244</td><td>266</td><td>0</td><td>1922</td><td>491</td><td>231</td><td>223</td><td>210</td><td>394</td><td>0</td><td>1944</td><td>438</td><td>182</td><td>138</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td></tr><tr><td>&quot;Zimbabwe&quot;</td><td>&quot;ZW&quot;</td><td>&quot;ZWE&quot;</td><td>2010</td><td>150</td><td>710</td><td>2208</td><td>1682</td><td>761</td><td>350</td><td>252</td><td>173</td><td>974</td><td>2185</td><td>1283</td><td>490</td><td>265</td><td>171</td><td>1826</td><td>821</td><td>3342</td><td>3270</td><td>1545</td><td>882</td><td>864</td><td>1732</td><td>1282</td><td>4013</td><td>2851</td><td>1377</td><td>789</td><td>563</td><td>270</td><td>243</td><td>902</td><td>868</td><td>418</td><td>229</td><td>192</td><td>220</td><td>319</td><td>1058</td><td>677</td><td>338</td><td>181</td><td>146</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td></tr><tr><td>&quot;Zimbabwe&quot;</td><td>&quot;ZW&quot;</td><td>&quot;ZWE&quot;</td><td>2011</td><td>152</td><td>784</td><td>2467</td><td>2071</td><td>780</td><td>377</td><td>278</td><td>174</td><td>1084</td><td>2161</td><td>1386</td><td>448</td><td>274</td><td>160</td><td>1364</td><td>596</td><td>2473</td><td>2813</td><td>1264</td><td>702</td><td>728</td><td>1271</td><td>947</td><td>2754</td><td>2216</td><td>962</td><td>587</td><td>495</td><td>250</td><td>195</td><td>746</td><td>796</td><td>342</td><td>172</td><td>172</td><td>209</td><td>318</td><td>802</td><td>640</td><td>284</td><td>137</td><td>129</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td></tr><tr><td>&quot;Zimbabwe&quot;</td><td>&quot;ZW&quot;</td><td>&quot;ZWE&quot;</td><td>2012</td><td>120</td><td>783</td><td>2421</td><td>2086</td><td>796</td><td>360</td><td>271</td><td>173</td><td>939</td><td>2053</td><td>1286</td><td>483</td><td>231</td><td>161</td><td>1169</td><td>613</td><td>2302</td><td>2657</td><td>1154</td><td>708</td><td>796</td><td>1008</td><td>888</td><td>2287</td><td>1957</td><td>829</td><td>516</td><td>432</td><td>233</td><td>214</td><td>658</td><td>789</td><td>331</td><td>178</td><td>182</td><td>208</td><td>319</td><td>710</td><td>579</td><td>228</td><td>140</td><td>143</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td></tr><tr><td>&quot;Zimbabwe&quot;</td><td>&quot;ZW&quot;</td><td>&quot;ZWE&quot;</td><td>2013</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>null</td><td>1315</td><td>1642</td><td>5331</td><td>5363</td><td>2349</td><td>1206</td><td>1208</td><td>1252</td><td>2069</td><td>4649</td><td>3526</td><td>1453</td><td>811</td><td>725</td></tr></tbody></table></div></div></div>
+</div>
+<p>In the <a class="reference internal" href="Reshape-Data-in-Polars-Wide-to_Long-Part-I.html"><span class="std std-doc">previous blogpost</span></a>, we flipped to long form using the code below:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)&quot;</span>
+<span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract_groups</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
+<span class="n">out_naive</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">who</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span>
+        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">,</span> <span class="s2">&quot;iso2&quot;</span><span class="p">,</span> <span class="s2">&quot;iso3&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">],</span>
+        <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">expression</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">cast</span><span class="p">({</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Int32</span><span class="p">})</span>
+<span class="p">)</span>
+
+<span class="n">out_naive</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (405_440, 8)</small><table border="1" class="dataframe"><thead><tr><th>country</th><th>iso2</th><th>iso3</th><th>year</th><th>diagnosis</th><th>gender</th><th>age</th><th>count</th></tr><tr><td>str</td><td>str</td><td>str</td><td>i64</td><td>str</td><td>str</td><td>str</td><td>i32</td></tr></thead><tbody><tr><td>&quot;Afghanistan&quot;</td><td>&quot;AF&quot;</td><td>&quot;AFG&quot;</td><td>1980</td><td>&quot;sp&quot;</td><td>&quot;m&quot;</td><td>&quot;014&quot;</td><td>null</td></tr><tr><td>&quot;Afghanistan&quot;</td><td>&quot;AF&quot;</td><td>&quot;AFG&quot;</td><td>1981</td><td>&quot;sp&quot;</td><td>&quot;m&quot;</td><td>&quot;014&quot;</td><td>null</td></tr><tr><td>&quot;Afghanistan&quot;</td><td>&quot;AF&quot;</td><td>&quot;AFG&quot;</td><td>1982</td><td>&quot;sp&quot;</td><td>&quot;m&quot;</td><td>&quot;014&quot;</td><td>null</td></tr><tr><td>&quot;Afghanistan&quot;</td><td>&quot;AF&quot;</td><td>&quot;AFG&quot;</td><td>1983</td><td>&quot;sp&quot;</td><td>&quot;m&quot;</td><td>&quot;014&quot;</td><td>null</td></tr><tr><td>&quot;Afghanistan&quot;</td><td>&quot;AF&quot;</td><td>&quot;AFG&quot;</td><td>1984</td><td>&quot;sp&quot;</td><td>&quot;m&quot;</td><td>&quot;014&quot;</td><td>null</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>&quot;Zimbabwe&quot;</td><td>&quot;ZW&quot;</td><td>&quot;ZWE&quot;</td><td>2009</td><td>&quot;rel&quot;</td><td>&quot;f&quot;</td><td>&quot;65&quot;</td><td>null</td></tr><tr><td>&quot;Zimbabwe&quot;</td><td>&quot;ZW&quot;</td><td>&quot;ZWE&quot;</td><td>2010</td><td>&quot;rel&quot;</td><td>&quot;f&quot;</td><td>&quot;65&quot;</td><td>null</td></tr><tr><td>&quot;Zimbabwe&quot;</td><td>&quot;ZW&quot;</td><td>&quot;ZWE&quot;</td><td>2011</td><td>&quot;rel&quot;</td><td>&quot;f&quot;</td><td>&quot;65&quot;</td><td>null</td></tr><tr><td>&quot;Zimbabwe&quot;</td><td>&quot;ZW&quot;</td><td>&quot;ZWE&quot;</td><td>2012</td><td>&quot;rel&quot;</td><td>&quot;f&quot;</td><td>&quot;65&quot;</td><td>null</td></tr><tr><td>&quot;Zimbabwe&quot;</td><td>&quot;ZW&quot;</td><td>&quot;ZWE&quot;</td><td>2013</td><td>&quot;rel&quot;</td><td>&quot;f&quot;</td><td>&quot;65&quot;</td><td>725</td></tr></tbody></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)&quot;</span>
+<span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract_groups</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
+<span class="p">(</span>
+    <span class="n">who</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">,</span> <span class="s2">&quot;iso2&quot;</span><span class="p">,</span> <span class="s2">&quot;iso3&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">],</span>
+        <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">expression</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>102 ms ± 2.33 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Is this good enough, or can we do better? Let’s investigate with <a class="reference external" href="https://github.com/pyutils/line_profiler">lprun</a>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> line_profiler
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">wide_to_long</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="c1"># the computation is broken down</span>
+    <span class="c1"># into parts for more clarity</span>
+    <span class="c1"># on what happens at each stage</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span>
+        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">,</span> <span class="s2">&quot;iso2&quot;</span><span class="p">,</span> <span class="s2">&quot;iso3&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">],</span>
+        <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)&quot;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract_groups</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">string</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">lprun</span> -f wide_to_long wide_to_long(df=who)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Timer</span> <span class="n">unit</span><span class="p">:</span> <span class="mf">1e-09</span> <span class="n">s</span>
+
+<span class="n">Total</span> <span class="n">time</span><span class="p">:</span> <span class="mf">0.100968</span> <span class="n">s</span>
+<span class="n">File</span><span class="p">:</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">folders</span><span class="o">/</span><span class="n">yh</span><span class="o">/</span><span class="mi">003</span><span class="n">fk4jn5fl9kl3mnm1y0b1h0000gr</span><span class="o">/</span><span class="n">T</span><span class="o">/</span><span class="n">ipykernel_83318</span><span class="o">/</span><span class="mf">3562139280.</span><span class="n">py</span>
+<span class="n">Function</span><span class="p">:</span> <span class="n">wide_to_long</span> <span class="n">at</span> <span class="n">line</span> <span class="mi">1</span>
+
+<span class="n">Line</span> <span class="c1">#      Hits         Time  Per Hit   % Time  Line Contents</span>
+<span class="o">==============================================================</span>
+     <span class="mi">1</span>                                           <span class="k">def</span> <span class="nf">wide_to_long</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+     <span class="mi">2</span>                                               <span class="c1"># the computation is broken down</span>
+     <span class="mi">3</span>                                               <span class="c1"># into parts for more clarity</span>
+     <span class="mi">4</span>                                               <span class="c1"># on what happens at each stage</span>
+     <span class="mi">5</span>         <span class="mi">2</span>    <span class="mf">3317000.0</span>    <span class="mf">2e+06</span>      <span class="mf">3.3</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span>
+     <span class="mi">6</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>          <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">,</span> <span class="s2">&quot;iso2&quot;</span><span class="p">,</span> <span class="s2">&quot;iso3&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">],</span>
+     <span class="mi">7</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>          <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+     <span class="mi">8</span>                                               <span class="p">)</span>
+     <span class="mi">9</span>         <span class="mi">1</span>      <span class="mf">12000.0</span>  <span class="mf">12000.0</span>      <span class="mf">0.0</span>      <span class="n">string</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+    <span class="mi">10</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)&quot;</span>
+    <span class="mi">11</span>         <span class="mi">1</span>   <span class="mf">97543000.0</span>    <span class="mf">1e+08</span>     <span class="mf">96.6</span>      <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract_groups</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
+    <span class="mi">12</span>         <span class="mi">1</span>      <span class="mf">82000.0</span>  <span class="mf">82000.0</span>      <span class="mf">0.1</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">string</span><span class="p">)</span>
+    <span class="mi">13</span>         <span class="mi">1</span>      <span class="mf">14000.0</span>  <span class="mf">14000.0</span>      <span class="mf">0.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+    <span class="mi">14</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+<p>The bulk of time is spent in the string computation, specifically the section where we extract the <code class="docutils literal notranslate"><span class="pre">diagnosis</span></code>, <code class="docutils literal notranslate"><span class="pre">gender</span></code> and <code class="docutils literal notranslate"><span class="pre">age</span></code> columns, using the <a class="reference external" href="https://docs.pola.rs/api/python/stable/reference/series/api/polars.Series.str.extract_groups.html">extract_groups</a> method.</p>
+<p>Can we reduce this cost? How? What if we compute the string regex operation on the columns before unpivoting? 	🤔</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">,</span> <span class="s2">&quot;iso2&quot;</span><span class="p">,</span> <span class="s2">&quot;iso3&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">]</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">who</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">not_</span><span class="p">()</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+<span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)&quot;</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract_groups</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">struct</span><span class="o">.</span><span class="n">unnest</span><span class="p">()</span>
+<span class="n">columns</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (56, 3)</small><table border="1" class="dataframe"><thead><tr><th>diagnosis</th><th>gender</th><th>age</th></tr><tr><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>&quot;sp&quot;</td><td>&quot;m&quot;</td><td>&quot;014&quot;</td></tr><tr><td>&quot;sp&quot;</td><td>&quot;m&quot;</td><td>&quot;1524&quot;</td></tr><tr><td>&quot;sp&quot;</td><td>&quot;m&quot;</td><td>&quot;2534&quot;</td></tr><tr><td>&quot;sp&quot;</td><td>&quot;m&quot;</td><td>&quot;3544&quot;</td></tr><tr><td>&quot;sp&quot;</td><td>&quot;m&quot;</td><td>&quot;4554&quot;</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>&quot;rel&quot;</td><td>&quot;f&quot;</td><td>&quot;2534&quot;</td></tr><tr><td>&quot;rel&quot;</td><td>&quot;f&quot;</td><td>&quot;3544&quot;</td></tr><tr><td>&quot;rel&quot;</td><td>&quot;f&quot;</td><td>&quot;4554&quot;</td></tr><tr><td>&quot;rel&quot;</td><td>&quot;f&quot;</td><td>&quot;5564&quot;</td></tr><tr><td>&quot;rel&quot;</td><td>&quot;f&quot;</td><td>&quot;65&quot;</td></tr></tbody></table></div></div></div>
+</div>
+<p>Next, we need to properly pair the extracted column with the unpivoted data:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># implosion and unpivoting ensures we get a final length</span>
+<span class="c1"># that is the same as the columns&#39; length</span>
+<span class="c1"># ensuring we can pair correctly</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">who</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">))</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+<span class="n">out</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (405_440, 8)</small><table border="1" class="dataframe"><thead><tr><th>country</th><th>iso2</th><th>iso3</th><th>year</th><th>count</th><th>diagnosis</th><th>gender</th><th>age</th></tr><tr><td>str</td><td>str</td><td>str</td><td>i64</td><td>i64</td><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>&quot;Afghanistan&quot;</td><td>&quot;AF&quot;</td><td>&quot;AFG&quot;</td><td>1980</td><td>null</td><td>&quot;sp&quot;</td><td>&quot;m&quot;</td><td>&quot;014&quot;</td></tr><tr><td>&quot;Afghanistan&quot;</td><td>&quot;AF&quot;</td><td>&quot;AFG&quot;</td><td>1981</td><td>null</td><td>&quot;sp&quot;</td><td>&quot;m&quot;</td><td>&quot;014&quot;</td></tr><tr><td>&quot;Afghanistan&quot;</td><td>&quot;AF&quot;</td><td>&quot;AFG&quot;</td><td>1982</td><td>null</td><td>&quot;sp&quot;</td><td>&quot;m&quot;</td><td>&quot;014&quot;</td></tr><tr><td>&quot;Afghanistan&quot;</td><td>&quot;AF&quot;</td><td>&quot;AFG&quot;</td><td>1983</td><td>null</td><td>&quot;sp&quot;</td><td>&quot;m&quot;</td><td>&quot;014&quot;</td></tr><tr><td>&quot;Afghanistan&quot;</td><td>&quot;AF&quot;</td><td>&quot;AFG&quot;</td><td>1984</td><td>null</td><td>&quot;sp&quot;</td><td>&quot;m&quot;</td><td>&quot;014&quot;</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>&quot;Zimbabwe&quot;</td><td>&quot;ZW&quot;</td><td>&quot;ZWE&quot;</td><td>2009</td><td>null</td><td>&quot;rel&quot;</td><td>&quot;f&quot;</td><td>&quot;65&quot;</td></tr><tr><td>&quot;Zimbabwe&quot;</td><td>&quot;ZW&quot;</td><td>&quot;ZWE&quot;</td><td>2010</td><td>null</td><td>&quot;rel&quot;</td><td>&quot;f&quot;</td><td>&quot;65&quot;</td></tr><tr><td>&quot;Zimbabwe&quot;</td><td>&quot;ZW&quot;</td><td>&quot;ZWE&quot;</td><td>2011</td><td>null</td><td>&quot;rel&quot;</td><td>&quot;f&quot;</td><td>&quot;65&quot;</td></tr><tr><td>&quot;Zimbabwe&quot;</td><td>&quot;ZW&quot;</td><td>&quot;ZWE&quot;</td><td>2012</td><td>null</td><td>&quot;rel&quot;</td><td>&quot;f&quot;</td><td>&quot;65&quot;</td></tr><tr><td>&quot;Zimbabwe&quot;</td><td>&quot;ZW&quot;</td><td>&quot;ZWE&quot;</td><td>2013</td><td>725</td><td>&quot;rel&quot;</td><td>&quot;f&quot;</td><td>&quot;65&quot;</td></tr></tbody></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cols</span> <span class="o">=</span> <span class="n">out_naive</span><span class="o">.</span><span class="n">columns</span>
+<span class="n">out_naive</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">all</span><span class="p">())</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">all</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">,</span> <span class="s2">&quot;iso2&quot;</span><span class="p">,</span> <span class="s2">&quot;iso3&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">]</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">who</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">not_</span><span class="p">()</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+<span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)&quot;</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract_groups</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">struct</span><span class="o">.</span><span class="n">unnest</span><span class="p">()</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">who</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">))</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;count&#39;</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+<span class="n">out</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4.2 ms ± 14.8 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<aside class="margin sidebar">
+<p class="sidebar-title"></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that the primary performance culprit here is the regex computation - other string operations may offer better performance e.g string slice - in which case, you probably would not need the implode/explode approach.</p>
+</div>
+</aside>
+<p>That is a significant improvement in performance - about 20x faster.</p>
+<p>By changing our approach and shifting the computation to a less expensive section, we claw back some performance gains.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">wide_to_long_optimised</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">,</span> <span class="s2">&quot;iso2&quot;</span><span class="p">,</span> <span class="s2">&quot;iso3&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">]</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">not_</span><span class="p">()</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)&quot;</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract_groups</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">struct</span><span class="o">.</span><span class="n">unnest</span><span class="p">()</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">))</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">lprun</span> -f wide_to_long_optimised wide_to_long_optimised(df=who)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Timer</span> <span class="n">unit</span><span class="p">:</span> <span class="mf">1e-09</span> <span class="n">s</span>
+
+<span class="n">Total</span> <span class="n">time</span><span class="p">:</span> <span class="mf">0.00589</span> <span class="n">s</span>
+<span class="n">File</span><span class="p">:</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">folders</span><span class="o">/</span><span class="n">yh</span><span class="o">/</span><span class="mi">003</span><span class="n">fk4jn5fl9kl3mnm1y0b1h0000gr</span><span class="o">/</span><span class="n">T</span><span class="o">/</span><span class="n">ipykernel_83318</span><span class="o">/</span><span class="mf">509568358.</span><span class="n">py</span>
+<span class="n">Function</span><span class="p">:</span> <span class="n">wide_to_long_optimised</span> <span class="n">at</span> <span class="n">line</span> <span class="mi">1</span>
+
+<span class="n">Line</span> <span class="c1">#      Hits         Time  Per Hit   % Time  Line Contents</span>
+<span class="o">==============================================================</span>
+     <span class="mi">1</span>                                           <span class="k">def</span> <span class="nf">wide_to_long_optimised</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+     <span class="mi">2</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">,</span> <span class="s2">&quot;iso2&quot;</span><span class="p">,</span> <span class="s2">&quot;iso3&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">]</span>
+     <span class="mi">3</span>         <span class="mi">1</span>      <span class="mf">29000.0</span>  <span class="mf">29000.0</span>      <span class="mf">0.5</span>      <span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+     <span class="mi">4</span>         <span class="mi">1</span>     <span class="mf">232000.0</span> <span class="mf">232000.0</span>      <span class="mf">3.9</span>      <span class="n">mask</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">not_</span><span class="p">()</span>
+     <span class="mi">5</span>         <span class="mi">1</span>       <span class="mf">4000.0</span>   <span class="mf">4000.0</span>      <span class="mf">0.1</span>      <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+     <span class="mi">6</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)&quot;</span>
+     <span class="mi">7</span>         <span class="mi">1</span>     <span class="mf">299000.0</span> <span class="mf">299000.0</span>      <span class="mf">5.1</span>      <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract_groups</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
+     <span class="mi">8</span>         <span class="mi">1</span>       <span class="mf">5000.0</span>   <span class="mf">5000.0</span>      <span class="mf">0.1</span>      <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">struct</span><span class="o">.</span><span class="n">unnest</span><span class="p">()</span>
+     <span class="mi">9</span>         <span class="mi">1</span>     <span class="mf">439000.0</span> <span class="mf">439000.0</span>      <span class="mf">7.5</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">))</span>
+    <span class="mi">10</span>         <span class="mi">1</span>    <span class="mf">3119000.0</span>    <span class="mf">3e+06</span>     <span class="mf">53.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
+    <span class="mi">11</span>         <span class="mi">1</span>      <span class="mf">34000.0</span>  <span class="mf">34000.0</span>      <span class="mf">0.6</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+    <span class="mi">12</span>         <span class="mi">1</span>      <span class="mf">60000.0</span>  <span class="mf">60000.0</span>      <span class="mf">1.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
+    <span class="mi">13</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="n">index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
+    <span class="mi">14</span>         <span class="mi">1</span>    <span class="mf">1669000.0</span>    <span class="mf">2e+06</span>     <span class="mf">28.3</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+    <span class="mi">15</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</section>
+<section id="multiple-observations-per-row">
+<h2><strong>Multiple observations per row</strong><a class="headerlink" href="#multiple-observations-per-row" title="Link to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">household</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./Data_files/household.csv&quot;</span><span class="p">,</span> <span class="n">null_values</span><span class="o">=</span><span class="s2">&quot;NA&quot;</span><span class="p">)</span>
+<span class="n">household</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (5, 5)</small><table border="1" class="dataframe"><thead><tr><th>family</th><th>dob_child1</th><th>dob_child2</th><th>name_child1</th><th>name_child2</th></tr><tr><td>i64</td><td>str</td><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>1</td><td>&quot;1998-11-26&quot;</td><td>&quot;2000-01-29&quot;</td><td>&quot;Susan&quot;</td><td>&quot;Jose&quot;</td></tr><tr><td>2</td><td>&quot;1996-06-22&quot;</td><td>null</td><td>&quot;Mark&quot;</td><td>null</td></tr><tr><td>3</td><td>&quot;2002-07-11&quot;</td><td>&quot;2004-04-05&quot;</td><td>&quot;Sam&quot;</td><td>&quot;Seth&quot;</td></tr><tr><td>4</td><td>&quot;2004-10-10&quot;</td><td>&quot;2009-08-27&quot;</td><td>&quot;Craig&quot;</td><td>&quot;Khai&quot;</td></tr><tr><td>5</td><td>&quot;2000-12-05&quot;</td><td>&quot;2005-02-28&quot;</td><td>&quot;Parker&quot;</td><td>&quot;Gracie&quot;</td></tr></tbody></table></div></div></div>
+</div>
+<p>In the <a class="reference internal" href="Reshape-Data-in-Polars-Wide-to_Long-Part-I.html"><span class="std std-doc">previous blogpost</span></a>, we kept the <code class="docutils literal notranslate"><span class="pre">dob</span></code> and <code class="docutils literal notranslate"><span class="pre">name</span></code> as column headers, while flipping the remaining parts of the columns to rows:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+<span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+<span class="p">(</span>
+    <span class="n">household</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;family&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">expression</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (9, 4)</small><table border="1" class="dataframe"><thead><tr><th>family</th><th>child</th><th>dob</th><th>name</th></tr><tr><td>i64</td><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>1</td><td>&quot;child1&quot;</td><td>&quot;1998-11-26&quot;</td><td>&quot;Susan&quot;</td></tr><tr><td>2</td><td>&quot;child1&quot;</td><td>&quot;1996-06-22&quot;</td><td>&quot;Mark&quot;</td></tr><tr><td>3</td><td>&quot;child1&quot;</td><td>&quot;2002-07-11&quot;</td><td>&quot;Sam&quot;</td></tr><tr><td>4</td><td>&quot;child1&quot;</td><td>&quot;2004-10-10&quot;</td><td>&quot;Craig&quot;</td></tr><tr><td>5</td><td>&quot;child1&quot;</td><td>&quot;2000-12-05&quot;</td><td>&quot;Parker&quot;</td></tr><tr><td>1</td><td>&quot;child2&quot;</td><td>&quot;2000-01-29&quot;</td><td>&quot;Jose&quot;</td></tr><tr><td>3</td><td>&quot;child2&quot;</td><td>&quot;2004-04-05&quot;</td><td>&quot;Seth&quot;</td></tr><tr><td>4</td><td>&quot;child2&quot;</td><td>&quot;2009-08-27&quot;</td><td>&quot;Khai&quot;</td></tr><tr><td>5</td><td>&quot;child2&quot;</td><td>&quot;2005-02-28&quot;</td><td>&quot;Gracie&quot;</td></tr></tbody></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+<span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+<span class="p">(</span>
+    <span class="n">household</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;family&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">expression</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>222 μs ± 4.05 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s see the performance for a similar dataset, but larger:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">ZipFile</span>
+<span class="n">zip_file</span> <span class="o">=</span> <span class="n">ZipFile</span><span class="p">(</span><span class="s2">&quot;./Data_files/household_large.csv.zip&quot;</span><span class="p">)</span>
+<span class="n">zip_file</span> <span class="o">=</span> <span class="n">zip_file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;household_large.csv&quot;</span><span class="p">)</span>
+<span class="n">household_large</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">zip_file</span><span class="p">,</span> <span class="n">null_values</span><span class="o">=</span><span class="s2">&quot;NA&quot;</span><span class="p">)</span>
+<span class="n">household_large</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (100_000, 61)</small><table border="1" class="dataframe"><thead><tr><th>family</th><th>name_child0</th><th>dob_child0</th><th>name_child1</th><th>dob_child1</th><th>name_child2</th><th>dob_child2</th><th>name_child3</th><th>dob_child3</th><th>name_child4</th><th>dob_child4</th><th>name_child5</th><th>dob_child5</th><th>name_child6</th><th>dob_child6</th><th>name_child7</th><th>dob_child7</th><th>name_child8</th><th>dob_child8</th><th>name_child9</th><th>dob_child9</th><th>name_child10</th><th>dob_child10</th><th>name_child11</th><th>dob_child11</th><th>name_child12</th><th>dob_child12</th><th>name_child13</th><th>dob_child13</th><th>name_child14</th><th>dob_child14</th><th>name_child15</th><th>dob_child15</th><th>name_child16</th><th>dob_child16</th><th>name_child17</th><th>dob_child17</th><th>name_child18</th><th>dob_child18</th><th>name_child19</th><th>dob_child19</th><th>name_child20</th><th>dob_child20</th><th>name_child21</th><th>dob_child21</th><th>name_child22</th><th>dob_child22</th><th>name_child23</th><th>dob_child23</th><th>name_child24</th><th>dob_child24</th><th>name_child25</th><th>dob_child25</th><th>name_child26</th><th>dob_child26</th><th>name_child27</th><th>dob_child27</th><th>name_child28</th><th>dob_child28</th><th>name_child29</th><th>dob_child29</th></tr><tr><td>i64</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>0</td><td>&quot;Brittany Mcdonald&quot;</td><td>&quot;1989-08-24&quot;</td><td>&quot;Karen Mendoza MD&quot;</td><td>&quot;1938-12-01&quot;</td><td>&quot;Stephanie Casey&quot;</td><td>&quot;1959-08-07&quot;</td><td>&quot;Rhonda Hartman&quot;</td><td>&quot;1984-01-17&quot;</td><td>&quot;Elizabeth Sampson&quot;</td><td>&quot;1947-01-25&quot;</td><td>&quot;Jacqueline Barrett&quot;</td><td>&quot;1949-02-15&quot;</td><td>&quot;Rebecca Harvey&quot;</td><td>&quot;1974-12-03&quot;</td><td>&quot;John Hopkins&quot;</td><td>&quot;2009-11-27&quot;</td><td>&quot;Diane Ali&quot;</td><td>&quot;1993-03-04&quot;</td><td>&quot;Emily Jones&quot;</td><td>&quot;1933-01-27&quot;</td><td>&quot;Rickey Bates&quot;</td><td>&quot;1938-06-03&quot;</td><td>&quot;Walter Stuart&quot;</td><td>&quot;1971-12-04&quot;</td><td>&quot;Megan Smith&quot;</td><td>&quot;1992-06-05&quot;</td><td>&quot;Amanda Morris&quot;</td><td>&quot;1976-02-01&quot;</td><td>&quot;Jennifer Greer&quot;</td><td>&quot;1971-12-12&quot;</td><td>&quot;Megan Haney&quot;</td><td>&quot;1935-09-11&quot;</td><td>&quot;Alyssa Garcia&quot;</td><td>&quot;1963-09-03&quot;</td><td>&quot;Daniel Turner&quot;</td><td>&quot;1938-11-17&quot;</td><td>&quot;Brittany Simmons&quot;</td><td>&quot;1919-11-21&quot;</td><td>&quot;Kurt Schwartz&quot;</td><td>&quot;1956-02-27&quot;</td><td>&quot;Tanya Brandt&quot;</td><td>&quot;1943-08-16&quot;</td><td>&quot;Jennifer White&quot;</td><td>&quot;1960-08-27&quot;</td><td>&quot;Eddie Hamilton&quot;</td><td>&quot;1988-01-15&quot;</td><td>&quot;Sean Chavez&quot;</td><td>&quot;1968-12-08&quot;</td><td>&quot;Rhonda White&quot;</td><td>&quot;1948-08-30&quot;</td><td>&quot;Linda Hicks&quot;</td><td>&quot;1936-08-03&quot;</td><td>&quot;Brittany Beard&quot;</td><td>&quot;1996-03-08&quot;</td><td>&quot;Nicole Schmidt&quot;</td><td>&quot;1948-12-06&quot;</td><td>&quot;Nancy Clark&quot;</td><td>&quot;1914-12-12&quot;</td><td>&quot;Dr. David Walters&quot;</td><td>&quot;1922-10-24&quot;</td></tr><tr><td>1</td><td>&quot;Diana Welch&quot;</td><td>&quot;1989-02-11&quot;</td><td>&quot;Brandon Pittman&quot;</td><td>&quot;2019-09-02&quot;</td><td>&quot;Alicia Smith&quot;</td><td>&quot;1923-06-27&quot;</td><td>&quot;Sarah Dean DVM&quot;</td><td>&quot;2001-02-10&quot;</td><td>&quot;Katherine Landry&quot;</td><td>&quot;1935-06-26&quot;</td><td>&quot;Sarah Hughes&quot;</td><td>&quot;1911-01-19&quot;</td><td>&quot;Amanda Peters&quot;</td><td>&quot;1922-06-02&quot;</td><td>&quot;Shawn Sanders&quot;</td><td>&quot;1936-11-17&quot;</td><td>&quot;David White&quot;</td><td>&quot;1998-02-25&quot;</td><td>&quot;Justin Mccormick&quot;</td><td>&quot;1994-03-06&quot;</td><td>&quot;James Kelly&quot;</td><td>&quot;2005-02-13&quot;</td><td>&quot;Kimberly Lynch MD&quot;</td><td>&quot;1986-02-18&quot;</td><td>&quot;Kimberly Hall&quot;</td><td>&quot;2001-07-23&quot;</td><td>&quot;Susan Anderson&quot;</td><td>&quot;1908-10-26&quot;</td><td>&quot;Anthony Hall&quot;</td><td>&quot;2012-10-10&quot;</td><td>&quot;Lisa Gardner&quot;</td><td>&quot;1939-08-17&quot;</td><td>&quot;Andrew Burke&quot;</td><td>&quot;1981-07-13&quot;</td><td>&quot;Brittney Evans&quot;</td><td>&quot;1993-06-06&quot;</td><td>&quot;Taylor Wood&quot;</td><td>&quot;1951-07-29&quot;</td><td>&quot;Tanya Taylor&quot;</td><td>&quot;2019-02-01&quot;</td><td>&quot;Ashley Schultz&quot;</td><td>&quot;1993-04-15&quot;</td><td>&quot;Amanda Sanchez&quot;</td><td>&quot;1923-07-14&quot;</td><td>&quot;Harry Stevens&quot;</td><td>&quot;1986-11-10&quot;</td><td>&quot;David Flores&quot;</td><td>&quot;1931-09-16&quot;</td><td>&quot;Timothy Gray&quot;</td><td>&quot;2017-05-07&quot;</td><td>&quot;Jay Ramsey&quot;</td><td>&quot;1936-05-08&quot;</td><td>&quot;Charles Bell&quot;</td><td>&quot;2014-12-05&quot;</td><td>&quot;Jacob Williams&quot;</td><td>&quot;1963-04-17&quot;</td><td>&quot;Kimberly Gonzalez&quot;</td><td>&quot;1991-11-15&quot;</td><td>&quot;Monica Newton&quot;</td><td>&quot;1923-10-27&quot;</td></tr><tr><td>2</td><td>&quot;Jamie Richards&quot;</td><td>&quot;1973-11-04&quot;</td><td>&quot;Kristin Dunn&quot;</td><td>&quot;1973-04-02&quot;</td><td>&quot;Kathy Vasquez&quot;</td><td>&quot;1966-03-20&quot;</td><td>&quot;William Johnson&quot;</td><td>&quot;2006-03-08&quot;</td><td>&quot;Anthony Brewer&quot;</td><td>&quot;1987-06-21&quot;</td><td>&quot;James Hendricks&quot;</td><td>&quot;1981-03-29&quot;</td><td>&quot;Emily Torres&quot;</td><td>&quot;1990-11-09&quot;</td><td>&quot;Jennifer Santos&quot;</td><td>&quot;1982-02-13&quot;</td><td>&quot;Travis Snyder&quot;</td><td>&quot;2018-09-04&quot;</td><td>&quot;Misty Hudson&quot;</td><td>&quot;1974-01-03&quot;</td><td>&quot;Mathew Price&quot;</td><td>&quot;1965-07-09&quot;</td><td>&quot;Charles Anthony&quot;</td><td>&quot;2003-07-20&quot;</td><td>&quot;Sean Cook&quot;</td><td>&quot;1919-03-26&quot;</td><td>&quot;Krista Hall&quot;</td><td>&quot;1951-02-12&quot;</td><td>&quot;Sarah Hurst&quot;</td><td>&quot;1962-09-22&quot;</td><td>&quot;Angela May&quot;</td><td>&quot;2009-11-07&quot;</td><td>&quot;Antonio Ayers&quot;</td><td>&quot;1980-12-11&quot;</td><td>&quot;Kathryn Beck&quot;</td><td>&quot;1944-05-27&quot;</td><td>&quot;Barbara Davis&quot;</td><td>&quot;1929-04-19&quot;</td><td>&quot;Vanessa Gonzalez&quot;</td><td>&quot;1944-06-13&quot;</td><td>&quot;Tina Benjamin&quot;</td><td>&quot;1911-02-01&quot;</td><td>&quot;Anthony Wade&quot;</td><td>&quot;1938-10-10&quot;</td><td>&quot;Rachel Green&quot;</td><td>&quot;2001-02-26&quot;</td><td>&quot;Laura Wright&quot;</td><td>&quot;1950-01-11&quot;</td><td>&quot;Kenneth Stewart&quot;</td><td>&quot;1976-03-10&quot;</td><td>&quot;Megan Glass&quot;</td><td>&quot;1987-10-25&quot;</td><td>&quot;Jennifer King&quot;</td><td>&quot;1962-01-26&quot;</td><td>&quot;Cheyenne Ramirez&quot;</td><td>&quot;2009-12-21&quot;</td><td>&quot;Hayden Williamson&quot;</td><td>&quot;1993-12-27&quot;</td><td>&quot;Thomas Buchanan&quot;</td><td>&quot;2017-06-23&quot;</td></tr><tr><td>3</td><td>&quot;Michele Reed&quot;</td><td>&quot;1994-11-05&quot;</td><td>&quot;John Perry&quot;</td><td>&quot;1915-07-08&quot;</td><td>&quot;Benjamin Garcia&quot;</td><td>&quot;2006-03-12&quot;</td><td>&quot;Mrs. Carolyn Chavez&quot;</td><td>&quot;1999-08-03&quot;</td><td>&quot;Bailey Stevens&quot;</td><td>&quot;2000-04-09&quot;</td><td>&quot;Gilbert Lynch&quot;</td><td>&quot;1978-10-06&quot;</td><td>&quot;Jennifer Burton&quot;</td><td>&quot;2000-12-13&quot;</td><td>&quot;Jose Nguyen&quot;</td><td>&quot;2020-11-15&quot;</td><td>&quot;Yvonne Wall&quot;</td><td>&quot;1910-10-16&quot;</td><td>&quot;Jacob Owens&quot;</td><td>&quot;1943-11-14&quot;</td><td>&quot;William Gibson&quot;</td><td>&quot;1935-09-11&quot;</td><td>&quot;Nicholas Garcia&quot;</td><td>&quot;2014-12-28&quot;</td><td>&quot;Jamie Diaz&quot;</td><td>&quot;1952-10-05&quot;</td><td>&quot;Brian Burns&quot;</td><td>&quot;1934-03-03&quot;</td><td>&quot;Ryan Taylor&quot;</td><td>&quot;1978-11-15&quot;</td><td>&quot;Ashley Miller&quot;</td><td>&quot;1915-01-14&quot;</td><td>&quot;Francisco Brewer&quot;</td><td>&quot;2006-10-21&quot;</td><td>&quot;Melissa Ramos&quot;</td><td>&quot;1966-05-01&quot;</td><td>&quot;Antonio Moore&quot;</td><td>&quot;1914-11-28&quot;</td><td>&quot;Darin Russell&quot;</td><td>&quot;1994-07-29&quot;</td><td>&quot;Eric Santos&quot;</td><td>&quot;1928-02-18&quot;</td><td>&quot;Mariah Cunningham&quot;</td><td>&quot;1958-07-21&quot;</td><td>&quot;Deanna White&quot;</td><td>&quot;1914-08-30&quot;</td><td>&quot;Peggy Williams&quot;</td><td>&quot;1973-03-17&quot;</td><td>&quot;Michael Richardson&quot;</td><td>&quot;1968-02-20&quot;</td><td>&quot;Debra Haney&quot;</td><td>&quot;1972-04-02&quot;</td><td>&quot;Alexander Roberts&quot;</td><td>&quot;1977-04-14&quot;</td><td>&quot;Derrick Martin&quot;</td><td>&quot;1999-09-02&quot;</td><td>&quot;Teresa Stephens&quot;</td><td>&quot;1928-04-11&quot;</td><td>&quot;Andrew Murphy&quot;</td><td>&quot;1910-03-21&quot;</td></tr><tr><td>4</td><td>&quot;Steven Burgess&quot;</td><td>&quot;1997-12-24&quot;</td><td>&quot;Robert Willis&quot;</td><td>&quot;2011-04-18&quot;</td><td>&quot;Amy Forbes&quot;</td><td>&quot;1943-06-26&quot;</td><td>&quot;Chase Gutierrez&quot;</td><td>&quot;1976-06-21&quot;</td><td>&quot;Kevin Gonzales&quot;</td><td>&quot;1977-10-03&quot;</td><td>&quot;Michael Lyons&quot;</td><td>&quot;1973-08-06&quot;</td><td>&quot;Brian Carlson&quot;</td><td>&quot;1964-07-16&quot;</td><td>&quot;Jonathan Brown&quot;</td><td>&quot;1983-07-06&quot;</td><td>&quot;Ryan Lewis&quot;</td><td>&quot;2011-09-30&quot;</td><td>&quot;Brandon Drake&quot;</td><td>&quot;1995-07-27&quot;</td><td>&quot;Christine Mueller&quot;</td><td>&quot;1945-07-15&quot;</td><td>&quot;Joseph Sanders&quot;</td><td>&quot;1995-01-22&quot;</td><td>&quot;Patricia Robertson&quot;</td><td>&quot;1953-01-29&quot;</td><td>&quot;Kevin Young&quot;</td><td>&quot;1962-08-12&quot;</td><td>&quot;Amber Gray&quot;</td><td>&quot;1992-05-30&quot;</td><td>&quot;Laura Powers&quot;</td><td>&quot;1934-10-28&quot;</td><td>&quot;Carrie Ross&quot;</td><td>&quot;1974-11-03&quot;</td><td>&quot;Anthony Taylor&quot;</td><td>&quot;2002-03-31&quot;</td><td>&quot;Bill Hawkins&quot;</td><td>&quot;1923-01-26&quot;</td><td>&quot;Erin Mcbride&quot;</td><td>&quot;2009-01-12&quot;</td><td>&quot;Roger Meza&quot;</td><td>&quot;1934-12-10&quot;</td><td>&quot;Sandra Davis&quot;</td><td>&quot;1918-11-05&quot;</td><td>&quot;Kristie Whitehead&quot;</td><td>&quot;1979-12-01&quot;</td><td>&quot;James Anderson&quot;</td><td>&quot;1954-02-02&quot;</td><td>&quot;Sara Aguilar&quot;</td><td>&quot;2008-03-09&quot;</td><td>&quot;Hector Reynolds&quot;</td><td>&quot;1990-08-17&quot;</td><td>&quot;Cynthia Klein&quot;</td><td>&quot;1931-12-16&quot;</td><td>&quot;Richard Copeland&quot;</td><td>&quot;1978-11-24&quot;</td><td>&quot;Rickey Hudson&quot;</td><td>&quot;1926-09-29&quot;</td><td>&quot;Carmen Smith&quot;</td><td>&quot;1963-11-05&quot;</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>99995</td><td>&quot;Donna Vazquez&quot;</td><td>&quot;1938-12-26&quot;</td><td>&quot;William Curry&quot;</td><td>&quot;1943-03-27&quot;</td><td>&quot;Brian Green&quot;</td><td>&quot;1941-08-20&quot;</td><td>&quot;Cathy Krause&quot;</td><td>&quot;1910-10-22&quot;</td><td>&quot;Christopher Johnson&quot;</td><td>&quot;2006-10-22&quot;</td><td>&quot;Amanda Anderson&quot;</td><td>&quot;1910-07-21&quot;</td><td>&quot;Paul Casey&quot;</td><td>&quot;1965-02-23&quot;</td><td>&quot;Franklin Strickland&quot;</td><td>&quot;2004-03-26&quot;</td><td>&quot;Brian Murphy&quot;</td><td>&quot;1951-06-04&quot;</td><td>&quot;Jennifer Martinez&quot;</td><td>&quot;1921-08-12&quot;</td><td>&quot;Tony Long&quot;</td><td>&quot;1928-04-01&quot;</td><td>&quot;Anthony Garcia&quot;</td><td>&quot;2015-12-03&quot;</td><td>&quot;Todd Gonzales&quot;</td><td>&quot;2001-10-31&quot;</td><td>&quot;Justin Anderson&quot;</td><td>&quot;2021-05-04&quot;</td><td>&quot;Chad Garrett&quot;</td><td>&quot;1939-06-03&quot;</td><td>&quot;Mr. Christopher Harper&quot;</td><td>&quot;2002-07-22&quot;</td><td>&quot;Jennifer Flores&quot;</td><td>&quot;1933-06-17&quot;</td><td>&quot;Alexis Porter&quot;</td><td>&quot;2020-08-27&quot;</td><td>&quot;Jason Pitts&quot;</td><td>&quot;1969-03-11&quot;</td><td>&quot;Adam Sanchez&quot;</td><td>&quot;1959-02-02&quot;</td><td>&quot;Angela Cooper&quot;</td><td>&quot;1972-02-16&quot;</td><td>&quot;Elizabeth Thomas&quot;</td><td>&quot;1959-10-25&quot;</td><td>&quot;Mark Aguilar&quot;</td><td>&quot;1989-03-28&quot;</td><td>&quot;Chad Chapman&quot;</td><td>&quot;1919-03-01&quot;</td><td>&quot;Jessica Doyle&quot;</td><td>&quot;1938-04-14&quot;</td><td>&quot;Kim Miller&quot;</td><td>&quot;2017-08-04&quot;</td><td>&quot;Angela Hughes&quot;</td><td>&quot;1930-10-31&quot;</td><td>&quot;Jamie Thompson&quot;</td><td>&quot;2017-02-28&quot;</td><td>&quot;Brandy Frederick&quot;</td><td>&quot;1932-07-31&quot;</td><td>&quot;Patrick Solomon&quot;</td><td>&quot;1920-03-12&quot;</td></tr><tr><td>99996</td><td>&quot;Monica Davis&quot;</td><td>&quot;1987-10-07&quot;</td><td>&quot;Laura Donovan&quot;</td><td>&quot;1992-07-30&quot;</td><td>&quot;Morgan Garcia&quot;</td><td>&quot;1997-01-09&quot;</td><td>&quot;Stacey Chambers&quot;</td><td>&quot;1944-01-10&quot;</td><td>&quot;Stephen Fields&quot;</td><td>&quot;1935-10-03&quot;</td><td>&quot;Ann Barnes&quot;</td><td>&quot;1996-01-04&quot;</td><td>&quot;Nicholas Jones&quot;</td><td>&quot;1967-02-01&quot;</td><td>&quot;Karen Dunn&quot;</td><td>&quot;2012-07-21&quot;</td><td>&quot;Sheryl Hill&quot;</td><td>&quot;1989-02-21&quot;</td><td>&quot;Kyle Fox&quot;</td><td>&quot;2005-01-04&quot;</td><td>&quot;Mark Adkins&quot;</td><td>&quot;1981-12-01&quot;</td><td>&quot;Spencer Blankenship&quot;</td><td>&quot;1934-04-05&quot;</td><td>&quot;Catherine Smith&quot;</td><td>&quot;2008-12-06&quot;</td><td>&quot;Andrea Walker&quot;</td><td>&quot;1940-07-01&quot;</td><td>&quot;Ricky Barr&quot;</td><td>&quot;1912-11-17&quot;</td><td>&quot;Desiree Parker&quot;</td><td>&quot;1939-11-15&quot;</td><td>&quot;Amanda Ruiz&quot;</td><td>&quot;2018-08-09&quot;</td><td>&quot;Sharon Miller&quot;</td><td>&quot;2019-05-05&quot;</td><td>&quot;Larry Smith&quot;</td><td>&quot;1981-02-24&quot;</td><td>&quot;James Harris&quot;</td><td>&quot;1990-12-14&quot;</td><td>&quot;Justin Smith&quot;</td><td>&quot;1994-10-18&quot;</td><td>&quot;Tamara Roman&quot;</td><td>&quot;1921-04-01&quot;</td><td>&quot;Bridget Serrano&quot;</td><td>&quot;1974-05-13&quot;</td><td>&quot;Ann Melendez&quot;</td><td>&quot;1986-07-06&quot;</td><td>&quot;Susan Huff&quot;</td><td>&quot;2018-09-05&quot;</td><td>&quot;Antonio Juarez&quot;</td><td>&quot;1995-08-11&quot;</td><td>&quot;Ashley Lamb&quot;</td><td>&quot;1955-05-31&quot;</td><td>&quot;Patrick Morse&quot;</td><td>&quot;1932-08-08&quot;</td><td>&quot;Thomas Gregory&quot;</td><td>&quot;1963-04-11&quot;</td><td>&quot;Steven Smith&quot;</td><td>&quot;1987-09-22&quot;</td></tr><tr><td>99997</td><td>&quot;Vanessa Byrd&quot;</td><td>&quot;1967-03-17&quot;</td><td>&quot;Tammy Mcpherson&quot;</td><td>&quot;1987-11-06&quot;</td><td>&quot;Jacob Schwartz&quot;</td><td>&quot;2019-07-07&quot;</td><td>&quot;Barry Smith&quot;</td><td>&quot;1996-03-17&quot;</td><td>&quot;Samuel Martinez&quot;</td><td>&quot;1980-02-27&quot;</td><td>&quot;Erin Flores&quot;</td><td>&quot;1959-04-12&quot;</td><td>&quot;Melissa Perez&quot;</td><td>&quot;2001-07-28&quot;</td><td>&quot;Victoria Wilson&quot;</td><td>&quot;1975-02-12&quot;</td><td>&quot;Timothy Ramirez&quot;</td><td>&quot;1912-08-05&quot;</td><td>&quot;Kyle Johnson&quot;</td><td>&quot;2015-04-01&quot;</td><td>&quot;David Roberts&quot;</td><td>&quot;2001-10-01&quot;</td><td>&quot;Michael Alexander&quot;</td><td>&quot;1922-10-18&quot;</td><td>&quot;Robert Green&quot;</td><td>&quot;2004-03-13&quot;</td><td>&quot;Brent Nelson&quot;</td><td>&quot;1973-02-24&quot;</td><td>&quot;Curtis Smith&quot;</td><td>&quot;1978-11-04&quot;</td><td>&quot;Walter Lyons&quot;</td><td>&quot;2002-03-03&quot;</td><td>&quot;Angela Johnson&quot;</td><td>&quot;2015-06-24&quot;</td><td>&quot;Amanda Smith&quot;</td><td>&quot;1913-01-08&quot;</td><td>&quot;Jacqueline Smith&quot;</td><td>&quot;2012-01-07&quot;</td><td>&quot;Brian Ho&quot;</td><td>&quot;1948-12-11&quot;</td><td>&quot;Robert Lopez&quot;</td><td>&quot;1967-02-04&quot;</td><td>&quot;Charles Rogers&quot;</td><td>&quot;1996-04-25&quot;</td><td>&quot;Marcus Dixon&quot;</td><td>&quot;1952-03-11&quot;</td><td>&quot;Alexis Moore&quot;</td><td>&quot;1952-07-26&quot;</td><td>&quot;Joshua Robles&quot;</td><td>&quot;1956-11-12&quot;</td><td>&quot;Rachel Hull&quot;</td><td>&quot;1979-05-28&quot;</td><td>&quot;Jessica Smith&quot;</td><td>&quot;2006-01-17&quot;</td><td>&quot;Joshua Hernandez&quot;</td><td>&quot;2005-06-26&quot;</td><td>&quot;Melanie Crawford&quot;</td><td>&quot;1927-07-12&quot;</td><td>&quot;Scott Carlson&quot;</td><td>&quot;1950-05-23&quot;</td></tr><tr><td>99998</td><td>&quot;Gary Harmon&quot;</td><td>&quot;2002-05-09&quot;</td><td>&quot;William Reeves&quot;</td><td>&quot;1960-01-23&quot;</td><td>&quot;Linda Cohen&quot;</td><td>&quot;1953-05-31&quot;</td><td>&quot;Damon Soto&quot;</td><td>&quot;1948-11-15&quot;</td><td>&quot;Christina Hull&quot;</td><td>&quot;1992-04-07&quot;</td><td>&quot;Sean Boone&quot;</td><td>&quot;2022-08-10&quot;</td><td>&quot;Benjamin Graham&quot;</td><td>&quot;1971-12-30&quot;</td><td>&quot;Daniel Pacheco&quot;</td><td>&quot;1926-08-16&quot;</td><td>&quot;Jennifer Hopkins&quot;</td><td>&quot;2016-04-15&quot;</td><td>&quot;Anne Kelly&quot;</td><td>&quot;1988-12-03&quot;</td><td>&quot;Cristina Garcia&quot;</td><td>&quot;1997-05-03&quot;</td><td>&quot;Lindsay Wright&quot;</td><td>&quot;1979-12-03&quot;</td><td>&quot;Teresa Berg&quot;</td><td>&quot;1953-11-01&quot;</td><td>&quot;Lisa Murphy&quot;</td><td>&quot;1930-09-15&quot;</td><td>&quot;Jacob Hernandez&quot;</td><td>&quot;2017-04-25&quot;</td><td>&quot;Amber Campbell&quot;</td><td>&quot;1983-10-31&quot;</td><td>&quot;Ashley Mitchell&quot;</td><td>&quot;1962-09-07&quot;</td><td>&quot;Jacqueline Singleton&quot;</td><td>&quot;1970-06-14&quot;</td><td>&quot;Melinda Miller&quot;</td><td>&quot;1978-05-08&quot;</td><td>&quot;Brenda Gibbs&quot;</td><td>&quot;1964-08-13&quot;</td><td>&quot;Rebecca Cooper&quot;</td><td>&quot;2022-10-04&quot;</td><td>&quot;Jonathan Kelly&quot;</td><td>&quot;1935-11-19&quot;</td><td>&quot;Stephen Sanchez&quot;</td><td>&quot;2010-05-15&quot;</td><td>&quot;Adam Stark&quot;</td><td>&quot;1911-07-12&quot;</td><td>&quot;Denise George&quot;</td><td>&quot;1930-02-08&quot;</td><td>&quot;Brenda Lee&quot;</td><td>&quot;2003-09-22&quot;</td><td>&quot;Tracey Nelson&quot;</td><td>&quot;1910-09-10&quot;</td><td>&quot;Greg Esparza&quot;</td><td>&quot;2000-07-07&quot;</td><td>&quot;Tanner Bell&quot;</td><td>&quot;1928-01-15&quot;</td><td>&quot;Veronica Collins&quot;</td><td>&quot;1934-09-23&quot;</td></tr><tr><td>99999</td><td>&quot;Sheila Elliott&quot;</td><td>&quot;1965-08-06&quot;</td><td>&quot;Charlene Lee&quot;</td><td>&quot;2014-06-22&quot;</td><td>&quot;Gabriella Brown&quot;</td><td>&quot;2015-03-17&quot;</td><td>&quot;Joseph Warren&quot;</td><td>&quot;2015-03-18&quot;</td><td>&quot;Martin Frederick&quot;</td><td>&quot;1992-05-01&quot;</td><td>&quot;Cameron Pruitt&quot;</td><td>&quot;1992-12-19&quot;</td><td>&quot;Jennifer Wilson&quot;</td><td>&quot;1929-02-17&quot;</td><td>&quot;Scott Soto&quot;</td><td>&quot;2014-02-18&quot;</td><td>&quot;Lisa Oneill&quot;</td><td>&quot;1909-10-27&quot;</td><td>&quot;Joy Jones&quot;</td><td>&quot;1963-11-07&quot;</td><td>&quot;Diana Rodriguez&quot;</td><td>&quot;1951-12-27&quot;</td><td>&quot;Rachel Estes&quot;</td><td>&quot;1986-01-22&quot;</td><td>&quot;Susan Smith&quot;</td><td>&quot;1985-01-30&quot;</td><td>&quot;Cody Perez&quot;</td><td>&quot;1932-02-02&quot;</td><td>&quot;Pamela Stevenson DDS&quot;</td><td>&quot;2020-07-06&quot;</td><td>&quot;Katelyn Oconnor&quot;</td><td>&quot;1975-11-13&quot;</td><td>&quot;James Blair&quot;</td><td>&quot;1976-03-29&quot;</td><td>&quot;Betty Rowe&quot;</td><td>&quot;1991-03-26&quot;</td><td>&quot;William Briggs&quot;</td><td>&quot;1932-10-01&quot;</td><td>&quot;James Hudson&quot;</td><td>&quot;1998-01-17&quot;</td><td>&quot;Shawn Martinez&quot;</td><td>&quot;2013-11-03&quot;</td><td>&quot;Carla Shelton&quot;</td><td>&quot;2018-10-05&quot;</td><td>&quot;Emily Burke&quot;</td><td>&quot;1965-04-03&quot;</td><td>&quot;Matthew Brown&quot;</td><td>&quot;1932-06-30&quot;</td><td>&quot;Mrs. Jill Rogers MD&quot;</td><td>&quot;2000-05-07&quot;</td><td>&quot;Martin Schmidt&quot;</td><td>&quot;1977-11-22&quot;</td><td>&quot;Cody Collins&quot;</td><td>&quot;1994-08-01&quot;</td><td>&quot;Kevin Duncan&quot;</td><td>&quot;2009-10-15&quot;</td><td>&quot;Jerry Brown&quot;</td><td>&quot;2004-01-29&quot;</td><td>&quot;Nancy Benjamin&quot;</td><td>&quot;1966-05-18&quot;</td></tr></tbody></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">household_large</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(100000, 61)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+<span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+<span class="n">out_naive</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">household_large</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;family&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">expression</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">out_naive</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (3_000_000, 4)</small><table border="1" class="dataframe"><thead><tr><th>family</th><th>child</th><th>name</th><th>dob</th></tr><tr><td>i64</td><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>0</td><td>&quot;child0&quot;</td><td>&quot;Brittany Mcdonald&quot;</td><td>&quot;1989-08-24&quot;</td></tr><tr><td>1</td><td>&quot;child0&quot;</td><td>&quot;Diana Welch&quot;</td><td>&quot;1989-02-11&quot;</td></tr><tr><td>2</td><td>&quot;child0&quot;</td><td>&quot;Jamie Richards&quot;</td><td>&quot;1973-11-04&quot;</td></tr><tr><td>3</td><td>&quot;child0&quot;</td><td>&quot;Michele Reed&quot;</td><td>&quot;1994-11-05&quot;</td></tr><tr><td>4</td><td>&quot;child0&quot;</td><td>&quot;Steven Burgess&quot;</td><td>&quot;1997-12-24&quot;</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>99995</td><td>&quot;child29&quot;</td><td>&quot;Patrick Solomon&quot;</td><td>&quot;1920-03-12&quot;</td></tr><tr><td>99996</td><td>&quot;child29&quot;</td><td>&quot;Steven Smith&quot;</td><td>&quot;1987-09-22&quot;</td></tr><tr><td>99997</td><td>&quot;child29&quot;</td><td>&quot;Scott Carlson&quot;</td><td>&quot;1950-05-23&quot;</td></tr><tr><td>99998</td><td>&quot;child29&quot;</td><td>&quot;Veronica Collins&quot;</td><td>&quot;1934-09-23&quot;</td></tr><tr><td>99999</td><td>&quot;child29&quot;</td><td>&quot;Nancy Benjamin&quot;</td><td>&quot;1966-05-18&quot;</td></tr></tbody></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+<span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+<span class="p">(</span>
+    <span class="n">household_large</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;family&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">expression</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.2 s ± 8.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">lreshape</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;family&quot;</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">string</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">lprun</span> -f lreshape lreshape(household_large)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Timer</span> <span class="n">unit</span><span class="p">:</span> <span class="mf">1e-09</span> <span class="n">s</span>
+
+<span class="n">Total</span> <span class="n">time</span><span class="p">:</span> <span class="mf">1.14191</span> <span class="n">s</span>
+<span class="n">File</span><span class="p">:</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">folders</span><span class="o">/</span><span class="n">yh</span><span class="o">/</span><span class="mi">003</span><span class="n">fk4jn5fl9kl3mnm1y0b1h0000gr</span><span class="o">/</span><span class="n">T</span><span class="o">/</span><span class="n">ipykernel_83318</span><span class="o">/</span><span class="mf">2283907795.</span><span class="n">py</span>
+<span class="n">Function</span><span class="p">:</span> <span class="n">lreshape</span> <span class="n">at</span> <span class="n">line</span> <span class="mi">1</span>
+
+<span class="n">Line</span> <span class="c1">#      Hits         Time  Per Hit   % Time  Line Contents</span>
+<span class="o">==============================================================</span>
+     <span class="mi">1</span>                                           <span class="k">def</span> <span class="nf">lreshape</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+     <span class="mi">2</span>         <span class="mi">1</span>   <span class="mf">55695000.0</span>    <span class="mf">6e+07</span>      <span class="mf">4.9</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;family&quot;</span><span class="p">)</span>
+     <span class="mi">3</span>         <span class="mi">1</span>     <span class="mf">268000.0</span> <span class="mf">268000.0</span>      <span class="mf">0.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+     <span class="mi">4</span>         <span class="mi">1</span>       <span class="mf">9000.0</span>   <span class="mf">9000.0</span>      <span class="mf">0.0</span>      <span class="n">string</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+     <span class="mi">5</span>         <span class="mi">1</span>  <span class="mf">222072000.0</span>    <span class="mf">2e+08</span>     <span class="mf">19.4</span>      <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+     <span class="mi">6</span>         <span class="mi">1</span>   <span class="mf">31940000.0</span>    <span class="mf">3e+07</span>      <span class="mf">2.8</span>      <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+     <span class="mi">7</span>         <span class="mi">1</span>    <span class="mf">1298000.0</span>    <span class="mf">1e+06</span>      <span class="mf">0.1</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">string</span><span class="p">)</span>
+     <span class="mi">8</span>         <span class="mi">1</span>      <span class="mf">17000.0</span>  <span class="mf">17000.0</span>      <span class="mf">0.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+     <span class="mi">9</span>         <span class="mi">1</span>  <span class="mf">830615000.0</span>    <span class="mf">8e+08</span>     <span class="mf">72.7</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="mi">10</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">pivot</span></code> operation takes more than half of the reshaping; looks like a good place to start, with a view to improving performance, if possible.</p>
+<p>To possibly improve performance, we need to find a way to pair the headers(<code class="docutils literal notranslate"><span class="pre">dob</span></code>, <code class="docutils literal notranslate"><span class="pre">name</span></code>) with the relevant columns, before unpivoting.</p>
+<p>We will also process the columns before unpivoting, based on what we learnt from our <a class="reference internal" href="#many-variables-in-column-names"><span class="std std-ref">previous reshaping exercise</span></a>.</p>
+<p>Let’s start with processing the columns :</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;family&quot;</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">household_large</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">is_in</span><span class="p">([</span><span class="n">index</span><span class="p">])</span><span class="o">.</span><span class="n">not_</span><span class="p">()</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">struct</span><span class="o">.</span><span class="n">unnest</span><span class="p">()</span>
+<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">columns_</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (60, 3)</small><table border="1" class="dataframe"><thead><tr><th>header</th><th>child</th><th>columns</th></tr><tr><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>&quot;name&quot;</td><td>&quot;child0&quot;</td><td>&quot;name_child0&quot;</td></tr><tr><td>&quot;dob&quot;</td><td>&quot;child0&quot;</td><td>&quot;dob_child0&quot;</td></tr><tr><td>&quot;name&quot;</td><td>&quot;child1&quot;</td><td>&quot;name_child1&quot;</td></tr><tr><td>&quot;dob&quot;</td><td>&quot;child1&quot;</td><td>&quot;dob_child1&quot;</td></tr><tr><td>&quot;name&quot;</td><td>&quot;child2&quot;</td><td>&quot;name_child2&quot;</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>&quot;dob&quot;</td><td>&quot;child27&quot;</td><td>&quot;dob_child27&quot;</td></tr><tr><td>&quot;name&quot;</td><td>&quot;child28&quot;</td><td>&quot;name_child28&quot;</td></tr><tr><td>&quot;dob&quot;</td><td>&quot;child28&quot;</td><td>&quot;dob_child28&quot;</td></tr><tr><td>&quot;name&quot;</td><td>&quot;child29&quot;</td><td>&quot;name_child29&quot;</td></tr><tr><td>&quot;dob&quot;</td><td>&quot;child29&quot;</td><td>&quot;dob_child29&quot;</td></tr></tbody></table></div></div></div>
+</div>
+<p>The next step is to pair the <code class="docutils literal notranslate"><span class="pre">header</span></code> and <code class="docutils literal notranslate"><span class="pre">columns</span></code>, based on <code class="docutils literal notranslate"><span class="pre">child</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pass maintain_order=True</span>
+<span class="c1"># if you want to retain the order</span>
+<span class="n">grouped</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;child&quot;</span><span class="p">)</span> 
+<span class="n">grouped</span> <span class="o">=</span> <span class="n">grouped</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+<span class="n">grouped</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (30, 3)</small><table border="1" class="dataframe"><thead><tr><th>child</th><th>header</th><th>columns</th></tr><tr><td>str</td><td>list[str]</td><td>list[str]</td></tr></thead><tbody><tr><td>&quot;child4&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child4&quot;, &quot;dob_child4&quot;]</td></tr><tr><td>&quot;child2&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child2&quot;, &quot;dob_child2&quot;]</td></tr><tr><td>&quot;child13&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child13&quot;, &quot;dob_child13&quot;]</td></tr><tr><td>&quot;child25&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child25&quot;, &quot;dob_child25&quot;]</td></tr><tr><td>&quot;child19&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child19&quot;, &quot;dob_child19&quot;]</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>&quot;child11&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child11&quot;, &quot;dob_child11&quot;]</td></tr><tr><td>&quot;child10&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child10&quot;, &quot;dob_child10&quot;]</td></tr><tr><td>&quot;child5&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child5&quot;, &quot;dob_child5&quot;]</td></tr><tr><td>&quot;child24&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child24&quot;, &quot;dob_child24&quot;]</td></tr><tr><td>&quot;child15&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child15&quot;, &quot;dob_child15&quot;]</td></tr></tbody></table></div></div></div>
+</div>
+<p>From the above we can see a relationship; we’ll create structs of pairs, where the field names are the headers(<code class="docutils literal notranslate"><span class="pre">dob</span></code>, <code class="docutils literal notranslate"><span class="pre">name</span></code>) and the values in the structs are the relevant column names:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expression</span> <span class="o">=</span> <span class="p">[</span><span class="n">index</span><span class="p">]</span>
+<span class="n">zipped</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+    <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+<span class="p">)</span>
+<span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="p">(</span><span class="n">heads</span><span class="p">,</span> <span class="n">column_names</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">zipped</span><span class="p">):</span>
+    <span class="n">expr_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">heads</span><span class="p">,</span> <span class="n">column_names</span><span class="p">))</span>
+    <span class="n">expr_</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">struct</span><span class="p">(</span><span class="o">**</span><span class="n">expr_</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+    <span class="n">expression</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expr_</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we unpivot:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="n">household_large</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">))</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s1">&#39;child&#39;</span><span class="p">))</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">([</span><span class="s1">&#39;family&#39;</span><span class="p">,</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+<span class="n">out</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+  text-align: right;
+  white-space: pre-wrap;
+}
+</style>
+<small>shape: (3_000_000, 4)</small><table border="1" class="dataframe"><thead><tr><th>family</th><th>name</th><th>dob</th><th>child</th></tr><tr><td>i64</td><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>0</td><td>&quot;Elizabeth Sampson&quot;</td><td>&quot;1947-01-25&quot;</td><td>&quot;child4&quot;</td></tr><tr><td>1</td><td>&quot;Katherine Landry&quot;</td><td>&quot;1935-06-26&quot;</td><td>&quot;child4&quot;</td></tr><tr><td>2</td><td>&quot;Anthony Brewer&quot;</td><td>&quot;1987-06-21&quot;</td><td>&quot;child4&quot;</td></tr><tr><td>3</td><td>&quot;Bailey Stevens&quot;</td><td>&quot;2000-04-09&quot;</td><td>&quot;child4&quot;</td></tr><tr><td>4</td><td>&quot;Kevin Gonzales&quot;</td><td>&quot;1977-10-03&quot;</td><td>&quot;child4&quot;</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>99995</td><td>&quot;Mr. Christopher Harper&quot;</td><td>&quot;2002-07-22&quot;</td><td>&quot;child15&quot;</td></tr><tr><td>99996</td><td>&quot;Desiree Parker&quot;</td><td>&quot;1939-11-15&quot;</td><td>&quot;child15&quot;</td></tr><tr><td>99997</td><td>&quot;Walter Lyons&quot;</td><td>&quot;2002-03-03&quot;</td><td>&quot;child15&quot;</td></tr><tr><td>99998</td><td>&quot;Amber Campbell&quot;</td><td>&quot;1983-10-31&quot;</td><td>&quot;child15&quot;</td></tr><tr><td>99999</td><td>&quot;Katelyn Oconnor&quot;</td><td>&quot;1975-11-13&quot;</td><td>&quot;child15&quot;</td></tr></tbody></table></div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cols</span> <span class="o">=</span> <span class="n">out_naive</span><span class="o">.</span><span class="n">columns</span>
+<span class="n">out_naive</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">all</span><span class="p">())</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">all</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;family&quot;</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">household_large</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">is_in</span><span class="p">([</span><span class="n">index</span><span class="p">])</span><span class="o">.</span><span class="n">not_</span><span class="p">()</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">struct</span><span class="o">.</span><span class="n">unnest</span><span class="p">()</span>
+<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">grouped</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;child&quot;</span><span class="p">)</span>
+<span class="n">grouped</span> <span class="o">=</span> <span class="n">grouped</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+<span class="n">expression</span> <span class="o">=</span> <span class="p">[</span><span class="n">index</span><span class="p">]</span>
+<span class="n">zipped</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+    <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+<span class="p">)</span>
+<span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="p">(</span><span class="n">heads</span><span class="p">,</span> <span class="n">column_names</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">zipped</span><span class="p">):</span>
+    <span class="n">expr_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">heads</span><span class="p">,</span> <span class="n">column_names</span><span class="p">))</span>
+    <span class="n">expr_</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">struct</span><span class="p">(</span><span class="o">**</span><span class="n">expr_</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+    <span class="n">expression</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expr_</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">household_large</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">))</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s1">&#39;child&#39;</span><span class="p">))</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">([</span><span class="s1">&#39;family&#39;</span><span class="p">,</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+<span class="n">out</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>86.1 ms ± 233 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+</pre></div>
+</div>
+</div>
+</div>
+<p>By changing our approach (preprocess the columns, and grouping related columns into structs before unpivoting) we improve the peformance significantly - about 14x faster.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">lreshape_optimised</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;family&quot;</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">is_in</span><span class="p">([</span><span class="n">index</span><span class="p">])</span><span class="o">.</span><span class="n">not_</span><span class="p">()</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+    <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+    <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+    <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">struct</span><span class="o">.</span><span class="n">unnest</span><span class="p">()</span>
+    <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">grouped</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;child&quot;</span><span class="p">)</span>
+    <span class="n">grouped</span> <span class="o">=</span> <span class="n">grouped</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+    <span class="n">expression</span> <span class="o">=</span> <span class="p">[</span><span class="n">index</span><span class="p">]</span>
+    <span class="n">zipped</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span>
+        <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+        <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="p">(</span><span class="n">heads</span><span class="p">,</span> <span class="n">column_names</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">zipped</span><span class="p">):</span>
+        <span class="n">expr_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">heads</span><span class="p">,</span> <span class="n">column_names</span><span class="p">))</span>
+        <span class="n">expr_</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">struct</span><span class="p">(</span><span class="o">**</span><span class="n">expr_</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+        <span class="n">expression</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expr_</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">))</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s1">&#39;child&#39;</span><span class="p">))</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">([</span><span class="s1">&#39;family&#39;</span><span class="p">,</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">lprun</span> -f lreshape_optimised lreshape_optimised(household_large)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Timer</span> <span class="n">unit</span><span class="p">:</span> <span class="mf">1e-09</span> <span class="n">s</span>
+
+<span class="n">Total</span> <span class="n">time</span><span class="p">:</span> <span class="mf">0.08356</span> <span class="n">s</span>
+<span class="n">File</span><span class="p">:</span> <span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">folders</span><span class="o">/</span><span class="n">yh</span><span class="o">/</span><span class="mi">003</span><span class="n">fk4jn5fl9kl3mnm1y0b1h0000gr</span><span class="o">/</span><span class="n">T</span><span class="o">/</span><span class="n">ipykernel_83318</span><span class="o">/</span><span class="mf">2813683113.</span><span class="n">py</span>
+<span class="n">Function</span><span class="p">:</span> <span class="n">lreshape_optimised</span> <span class="n">at</span> <span class="n">line</span> <span class="mi">1</span>
+
+<span class="n">Line</span> <span class="c1">#      Hits         Time  Per Hit   % Time  Line Contents</span>
+<span class="o">==============================================================</span>
+     <span class="mi">1</span>                                           <span class="k">def</span> <span class="nf">lreshape_optimised</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+     <span class="mi">2</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;family&quot;</span>
+     <span class="mi">3</span>         <span class="mi">1</span>      <span class="mf">34000.0</span>  <span class="mf">34000.0</span>      <span class="mf">0.0</span>      <span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+     <span class="mi">4</span>         <span class="mi">1</span>     <span class="mf">165000.0</span> <span class="mf">165000.0</span>      <span class="mf">0.2</span>      <span class="n">mask</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">is_in</span><span class="p">([</span><span class="n">index</span><span class="p">])</span><span class="o">.</span><span class="n">not_</span><span class="p">()</span>
+     <span class="mi">5</span>         <span class="mi">1</span>       <span class="mf">6000.0</span>   <span class="mf">6000.0</span>      <span class="mf">0.0</span>      <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+     <span class="mi">6</span>         <span class="mi">1</span>     <span class="mf">136000.0</span> <span class="mf">136000.0</span>      <span class="mf">0.2</span>      <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+     <span class="mi">7</span>         <span class="mi">1</span>     <span class="mf">157000.0</span> <span class="mf">157000.0</span>      <span class="mf">0.2</span>      <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+     <span class="mi">8</span>         <span class="mi">1</span>       <span class="mf">8000.0</span>   <span class="mf">8000.0</span>      <span class="mf">0.0</span>      <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">struct</span><span class="o">.</span><span class="n">unnest</span><span class="p">()</span>
+     <span class="mi">9</span>         <span class="mi">1</span>     <span class="mf">187000.0</span> <span class="mf">187000.0</span>      <span class="mf">0.2</span>      <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
+    <span class="mi">10</span>         <span class="mi">1</span>       <span class="mf">4000.0</span>   <span class="mf">4000.0</span>      <span class="mf">0.0</span>      <span class="n">grouped</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;child&quot;</span><span class="p">)</span>
+    <span class="mi">11</span>         <span class="mi">1</span>     <span class="mf">274000.0</span> <span class="mf">274000.0</span>      <span class="mf">0.3</span>      <span class="n">grouped</span> <span class="o">=</span> <span class="n">grouped</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+    <span class="mi">12</span>         <span class="mi">1</span>       <span class="mf">1000.0</span>   <span class="mf">1000.0</span>      <span class="mf">0.0</span>      <span class="n">expression</span> <span class="o">=</span> <span class="p">[</span><span class="n">index</span><span class="p">]</span>
+    <span class="mi">13</span>         <span class="mi">2</span>       <span class="mf">1000.0</span>    <span class="mf">500.0</span>      <span class="mf">0.0</span>      <span class="n">zipped</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="mi">14</span>         <span class="mi">1</span>      <span class="mf">14000.0</span>  <span class="mf">14000.0</span>      <span class="mf">0.0</span>          <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+    <span class="mi">15</span>         <span class="mi">1</span>       <span class="mf">6000.0</span>   <span class="mf">6000.0</span>      <span class="mf">0.0</span>          <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+    <span class="mi">16</span>                                               <span class="p">)</span>
+    <span class="mi">17</span>        <span class="mi">31</span>       <span class="mf">8000.0</span>    <span class="mf">258.1</span>      <span class="mf">0.0</span>      <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="p">(</span><span class="n">heads</span><span class="p">,</span> <span class="n">column_names</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">zipped</span><span class="p">):</span>
+    <span class="mi">18</span>        <span class="mi">30</span>      <span class="mf">12000.0</span>    <span class="mf">400.0</span>      <span class="mf">0.0</span>          <span class="n">expr_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">heads</span><span class="p">,</span> <span class="n">column_names</span><span class="p">))</span>
+    <span class="mi">19</span>        <span class="mi">30</span>     <span class="mf">193000.0</span>   <span class="mf">6433.3</span>      <span class="mf">0.2</span>          <span class="n">expr_</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">struct</span><span class="p">(</span><span class="o">**</span><span class="n">expr_</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
+    <span class="mi">20</span>        <span class="mi">30</span>       <span class="mf">5000.0</span>    <span class="mf">166.7</span>      <span class="mf">0.0</span>          <span class="n">expression</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expr_</span><span class="p">)</span>
+    <span class="mi">21</span>         <span class="mi">1</span>     <span class="mf">719000.0</span> <span class="mf">719000.0</span>      <span class="mf">0.9</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
+    <span class="mi">22</span>         <span class="mi">1</span>    <span class="mf">6927000.0</span>    <span class="mf">7e+06</span>      <span class="mf">8.3</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">))</span>
+    <span class="mi">23</span>         <span class="mi">1</span>   <span class="mf">57090000.0</span>    <span class="mf">6e+07</span>     <span class="mf">68.3</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
+    <span class="mi">24</span>         <span class="mi">1</span>      <span class="mf">93000.0</span>  <span class="mf">93000.0</span>      <span class="mf">0.1</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s1">&#39;child&#39;</span><span class="p">))</span>
+    <span class="mi">25</span>         <span class="mi">1</span>      <span class="mf">23000.0</span>  <span class="mf">23000.0</span>      <span class="mf">0.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span>
+    <span class="mi">26</span>         <span class="mi">1</span>   <span class="mf">17479000.0</span>    <span class="mf">2e+07</span>     <span class="mf">20.9</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">([</span><span class="s1">&#39;family&#39;</span><span class="p">,</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+    <span class="mi">27</span>         <span class="mi">1</span>      <span class="mf">18000.0</span>  <span class="mf">18000.0</span>      <span class="mf">0.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+    <span class="mi">28</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+</section>
+<section id="summary">
+<h2><strong>Summary</strong><a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<p>This blog post highlights how to flip from wide to long form efficiently.</p>
+<p>One thing to note is the verbosity of the faster approach. In another blog post, we’ll have a look at two functions from the <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/">pyjanitor</a> library that offer conciseness and efficiency when reshaping from wide to long form.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Reshape-Data-in-Polars-Wide-to_Long-Part-I.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Reshape Data in Polars Efficiently from Wide to Long Form - Part I</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Reshape-Data-in-Polars-Wide-to_Long-Part-III.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Reshape Data in Polars Efficiently from Wide to Long Form - Part III</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction"><strong>Introduction</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#many-variables-in-column-names"><strong>Many variables in column names</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-observations-per-row"><strong>Multiple observations per row</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary"><strong>Summary</strong></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Samuel Oranyeli
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2021.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
