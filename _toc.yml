@@ -44,3 +44,6 @@ parts:
   - caption: Polars
     chapters:
     - file: notebooks/dplyr-across-in-Polars
+    - file: notebooks/Reshape-Data-in-Polars-Wide-to_Long-Part-I
+    - file: notebooks/Reshape-Data-in-Polars-Wide-to_Long-Part-II
+    - file: notebooks/Reshape-Data-in-Polars-Wide-to_Long-Part-III

@@ -1,5 +1,5 @@
-Data Wrangling Recipes
-=======================
+Introduction
+============
 
 *Author: Samuel Oranyeli*
 

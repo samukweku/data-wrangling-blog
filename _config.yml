@@ -32,3 +32,13 @@ html:
   comments:
     utterances:
       repo: "samukweku/data-wrangling-blog"
+
+# sphinx:
+#   extensions: 
+#     - sphinx_comments
+
+#   config:
+#     comments_config: 
+#       utterances:
+#         repo: samukweku/data-wrangling-blog
+#         optional: config
