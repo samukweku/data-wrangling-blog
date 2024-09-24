@@ -51,40 +51,6 @@
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
-    <script kind="utterances">
-
-    var commentsRunWhenDOMLoaded = cb => {
-    if (document.readyState != 'loading') {
-        cb()
-    } else if (document.addEventListener) {
-        document.addEventListener('DOMContentLoaded', cb)
-    } else {
-        document.attachEvent('onreadystatechange', function() {
-        if (document.readyState == 'complete') cb()
-        })
-    }
-}
-
-var addUtterances = () => {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = "https://utteranc.es/client.js";
-    script.async = "async";
-
-    script.setAttribute("repo", "samukweku/data-wrangling-blog");
-    script.setAttribute("issue-term", "pathname");
-    script.setAttribute("theme", "github-light");
-    script.setAttribute("label", "💬 comment");
-    script.setAttribute("crossorigin", "anonymous");
-
-    sections = document.querySelectorAll("div.section");
-    if (sections !== null) {
-        section = sections[sections.length-1];
-        section.appendChild(script);
-    }
-}
-commentsRunWhenDOMLoaded(addUtterances);
-</script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
@@ -528,7 +494,7 @@ document.write(`
 </style>
 <small>shape: (18, 11)</small><table border="1" class="dataframe"><thead><tr><th>religion</th><th>&lt;$10k</th><th>$10-20k</th><th>$20-30k</th><th>$30-40k</th><th>$40-50k</th><th>$50-75k</th><th>$75-100k</th><th>$100-150k</th><th>&gt;150k</th><th>Don&#x27;t know/refused</th></tr><tr><td>str</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Agnostic&quot;</td><td>27</td><td>34</td><td>60</td><td>81</td><td>76</td><td>137</td><td>122</td><td>109</td><td>84</td><td>96</td></tr><tr><td>&quot;Atheist&quot;</td><td>12</td><td>27</td><td>37</td><td>52</td><td>35</td><td>70</td><td>73</td><td>59</td><td>74</td><td>76</td></tr><tr><td>&quot;Buddhist&quot;</td><td>27</td><td>21</td><td>30</td><td>34</td><td>33</td><td>58</td><td>62</td><td>39</td><td>53</td><td>54</td></tr><tr><td>&quot;Catholic&quot;</td><td>418</td><td>617</td><td>732</td><td>670</td><td>638</td><td>1116</td><td>949</td><td>792</td><td>633</td><td>1489</td></tr><tr><td>&quot;Don’t know/refused&quot;</td><td>15</td><td>14</td><td>15</td><td>11</td><td>10</td><td>35</td><td>21</td><td>17</td><td>18</td><td>116</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>&quot;Orthodox&quot;</td><td>13</td><td>17</td><td>23</td><td>32</td><td>32</td><td>47</td><td>38</td><td>42</td><td>46</td><td>73</td></tr><tr><td>&quot;Other Christian&quot;</td><td>9</td><td>7</td><td>11</td><td>13</td><td>13</td><td>14</td><td>18</td><td>14</td><td>12</td><td>18</td></tr><tr><td>&quot;Other Faiths&quot;</td><td>20</td><td>33</td><td>40</td><td>46</td><td>49</td><td>63</td><td>46</td><td>40</td><td>41</td><td>71</td></tr><tr><td>&quot;Other World Religions&quot;</td><td>5</td><td>2</td><td>3</td><td>4</td><td>2</td><td>7</td><td>3</td><td>4</td><td>4</td><td>8</td></tr><tr><td>&quot;Unaffiliated&quot;</td><td>217</td><td>299</td><td>374</td><td>365</td><td>341</td><td>528</td><td>407</td><td>321</td><td>258</td><td>597</td></tr></tbody></table></div></div></div>
 </div>
-<p>This is an easy use case - <a class="reference internal" href="#"><span class="xref myst">pivot_longer</span></a> simply calls <a class="reference external" href="https://docs.pola.rs/api/python/stable/reference/DataFrame/api/polars.DataFrame.unpivot.html#polars.DataFrame.unpivot">unpivot</a> under the hood:</p>
+<p>This is an easy use case - <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/polars/#janitor.polars.pivot_longer">pivot_longer</a> simply calls <a class="reference external" href="https://docs.pola.rs/api/python/stable/reference/DataFrame/api/polars.DataFrame.unpivot.html#polars.DataFrame.unpivot">unpivot</a> under the hood:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">relig_income</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
@@ -867,7 +833,7 @@ document.write(`
 </section>
 <section id="describe-the-output-with-pivot-longer-spec">
 <h2><strong>Describe the output with <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/polars/#janitor.polars.pivot_longer.pivot_longer_spec">pivot_longer_spec</a></strong><a class="headerlink" href="#describe-the-output-with-pivot-longer-spec" title="Link to this heading">#</a></h2>
-<p>So far, <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/polars/#janitor.polars.pivot_longer">pivot_longer</a> allows us an easy, flexible way to reshape data from wide to long form. However, there are situations where <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/polars/#janitor.polars.pivot_longer">pivot_longer</a> is inadequate for the transformation, or you need more control over the reshaping. This is where <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/polars/#janitor.polars.pivot_longer.pivot_longer_spec">pivot_longer_spec</a> shines - you describe how the new DataFrame should look, based on the source DataFrame.</p>
+<p><a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/polars/#janitor.polars.pivot_longer">pivot_longer</a> offers a powerful, flexible and concise way to reshape data from wide to long form. However, there are situations where <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/polars/#janitor.polars.pivot_longer">pivot_longer</a> is inadequate for the transformation, or you need more control over the reshaping. This is where <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/polars/#janitor.polars.pivot_longer.pivot_longer_spec">pivot_longer_spec</a> shines - you describe how the new DataFrame should look, based on the source DataFrame.</p>
 <p>Let’s look at an example, adapted from <a class="reference external" href="https://rdatatable.gitlab.io/data.table/articles/datatable-reshape.html#a-enhanced-melt">data.table vignette</a>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
