@@ -438,14 +438,16 @@ document.write(`
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="pivot-tables-simple-unpivoting">
 <h1><strong>Pivot Tables - Simple Unpivoting</strong><a class="headerlink" href="#pivot-tables-simple-unpivoting" title="Link to this heading">#</a></h1>
-<p><em>updated : April 14, 2022</em></p>
-<p>This is part of a series of blog posts about extracting data from spreadsheets using Python.  It is based on the <a class="reference external" href="https://nacnudus.github.io/spreadsheet-munging-strategies/index.html">book</a> written by <a class="reference external" href="https://twitter.com/nacnudus?lang=en">Duncan Garmonsway</a>, which was written primarily for R users. LInks to the other posts are on the <a class="reference external" href="https://samukweku.github.io/data-wrangling-blog/">homepage</a>.</p>
+<p><em>updated : September 25, 2024</em></p>
+<p>This is part of a series of blog posts about extracting data from spreadsheets using Python.  It is based on the <a class="reference external" href="https://nacnudus.github.io/spreadsheet-munging-strategies/index.html">book</a> written by <a class="reference external" href="https://twitter.com/nacnudus?lang=en">Duncan Garmonsway</a>, which was written primarily for R users. Links to the other posts are on the sidebar.</p>
+<p>The key takeaway is this - you understand your data layout; use the tools to achieve your end goal. <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a> offers a way to get the cells in a spreadsheet into individual rows, with some metadata. The final outcome however relies on your understanding of the data layout and its proper application.</p>
 <p>Pivot tables offer a summarized version of the data, and are usually succinct and visually appealing. However, for analysis, it is not so good. How do we convert pivot tables to tidy data? This section covers that. We’ll see various kinds of pivot tables, and work through each of them.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pip install git+https://github.com/pyjanitor-devs/pyjanitor.git</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pip install pyjanitor</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">janitor</span>
+<span class="kn">import</span> <span class="nn">janitor</span> <span class="k">as</span> <span class="nn">jn</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 </pre></div>
 </div>
@@ -453,7 +455,25 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">excel_file</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelFile</span><span class="p">(</span><span class="s2">&quot;Data_files/worked-examples.xlsx&quot;</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;openpyxl&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;pandas version: &quot;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;janitor version: &quot;</span><span class="p">,</span> <span class="n">jn</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;python version: &quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;numpy version: &quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pandas version:  2.2.2
+janitor version:  0.29.1
+python version:  3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:49) [Clang 16.0.6 ]
+numpy version:  2.0.2
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">excel_file</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelFile</span><span class="p">(</span><span class="s2">&quot;Data_files/worked-examples.xlsx&quot;</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s2">&quot;openpyxl&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -470,10 +490,9 @@ document.write(`
 </ol>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">excel_file</span>
-     <span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s1">&#39;pivot-annotations&#39;</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">index_col</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-     <span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">level</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
-     <span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">excel_file</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span>
+    <span class="s2">&quot;pivot-annotations&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">index_col</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="p">)</span><span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">df</span>
 </pre></div>
@@ -548,23 +567,19 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">,</span> <span class="s1">&#39;subject&#39;</span><span class="p">]</span>
-<span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;student&#39;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;field&quot;</span><span class="p">,</span> <span class="s2">&quot;subject&quot;</span><span class="p">]</span>
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="s2">&quot;student&quot;</span><span class="p">]</span>
 
-<span class="p">(</span><span class="n">df</span>
-<span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;student&#39;</span><span class="p">])</span>
-<span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;scores&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-<span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
+<span class="p">(</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="s2">&quot;student&quot;</span><span class="p">],</span> <span class="n">future_stack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;scores&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/yh/003fk4jn5fl9kl3mnm1y0b1h0000gr/T/ipykernel_78454/1922738328.py:5: FutureWarning: The previous implementation of stack is deprecated and will be removed in a future version of pandas. See the What&#39;s New notes for pandas 2.1.0 for details. Specify future_stack=True to adopt the new implementation and silence this warning.
-  .stack([&#39;gender&#39;, &#39;student&#39;])
-</pre></div>
-</div>
 <div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -597,7 +612,7 @@ document.write(`
       <td>Classics</td>
       <td>Female</td>
       <td>Matilda</td>
-      <td>1.0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>1</th>
@@ -605,7 +620,7 @@ document.write(`
       <td>Classics</td>
       <td>Female</td>
       <td>Olivia</td>
-      <td>2.0</td>
+      <td>2</td>
     </tr>
     <tr>
       <th>2</th>
@@ -613,7 +628,7 @@ document.write(`
       <td>Classics</td>
       <td>Male</td>
       <td>Nicholas</td>
-      <td>3.0</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>3</th>
@@ -621,7 +636,7 @@ document.write(`
       <td>Classics</td>
       <td>Male</td>
       <td>Paul</td>
-      <td>0.0</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>4</th>
@@ -629,7 +644,7 @@ document.write(`
       <td>History</td>
       <td>Female</td>
       <td>Matilda</td>
-      <td>3.0</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>5</th>
@@ -637,7 +652,7 @@ document.write(`
       <td>History</td>
       <td>Female</td>
       <td>Olivia</td>
-      <td>4.0</td>
+      <td>4</td>
     </tr>
     <tr>
       <th>6</th>
@@ -645,7 +660,7 @@ document.write(`
       <td>History</td>
       <td>Male</td>
       <td>Nicholas</td>
-      <td>5.0</td>
+      <td>5</td>
     </tr>
     <tr>
       <th>7</th>
@@ -653,7 +668,7 @@ document.write(`
       <td>History</td>
       <td>Male</td>
       <td>Paul</td>
-      <td>1.0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>8</th>
@@ -661,7 +676,7 @@ document.write(`
       <td>Music</td>
       <td>Female</td>
       <td>Matilda</td>
-      <td>5.0</td>
+      <td>5</td>
     </tr>
     <tr>
       <th>9</th>
@@ -669,7 +684,7 @@ document.write(`
       <td>Music</td>
       <td>Female</td>
       <td>Olivia</td>
-      <td>6.0</td>
+      <td>6</td>
     </tr>
     <tr>
       <th>10</th>
@@ -677,7 +692,7 @@ document.write(`
       <td>Music</td>
       <td>Male</td>
       <td>Nicholas</td>
-      <td>9.0</td>
+      <td>9</td>
     </tr>
     <tr>
       <th>11</th>
@@ -685,7 +700,7 @@ document.write(`
       <td>Music</td>
       <td>Male</td>
       <td>Paul</td>
-      <td>2.0</td>
+      <td>2</td>
     </tr>
     <tr>
       <th>12</th>
@@ -693,7 +708,7 @@ document.write(`
       <td>Drama</td>
       <td>Female</td>
       <td>Matilda</td>
-      <td>7.0</td>
+      <td>7</td>
     </tr>
     <tr>
       <th>13</th>
@@ -701,7 +716,7 @@ document.write(`
       <td>Drama</td>
       <td>Female</td>
       <td>Olivia</td>
-      <td>8.0</td>
+      <td>8</td>
     </tr>
     <tr>
       <th>14</th>
@@ -709,7 +724,7 @@ document.write(`
       <td>Drama</td>
       <td>Male</td>
       <td>Nicholas</td>
-      <td>12.0</td>
+      <td>12</td>
     </tr>
     <tr>
       <th>15</th>
@@ -717,7 +732,7 @@ document.write(`
       <td>Drama</td>
       <td>Male</td>
       <td>Paul</td>
-      <td>3.0</td>
+      <td>3</td>
     </tr>
   </tbody>
 </table>
@@ -727,22 +742,21 @@ document.write(`
 <section id="case-2-multiple-rows-or-columns-of-headers-with-meaningful-formatting">
 <h2><strong>Case 2 : Multiple rows or columns of headers, with meaningful formatting</strong><a class="headerlink" href="#case-2-multiple-rows-or-columns-of-headers-with-meaningful-formatting" title="Link to this heading">#</a></h2>
 <p><img alt="pivot-annotations.png" src="../_images/pivot-annotations.png" /></p>
-<p>Same as above, except we have to capture the format details. To get the colour information, we’ll make use of the <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a> function from <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/">pyjanitor</a> - under the hood, it uses <a class="reference external" href="https://openpyxl.readthedocs.io/en/stable/index.html">openpyxl</a>:</p>
+<p>Same as above, except we have to capture the format details. To get the colour information, we’ll make use of the <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a> function from <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/">pyjanitor</a> - under the hood, it uses <a class="reference external" href="https://openpyxl.readthedocs.io/en/stable/index.html">openpyxl</a>.</p>
+<p><strong>Observations</strong>:</p>
+<ol class="arabic simple">
+<li><p>The first row is the gender; the next row are the names.</p></li>
+<li><p>The first column are the fields; the next column are the subjects</p></li>
+<li><p>The scores are all integers.</p></li>
+<li><p>The fonts are attached only to the scores.</p></li>
+</ol>
+<p>Plan of action - get the respective fields and combine based on row/column positions:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">janitor</span> <span class="kn">import</span> <span class="n">xlsx_cells</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">excel_file</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s1">&#39;pivot-annotations&#39;</span><span class="p">,</span> <span class="n">include_blank_cells</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="c1"># the colours are stored in a dictionary form in a cell</span>
-<span class="c1"># using Pandas&#39; string functions make it easy to traverse</span>
-<span class="c1"># and pick the exact metadata we are interested in.</span>
-<span class="n">df</span><span class="p">[</span><span class="s1">&#39;fill_colour&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">fill</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fgColor&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rgb&#39;</span><span class="p">)</span>
-<span class="n">df</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">jn</span><span class="o">.</span><span class="n">xlsx_cells</span><span class="p">(</span>
+    <span class="n">excel_file</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;pivot-annotations&quot;</span><span class="p">,</span> <span class="n">include_blank_cells</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s2">&quot;row&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">})</span>
+<span class="n">frame</span>
 </pre></div>
 </div>
 </div>
@@ -774,7 +788,6 @@ document.write(`
       <th>is_date</th>
       <th>number_format</th>
       <th>fill</th>
-      <th>fill_colour</th>
     </tr>
   </thead>
   <tbody>
@@ -789,7 +802,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>1</th>
@@ -802,7 +814,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>2</th>
@@ -815,7 +826,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>3</th>
@@ -828,7 +838,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>4</th>
@@ -841,7 +850,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>5</th>
@@ -854,7 +862,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>6</th>
@@ -867,7 +874,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>7</th>
@@ -880,7 +886,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>8</th>
@@ -893,7 +898,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>9</th>
@@ -906,7 +910,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': 'solid', 'fgColor': {'rgb': 'F...</td>
-      <td>FFFFFF00</td>
     </tr>
     <tr>
       <th>10</th>
@@ -919,7 +922,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>11</th>
@@ -932,7 +934,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>12</th>
@@ -945,7 +946,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>13</th>
@@ -958,7 +958,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': 'solid', 'fgColor': {'rgb': 'F...</td>
-      <td>FFFFFF00</td>
     </tr>
     <tr>
       <th>14</th>
@@ -971,7 +970,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>15</th>
@@ -984,7 +982,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>16</th>
@@ -997,7 +994,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>17</th>
@@ -1010,7 +1006,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>18</th>
@@ -1023,7 +1018,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>19</th>
@@ -1036,7 +1030,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>20</th>
@@ -1049,7 +1042,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>21</th>
@@ -1062,7 +1054,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>22</th>
@@ -1075,7 +1066,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>23</th>
@@ -1088,7 +1078,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>24</th>
@@ -1101,7 +1090,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>25</th>
@@ -1114,7 +1102,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
     <tr>
       <th>26</th>
@@ -1127,7 +1114,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': 'solid', 'fgColor': {'rgb': 'F...</td>
-      <td>FFFFFF00</td>
     </tr>
     <tr>
       <th>27</th>
@@ -1140,33 +1126,25 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-      <td>00000000</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
-<p>From the excel file we can tell that the <code class="docutils literal notranslate"><span class="pre">fields</span></code> and <code class="docutils literal notranslate"><span class="pre">subjects</span></code> columns are columns 2 and 3 respectively, the <code class="docutils literal notranslate"><span class="pre">gender</span></code> row is 2, while the <code class="docutils literal notranslate"><span class="pre">students</span></code> are on row 3:</p>
+<p>Get the gender and names:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">index</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">]]</span>
-<span class="n">index</span> <span class="o">=</span> <span class="p">(</span><span class="n">index</span>
-        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">fields</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">index</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">index</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span> 
-                <span class="n">subjects</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">df</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">))</span>
-        <span class="c1"># pyjanitor ... syntactic sugar for pd.Series.ffill     </span>
-        <span class="o">.</span><span class="n">fill_direction</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="s1">&#39;down&#39;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-        <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
-        <span class="p">)</span>
-<span class="n">index</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rows</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">unique</span><span class="p">()[:</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">gender</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">row</span> <span class="o">==</span> <span class="n">rows</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span>
+<span class="n">gender</span> <span class="o">=</span> <span class="n">gender</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;gender&quot;</span><span class="p">})</span>
+<span class="n">names</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">row</span> <span class="o">==</span> <span class="n">rows</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span>
+<span class="n">names</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">})</span>
+<span class="n">gender_and_names</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">gender</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;column&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
+<span class="n">gender_and_names</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas_flavor/register.py:157: FutureWarning: This function will be deprecated in a 1.x release. Please use `pd.DataFrame.assign` instead.
-  return method(self._obj, *args, **kwargs)
-</pre></div>
-</div>
 <div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1185,73 +1163,50 @@ document.write(`
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>row</th>
-      <th>column</th>
-      <th>fields</th>
-      <th>subjects</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">]]</span>
-<span class="n">columns</span> <span class="o">=</span> <span class="p">(</span><span class="n">columns</span>
-            <span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;column&#39;</span><span class="p">])</span>
-            <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">gender</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">df</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span> 
-                    <span class="n">students</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">gender</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">df</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">))</span>
-            <span class="o">.</span><span class="n">fill_direction</span><span class="p">(</span><span class="n">gender</span><span class="o">=</span><span class="s1">&#39;down&#39;</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-            <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
-        <span class="p">)</span>
-<span class="n">columns</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas_flavor/register.py:157: FutureWarning: This function will be deprecated in a 1.x release. Please use `pd.DataFrame.assign` instead.
-  return method(self._obj, *args, **kwargs)
-</pre></div>
-</div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>row</th>
+      <th>name</th>
       <th>column</th>
       <th>gender</th>
-      <th>students</th>
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <th>0</th>
+      <td>Matilda</td>
+      <td>4</td>
+      <td>Female</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Olivia</td>
+      <td>5</td>
+      <td>Female</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Nicholas</td>
+      <td>6</td>
+      <td>Male</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Paul</td>
+      <td>7</td>
+      <td>Male</td>
+    </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
+<p>Get the field and subjects:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
-        <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">,</span> <span class="s1">&#39;fill_colour&#39;</span><span class="p">]]</span>
-        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;scores&#39;</span><span class="p">})</span>
-        <span class="p">)</span>
-<span class="n">scores</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">columns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">column</span><span class="p">)[:</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">field</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">column</span> <span class="o">==</span> <span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">]]</span>
+<span class="n">field</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;field&quot;</span><span class="p">})</span>
+<span class="n">subjects</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">column</span> <span class="o">==</span> <span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">]]</span>
+<span class="n">subjects</span> <span class="o">=</span> <span class="n">subjects</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;subject&quot;</span><span class="p">})</span>
+<span class="n">field_and_subjects</span> <span class="o">=</span> <span class="n">subjects</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
+<span class="n">field_and_subjects</span>
 </pre></div>
 </div>
 </div>
@@ -1274,10 +1229,79 @@ document.write(`
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>scores</th>
+      <th>subject</th>
+      <th>row</th>
+      <th>field</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Classics</td>
+      <td>4</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>History</td>
+      <td>5</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Music</td>
+      <td>6</td>
+      <td>Performance</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Drama</td>
+      <td>7</td>
+      <td>Performance</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Get the scores and colours:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get the scores</span>
+<span class="n">booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">data_type</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;score&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+<span class="c1"># get the colours</span>
+<span class="n">fonts</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">fill</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;fgColor&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rgb&quot;</span><span class="p">)</span>
+<span class="n">fonts</span> <span class="o">=</span> <span class="n">fonts</span><span class="p">[</span><span class="n">booleans</span><span class="p">]</span>
+<span class="n">data</span><span class="p">[</span><span class="s2">&quot;font&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fonts</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>score</th>
       <th>row</th>
       <th>column</th>
-      <th>fill_colour</th>
+      <th>font</th>
     </tr>
   </thead>
   <tbody>
@@ -1397,14 +1421,13 @@ document.write(`
 </table>
 </div></div></div>
 </div>
-<p>All that’s left is to align them on their row and column positions:</p>
+<p>Combine into a single DataFrame:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">index</span>
-<span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;row&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">columns</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">),</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;column&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;students&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;fields&#39;</span><span class="p">,</span> <span class="s1">&#39;subjects&#39;</span><span class="p">,</span> <span class="s1">&#39;scores&#39;</span><span class="p">,</span> <span class="s1">&#39;fill_colour&#39;</span><span class="p">]]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">field_and_subjects</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">gender_and_names</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;column&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">,</span> <span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="s2">&quot;font&quot;</span><span class="p">]]</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -1428,15 +1451,159 @@ document.write(`
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>students</th>
+      <th>name</th>
       <th>gender</th>
-      <th>fields</th>
-      <th>subjects</th>
-      <th>scores</th>
-      <th>fill_colour</th>
+      <th>field</th>
+      <th>subject</th>
+      <th>score</th>
+      <th>font</th>
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <th>0</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>1</td>
+      <td>00000000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>2</td>
+      <td>FFFFFF00</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>3</td>
+      <td>00000000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>0</td>
+      <td>00000000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>3</td>
+      <td>FFFFFF00</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>4</td>
+      <td>00000000</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>5</td>
+      <td>00000000</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>1</td>
+      <td>00000000</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>5</td>
+      <td>00000000</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>6</td>
+      <td>00000000</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>9</td>
+      <td>00000000</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>2</td>
+      <td>00000000</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>7</td>
+      <td>00000000</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>8</td>
+      <td>00000000</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>12</td>
+      <td>FFFFFF00</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>3</td>
+      <td>00000000</td>
+    </tr>
   </tbody>
 </table>
 </div></div></div>
@@ -1449,43 +1616,10 @@ document.write(`
 <p>We’ll use the same steps as in the last solution:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">excel_file</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s1">&#39;pivot-notes&#39;</span><span class="p">,</span> <span class="n">include_blank_cells</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>You can view a single row in the font column:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">font</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;name&#39;: &#39;Calibri&#39;,
- &#39;family&#39;: 2.0,
- &#39;sz&#39;: 11.0,
- &#39;b&#39;: False,
- &#39;i&#39;: False,
- &#39;u&#39;: None,
- &#39;strike&#39;: None,
- &#39;color&#39;: {&#39;rgb&#39;: &#39;FF000000&#39;, &#39;type&#39;: &#39;rgb&#39;, &#39;tint&#39;: 0.0},
- &#39;vertAlign&#39;: None,
- &#39;charset&#39;: 1,
- &#39;outline&#39;: None,
- &#39;shadow&#39;: None,
- &#39;condense&#39;: None,
- &#39;extend&#39;: None,
- &#39;scheme&#39;: None}
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">font_colour</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;color&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rgb&#39;</span><span class="p">),</span> 
-               <span class="n">italics</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">))</span>
-<span class="n">df</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">jn</span><span class="o">.</span><span class="n">xlsx_cells</span><span class="p">(</span>
+    <span class="n">excel_file</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;pivot-notes&quot;</span><span class="p">,</span> <span class="n">include_blank_cells</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">frame</span>
 </pre></div>
 </div>
 </div>
@@ -1517,8 +1651,6 @@ document.write(`
       <th>is_date</th>
       <th>number_format</th>
       <th>font</th>
-      <th>font_colour</th>
-      <th>italics</th>
     </tr>
   </thead>
   <tbody>
@@ -1533,8 +1665,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>1</th>
@@ -1547,8 +1677,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>2</th>
@@ -1561,8 +1689,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>True</td>
     </tr>
     <tr>
       <th>3</th>
@@ -1575,8 +1701,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>4</th>
@@ -1589,8 +1713,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>5</th>
@@ -1603,8 +1725,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>6</th>
@@ -1617,8 +1737,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>7</th>
@@ -1631,8 +1749,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>8</th>
@@ -1645,8 +1761,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>9</th>
@@ -1659,8 +1773,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>10</th>
@@ -1673,8 +1785,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>11</th>
@@ -1687,8 +1797,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>12</th>
@@ -1701,8 +1809,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>13</th>
@@ -1715,8 +1821,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FFFF0000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>14</th>
@@ -1729,8 +1833,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>15</th>
@@ -1743,8 +1845,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>16</th>
@@ -1757,8 +1857,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>17</th>
@@ -1771,8 +1869,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>18</th>
@@ -1785,8 +1881,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>19</th>
@@ -1799,8 +1893,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>20</th>
@@ -1813,8 +1905,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>21</th>
@@ -1827,8 +1917,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>22</th>
@@ -1841,8 +1929,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>23</th>
@@ -1855,8 +1941,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>24</th>
@@ -1869,8 +1953,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>25</th>
@@ -1883,8 +1965,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FFFF0000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>26</th>
@@ -1897,8 +1977,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>27</th>
@@ -1911,8 +1989,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>28</th>
@@ -1925,8 +2001,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>29</th>
@@ -1939,8 +2013,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
     <tr>
       <th>30</th>
@@ -1953,8 +2025,6 @@ document.write(`
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>FF000000</td>
-      <td>False</td>
     </tr>
   </tbody>
 </table>
@@ -1962,24 +2032,21 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">index</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">,</span> <span class="s1">&#39;font_colour&#39;</span><span class="p">]]</span>
-<span class="n">index</span> <span class="o">=</span> <span class="p">(</span><span class="n">index</span>
-        <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">font_colour</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="s1">&#39;FFFF0000&#39;</span><span class="p">)]</span>
-        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">fields</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">df</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span> 
-                <span class="n">subjects</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">df</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">))</span>   
-        <span class="o">.</span><span class="n">fill_direction</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="s1">&#39;down&#39;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-        <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;font_colour&#39;</span><span class="p">])</span>
-        <span class="p">)</span>
-<span class="n">index</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># exclude the italicised cell</span>
+<span class="n">italics</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">)</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">unique</span><span class="p">()[:</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">row</span> <span class="o">==</span> <span class="n">rows</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">booleans</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">italics</span>
+<span class="n">gender</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span>
+<span class="n">gender</span> <span class="o">=</span> <span class="n">gender</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;gender&quot;</span><span class="p">})</span>
+<span class="n">names</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">row</span> <span class="o">==</span> <span class="n">rows</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span>
+<span class="n">names</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">})</span>
+<span class="n">gender_and_names</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">gender</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;column&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
+<span class="n">gender_and_names</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas_flavor/register.py:157: FutureWarning: This function will be deprecated in a 1.x release. Please use `pd.DataFrame.assign` instead.
-  return method(self._obj, *args, **kwargs)
-</pre></div>
-</div>
 <div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1998,73 +2065,775 @@ document.write(`
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>row</th>
-      <th>column</th>
-      <th>fields</th>
-      <th>subjects</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">,</span> <span class="s1">&#39;italics&#39;</span><span class="p">]]</span>
-<span class="n">columns</span> <span class="o">=</span> <span class="p">(</span><span class="n">columns</span>
-            <span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;column&#39;</span><span class="p">])</span>
-            <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="o">~</span><span class="n">df</span><span class="o">.</span><span class="n">italics</span><span class="p">]</span>
-            <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">gender</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">df</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span> 
-                    <span class="n">students</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">gender</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">df</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">))</span>
-            <span class="o">.</span><span class="n">fill_direction</span><span class="p">(</span><span class="n">gender</span> <span class="o">=</span> <span class="s1">&#39;down&#39;</span><span class="p">)</span>
-            <span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-            <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;italics&#39;</span><span class="p">])</span>
-        <span class="p">)</span>
-<span class="n">columns</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas_flavor/register.py:157: FutureWarning: This function will be deprecated in a 1.x release. Please use `pd.DataFrame.assign` instead.
-  return method(self._obj, *args, **kwargs)
-</pre></div>
-</div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>row</th>
+      <th>name</th>
       <th>column</th>
       <th>gender</th>
-      <th>students</th>
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <th>0</th>
+      <td>Matilda</td>
+      <td>4</td>
+      <td>Female</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Olivia</td>
+      <td>5</td>
+      <td>Female</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Nicholas</td>
+      <td>6</td>
+      <td>Male</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Paul</td>
+      <td>7</td>
+      <td>Male</td>
+    </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
-        <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">]]</span>
-        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;scores&#39;</span><span class="p">})</span>
-        <span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># exclude the cells with red font -&gt; FFFF0000</span>
+<span class="n">red</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;color&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rgb&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;FFFF0000&quot;</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">column</span><span class="p">)[:</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">column</span> <span class="o">==</span> <span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">booleans</span> <span class="o">&amp;=</span> <span class="n">red</span>
+<span class="n">field</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">]]</span>
+<span class="n">field</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;field&quot;</span><span class="p">})</span>
+<span class="n">subjects</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">column</span> <span class="o">==</span> <span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">]]</span>
+<span class="n">subjects</span> <span class="o">=</span> <span class="n">subjects</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;subject&quot;</span><span class="p">})</span>
+<span class="n">field_and_subjects</span> <span class="o">=</span> <span class="n">subjects</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
+<span class="n">field_and_subjects</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>subject</th>
+      <th>row</th>
+      <th>field</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Classics</td>
+      <td>4</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>History</td>
+      <td>5</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Music</td>
+      <td>6</td>
+      <td>Performance</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Drama</td>
+      <td>7</td>
+      <td>Performance</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">data_type</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;score&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>score</th>
+      <th>row</th>
+      <th>column</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>9</th>
+      <td>1</td>
+      <td>4</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>2</td>
+      <td>4</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>3</td>
+      <td>4</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>0</td>
+      <td>4</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>3</td>
+      <td>5</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>4</td>
+      <td>5</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>5</td>
+      <td>5</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>1</td>
+      <td>5</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>5</td>
+      <td>6</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>6</td>
+      <td>6</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>9</td>
+      <td>6</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>2</td>
+      <td>6</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>7</td>
+      <td>7</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>8</td>
+      <td>7</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>12</td>
+      <td>7</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>3</td>
+      <td>7</td>
+      <td>7</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">field_and_subjects</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">gender_and_names</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;column&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">,</span> <span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">]]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>gender</th>
+      <th>field</th>
+      <th>subject</th>
+      <th>score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="case-4-mixed-levels-of-headers-in-the-same-row-column-distinguished-by-formatting">
+<h2><strong>Case 4: Mixed levels of headers in the same row/column, distinguished by formatting</strong><a class="headerlink" href="#case-4-mixed-levels-of-headers-in-the-same-row-column-distinguished-by-formatting" title="Link to this heading">#</a></h2>
+<p><img alt="pivot-hierarchy.png" src="../_images/pivot-hierarchy.png" /></p>
+<p>The formatting here refers to the indent - notice how Humanities and Performance are closer to the border compared to the subjects. Same goes for Matilda and Nicholas. Getting the indent information would require the use of Openpyxl. We also know that the fields is just one row above the respective subjects. Let’s use that knowlege in extracting our data:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">jn</span><span class="o">.</span><span class="n">xlsx_cells</span><span class="p">(</span>
+    <span class="n">excel_file</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;pivot-hierarchy&quot;</span><span class="p">,</span> <span class="n">include_blank_cells</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s2">&quot;row&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">})</span>
+<span class="n">frame</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+      <th>internal_value</th>
+      <th>coordinate</th>
+      <th>row</th>
+      <th>column</th>
+      <th>data_type</th>
+      <th>is_date</th>
+      <th>number_format</th>
+      <th>alignment</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Matilda</td>
+      <td>Matilda</td>
+      <td>C2</td>
+      <td>2</td>
+      <td>3</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'horizontal': 'general', 'vertical': 'bottom'...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Nicholas</td>
+      <td>Nicholas</td>
+      <td>D2</td>
+      <td>2</td>
+      <td>4</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'horizontal': 'general', 'vertical': 'bottom'...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Humanities</td>
+      <td>Humanities</td>
+      <td>B3</td>
+      <td>3</td>
+      <td>2</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'horizontal': 'general', 'vertical': 'bottom'...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Classics</td>
+      <td>Classics</td>
+      <td>B4</td>
+      <td>4</td>
+      <td>2</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'horizontal': 'left', 'vertical': 'bottom', '...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>1</td>
+      <td>C4</td>
+      <td>4</td>
+      <td>3</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'horizontal': 'general', 'vertical': 'bottom'...</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>3</td>
+      <td>3</td>
+      <td>D4</td>
+      <td>4</td>
+      <td>4</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'horizontal': 'general', 'vertical': 'bottom'...</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>History</td>
+      <td>History</td>
+      <td>B5</td>
+      <td>5</td>
+      <td>2</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'horizontal': 'left', 'vertical': 'bottom', '...</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>3</td>
+      <td>3</td>
+      <td>C5</td>
+      <td>5</td>
+      <td>3</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'horizontal': 'general', 'vertical': 'bottom'...</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>5</td>
+      <td>5</td>
+      <td>D5</td>
+      <td>5</td>
+      <td>4</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'horizontal': 'general', 'vertical': 'bottom'...</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Performance</td>
+      <td>Performance</td>
+      <td>B6</td>
+      <td>6</td>
+      <td>2</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'horizontal': 'general', 'vertical': 'bottom'...</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Music</td>
+      <td>Music</td>
+      <td>B7</td>
+      <td>7</td>
+      <td>2</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'horizontal': 'left', 'vertical': 'bottom', '...</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>5</td>
+      <td>5</td>
+      <td>C7</td>
+      <td>7</td>
+      <td>3</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'horizontal': 'general', 'vertical': 'bottom'...</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>9</td>
+      <td>9</td>
+      <td>D7</td>
+      <td>7</td>
+      <td>4</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'horizontal': 'general', 'vertical': 'bottom'...</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Drama</td>
+      <td>Drama</td>
+      <td>B8</td>
+      <td>8</td>
+      <td>2</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'horizontal': 'left', 'vertical': 'bottom', '...</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>7</td>
+      <td>7</td>
+      <td>C8</td>
+      <td>8</td>
+      <td>3</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'horizontal': 'general', 'vertical': 'bottom'...</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>12</td>
+      <td>12</td>
+      <td>D8</td>
+      <td>8</td>
+      <td>4</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'horizontal': 'general', 'vertical': 'bottom'...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Get the field and subjects:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># fields and subjects are in the first column:</span>
+<span class="n">booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">alignment</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;indent&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">frame</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+<span class="n">field</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">row</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">field</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;field&quot;</span><span class="p">})</span>
+<span class="n">booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">alignment</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;indent&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">frame</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+<span class="n">subject</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">]]</span>
+<span class="n">subject</span> <span class="o">=</span> <span class="n">subject</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;subject&quot;</span><span class="p">})</span>
+<span class="n">field_and_subjects</span> <span class="o">=</span> <span class="n">subject</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
+<span class="n">field_and_subjects</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>subject</th>
+      <th>row</th>
+      <th>field</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Classics</td>
+      <td>4</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>History</td>
+      <td>5</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Music</td>
+      <td>7</td>
+      <td>Performance</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Drama</td>
+      <td>8</td>
+      <td>Performance</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Get the names:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># names are the very first row:</span>
+<span class="n">names</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">row</span> <span class="o">==</span> <span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span>
+<span class="n">names</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">})</span>
+<span class="n">names</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>column</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Matilda</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Nicholas</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Get the scores</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;score&quot;</span><span class="p">})</span>
 <span class="n">scores</span>
 </pre></div>
 </div>
@@ -2088,107 +2857,59 @@ document.write(`
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>scores</th>
+      <th>score</th>
       <th>row</th>
       <th>column</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>9</th>
+      <th>4</th>
       <td>1</td>
+      <td>4</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>3</td>
       <td>4</td>
       <td>4</td>
     </tr>
     <tr>
-      <th>10</th>
-      <td>2</td>
-      <td>4</td>
+      <th>7</th>
+      <td>3</td>
       <td>5</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>5</td>
+      <td>5</td>
+      <td>4</td>
     </tr>
     <tr>
       <th>11</th>
+      <td>5</td>
+      <td>7</td>
       <td>3</td>
-      <td>4</td>
-      <td>6</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>0</td>
-      <td>4</td>
+      <td>9</td>
       <td>7</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>7</td>
+      <td>8</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>3</td>
-      <td>5</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>16</th>
-      <td>4</td>
-      <td>5</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>17</th>
-      <td>5</td>
-      <td>5</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>18</th>
-      <td>1</td>
-      <td>5</td>
-      <td>7</td>
-    </tr>
-    <tr>
-      <th>21</th>
-      <td>5</td>
-      <td>6</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>22</th>
-      <td>6</td>
-      <td>6</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>23</th>
-      <td>9</td>
-      <td>6</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>24</th>
-      <td>2</td>
-      <td>6</td>
-      <td>7</td>
-    </tr>
-    <tr>
-      <th>27</th>
-      <td>7</td>
-      <td>7</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>28</th>
-      <td>8</td>
-      <td>7</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>29</th>
       <td>12</td>
-      <td>7</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>30</th>
-      <td>3</td>
-      <td>7</td>
-      <td>7</td>
+      <td>8</td>
+      <td>4</td>
     </tr>
   </tbody>
 </table>
@@ -2196,11 +2917,10 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">index</span>
-<span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;row&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">columns</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">),</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;column&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;students&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;fields&#39;</span><span class="p">,</span> <span class="s1">&#39;subjects&#39;</span><span class="p">,</span> <span class="s1">&#39;scores&#39;</span><span class="p">]]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">scores</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;column&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">field_and_subjects</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">,</span> <span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">]]</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -2224,45 +2944,90 @@ document.write(`
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>students</th>
-      <th>gender</th>
-      <th>fields</th>
-      <th>subjects</th>
-      <th>scores</th>
+      <th>name</th>
+      <th>field</th>
+      <th>subject</th>
+      <th>score</th>
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <th>0</th>
+      <td>Matilda</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Nicholas</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Matilda</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Nicholas</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Matilda</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Nicholas</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Matilda</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Nicholas</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>12</td>
+    </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
-</section>
-<section id="case-4-mixed-levels-of-headers-in-the-same-row-column-distinguished-by-formatting">
-<h2><strong>Case 4: Mixed levels of headers in the same row/column, distinguished by formatting</strong><a class="headerlink" href="#case-4-mixed-levels-of-headers-in-the-same-row-column-distinguished-by-formatting" title="Link to this heading">#</a></h2>
-<p><img alt="pivot-hierarchy.png" src="../_images/pivot-hierarchy.png" /></p>
-<p>The formatting here refers to the indent - notice how Humanities and Performance are closer to the border compared to the subjects. Same goes for Matilda and Nicholas. Getting the indent information would require the use of Openpyxl. This data can however be handled easily by Pandas - for the header columns, we can use the adjacent null cells as identifiers:</p>
+<p>Another route, without <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">excel_file</span>
-<span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;pivot-hierarchy&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">level</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
-<span class="o">.</span><span class="n">remove_empty</span><span class="p">()</span>
-<span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">fields</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">),</span>
-        <span class="n">subjects</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-        <span class="p">)</span>
-<span class="o">.</span><span class="n">fill_direction</span><span class="p">(</span><span class="n">fields</span> <span class="o">=</span> <span class="s1">&#39;down&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-<span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
-<span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;fields&#39;</span><span class="p">,</span> <span class="s1">&#39;subjects&#39;</span><span class="p">],</span> <span class="n">var_name</span> <span class="o">=</span> <span class="s1">&#39;students&#39;</span><span class="p">,</span> <span class="n">value_name</span> <span class="o">=</span> <span class="s1">&#39;scores&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">excel_file</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sheet_name</span><span class="o">=</span><span class="s2">&quot;pivot-hierarchy&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">remove_empty</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">set_axis</span><span class="p">([</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;Matilda&quot;</span><span class="p">,</span> <span class="s2">&quot;Nicholas&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">field</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">Matilda</span><span class="o">.</span><span class="n">isna</span><span class="p">())</span><span class="o">.</span><span class="n">ffill</span><span class="p">())</span>
+    <span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;field&quot;</span><span class="p">,</span> <span class="s2">&quot;subject&quot;</span><span class="p">],</span> <span class="n">var_name</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">})</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas_flavor/register.py:157: FutureWarning: This function will be deprecated in a 1.x release. Please use `pd.DataFrame.assign` instead.
-  return method(self._obj, *args, **kwargs)
-</pre></div>
-</div>
 <div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -2281,10 +3046,10 @@ document.write(`
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>fields</th>
-      <th>subjects</th>
-      <th>students</th>
-      <th>scores</th>
+      <th>field</th>
+      <th>subject</th>
+      <th>name</th>
+      <th>score</th>
     </tr>
   </thead>
   <tbody>
@@ -2293,56 +3058,56 @@ document.write(`
       <td>Humanities</td>
       <td>Classics</td>
       <td>Matilda</td>
-      <td>1.0</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>1</th>
       <td>Humanities</td>
       <td>History</td>
       <td>Matilda</td>
-      <td>3.0</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>2</th>
       <td>Performance</td>
       <td>Music</td>
       <td>Matilda</td>
-      <td>5.0</td>
+      <td>5</td>
     </tr>
     <tr>
       <th>3</th>
       <td>Performance</td>
       <td>Drama</td>
       <td>Matilda</td>
-      <td>7.0</td>
+      <td>7</td>
     </tr>
     <tr>
       <th>4</th>
       <td>Humanities</td>
       <td>Classics</td>
       <td>Nicholas</td>
-      <td>3.0</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>5</th>
       <td>Humanities</td>
       <td>History</td>
       <td>Nicholas</td>
-      <td>5.0</td>
+      <td>5</td>
     </tr>
     <tr>
       <th>6</th>
       <td>Performance</td>
       <td>Music</td>
       <td>Nicholas</td>
-      <td>9.0</td>
+      <td>9</td>
     </tr>
     <tr>
       <th>7</th>
       <td>Performance</td>
       <td>Drama</td>
       <td>Nicholas</td>
-      <td>12.0</td>
+      <td>12</td>
     </tr>
   </tbody>
 </table>

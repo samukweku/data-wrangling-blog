@@ -435,8 +435,9 @@ document.write(`
 <h1>SpreadSheet Munging Strategies in Python - Small Multiples<a class="headerlink" href="#spreadsheet-munging-strategies-in-python-small-multiples" title="Link to this heading">#</a></h1>
 <section id="small-multiples">
 <h2><strong>Small Multiples</strong><a class="headerlink" href="#small-multiples" title="Link to this heading">#</a></h2>
-<p><em>updated : April 14, 2022</em></p>
-<p>This is part of a series of blog posts about extracting data from spreadsheets using Python.  It is based on the <a class="reference external" href="https://nacnudus.github.io/spreadsheet-munging-strategies/index.html">book</a> written by <a class="reference external" href="https://twitter.com/nacnudus?lang=en">Duncan Garmonsway</a>, which was written primarily for R users. LInks to the other posts are on the <a class="reference external" href="https://samukweku.github.io/data-wrangling-blog/">homepage</a>.</p>
+<p><em>updated : September 25, 2024</em></p>
+<p>This is part of a series of blog posts about extracting data from spreadsheets using Python.  It is based on the <a class="reference external" href="https://nacnudus.github.io/spreadsheet-munging-strategies/index.html">book</a> written by <a class="reference external" href="https://twitter.com/nacnudus?lang=en">Duncan Garmonsway</a>, which was written primarily for R users. Links to the other posts are on the sidebar.</p>
+<p>The key takeaway is this - you understand your data layout; use the tools to achieve your end goal. <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a> offers a way to get the cells in a spreadsheet into individual rows, with some metadata. The final outcome however relies on your understanding of the data layout and its proper application.</p>
 <p>Small multiples refer to mini tables embedded in a spreadsheet, or multiple spreadsheets. Ideally, this tables should be lumped into one dataframe for meaningful analysis. The examples below show different scenarios and how we can reshape the data</p>
 <section id="case-1-small-multiples-with-all-headers-present-for-each-multiple">
 <h3><strong>Case 1 : Small Multiples with all Headers Present for Each Multiple</strong><a class="headerlink" href="#case-1-small-multiples-with-all-headers-present-for-each-multiple" title="Link to this heading">#</a></h3>
@@ -444,8 +445,10 @@ document.write(`
 <p>In this spreadsheet, each table is a separate subject. It would be better to aggregate all the subjects and underlying data into one table.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">janitor</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pip install pyjanitor</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">janitor</span> <span class="k">as</span> <span class="nn">jn</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 </pre></div>
 </div>
@@ -453,15 +456,38 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">excel_file</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelFile</span><span class="p">(</span><span class="s2">&quot;Data_files/worked-examples.xlsx&quot;</span><span class="p">,</span> <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;openpyxl&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;pandas version: &#39;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;janitor version: &#39;</span><span class="p">,</span> <span class="n">jn</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;python version: &#39;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;numpy version: &#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pandas version:  2.2.2
+janitor version:  0.29.1
+python version:  3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:49) [Clang 16.0.6 ]
+numpy version:  2.0.2
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">excel_file</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sheet_name</span><span class="o">=</span><span class="s2">&quot;small-multiples&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="n">df</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">excel_file</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelFile</span><span class="p">(</span><span class="s2">&quot;Data_files/worked-examples.xlsx&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">jn</span><span class="o">.</span><span class="n">xlsx_cells</span><span class="p">(</span>
+    <span class="n">excel_file</span><span class="p">,</span>
+    <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;small-multiples&quot;</span><span class="p">,</span>
+    <span class="n">font</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">include_blank_cells</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s2">&quot;row&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">})</span>
+<span class="n">frame</span>
 </pre></div>
 </div>
 </div>
@@ -484,135 +510,776 @@ document.write(`
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>0</th>
-      <th>1</th>
-      <th>2</th>
-      <th>3</th>
-      <th>4</th>
-      <th>5</th>
-      <th>6</th>
+      <th>value</th>
+      <th>internal_value</th>
+      <th>coordinate</th>
+      <th>row</th>
+      <th>column</th>
+      <th>data_type</th>
+      <th>is_date</th>
+      <th>number_format</th>
+      <th>font</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
       <td>Classics</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>History</td>
-      <td>NaN</td>
-      <td>NaN</td>
+      <td>Classics</td>
+      <td>A1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>Name</td>
-      <td>Score</td>
-      <td>Grade</td>
-      <td>NaN</td>
-      <td>Name</td>
-      <td>Score</td>
-      <td>Grade</td>
+      <td>History</td>
+      <td>History</td>
+      <td>E1</td>
+      <td>1</td>
+      <td>5</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>Matilda</td>
+      <td>Name</td>
+      <td>Name</td>
+      <td>A2</td>
+      <td>2</td>
       <td>1</td>
-      <td>F</td>
-      <td>NaN</td>
-      <td>Matilda</td>
-      <td>3</td>
-      <td>D</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>Olivia</td>
+      <td>Score</td>
+      <td>Score</td>
+      <td>B2</td>
       <td>2</td>
-      <td>D</td>
-      <td>NaN</td>
-      <td>Olivia</td>
-      <td>4</td>
-      <td>C</td>
+      <td>2</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
+      <td>Grade</td>
+      <td>Grade</td>
+      <td>C2</td>
+      <td>2</td>
+      <td>3</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>Music</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>NaN</td>
-      <td>Drama</td>
-      <td>NaN</td>
-      <td>NaN</td>
+      <td>Name</td>
+      <td>Name</td>
+      <td>E2</td>
+      <td>2</td>
+      <td>5</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>Name</td>
       <td>Score</td>
-      <td>Grade</td>
-      <td>NaN</td>
-      <td>Name</td>
       <td>Score</td>
-      <td>Grade</td>
+      <td>F2</td>
+      <td>2</td>
+      <td>6</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>Matilda</td>
-      <td>5</td>
-      <td>B</td>
-      <td>NaN</td>
-      <td>Matilda</td>
+      <td>Grade</td>
+      <td>Grade</td>
+      <td>G2</td>
+      <td>2</td>
       <td>7</td>
-      <td>A</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>Olivia</td>
+      <td>Matilda</td>
+      <td>Matilda</td>
+      <td>A3</td>
+      <td>3</td>
+      <td>1</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>1</td>
+      <td>1</td>
+      <td>B3</td>
+      <td>3</td>
+      <td>2</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>F</td>
+      <td>F</td>
+      <td>C3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Matilda</td>
+      <td>Matilda</td>
+      <td>E3</td>
+      <td>3</td>
+      <td>5</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>3</td>
+      <td>3</td>
+      <td>F3</td>
+      <td>3</td>
       <td>6</td>
-      <td>B</td>
-      <td>NaN</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>D</td>
+      <td>D</td>
+      <td>G3</td>
+      <td>3</td>
+      <td>7</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>14</th>
       <td>Olivia</td>
+      <td>Olivia</td>
+      <td>A4</td>
+      <td>4</td>
+      <td>1</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>2</td>
+      <td>2</td>
+      <td>B4</td>
+      <td>4</td>
+      <td>2</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>D</td>
+      <td>D</td>
+      <td>C4</td>
+      <td>4</td>
+      <td>3</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Olivia</td>
+      <td>Olivia</td>
+      <td>E4</td>
+      <td>4</td>
+      <td>5</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>4</td>
+      <td>4</td>
+      <td>F4</td>
+      <td>4</td>
+      <td>6</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>C</td>
+      <td>C</td>
+      <td>G4</td>
+      <td>4</td>
+      <td>7</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>Music</td>
+      <td>Music</td>
+      <td>A6</td>
+      <td>6</td>
+      <td>1</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>Drama</td>
+      <td>Drama</td>
+      <td>E6</td>
+      <td>6</td>
+      <td>5</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>Name</td>
+      <td>Name</td>
+      <td>A7</td>
+      <td>7</td>
+      <td>1</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>Score</td>
+      <td>Score</td>
+      <td>B7</td>
+      <td>7</td>
+      <td>2</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>Grade</td>
+      <td>Grade</td>
+      <td>C7</td>
+      <td>7</td>
+      <td>3</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>Name</td>
+      <td>Name</td>
+      <td>E7</td>
+      <td>7</td>
+      <td>5</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>Score</td>
+      <td>Score</td>
+      <td>F7</td>
+      <td>7</td>
+      <td>6</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>Grade</td>
+      <td>Grade</td>
+      <td>G7</td>
+      <td>7</td>
+      <td>7</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>Matilda</td>
+      <td>Matilda</td>
+      <td>A8</td>
       <td>8</td>
+      <td>1</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>5</td>
+      <td>5</td>
+      <td>B8</td>
+      <td>8</td>
+      <td>2</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>B</td>
+      <td>B</td>
+      <td>C8</td>
+      <td>8</td>
+      <td>3</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>Matilda</td>
+      <td>Matilda</td>
+      <td>E8</td>
+      <td>8</td>
+      <td>5</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>7</td>
+      <td>7</td>
+      <td>F8</td>
+      <td>8</td>
+      <td>6</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>33</th>
       <td>A</td>
+      <td>A</td>
+      <td>G8</td>
+      <td>8</td>
+      <td>7</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>Olivia</td>
+      <td>Olivia</td>
+      <td>A9</td>
+      <td>9</td>
+      <td>1</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>6</td>
+      <td>6</td>
+      <td>B9</td>
+      <td>9</td>
+      <td>2</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>B</td>
+      <td>B</td>
+      <td>C9</td>
+      <td>9</td>
+      <td>3</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>Olivia</td>
+      <td>Olivia</td>
+      <td>E9</td>
+      <td>9</td>
+      <td>5</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>8</td>
+      <td>8</td>
+      <td>F9</td>
+      <td>9</td>
+      <td>6</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>A</td>
+      <td>A</td>
+      <td>G9</td>
+      <td>9</td>
+      <td>7</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
-<p><strong>Observations :</strong></p>
-<ol class="arabic simple">
-<li><p>There is a completely empty column that splits the tables, and a completely empty row as well. We’ll use the coordinates in our data reshaping</p></li>
-<li><p>For each table, the subject is directly above. We’ll use the empty cells adjacent to it as a criteria to create a subject column</p></li>
-</ol>
+<p>We know this much:</p>
+<ul class="simple">
+<li><p>the data are in three columns (<code class="docutils literal notranslate"><span class="pre">Name</span></code>, <code class="docutils literal notranslate"><span class="pre">Score</span></code>, <code class="docutils literal notranslate"><span class="pre">Grade</span></code> are the headers)</p></li>
+<li><p>the data is not in bold/italic fonts</p></li>
+</ul>
+<p>Let’s apply this knowledge to grab the data:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#get the first three columns before the completely null column</span>
-<span class="n">before_null</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,:</span><span class="mi">3</span><span class="p">]</span>
-<span class="c1">#get the columns after the completely null column</span>
-<span class="n">after_null</span> <span class="o">=</span>  <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">4</span><span class="p">:]</span><span class="o">.</span><span class="n">set_axis</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">italics</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;i&quot;</span><span class="p">)</span>
+<span class="n">bold</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
+<span class="n">strings</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">data_type</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">)</span>
+<span class="n">booleans</span> <span class="o">=</span> <span class="o">~</span><span class="n">italics</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">bold</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-<span class="p">(</span><span class="n">pd</span>          
-<span class="o">.</span><span class="n">concat</span><span class="p">((</span><span class="n">before_null</span><span class="p">,</span> <span class="n">after_null</span><span class="p">))</span>
-<span class="o">.</span><span class="n">set_axis</span><span class="p">([</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span><span class="s1">&#39;Score&#39;</span><span class="p">,</span><span class="s1">&#39;Grade&#39;</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;Name != &quot;Name&quot;&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">])</span>
-<span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">subject</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">Score</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> 
-                                        <span class="n">x</span><span class="o">.</span><span class="n">Name</span><span class="p">,</span> 
-                                        <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-        <span class="p">)</span>
-<span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">subject</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">ffill</span><span class="p">())</span>
-<span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-<span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+      <th>row</th>
+      <th>column</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>8</th>
+      <td>Matilda</td>
+      <td>3</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>1</td>
+      <td>3</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>F</td>
+      <td>3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Matilda</td>
+      <td>3</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>3</td>
+      <td>3</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>D</td>
+      <td>3</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Olivia</td>
+      <td>4</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>2</td>
+      <td>4</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>D</td>
+      <td>4</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Olivia</td>
+      <td>4</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>4</td>
+      <td>4</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>C</td>
+      <td>4</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>Matilda</td>
+      <td>8</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>5</td>
+      <td>8</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>B</td>
+      <td>8</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>Matilda</td>
+      <td>8</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>7</td>
+      <td>8</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>A</td>
+      <td>8</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>Olivia</td>
+      <td>9</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>6</td>
+      <td>9</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>B</td>
+      <td>9</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>Olivia</td>
+      <td>9</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>8</td>
+      <td>9</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>A</td>
+      <td>9</td>
+      <td>7</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># we know there are three columns per subset of data</span>
+<span class="n">extract</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">extract</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;NumpyExtensionArray&gt;
+[
+[&#39;Matilda&#39;, &#39;1&#39;, &#39;F&#39;],
+[&#39;Matilda&#39;, &#39;3&#39;, &#39;D&#39;],
+[&#39;Olivia&#39;, &#39;2&#39;, &#39;D&#39;],
+[&#39;Olivia&#39;, &#39;4&#39;, &#39;C&#39;],
+[&#39;Matilda&#39;, &#39;5&#39;, &#39;B&#39;],
+[&#39;Matilda&#39;, &#39;7&#39;, &#39;A&#39;],
+[&#39;Olivia&#39;, &#39;6&#39;, &#39;B&#39;],
+[&#39;Olivia&#39;, &#39;8&#39;, &#39;A&#39;]
+]
+Shape: (8, 3), dtype: object
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># apply same concept to reshape the row and column</span>
+<span class="c1"># required to pair the subjects to the data</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">rows</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;NumpyExtensionArray&gt;
+[np.int8(3), np.int8(3), np.int8(4), np.int8(4), np.int8(8), np.int8(8),
+ np.int8(9), np.int8(9)]
+Length: 8, dtype: int8
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">columns</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">columns</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;NumpyExtensionArray&gt;
+[np.int8(1), np.int8(5), np.int8(1), np.int8(5), np.int8(1), np.int8(5),
+ np.int8(1), np.int8(5)]
+Length: 8, dtype: int8
+</pre></div>
+</div>
+</div>
+</div>
+<p>Get the headers, and create a DataFrame of <code class="docutils literal notranslate"><span class="pre">extract</span></code>, along with <code class="docutils literal notranslate"><span class="pre">rows</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">headers</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">bold</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+<span class="n">headers</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([&#39;Name&#39;, &#39;Score&#39;, &#39;Grade&#39;], dtype=object)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">extract</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">extract</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">rows</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
+    <span class="c1"># order necessary for when patching subjects</span>
+    <span class="c1"># into the DatFrame</span>
+    <span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s2">&quot;Score&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">})</span>
+    <span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;column&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">])</span>
 <span class="p">)</span>
+<span class="n">extract</span>
 </pre></div>
 </div>
 </div>
@@ -638,7 +1305,8 @@ document.write(`
       <th>Name</th>
       <th>Score</th>
       <th>Grade</th>
-      <th>subject</th>
+      <th>row</th>
+      <th>column</th>
     </tr>
   </thead>
   <tbody>
@@ -647,73 +1315,250 @@ document.write(`
       <td>Matilda</td>
       <td>1</td>
       <td>F</td>
-      <td>Classics</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Olivia</td>
-      <td>2</td>
-      <td>D</td>
-      <td>Classics</td>
+      <td>3</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>Matilda</td>
-      <td>5</td>
-      <td>B</td>
-      <td>Music</td>
-    </tr>
-    <tr>
-      <th>3</th>
       <td>Olivia</td>
-      <td>6</td>
-      <td>B</td>
-      <td>Music</td>
+      <td>2</td>
+      <td>D</td>
+      <td>4</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>4</th>
       <td>Matilda</td>
-      <td>3</td>
-      <td>D</td>
-      <td>History</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>Olivia</td>
-      <td>4</td>
-      <td>C</td>
-      <td>History</td>
+      <td>5</td>
+      <td>B</td>
+      <td>8</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>6</th>
+      <td>Olivia</td>
+      <td>6</td>
+      <td>B</td>
+      <td>9</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Matilda</td>
+      <td>3</td>
+      <td>D</td>
+      <td>3</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Olivia</td>
+      <td>4</td>
+      <td>C</td>
+      <td>4</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>5</th>
       <td>Matilda</td>
       <td>7</td>
       <td>A</td>
-      <td>Drama</td>
+      <td>8</td>
+      <td>5</td>
     </tr>
     <tr>
       <th>7</th>
       <td>Olivia</td>
       <td>8</td>
       <td>A</td>
-      <td>Drama</td>
+      <td>9</td>
+      <td>5</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
-<p>The image below illustrates the main concepts of the above code.</p>
-<p><img alt="&quot;solution visual for case1&quot;" src="../_images/case1.jpg" /></p>
+<p>All that is left is to pair the subjects(italicized) with the <code class="docutils literal notranslate"><span class="pre">extract</span></code> DataFrame.</p>
+<p>We know that the subject has a difference of two, row-wise to the first entry in the sub data:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">subjects</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">italics</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;subject&quot;</span><span class="p">})</span>
+<span class="p">)</span>
+<span class="n">subjects</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>subject</th>
+      <th>row</th>
+      <th>column</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Classics</td>
+      <td>3</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>History</td>
+      <td>3</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>Music</td>
+      <td>8</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>Drama</td>
+      <td>8</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">outcome</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">extract</span>
+    <span class="c1"># notice the join order</span>
+    <span class="c1"># join on the columns first, before the row</span>
+    <span class="c1"># to ensure correct output</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">subjects</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;column&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">Subject</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">ffill</span><span class="p">())</span>
+    <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Subject&quot;</span><span class="p">,</span> <span class="s2">&quot;Score&quot;</span><span class="p">,</span> <span class="s2">&quot;Grade&quot;</span><span class="p">]]</span>
+<span class="p">)</span>
+
+<span class="n">outcome</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>Subject</th>
+      <th>Score</th>
+      <th>Grade</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Matilda</td>
+      <td>Classics</td>
+      <td>1</td>
+      <td>F</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Olivia</td>
+      <td>Classics</td>
+      <td>2</td>
+      <td>D</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Matilda</td>
+      <td>Music</td>
+      <td>5</td>
+      <td>B</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Olivia</td>
+      <td>Music</td>
+      <td>6</td>
+      <td>B</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Matilda</td>
+      <td>History</td>
+      <td>3</td>
+      <td>D</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Olivia</td>
+      <td>History</td>
+      <td>4</td>
+      <td>C</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Matilda</td>
+      <td>Drama</td>
+      <td>7</td>
+      <td>A</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Olivia</td>
+      <td>Drama</td>
+      <td>8</td>
+      <td>A</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
 </section>
 <section id="case-2-same-table-in-several-worksheets-files-using-the-sheet-file-name">
 <h3><strong>Case 2 : Same table in several worksheets/files (using the sheet/file name)</strong><a class="headerlink" href="#case-2-same-table-in-several-worksheets-files-using-the-sheet-file-name" title="Link to this heading">#</a></h3>
 <p><img alt="humanities.png" src="../_images/humanities.png" /></p>
 <p><img alt="performance.png" src="../_images/performance.png" /></p>
 <p>For this case, our data is in different worksheets. We can iterate through each worksheet and combine the dataframes into one.</p>
+<p>We do not need <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a> for this - <a class="reference external" href="https://pandas.pydata.org/docs/user_guide/index.html">pandas</a> is sufficient:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">extract</span> <span class="o">=</span> <span class="p">[</span><span class="n">excel_file</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sheet_name</span><span class="o">=</span><span class="n">sheetname</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> 
-           <span class="k">for</span> <span class="n">sheetname</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;humanities&quot;</span><span class="p">,</span> <span class="s2">&quot;performance&quot;</span><span class="p">)]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">extract</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">excel_file</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sheet_name</span><span class="o">=</span><span class="n">sheetname</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">sheetname</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;humanities&quot;</span><span class="p">,</span> <span class="s2">&quot;performance&quot;</span><span class="p">)</span>
+<span class="p">]</span>
 
 <span class="n">extract</span>
 </pre></div>
@@ -733,12 +1578,12 @@ document.write(`
 <p>Combine the individual dataframes into one:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">pd</span>
-<span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">extract</span><span class="p">)</span>
-<span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;subject&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;student&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">stack</span><span class="p">()</span>
-<span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;scores&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">extract</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;student&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">future_stack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;scores&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -830,27 +1675,35 @@ document.write(`
 <p>This is similar to Case 2, with the core data been the same. Here we need to pick rows from <code class="docutils literal notranslate"><span class="pre">Subject</span></code> downwards only, as that is the only relevant data:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">extract</span> <span class="o">=</span> <span class="p">{</span><span class="n">sheetname</span> <span class="p">:</span> <span class="n">excel_file</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sheet_name</span><span class="o">=</span><span class="n">sheetname</span><span class="p">,</span> <span class="n">header</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-                                 <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Subject&#39;</span><span class="p">:]</span>
-                                 <span class="c1"># use the subject row as column names</span>
-                                 <span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">set_axis</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Subject&#39;</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">))</span>
-                                 <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s1">&#39;Subject&#39;</span><span class="p">)</span>
-                                 <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="s1">&#39;subject&#39;</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="s1">&#39;student&#39;</span><span class="p">)</span>
-           <span class="k">for</span> <span class="n">sheetname</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;female&quot;</span><span class="p">,</span> <span class="s2">&quot;male&quot;</span><span class="p">)}</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">extract</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">sheetname</span><span class="p">:</span> <span class="n">excel_file</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sheet_name</span><span class="o">=</span><span class="n">sheetname</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="s2">&quot;Subject&quot;</span><span class="p">:</span>
+    <span class="p">]</span>
+    <span class="c1"># use the subject row as column names</span>
+    <span class="o">.</span><span class="n">row_to_names</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># pyjanitor method</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;Subject&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;student&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">future_stack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">sheetname</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;female&quot;</span><span class="p">,</span> <span class="s2">&quot;male&quot;</span><span class="p">)</span>
+<span class="p">}</span>
 
 <span class="n">extract</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;female&#39;: student  Matilda Olivia
- subject                
- Classics       1      2
- History        3      4,
- &#39;male&#39;: student  Nicholas Paul
- subject               
- Classics        3    0
- History         5    1}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;female&#39;: subject   student
+ Classics  Matilda    1
+           Olivia     2
+ History   Matilda    3
+           Olivia     4
+ dtype: object,
+ &#39;male&#39;: subject   student 
+ Classics  Nicholas    3
+           Paul        0
+ History   Nicholas    5
+           Paul        1
+ dtype: object}
 </pre></div>
 </div>
 </div>
@@ -858,12 +1711,7 @@ document.write(`
 <p>Combine the individual dataframes into one:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">pd</span>
-<span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">extract</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sex&#39;</span><span class="p">])</span>
-<span class="o">.</span><span class="n">stack</span><span class="p">()</span>
-<span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s1">&#39;scores&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">extract</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;sex&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;scores&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
@@ -963,22 +1811,770 @@ document.write(`
 The goal is to get the subjects,grades and scores per field, per student and combine into one.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">excel_file</span>
-<span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sheet_name</span><span class="o">=</span><span class="s1">&#39;implied-multiples&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="o">.</span><span class="n">ffill</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="p">:</span> <span class="s1">&#39;field&#39;</span><span class="p">})</span>
-<span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="o">.</span><span class="n">T</span>
-<span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">,</span><span class="s1">&#39;Name&#39;</span><span class="p">],</span>
-      <span class="n">var_name</span> <span class="o">=</span> <span class="s1">&#39;student&#39;</span><span class="p">,</span>
-      <span class="n">value_name</span> <span class="o">=</span> <span class="s1">&#39;scores&#39;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">jn</span><span class="o">.</span><span class="n">xlsx_cells</span><span class="p">(</span>
+    <span class="n">excel_file</span><span class="p">,</span>
+    <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;implied-multiples&quot;</span><span class="p">,</span>
+    <span class="n">font</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">include_blank_cells</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s2">&quot;row&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">})</span>
+
+<span class="n">frame</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+      <th>internal_value</th>
+      <th>coordinate</th>
+      <th>row</th>
+      <th>column</th>
+      <th>data_type</th>
+      <th>is_date</th>
+      <th>number_format</th>
+      <th>font</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Humanities</td>
+      <td>Humanities</td>
+      <td>B1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Performance</td>
+      <td>Performance</td>
+      <td>F1</td>
+      <td>1</td>
+      <td>6</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Name</td>
+      <td>Name</td>
+      <td>A2</td>
+      <td>2</td>
+      <td>1</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Classics</td>
+      <td>Classics</td>
+      <td>B2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Grade</td>
+      <td>Grade</td>
+      <td>C2</td>
+      <td>2</td>
+      <td>3</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>History</td>
+      <td>History</td>
+      <td>D2</td>
+      <td>2</td>
+      <td>4</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Grade</td>
+      <td>Grade</td>
+      <td>E2</td>
+      <td>2</td>
+      <td>5</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Music</td>
+      <td>Music</td>
+      <td>F2</td>
+      <td>2</td>
+      <td>6</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Grade</td>
+      <td>Grade</td>
+      <td>G2</td>
+      <td>2</td>
+      <td>7</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Drama</td>
+      <td>Drama</td>
+      <td>H2</td>
+      <td>2</td>
+      <td>8</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Grade</td>
+      <td>Grade</td>
+      <td>I2</td>
+      <td>2</td>
+      <td>9</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Matilda</td>
+      <td>Matilda</td>
+      <td>A3</td>
+      <td>3</td>
+      <td>1</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>1</td>
+      <td>1</td>
+      <td>B3</td>
+      <td>3</td>
+      <td>2</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>F</td>
+      <td>F</td>
+      <td>C3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>3</td>
+      <td>3</td>
+      <td>D3</td>
+      <td>3</td>
+      <td>4</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>D</td>
+      <td>D</td>
+      <td>E3</td>
+      <td>3</td>
+      <td>5</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>5</td>
+      <td>5</td>
+      <td>F3</td>
+      <td>3</td>
+      <td>6</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>B</td>
+      <td>B</td>
+      <td>G3</td>
+      <td>3</td>
+      <td>7</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>7</td>
+      <td>7</td>
+      <td>H3</td>
+      <td>3</td>
+      <td>8</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>A</td>
+      <td>A</td>
+      <td>I3</td>
+      <td>3</td>
+      <td>9</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>Olivia</td>
+      <td>Olivia</td>
+      <td>A4</td>
+      <td>4</td>
+      <td>1</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>2</td>
+      <td>2</td>
+      <td>B4</td>
+      <td>4</td>
+      <td>2</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>D</td>
+      <td>D</td>
+      <td>C4</td>
+      <td>4</td>
+      <td>3</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>4</td>
+      <td>4</td>
+      <td>D4</td>
+      <td>4</td>
+      <td>4</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>C</td>
+      <td>C</td>
+      <td>E4</td>
+      <td>4</td>
+      <td>5</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>6</td>
+      <td>6</td>
+      <td>F4</td>
+      <td>4</td>
+      <td>6</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>B</td>
+      <td>B</td>
+      <td>G4</td>
+      <td>4</td>
+      <td>7</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>8</td>
+      <td>8</td>
+      <td>H4</td>
+      <td>4</td>
+      <td>8</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>A</td>
+      <td>A</td>
+      <td>I4</td>
+      <td>4</td>
+      <td>9</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># fields are on the very first row</span>
+<span class="n">fields</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">row</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span>
+<span class="n">fields</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;field&quot;</span><span class="p">})</span>
+<span class="n">fields</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>field</th>
+      <th>column</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Humanities</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Performance</td>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Get the subjects(bold fonts) and merge with fields:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">frame</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">subjects</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;subject&quot;</span><span class="p">})</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;column&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="c1"># subject will be repeated for every paired score and grade</span>
+    <span class="c1"># field will be repeated for every paired subject</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">subject</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">subject</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">subject</span> <span class="o">!=</span> <span class="s2">&quot;Grade&quot;</span><span class="p">))</span>
+    <span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
 <span class="p">)</span>
-<span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">grade</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">Name</span> <span class="o">==</span> <span class="s2">&quot;Grade&quot;</span><span class="p">,</span> <span class="s1">&#39;scores&#39;</span><span class="p">])</span>
-<span class="c1">#scores are above grades per student</span>
-<span class="c1">#hence the bfill</span>
-<span class="o">.</span><span class="n">bfill</span><span class="p">()</span>
-<span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;Name != &quot;Grade&quot;&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span><span class="s1">&#39;subject&#39;</span><span class="p">})</span>
+
+<span class="n">subjects</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>subject</th>
+      <th>column</th>
+      <th>field</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Classics</td>
+      <td>2</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Classics</td>
+      <td>3</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>History</td>
+      <td>4</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>History</td>
+      <td>5</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Music</td>
+      <td>6</td>
+      <td>Performance</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Music</td>
+      <td>7</td>
+      <td>Performance</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Drama</td>
+      <td>8</td>
+      <td>Performance</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Drama</td>
+      <td>9</td>
+      <td>Performance</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Get the data (third row and below):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">frame</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;row&quot;</span><span class="p">]</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">&quot;column&quot;</span><span class="p">]</span>
+<span class="c1"># We know the columns are in pairs</span>
+<span class="c1"># (subject, followed by grade):</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="c1"># apply the same logic to row:</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="n">rows</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="c1"># and column:</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">array</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="s2">&quot;grade&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">rows</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>score</th>
+      <th>grade</th>
+      <th>row</th>
+      <th>column</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>F</td>
+      <td>3</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>3</td>
+      <td>D</td>
+      <td>3</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>5</td>
+      <td>B</td>
+      <td>3</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>7</td>
+      <td>A</td>
+      <td>3</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2</td>
+      <td>D</td>
+      <td>4</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>4</td>
+      <td>C</td>
+      <td>4</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>6</td>
+      <td>B</td>
+      <td>4</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>8</td>
+      <td>A</td>
+      <td>4</td>
+      <td>8</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Get the student names, and join to data:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">outcome</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">]]</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;student&quot;</span><span class="p">})</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;row&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">subjects</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;column&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">&quot;student&quot;</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">,</span> <span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">,</span> <span class="s2">&quot;grade&quot;</span><span class="p">]]</span>
+<span class="p">)</span>
+<span class="n">outcome</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>student</th>
+      <th>field</th>
+      <th>subject</th>
+      <th>score</th>
+      <th>grade</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Matilda</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>1</td>
+      <td>F</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Matilda</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>3</td>
+      <td>D</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Matilda</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>5</td>
+      <td>B</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Matilda</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>7</td>
+      <td>A</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Olivia</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>2</td>
+      <td>D</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Olivia</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>4</td>
+      <td>C</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Olivia</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>6</td>
+      <td>B</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Olivia</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>8</td>
+      <td>A</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Another route, without <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">excel_file</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sheet_name</span><span class="o">=</span><span class="s2">&quot;implied-multiples&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">ffill</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">&quot;field&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;field&quot;</span><span class="p">,</span> <span class="s2">&quot;Name&quot;</span><span class="p">],</span> <span class="n">var_name</span><span class="o">=</span><span class="s2">&quot;student&quot;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;scores&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">grade</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">Name</span> <span class="o">==</span> <span class="s2">&quot;Grade&quot;</span><span class="p">,</span> <span class="s2">&quot;scores&quot;</span><span class="p">])</span>
+    <span class="c1"># scores are above grades per student</span>
+    <span class="c1"># hence the bfill</span>
+    <span class="o">.</span><span class="n">bfill</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;Name != &quot;Grade&quot;&#39;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Name&quot;</span><span class="p">:</span> <span class="s2">&quot;subject&quot;</span><span class="p">})</span>
 <span class="p">)</span>
 </pre></div>
 </div>

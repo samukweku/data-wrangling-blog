@@ -434,22 +434,41 @@ document.write(`
 <h1>SpreadSheet Munging Strategies in Python - Pivot Tables - Complex Unpivoting<a class="headerlink" href="#spreadsheet-munging-strategies-in-python-pivot-tables-complex-unpivoting" title="Link to this heading">#</a></h1>
 <section id="pivot-tables-complex-unpivoting">
 <h2><strong>Pivot Tables - Complex Unpivoting</strong><a class="headerlink" href="#pivot-tables-complex-unpivoting" title="Link to this heading">#</a></h2>
-<p><em>updated : April 15, 2022</em></p>
-<p>This is part of a series of blog posts about extracting data from spreadsheets using Python.  It is based on the <a class="reference external" href="https://nacnudus.github.io/spreadsheet-munging-strategies/index.html">book</a> written by <a class="reference external" href="https://twitter.com/nacnudus?lang=en">Duncan Garmonsway</a>, which was written primarily for R users. LInks to the other posts are on the <a class="reference external" href="https://samukweku.github.io/data-wrangling-blog/">homepage</a>.</p>
-<p>We’ve dealt with pivot tables in one of the <a class="reference external" href="https://samukweku.github.io/data-wrangling-blog/fastpages/jupyter/excel/spreadsheet/python/pandas/2020/05/10/Pivot-Tables-Simple-Unpivoting.html">previous posts</a>. Here, we take the complexity up a notch. Let’s dive in to the various scenarios.</p>
+<p><em>updated : September 26, 2024</em></p>
+<p>This is part of a series of blog posts about extracting data from spreadsheets using Python.  It is based on the <a class="reference external" href="https://nacnudus.github.io/spreadsheet-munging-strategies/index.html">book</a> written by <a class="reference external" href="https://twitter.com/nacnudus?lang=en">Duncan Garmonsway</a>, which was written primarily for R users. Links to the other posts are on the sidebar.</p>
+<p>The key takeaway is this - you understand your data layout; use the tools to achieve your end goal. <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a> offers a way to get the cells in a spreadsheet into individual rows, with some metadata. The final outcome however relies on your understanding of the data layout and its proper application.</p>
+<p>We’ve dealt with pivot tables in one of the <a class="reference internal" href="Pivot-Tables---Simple-Unpivoting.html"><span class="std std-doc">previous posts</span></a>. Here, we take the complexity up a notch. Let’s dive in to the various scenarios.</p>
 <section id="case-1-centre-aligned-headers">
-<h3><strong>Case 1 : Centre-aligned headers</strong><a class="headerlink" href="#case-1-centre-aligned-headers" title="Link to this heading">#</a></h3>
+<span id="case-1"></span><h3><strong>Case 1 : Centre-aligned headers</strong><a class="headerlink" href="#case-1-centre-aligned-headers" title="Link to this heading">#</a></h3>
 <p><img alt="pivot-centre-aligned.png" src="../_images/pivot-centre-aligned.png" /></p>
 <p>In this case, the headers are not aligned completely with the subjects or names. If the data is read into Pandas, columns B and C are set as the index of the dataframe, and a forward/backward fill applied, “Humanities” could be wrongly assigned to “Music” or “Performance” to “ Literature” (“Music” should be paired with “Performance”, while “Humanities” should be paired with “Literature”). Same goes for the header columns - if rows 2 and 3 are read in as header columns, and a forward/backward fill applied,  “Female” may be wrongly assigned to “Lenny”, while “Male” could be wrongly assigned to “Olivia”.</p>
 <p><img alt="highlight-borders.png" src="../_images/centred_aligned_headers_borders.jpg" /></p>
 <p>The solution is to get the coordinates for the horizontal and vertical borders, and use that to correctly pair the header rows and header columns. We’ll use <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a> function from <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/">pyjanitor</a> to get the coordinates - under the hood, it uses <a class="reference external" href="https://openpyxl.readthedocs.io/en/stable/index.html">openpyxl</a>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pip install git+https://github.com/pyjanitor-devs/pyjanitor.git</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pip install pyjanitor</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">janitor</span>
+<span class="kn">import</span> <span class="nn">janitor</span> <span class="k">as</span> <span class="nn">jn</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">janitor</span> <span class="kn">import</span> <span class="n">xlsx_cells</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;pandas version: &quot;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;janitor version: &quot;</span><span class="p">,</span> <span class="n">jn</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;python version: &quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;numpy version: &quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pandas version:  2.2.2
+janitor version:  0.29.1
+python version:  3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:49) [Clang 16.0.6 ]
+numpy version:  2.0.2
 </pre></div>
 </div>
 </div>
@@ -463,7 +482,13 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">excel_file</span><span class="p">,</span> <span class="n">sheetnames</span> <span class="o">=</span> <span class="s1">&#39;pivot-centre-aligned&#39;</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include_blank_cells</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">jn</span><span class="o">.</span><span class="n">xlsx_cells</span><span class="p">(</span>
+    <span class="n">excel_file</span><span class="p">,</span>
+    <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;pivot-centre-aligned&quot;</span><span class="p">,</span>
+    <span class="n">border</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">include_blank_cells</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s2">&quot;row&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">})</span>
 <span class="n">frame</span>
 </pre></div>
 </div>
@@ -636,63 +661,39 @@ document.write(`
 <p>75 rows × 9 columns</p>
 </div></div></div>
 </div>
-<p>You can view a single row in the border column:</p>
+<p><strong>Observations</strong>:</p>
+<ol class="arabic simple">
+<li><p>The first row is the gender; the next row are the names.</p></li>
+<li><p>The male and female students are separated by a vertical border. We’ll use the border position to accurately reshape the data.</p></li>
+<li><p>The first column are the fields; the next column are the subjects.</p></li>
+<li><p>Just like the gender/names; a border separates the fields, horizontally.</p></li>
+<li><p>The scores are all integers.</p></li>
+</ol>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span><span class="o">.</span><span class="n">border</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get the fields</span>
+<span class="c1"># the very first column</span>
+<span class="n">min_col</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="n">fields</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">column</span> <span class="o">==</span> <span class="n">min_col</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]]</span>
+<span class="n">fields</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;field&quot;</span><span class="p">})</span>
+<span class="c1"># the horizontal borders to properly pair field and subject</span>
+<span class="c1"># a good option is the bottom border</span>
+<span class="n">booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">border</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;bottom&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;style&quot;</span><span class="p">)</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="o">.</span><span class="n">notna</span><span class="p">(),</span> <span class="s2">&quot;row&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">array</span>
+<span class="c1"># align with the first cell per window</span>
+<span class="c1"># the first subject is one below the border</span>
+<span class="c1"># hence the +1</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">rows</span><span class="p">)[:</span> <span class="nb">len</span><span class="p">(</span><span class="n">fields</span><span class="p">)]</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="n">fields</span><span class="p">[</span><span class="s2">&quot;row&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rows</span>
+<span class="n">subjects</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">column</span> <span class="o">==</span> <span class="p">(</span><span class="n">min_col</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">]]</span>
+<span class="n">subjects</span> <span class="o">=</span> <span class="n">subjects</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;subject&quot;</span><span class="p">})</span>
+<span class="c1"># merge with fields:</span>
+<span class="n">fields_and_subjects</span> <span class="o">=</span> <span class="n">subjects</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">fields</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
+<span class="n">fields_and_subjects</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;left&#39;: {&#39;style&#39;: None, &#39;color&#39;: None},
- &#39;right&#39;: {&#39;style&#39;: None, &#39;color&#39;: None},
- &#39;top&#39;: {&#39;style&#39;: &#39;thin&#39;, &#39;color&#39;: None},
- &#39;bottom&#39;: {&#39;style&#39;: None, &#39;color&#39;: None},
- &#39;diagonal&#39;: {&#39;style&#39;: None, &#39;color&#39;: None},
- &#39;vertical&#39;: None,
- &#39;horizontal&#39;: None,
- &#39;diagonal_direction&#39;: None,
- &#39;diagonalUp&#39;: False,
- &#39;diagonalDown&#39;: False,
- &#39;outline&#39;: True,
- &#39;start&#39;: None,
- &#39;end&#39;: None}
-</pre></div>
-</div>
-</div>
-</div>
-<p>The <code class="docutils literal notranslate"><span class="pre">fields</span></code> and <code class="docutils literal notranslate"><span class="pre">subjects</span></code> columns are in columns 2 and 3 respectively, the <code class="docutils literal notranslate"><span class="pre">gender</span></code> and <code class="docutils literal notranslate"><span class="pre">students</span></code> columns are in rows 2 and 3 respectively; the relevant borders top and left respectively.</p>
-<p>Once we have the relevant border coordinates, we can correctly link the <code class="docutils literal notranslate"><span class="pre">fields</span></code> and <code class="docutils literal notranslate"><span class="pre">subjects</span></code>, as well as the <code class="docutils literal notranslate"><span class="pre">gender</span></code> and <code class="docutils literal notranslate"><span class="pre">students</span></code> columns:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">border</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;style&#39;</span><span class="p">)</span>
-<span class="n">frame</span><span class="p">[</span><span class="s1">&#39;fields&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">border</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;top&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;style&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># the border is above the relevant sections, use that to our advantage to pull the relevant data</span>
-<span class="n">index</span> <span class="o">=</span> <span class="p">(</span><span class="n">frame</span>
-        <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">,</span> <span class="s1">&#39;fields&#39;</span><span class="p">]]</span>
-        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">fields</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">column</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">df</span><span class="o">.</span><span class="n">fields</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">df</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">fields</span><span class="p">))</span>
-        <span class="c1"># pyjanitor ... syntactic sugar for pd.Series.ffill</span>
-        <span class="o">.</span><span class="n">fill_direction</span><span class="p">(</span><span class="n">fields</span> <span class="o">=</span> <span class="s1">&#39;down&#39;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s1">&#39;thin&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">})</span>
-        <span class="o">.</span><span class="n">fill_direction</span><span class="p">(</span><span class="n">fields</span> <span class="o">=</span> <span class="s1">&#39;up&#39;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;value != fields&quot;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;subjects&#39;</span><span class="p">})</span>
-        <span class="p">)</span>
-<span class="n">index</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas_flavor/register.py:157: FutureWarning: This function will be deprecated in a 1.x release. Please use `pd.DataFrame.assign` instead.
-  return method(self._obj, *args, **kwargs)
-</pre></div>
-</div>
 <div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -711,77 +712,86 @@ document.write(`
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>subjects</th>
+      <th>subject</th>
       <th>row</th>
-      <th>column</th>
-      <th>fields</th>
+      <th>field</th>
     </tr>
   </thead>
   <tbody>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<p>Same idea used for the index is applied to the columns:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">columns</span> <span class="o">=</span> <span class="p">(</span><span class="n">frame</span>
-        <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">]]</span>
-        <span class="c1"># sorting ensures the right order</span>
-        <span class="c1"># to allow correct reshaping</span>
-        <span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;column&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">])</span>
-        <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">gender</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">df</span><span class="o">.</span><span class="n">gender</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">df</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">gender</span><span class="p">))</span>
-        <span class="o">.</span><span class="n">fill_direction</span><span class="p">(</span><span class="n">gender</span> <span class="o">=</span> <span class="s1">&#39;down&#39;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">replace</span><span class="p">({</span><span class="s1">&#39;thin&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">})</span>
-        <span class="o">.</span><span class="n">fill_direction</span><span class="p">(</span><span class="n">gender</span> <span class="o">=</span> <span class="s1">&#39;up&#39;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;value != gender&quot;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;students&#39;</span><span class="p">})</span>
-        <span class="p">)</span>
-<span class="n">columns</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas_flavor/register.py:157: FutureWarning: This function will be deprecated in a 1.x release. Please use `pd.DataFrame.assign` instead.
-  return method(self._obj, *args, **kwargs)
-</pre></div>
-</div>
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>students</th>
-      <th>row</th>
-      <th>column</th>
-      <th>gender</th>
+    <tr>
+      <th>0</th>
+      <td>Classics</td>
+      <td>4</td>
+      <td>Humanities</td>
     </tr>
-  </thead>
-  <tbody>
+    <tr>
+      <th>1</th>
+      <td>History</td>
+      <td>5</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Literature</td>
+      <td>6</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Philosophy</td>
+      <td>7</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Languages</td>
+      <td>8</td>
+      <td>Humanities</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Music</td>
+      <td>9</td>
+      <td>Performance</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Dance</td>
+      <td>10</td>
+      <td>Performance</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Drama</td>
+      <td>11</td>
+      <td>Performance</td>
+    </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">frame</span>
-        <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">]]</span>
-        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;scores&#39;</span><span class="p">})</span>
-        <span class="p">)</span>
-<span class="n">scores</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># gender is the very first row</span>
+<span class="n">min_row</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="n">gender</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">row</span> <span class="o">==</span> <span class="n">min_row</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]]</span>
+<span class="n">gender</span> <span class="o">=</span> <span class="n">gender</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;gender&quot;</span><span class="p">})</span>
+<span class="c1"># the vertical borders we are interested in</span>
+<span class="c1"># are the ones paired with the numbers</span>
+<span class="c1"># a good option is the left border</span>
+<span class="n">border_booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">border</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;style&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span>
+<span class="n">number_booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">data_type</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span>
+<span class="n">booleans</span> <span class="o">=</span> <span class="n">border_booleans</span> <span class="o">&amp;</span> <span class="n">number_booleans</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">array</span>
+<span class="c1"># align with the first cell per window</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">columns</span><span class="p">)[:</span> <span class="nb">len</span><span class="p">(</span><span class="n">gender</span><span class="p">)]</span>
+<span class="n">gender</span><span class="p">[</span><span class="s2">&quot;column&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">columns</span>
+<span class="c1"># nemes are the very next row after gender</span>
+<span class="n">names</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">row</span> <span class="o">==</span> <span class="p">(</span><span class="n">min_row</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span>
+<span class="n">names</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">})</span>
+<span class="c1"># merge with gender</span>
+<span class="n">names_and_gender</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">gender</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;column&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
+<span class="n">names</span>
 </pre></div>
 </div>
 </div>
@@ -804,391 +814,542 @@ document.write(`
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>scores</th>
-      <th>row</th>
+      <th>name</th>
       <th>column</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>10</th>
+      <th>2</th>
+      <td>Leah</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Matilda</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Olivia</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Lenny</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Max</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Nicholas</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Paul</td>
+      <td>10</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># grab the scores</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">number_booleans</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;score&quot;</span><span class="p">})</span>
+<span class="c1"># merge with fields_and subjects</span>
+<span class="c1"># merge with names_and_gender</span>
+<span class="n">outcome</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">fields_and_subjects</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">names_and_gender</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;column&quot;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="s2">&quot;field&quot;</span><span class="p">,</span> <span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">]]</span>
+<span class="p">)</span>
+
+<span class="n">outcome</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>gender</th>
+      <th>field</th>
+      <th>subject</th>
+      <th>score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Leah</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Classics</td>
       <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Lenny</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Classics</td>
       <td>4</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Max</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Classics</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Leah</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>History</td>
       <td>4</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Lenny</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>7</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>1</td>
-      <td>4</td>
+      <td>Max</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>History</td>
       <td>5</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>2</td>
-      <td>4</td>
-      <td>6</td>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>5</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>4</td>
-      <td>4</td>
-      <td>7</td>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>History</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>3</td>
-      <td>4</td>
-      <td>8</td>
+      <td>Leah</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Literature</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>3</td>
-      <td>4</td>
-      <td>9</td>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Literature</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>16</th>
-      <td>0</td>
-      <td>4</td>
-      <td>10</td>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Literature</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Lenny</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Literature</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>Max</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Literature</td>
+      <td>12</td>
     </tr>
     <tr>
       <th>19</th>
-      <td>8</td>
-      <td>5</td>
-      <td>4</td>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Literature</td>
+      <td>7</td>
     </tr>
     <tr>
       <th>20</th>
-      <td>3</td>
-      <td>5</td>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Literature</td>
       <td>5</td>
     </tr>
     <tr>
       <th>21</th>
-      <td>4</td>
+      <td>Leah</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Philosophy</td>
       <td>5</td>
-      <td>6</td>
     </tr>
     <tr>
       <th>22</th>
-      <td>7</td>
-      <td>5</td>
-      <td>7</td>
-    </tr>
-    <tr>
-      <th>23</th>
-      <td>5</td>
-      <td>5</td>
-      <td>8</td>
-    </tr>
-    <tr>
-      <th>24</th>
-      <td>5</td>
-      <td>5</td>
-      <td>9</td>
-    </tr>
-    <tr>
-      <th>25</th>
-      <td>1</td>
-      <td>5</td>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Philosophy</td>
       <td>10</td>
     </tr>
     <tr>
+      <th>23</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Philosophy</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>Lenny</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Philosophy</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>Max</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Philosophy</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Philosophy</td>
+      <td>5</td>
+    </tr>
+    <tr>
       <th>27</th>
-      <td>1</td>
-      <td>6</td>
-      <td>4</td>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Philosophy</td>
+      <td>12</td>
     </tr>
     <tr>
       <th>28</th>
-      <td>1</td>
-      <td>6</td>
+      <td>Leah</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Languages</td>
       <td>5</td>
     </tr>
     <tr>
       <th>29</th>
-      <td>9</td>
-      <td>6</td>
-      <td>6</td>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Languages</td>
+      <td>4</td>
     </tr>
     <tr>
       <th>30</th>
-      <td>3</td>
-      <td>6</td>
-      <td>7</td>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Humanities</td>
+      <td>Languages</td>
+      <td>5</td>
     </tr>
     <tr>
       <th>31</th>
-      <td>12</td>
-      <td>6</td>
-      <td>8</td>
-    </tr>
-    <tr>
-      <th>32</th>
-      <td>7</td>
-      <td>6</td>
+      <td>Lenny</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Languages</td>
       <td>9</td>
     </tr>
     <tr>
+      <th>32</th>
+      <td>Max</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Languages</td>
+      <td>8</td>
+    </tr>
+    <tr>
       <th>33</th>
-      <td>5</td>
-      <td>6</td>
-      <td>10</td>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Languages</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Humanities</td>
+      <td>Languages</td>
+      <td>8</td>
     </tr>
     <tr>
       <th>35</th>
-      <td>5</td>
-      <td>7</td>
+      <td>Leah</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Music</td>
       <td>4</td>
     </tr>
     <tr>
       <th>36</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Music</td>
       <td>10</td>
-      <td>7</td>
-      <td>5</td>
     </tr>
     <tr>
       <th>37</th>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Music</td>
       <td>10</td>
-      <td>7</td>
-      <td>6</td>
     </tr>
     <tr>
       <th>38</th>
-      <td>8</td>
-      <td>7</td>
-      <td>7</td>
+      <td>Lenny</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>2</td>
     </tr>
     <tr>
       <th>39</th>
-      <td>2</td>
-      <td>7</td>
-      <td>8</td>
+      <td>Max</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>4</td>
     </tr>
     <tr>
       <th>40</th>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Music</td>
       <td>5</td>
-      <td>7</td>
-      <td>9</td>
     </tr>
     <tr>
       <th>41</th>
-      <td>12</td>
-      <td>7</td>
-      <td>10</td>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Music</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>Leah</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Dance</td>
+      <td>4</td>
     </tr>
     <tr>
       <th>43</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Dance</td>
       <td>5</td>
-      <td>8</td>
-      <td>4</td>
     </tr>
     <tr>
       <th>44</th>
-      <td>4</td>
-      <td>8</td>
-      <td>5</td>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Dance</td>
+      <td>6</td>
     </tr>
     <tr>
       <th>45</th>
-      <td>5</td>
-      <td>8</td>
-      <td>6</td>
+      <td>Lenny</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Dance</td>
+      <td>4</td>
     </tr>
     <tr>
       <th>46</th>
-      <td>9</td>
-      <td>8</td>
-      <td>7</td>
+      <td>Max</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Dance</td>
+      <td>12</td>
     </tr>
     <tr>
       <th>47</th>
-      <td>8</td>
-      <td>8</td>
-      <td>8</td>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Dance</td>
+      <td>9</td>
     </tr>
     <tr>
       <th>48</th>
-      <td>3</td>
-      <td>8</td>
-      <td>9</td>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Dance</td>
+      <td>2</td>
     </tr>
     <tr>
       <th>49</th>
-      <td>8</td>
-      <td>8</td>
-      <td>10</td>
+      <td>Leah</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>50</th>
+      <td>Matilda</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>7</td>
     </tr>
     <tr>
       <th>51</th>
-      <td>4</td>
-      <td>9</td>
-      <td>4</td>
+      <td>Olivia</td>
+      <td>Female</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>8</td>
     </tr>
     <tr>
       <th>52</th>
-      <td>10</td>
-      <td>9</td>
-      <td>5</td>
+      <td>Lenny</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>6</td>
     </tr>
     <tr>
       <th>53</th>
-      <td>10</td>
-      <td>9</td>
-      <td>6</td>
+      <td>Max</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>54</th>
-      <td>2</td>
-      <td>9</td>
-      <td>7</td>
+      <td>Nicholas</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Drama</td>
+      <td>12</td>
     </tr>
     <tr>
       <th>55</th>
-      <td>4</td>
-      <td>9</td>
-      <td>8</td>
-    </tr>
-    <tr>
-      <th>56</th>
-      <td>5</td>
-      <td>9</td>
-      <td>9</td>
-    </tr>
-    <tr>
-      <th>57</th>
-      <td>6</td>
-      <td>9</td>
-      <td>10</td>
-    </tr>
-    <tr>
-      <th>60</th>
-      <td>4</td>
-      <td>10</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>61</th>
-      <td>5</td>
-      <td>10</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>62</th>
-      <td>6</td>
-      <td>10</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>63</th>
-      <td>4</td>
-      <td>10</td>
-      <td>7</td>
-    </tr>
-    <tr>
-      <th>64</th>
-      <td>12</td>
-      <td>10</td>
-      <td>8</td>
-    </tr>
-    <tr>
-      <th>65</th>
-      <td>9</td>
-      <td>10</td>
-      <td>9</td>
-    </tr>
-    <tr>
-      <th>66</th>
-      <td>2</td>
-      <td>10</td>
-      <td>10</td>
-    </tr>
-    <tr>
-      <th>68</th>
-      <td>2</td>
-      <td>11</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>69</th>
-      <td>7</td>
-      <td>11</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>70</th>
-      <td>8</td>
-      <td>11</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>71</th>
-      <td>6</td>
-      <td>11</td>
-      <td>7</td>
-    </tr>
-    <tr>
-      <th>72</th>
-      <td>1</td>
-      <td>11</td>
-      <td>8</td>
-    </tr>
-    <tr>
-      <th>73</th>
-      <td>12</td>
-      <td>11</td>
-      <td>9</td>
-    </tr>
-    <tr>
-      <th>74</th>
+      <td>Paul</td>
+      <td>Male</td>
+      <td>Performance</td>
+      <td>Drama</td>
       <td>3</td>
-      <td>11</td>
-      <td>10</td>
     </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<p>We can merge the dataframes into one:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">index</span>
-<span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;row&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">columns</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;row&#39;</span><span class="p">),</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;column&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s1">&#39;students&#39;</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="s1">&#39;fields&#39;</span><span class="p">,</span> <span class="s1">&#39;subjects&#39;</span><span class="p">,</span> <span class="s1">&#39;scores&#39;</span><span class="p">]]</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>students</th>
-      <th>gender</th>
-      <th>fields</th>
-      <th>subjects</th>
-      <th>scores</th>
-    </tr>
-  </thead>
-  <tbody>
   </tbody>
 </table>
 </div></div></div>
@@ -1200,27 +1361,27 @@ document.write(`
 <p><strong>Observations</strong> : <br>
 The row header (Term1, Term2, Term3) is repeated in four locations; we only need one.<br>
 The index columns are clearly delineated; the pairing of subjects and names is assured.</p>
-<p>For this, we can use Pandas’ directly, and take advantage of MultiIndexes:</p>
+<p>For this, we skip <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a>, and take advantage of pandas’ <a class="reference external" href="https://pandas.pydata.org/docs/user_guide/advanced.html">MultiIndexes</a>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">excel_file</span>
-<span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sheet_name</span><span class="o">=</span> <span class="s2">&quot;pivot-repeated-headers&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">index_col</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-<span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">level</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
-<span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">level</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
-<span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;`Term 1` != &#39;Term 1&#39;&quot;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;subject&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">])</span>
-<span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">var_name</span> <span class="o">=</span> <span class="s1">&#39;Term&#39;</span><span class="p">,</span> <span class="n">value_name</span> <span class="o">=</span> <span class="s1">&#39;scores&#39;</span><span class="p">,</span> <span class="n">ignore_index</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
-<span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
-<span class="o">.</span><span class="n">fill_direction</span><span class="p">(</span><span class="n">subject</span> <span class="o">=</span> <span class="s1">&#39;down&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">excel_file</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span>
+        <span class="n">sheet_name</span><span class="o">=</span><span class="s2">&quot;pivot-repeated-headers&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">index_col</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s2">&quot;coerce&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">future_stack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="s2">&quot;scores&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;term&quot;</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas_flavor/register.py:157: FutureWarning: This function will be deprecated in a 1.x release. Please use `pd.DataFrame.assign` instead.
-  return method(self._obj, *args, **kwargs)
-</pre></div>
-</div>
 <div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1241,7 +1402,7 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <th></th>
       <th>subject</th>
       <th>name</th>
-      <th>Term</th>
+      <th>term</th>
       <th>scores</th>
     </tr>
   </thead>
@@ -1256,324 +1417,324 @@ The index columns are clearly delineated; the pairing of subjects and names is a
     <tr>
       <th>1</th>
       <td>Classics</td>
+      <td>Matilda</td>
+      <td>Term 2</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Classics</td>
+      <td>Matilda</td>
+      <td>Term 3</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Classics</td>
       <td>Nicholas</td>
       <td>Term 1</td>
       <td>2</td>
     </tr>
     <tr>
-      <th>2</th>
+      <th>4</th>
+      <td>Classics</td>
+      <td>Nicholas</td>
+      <td>Term 2</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Classics</td>
+      <td>Nicholas</td>
+      <td>Term 3</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>6</th>
       <td>Classics</td>
       <td>Olivia</td>
       <td>Term 1</td>
       <td>8</td>
     </tr>
     <tr>
-      <th>3</th>
+      <th>7</th>
+      <td>Classics</td>
+      <td>Olivia</td>
+      <td>Term 2</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Classics</td>
+      <td>Olivia</td>
+      <td>Term 3</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>9</th>
       <td>Classics</td>
       <td>Paul</td>
       <td>Term 1</td>
       <td>9</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>History</td>
-      <td>Matilda</td>
-      <td>Term 1</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>History</td>
-      <td>Nicholas</td>
-      <td>Term 1</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>History</td>
-      <td>Olivia</td>
-      <td>Term 1</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>History</td>
-      <td>Paul</td>
-      <td>Term 1</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>Music</td>
-      <td>Matilda</td>
-      <td>Term 1</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>Music</td>
-      <td>Nicholas</td>
-      <td>Term 1</td>
-      <td>1</td>
-    </tr>
-    <tr>
       <th>10</th>
-      <td>Music</td>
-      <td>Olivia</td>
-      <td>Term 1</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>11</th>
-      <td>Music</td>
+      <td>Classics</td>
       <td>Paul</td>
-      <td>Term 1</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>Drama</td>
-      <td>Matilda</td>
-      <td>Term 1</td>
+      <td>Term 2</td>
       <td>4</td>
     </tr>
     <tr>
-      <th>13</th>
-      <td>Drama</td>
-      <td>Nicholas</td>
+      <th>11</th>
+      <td>Classics</td>
+      <td>Paul</td>
+      <td>Term 3</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>History</td>
+      <td>Matilda</td>
       <td>Term 1</td>
-      <td>9</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>History</td>
+      <td>Matilda</td>
+      <td>Term 2</td>
+      <td>6</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>Drama</td>
-      <td>Olivia</td>
-      <td>Term 1</td>
-      <td>2</td>
+      <td>History</td>
+      <td>Matilda</td>
+      <td>Term 3</td>
+      <td>4</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>Drama</td>
-      <td>Paul</td>
+      <td>History</td>
+      <td>Nicholas</td>
       <td>Term 1</td>
       <td>2</td>
     </tr>
     <tr>
       <th>16</th>
-      <td>Classics</td>
-      <td>Matilda</td>
+      <td>History</td>
+      <td>Nicholas</td>
       <td>Term 2</td>
-      <td>7</td>
+      <td>4</td>
     </tr>
     <tr>
       <th>17</th>
-      <td>Classics</td>
-      <td>Nicholas</td>
-      <td>Term 2</td>
-      <td>9</td>
-    </tr>
-    <tr>
-      <th>18</th>
-      <td>Classics</td>
-      <td>Olivia</td>
-      <td>Term 2</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>19</th>
-      <td>Classics</td>
-      <td>Paul</td>
-      <td>Term 2</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>20</th>
       <td>History</td>
-      <td>Matilda</td>
-      <td>Term 2</td>
+      <td>Nicholas</td>
+      <td>Term 3</td>
       <td>6</td>
     </tr>
     <tr>
-      <th>21</th>
+      <th>18</th>
       <td>History</td>
-      <td>Nicholas</td>
-      <td>Term 2</td>
-      <td>4</td>
+      <td>Olivia</td>
+      <td>Term 1</td>
+      <td>5</td>
     </tr>
     <tr>
-      <th>22</th>
+      <th>19</th>
       <td>History</td>
       <td>Olivia</td>
       <td>Term 2</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>23</th>
+      <th>20</th>
+      <td>History</td>
+      <td>Olivia</td>
+      <td>Term 3</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>History</td>
+      <td>Paul</td>
+      <td>Term 1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>22</th>
       <td>History</td>
       <td>Paul</td>
       <td>Term 2</td>
       <td>6</td>
     </tr>
     <tr>
+      <th>23</th>
+      <td>History</td>
+      <td>Paul</td>
+      <td>Term 3</td>
+      <td>7</td>
+    </tr>
+    <tr>
       <th>24</th>
+      <td>Music</td>
+      <td>Matilda</td>
+      <td>Term 1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>25</th>
       <td>Music</td>
       <td>Matilda</td>
       <td>Term 2</td>
       <td>5</td>
     </tr>
     <tr>
-      <th>25</th>
-      <td>Music</td>
-      <td>Nicholas</td>
-      <td>Term 2</td>
-      <td>1</td>
-    </tr>
-    <tr>
       <th>26</th>
       <td>Music</td>
-      <td>Olivia</td>
-      <td>Term 2</td>
+      <td>Matilda</td>
+      <td>Term 3</td>
       <td>1</td>
     </tr>
     <tr>
       <th>27</th>
       <td>Music</td>
-      <td>Paul</td>
-      <td>Term 2</td>
-      <td>0</td>
+      <td>Nicholas</td>
+      <td>Term 1</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>28</th>
-      <td>Drama</td>
-      <td>Matilda</td>
+      <td>Music</td>
+      <td>Nicholas</td>
       <td>Term 2</td>
-      <td>3</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>29</th>
-      <td>Drama</td>
-      <td>Nicholas</td>
-      <td>Term 2</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>30</th>
-      <td>Drama</td>
-      <td>Olivia</td>
-      <td>Term 2</td>
-      <td>7</td>
-    </tr>
-    <tr>
-      <th>31</th>
-      <td>Drama</td>
-      <td>Paul</td>
-      <td>Term 2</td>
-      <td>7</td>
-    </tr>
-    <tr>
-      <th>32</th>
-      <td>Classics</td>
-      <td>Matilda</td>
-      <td>Term 3</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>33</th>
-      <td>Classics</td>
+      <td>Music</td>
       <td>Nicholas</td>
       <td>Term 3</td>
       <td>2</td>
     </tr>
     <tr>
-      <th>34</th>
-      <td>Classics</td>
+      <th>30</th>
+      <td>Music</td>
       <td>Olivia</td>
-      <td>Term 3</td>
-      <td>9</td>
-    </tr>
-    <tr>
-      <th>35</th>
-      <td>Classics</td>
-      <td>Paul</td>
-      <td>Term 3</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>36</th>
-      <td>History</td>
-      <td>Matilda</td>
-      <td>Term 3</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>37</th>
-      <td>History</td>
-      <td>Nicholas</td>
-      <td>Term 3</td>
+      <td>Term 1</td>
       <td>6</td>
     </tr>
     <tr>
-      <th>38</th>
-      <td>History</td>
+      <th>31</th>
+      <td>Music</td>
+      <td>Olivia</td>
+      <td>Term 2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>Music</td>
       <td>Olivia</td>
       <td>Term 3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>Music</td>
+      <td>Paul</td>
+      <td>Term 1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>Music</td>
+      <td>Paul</td>
+      <td>Term 2</td>
       <td>0</td>
     </tr>
     <tr>
-      <th>39</th>
-      <td>History</td>
-      <td>Paul</td>
-      <td>Term 3</td>
-      <td>7</td>
-    </tr>
-    <tr>
-      <th>40</th>
+      <th>35</th>
       <td>Music</td>
-      <td>Matilda</td>
+      <td>Paul</td>
       <td>Term 3</td>
       <td>1</td>
     </tr>
     <tr>
+      <th>36</th>
+      <td>Drama</td>
+      <td>Matilda</td>
+      <td>Term 1</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>Drama</td>
+      <td>Matilda</td>
+      <td>Term 2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>Drama</td>
+      <td>Matilda</td>
+      <td>Term 3</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>Drama</td>
+      <td>Nicholas</td>
+      <td>Term 1</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>Drama</td>
+      <td>Nicholas</td>
+      <td>Term 2</td>
+      <td>3</td>
+    </tr>
+    <tr>
       <th>41</th>
-      <td>Music</td>
+      <td>Drama</td>
       <td>Nicholas</td>
       <td>Term 3</td>
       <td>2</td>
     </tr>
     <tr>
       <th>42</th>
-      <td>Music</td>
+      <td>Drama</td>
       <td>Olivia</td>
-      <td>Term 3</td>
-      <td>3</td>
+      <td>Term 1</td>
+      <td>2</td>
     </tr>
     <tr>
       <th>43</th>
-      <td>Music</td>
-      <td>Paul</td>
-      <td>Term 3</td>
-      <td>1</td>
+      <td>Drama</td>
+      <td>Olivia</td>
+      <td>Term 2</td>
+      <td>7</td>
     </tr>
     <tr>
       <th>44</th>
       <td>Drama</td>
-      <td>Matilda</td>
+      <td>Olivia</td>
       <td>Term 3</td>
       <td>6</td>
     </tr>
     <tr>
       <th>45</th>
       <td>Drama</td>
-      <td>Nicholas</td>
-      <td>Term 3</td>
+      <td>Paul</td>
+      <td>Term 1</td>
       <td>2</td>
     </tr>
     <tr>
       <th>46</th>
       <td>Drama</td>
-      <td>Olivia</td>
-      <td>Term 3</td>
-      <td>6</td>
+      <td>Paul</td>
+      <td>Term 2</td>
+      <td>7</td>
     </tr>
     <tr>
       <th>47</th>
@@ -1590,12 +1751,18 @@ The index columns are clearly delineated; the pairing of subjects and names is a
 <section id="case-3-headers-amongst-the-data">
 <h3><strong>Case 3 : Headers amongst the data</strong><a class="headerlink" href="#case-3-headers-amongst-the-data" title="Link to this heading">#</a></h3>
 <p><img alt="pivot-header-within-data.png" src="../_images/pivot-header-within-data.png" /></p>
-<p>In this scenario, we have the subjects as a row header, mixed with the data. Note that the Term1,Term2,Term3 row is repeated.</p>
-<p>Just like in case 1, we can use <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a> to get the font data (specifically, the cells with bold font) and with that location, correctly align the data:</p>
+<p>In this scenario, we have the subjects as a row header, mixed with the data(<code class="docutils literal notranslate"><span class="pre">classics</span></code>, <code class="docutils literal notranslate"><span class="pre">history</span></code>, <code class="docutils literal notranslate"><span class="pre">music</span></code>, <code class="docutils literal notranslate"><span class="pre">drama</span></code>). Note that the Term1,Term2,Term3 row is repeated.</p>
+<p>Let’s use <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a> to get the font data (specifically, the cells with bold font) and with that location, correctly align the data:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">excel_file</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;pivot-header-within-data&quot;</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include_blank_cells</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">frame</span><span class="p">[</span><span class="s1">&#39;bold&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">jn</span><span class="o">.</span><span class="n">xlsx_cells</span><span class="p">(</span>
+    <span class="n">excel_file</span><span class="p">,</span>
+    <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;pivot-header-within-data&quot;</span><span class="p">,</span>
+    <span class="n">font</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">border</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">include_blank_cells</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s2">&quot;row&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">})</span>
 <span class="n">frame</span>
 </pre></div>
 </div>
@@ -1628,7 +1795,7 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <th>is_date</th>
       <th>number_format</th>
       <th>font</th>
-      <th>bold</th>
+      <th>border</th>
     </tr>
   </thead>
   <tbody>
@@ -1643,7 +1810,7 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>True</td>
+      <td>{'left': {'style': 'thin', 'color': None}, 'ri...</td>
     </tr>
     <tr>
       <th>1</th>
@@ -1656,7 +1823,7 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>False</td>
+      <td>{'left': {'style': 'thin', 'color': None}, 'ri...</td>
     </tr>
     <tr>
       <th>2</th>
@@ -1669,7 +1836,7 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>False</td>
+      <td>{'left': {'style': None, 'color': None}, 'righ...</td>
     </tr>
     <tr>
       <th>3</th>
@@ -1682,7 +1849,7 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>False</td>
+      <td>{'left': {'style': None, 'color': None}, 'righ...</td>
     </tr>
     <tr>
       <th>4</th>
@@ -1695,7 +1862,7 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>False</td>
+      <td>{'left': {'style': 'thin', 'color': None}, 'ri...</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1721,7 +1888,7 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>False</td>
+      <td>{'left': {'style': None, 'color': None}, 'righ...</td>
     </tr>
     <tr>
       <th>76</th>
@@ -1734,7 +1901,7 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>False</td>
+      <td>{'left': {'style': 'thin', 'color': None}, 'ri...</td>
     </tr>
     <tr>
       <th>77</th>
@@ -1747,7 +1914,7 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>False</td>
+      <td>{'left': {'style': 'thin', 'color': None}, 'ri...</td>
     </tr>
     <tr>
       <th>78</th>
@@ -1760,7 +1927,7 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>False</td>
+      <td>{'left': {'style': None, 'color': None}, 'righ...</td>
     </tr>
     <tr>
       <th>79</th>
@@ -1773,33 +1940,53 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <td>False</td>
       <td>General</td>
       <td>{'name': 'Calibri', 'family': 2.0, 'sz': 11.0,...</td>
-      <td>False</td>
+      <td>{'left': {'style': None, 'color': None}, 'righ...</td>
     </tr>
   </tbody>
 </table>
 <p>80 rows × 10 columns</p>
 </div></div></div>
 </div>
+<p>Observations:</p>
+<ul class="simple">
+<li><p>The subjects are in bold font</p></li>
+<li><p>The subjects are one row above the Terms</p></li>
+<li><p>The names are aligned with the scores row wise</p></li>
+<li><p>The term is one row above the scores; this implies the shortest distance between the scores and the subjects is 2</p></li>
+</ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">name_subject</span> <span class="o">=</span> <span class="p">(</span><span class="n">frame</span>
-                <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">data_type</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s1">&#39;s&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">frame</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Term&#39;</span><span class="p">,</span> <span class="n">na</span> <span class="o">=</span> <span class="kc">False</span><span class="p">),</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">]]</span>
-                <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">subject</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">bold</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">))</span>
-                <span class="o">.</span><span class="n">fill_direction</span><span class="p">(</span><span class="n">subject</span> <span class="o">=</span> <span class="s1">&#39;down&#39;</span><span class="p">)</span>
-                <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;value != subject&#39;</span><span class="p">)</span>
-                <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;name&#39;</span><span class="p">})</span>
-                <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="s1">&#39;bold&#39;</span><span class="p">)</span>
-                <span class="p">)</span>
-
-<span class="n">name_subject</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">subjects</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">]]</span>
+<span class="n">subjects</span> <span class="o">=</span> <span class="n">subjects</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;subject&quot;</span><span class="p">})</span>
+<span class="n">terms</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">row</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">subjects</span><span class="o">.</span><span class="n">row</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span>
+<span class="n">terms</span> <span class="o">=</span> <span class="n">terms</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;term&quot;</span><span class="p">})</span>
+<span class="n">subjects</span><span class="p">[</span><span class="s2">&quot;row&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># align with the terms</span>
+<span class="c1"># merge term and subjects:</span>
+<span class="n">terms_subjects</span> <span class="o">=</span> <span class="n">subjects</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">terms</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;row&quot;</span><span class="p">)</span>
+<span class="n">terms_subjects</span><span class="p">[</span><span class="s2">&quot;row&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>  <span class="c1"># align with the immediate next cell</span>
+<span class="c1"># names have a left border</span>
+<span class="n">border_booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">border</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;left&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;style&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span>
+<span class="n">string_booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">data_type</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">)</span>
+<span class="n">booleans</span> <span class="o">=</span> <span class="n">border_booleans</span> <span class="o">&amp;</span> <span class="n">string_booleans</span>
+<span class="n">names</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">booleans</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">]]</span>
+<span class="n">names</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span><span class="p">})</span>
+<span class="n">number_booleans</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">data_type</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">)</span>
+<span class="n">numbers</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">number_booleans</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">]]</span>
+<span class="c1"># sort columns so that merge with term and subject will be in the proper order</span>
+<span class="n">numbers</span> <span class="o">=</span> <span class="n">numbers</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="s2">&quot;score&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">&quot;column&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">])</span>
+<span class="c1"># merge into one DataFrame</span>
+<span class="c1"># numbers.merge(names, on=&#39;row&#39;, how=&#39;left&#39;)</span>
+<span class="n">outcome</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">numbers</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">terms_subjects</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;column&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">],</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;row&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;subject&quot;</span><span class="p">,</span> <span class="s2">&quot;term&quot;</span><span class="p">,</span> <span class="s2">&quot;score&quot;</span><span class="p">]]</span>
+<span class="p">)</span>
+<span class="n">outcome</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/pandas_flavor/register.py:157: FutureWarning: This function will be deprecated in a 1.x release. Please use `pd.DataFrame.assign` instead.
-  return method(self._obj, *args, **kwargs)
-</pre></div>
-</div>
 <div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
@@ -1819,518 +2006,366 @@ The index columns are clearly delineated; the pairing of subjects and names is a
     <tr style="text-align: right;">
       <th></th>
       <th>name</th>
-      <th>row</th>
-      <th>column</th>
       <th>subject</th>
+      <th>term</th>
+      <th>score</th>
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <th>0</th>
+      <td>Matilda</td>
+      <td>Classics</td>
+      <td>Term 1</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Nicholas</td>
+      <td>Classics</td>
+      <td>Term 1</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Olivia</td>
+      <td>Classics</td>
+      <td>Term 1</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Paul</td>
+      <td>Classics</td>
+      <td>Term 1</td>
+      <td>1</td>
+    </tr>
     <tr>
       <th>4</th>
       <td>Matilda</td>
+      <td>History</td>
+      <td>Term 1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Nicholas</td>
+      <td>History</td>
+      <td>Term 1</td>
       <td>4</td>
-      <td>2</td>
-      <td>Classics</td>
     </tr>
     <tr>
-      <th>8</th>
-      <td>Nicholas</td>
-      <td>5</td>
-      <td>2</td>
-      <td>Classics</td>
-    </tr>
-    <tr>
-      <th>12</th>
+      <th>6</th>
       <td>Olivia</td>
-      <td>6</td>
-      <td>2</td>
-      <td>Classics</td>
-    </tr>
-    <tr>
-      <th>16</th>
-      <td>Paul</td>
-      <td>7</td>
-      <td>2</td>
-      <td>Classics</td>
-    </tr>
-    <tr>
-      <th>24</th>
-      <td>Matilda</td>
-      <td>10</td>
-      <td>2</td>
       <td>History</td>
+      <td>Term 1</td>
+      <td>1</td>
     </tr>
     <tr>
-      <th>28</th>
-      <td>Nicholas</td>
-      <td>11</td>
-      <td>2</td>
-      <td>History</td>
-    </tr>
-    <tr>
-      <th>32</th>
-      <td>Olivia</td>
-      <td>12</td>
-      <td>2</td>
-      <td>History</td>
-    </tr>
-    <tr>
-      <th>36</th>
+      <th>7</th>
       <td>Paul</td>
-      <td>13</td>
-      <td>2</td>
       <td>History</td>
-    </tr>
-    <tr>
-      <th>44</th>
-      <td>Matilda</td>
-      <td>16</td>
-      <td>2</td>
-      <td>Music</td>
-    </tr>
-    <tr>
-      <th>48</th>
-      <td>Nicholas</td>
-      <td>17</td>
-      <td>2</td>
-      <td>Music</td>
-    </tr>
-    <tr>
-      <th>52</th>
-      <td>Olivia</td>
-      <td>18</td>
-      <td>2</td>
-      <td>Music</td>
-    </tr>
-    <tr>
-      <th>56</th>
-      <td>Paul</td>
-      <td>19</td>
-      <td>2</td>
-      <td>Music</td>
-    </tr>
-    <tr>
-      <th>64</th>
-      <td>Matilda</td>
-      <td>22</td>
-      <td>2</td>
-      <td>Drama</td>
-    </tr>
-    <tr>
-      <th>68</th>
-      <td>Nicholas</td>
-      <td>23</td>
-      <td>2</td>
-      <td>Drama</td>
-    </tr>
-    <tr>
-      <th>72</th>
-      <td>Olivia</td>
-      <td>24</td>
-      <td>2</td>
-      <td>Drama</td>
-    </tr>
-    <tr>
-      <th>76</th>
-      <td>Paul</td>
-      <td>25</td>
-      <td>2</td>
-      <td>Drama</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<p>Get the terms:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">terms</span> <span class="o">=</span> <span class="p">(</span><span class="n">frame</span>
-        <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Term&#39;</span><span class="p">,</span> <span class="n">na</span> <span class="o">=</span> <span class="kc">False</span><span class="p">),</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">]]</span>
-        <span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
-        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;term&#39;</span><span class="p">})</span>
-        <span class="p">)</span>
-<span class="n">terms</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>term</th>
-      <th>column</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>1</th>
       <td>Term 1</td>
       <td>3</td>
     </tr>
     <tr>
-      <th>2</th>
+      <th>8</th>
+      <td>Matilda</td>
+      <td>Music</td>
+      <td>Term 1</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Nicholas</td>
+      <td>Music</td>
+      <td>Term 1</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Olivia</td>
+      <td>Music</td>
+      <td>Term 1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Paul</td>
+      <td>Music</td>
+      <td>Term 1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Matilda</td>
+      <td>Drama</td>
+      <td>Term 1</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Nicholas</td>
+      <td>Drama</td>
+      <td>Term 1</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Olivia</td>
+      <td>Drama</td>
+      <td>Term 1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Paul</td>
+      <td>Drama</td>
+      <td>Term 1</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>Matilda</td>
+      <td>Classics</td>
+      <td>Term 2</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>Nicholas</td>
+      <td>Classics</td>
+      <td>Term 2</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>Olivia</td>
+      <td>Classics</td>
+      <td>Term 2</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>Paul</td>
+      <td>Classics</td>
       <td>Term 2</td>
       <td>4</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>Term 3</td>
+      <th>20</th>
+      <td>Matilda</td>
+      <td>History</td>
+      <td>Term 2</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>Nicholas</td>
+      <td>History</td>
+      <td>Term 2</td>
       <td>5</td>
     </tr>
-  </tbody>
-</table>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scores</span> <span class="o">=</span> <span class="p">(</span><span class="n">frame</span>
-        <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frame</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;n&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">]]</span>
-        <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="s1">&#39;scores&#39;</span><span class="p">})</span>
-        <span class="p">)</span>
-<span class="n">scores</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>scores</th>
-      <th>row</th>
-      <th>column</th>
-    </tr>
-  </thead>
-  <tbody>
     <tr>
-      <th>5</th>
-      <td>7</td>
-      <td>4</td>
+      <th>22</th>
+      <td>Olivia</td>
+      <td>History</td>
+      <td>Term 2</td>
       <td>3</td>
     </tr>
     <tr>
-      <th>6</th>
+      <th>23</th>
+      <td>Paul</td>
+      <td>History</td>
+      <td>Term 2</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>Matilda</td>
+      <td>Music</td>
+      <td>Term 2</td>
       <td>2</td>
-      <td>4</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>1</td>
-      <td>4</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>9</td>
-      <td>5</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>7</td>
-      <td>5</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>11</th>
-      <td>6</td>
-      <td>5</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td>5</td>
-      <td>6</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>9</td>
-      <td>6</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>15</th>
-      <td>5</td>
-      <td>6</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>17</th>
-      <td>1</td>
-      <td>7</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>18</th>
-      <td>4</td>
-      <td>7</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>19</th>
-      <td>9</td>
-      <td>7</td>
-      <td>5</td>
     </tr>
     <tr>
       <th>25</th>
-      <td>0</td>
-      <td>10</td>
-      <td>3</td>
+      <td>Nicholas</td>
+      <td>Music</td>
+      <td>Term 2</td>
+      <td>7</td>
     </tr>
     <tr>
       <th>26</th>
-      <td>0</td>
-      <td>10</td>
-      <td>4</td>
+      <td>Olivia</td>
+      <td>Music</td>
+      <td>Term 2</td>
+      <td>6</td>
     </tr>
     <tr>
       <th>27</th>
-      <td>5</td>
-      <td>10</td>
-      <td>5</td>
+      <td>Paul</td>
+      <td>Music</td>
+      <td>Term 2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>Matilda</td>
+      <td>Drama</td>
+      <td>Term 2</td>
+      <td>7</td>
     </tr>
     <tr>
       <th>29</th>
-      <td>4</td>
-      <td>11</td>
-      <td>3</td>
+      <td>Nicholas</td>
+      <td>Drama</td>
+      <td>Term 2</td>
+      <td>7</td>
     </tr>
     <tr>
       <th>30</th>
-      <td>5</td>
-      <td>11</td>
-      <td>4</td>
+      <td>Olivia</td>
+      <td>Drama</td>
+      <td>Term 2</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>31</th>
-      <td>9</td>
-      <td>11</td>
-      <td>5</td>
+      <td>Paul</td>
+      <td>Drama</td>
+      <td>Term 2</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>Matilda</td>
+      <td>Classics</td>
+      <td>Term 3</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>33</th>
-      <td>1</td>
-      <td>12</td>
-      <td>3</td>
+      <td>Nicholas</td>
+      <td>Classics</td>
+      <td>Term 3</td>
+      <td>6</td>
     </tr>
     <tr>
       <th>34</th>
-      <td>3</td>
-      <td>12</td>
-      <td>4</td>
+      <td>Olivia</td>
+      <td>Classics</td>
+      <td>Term 3</td>
+      <td>5</td>
     </tr>
     <tr>
       <th>35</th>
-      <td>3</td>
-      <td>12</td>
+      <td>Paul</td>
+      <td>Classics</td>
+      <td>Term 3</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>Matilda</td>
+      <td>History</td>
+      <td>Term 3</td>
       <td>5</td>
     </tr>
     <tr>
       <th>37</th>
-      <td>3</td>
-      <td>13</td>
-      <td>3</td>
+      <td>Nicholas</td>
+      <td>History</td>
+      <td>Term 3</td>
+      <td>9</td>
     </tr>
     <tr>
       <th>38</th>
-      <td>5</td>
-      <td>13</td>
-      <td>4</td>
+      <td>Olivia</td>
+      <td>History</td>
+      <td>Term 3</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>39</th>
+      <td>Paul</td>
+      <td>History</td>
+      <td>Term 3</td>
       <td>6</td>
-      <td>13</td>
-      <td>5</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>Matilda</td>
+      <td>Music</td>
+      <td>Term 3</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>Nicholas</td>
+      <td>Music</td>
+      <td>Term 3</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>Olivia</td>
+      <td>Music</td>
+      <td>Term 3</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>Paul</td>
+      <td>Music</td>
+      <td>Term 3</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>Matilda</td>
+      <td>Drama</td>
+      <td>Term 3</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>45</th>
-      <td>6</td>
-      <td>16</td>
-      <td>3</td>
+      <td>Nicholas</td>
+      <td>Drama</td>
+      <td>Term 3</td>
+      <td>8</td>
     </tr>
     <tr>
       <th>46</th>
-      <td>2</td>
-      <td>16</td>
-      <td>4</td>
+      <td>Olivia</td>
+      <td>Drama</td>
+      <td>Term 3</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>47</th>
-      <td>4</td>
-      <td>16</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>49</th>
-      <td>5</td>
-      <td>17</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>50</th>
-      <td>7</td>
-      <td>17</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>51</th>
-      <td>6</td>
-      <td>17</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>53</th>
-      <td>1</td>
-      <td>18</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>54</th>
-      <td>6</td>
-      <td>18</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>55</th>
-      <td>0</td>
-      <td>18</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>57</th>
-      <td>1</td>
-      <td>19</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>58</th>
-      <td>3</td>
-      <td>19</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>59</th>
-      <td>3</td>
-      <td>19</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>65</th>
-      <td>7</td>
-      <td>22</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>66</th>
-      <td>7</td>
-      <td>22</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>67</th>
-      <td>0</td>
-      <td>22</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>69</th>
-      <td>6</td>
-      <td>23</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>70</th>
-      <td>7</td>
-      <td>23</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>71</th>
-      <td>8</td>
-      <td>23</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>73</th>
-      <td>1</td>
-      <td>24</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>74</th>
-      <td>3</td>
-      <td>24</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>75</th>
-      <td>3</td>
-      <td>24</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>77</th>
-      <td>5</td>
-      <td>25</td>
-      <td>3</td>
-    </tr>
-    <tr>
-      <th>78</th>
-      <td>7</td>
-      <td>25</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>79</th>
+      <td>Paul</td>
+      <td>Drama</td>
+      <td>Term 3</td>
       <td>2</td>
-      <td>25</td>
-      <td>5</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
-<p>Merge the dataframes into one:</p>
+<p>Another route, without <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">name_subject</span>
-<span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;column&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;row&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">terms</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;column&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;row&#39;</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
+    <span class="n">excel_file</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">sheet_name</span><span class="o">=</span><span class="s2">&quot;pivot-header-within-data&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">set_axis</span><span class="p">([</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;Term 1&quot;</span><span class="p">,</span> <span class="s2">&quot;Term 2&quot;</span><span class="p">,</span> <span class="s2">&quot;Term3&quot;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+        <span class="n">subject</span><span class="o">=</span><span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;Term 1&quot;</span><span class="p">]</span>
+        <span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="o">~</span><span class="n">f</span><span class="p">[</span><span class="s2">&quot;Term 1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Term&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">isna</span><span class="p">())</span>
+        <span class="o">.</span><span class="n">ffill</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="o">.</span><span class="n">melt</span><span class="p">(</span><span class="n">id_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;subject&quot;</span><span class="p">],</span> <span class="n">var_name</span><span class="o">=</span><span class="s2">&quot;term&quot;</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;score&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -2356,8 +2391,8 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <th></th>
       <th>name</th>
       <th>subject</th>
-      <th>scores</th>
       <th>term</th>
+      <th>score</th>
     </tr>
   </thead>
   <tbody>
@@ -2365,337 +2400,337 @@ The index columns are clearly delineated; the pairing of subjects and names is a
       <th>0</th>
       <td>Matilda</td>
       <td>Classics</td>
-      <td>7</td>
       <td>Term 1</td>
+      <td>7</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>Matilda</td>
+      <td>Nicholas</td>
       <td>Classics</td>
-      <td>2</td>
-      <td>Term 2</td>
+      <td>Term 1</td>
+      <td>9</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>Matilda</td>
+      <td>Olivia</td>
       <td>Classics</td>
-      <td>1</td>
-      <td>Term 3</td>
+      <td>Term 1</td>
+      <td>5</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>Nicholas</td>
+      <td>Paul</td>
       <td>Classics</td>
-      <td>9</td>
       <td>Term 1</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>Nicholas</td>
-      <td>Classics</td>
-      <td>7</td>
-      <td>Term 2</td>
+      <td>Matilda</td>
+      <td>History</td>
+      <td>Term 1</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>5</th>
       <td>Nicholas</td>
-      <td>Classics</td>
-      <td>6</td>
-      <td>Term 3</td>
+      <td>History</td>
+      <td>Term 1</td>
+      <td>4</td>
     </tr>
     <tr>
       <th>6</th>
       <td>Olivia</td>
-      <td>Classics</td>
-      <td>5</td>
+      <td>History</td>
       <td>Term 1</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>Olivia</td>
-      <td>Classics</td>
-      <td>9</td>
-      <td>Term 2</td>
+      <td>Paul</td>
+      <td>History</td>
+      <td>Term 1</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>Olivia</td>
-      <td>Classics</td>
-      <td>5</td>
-      <td>Term 3</td>
+      <td>Matilda</td>
+      <td>Music</td>
+      <td>Term 1</td>
+      <td>6</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>Paul</td>
-      <td>Classics</td>
-      <td>1</td>
+      <td>Nicholas</td>
+      <td>Music</td>
       <td>Term 1</td>
+      <td>5</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>Paul</td>
-      <td>Classics</td>
-      <td>4</td>
-      <td>Term 2</td>
+      <td>Olivia</td>
+      <td>Music</td>
+      <td>Term 1</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>11</th>
       <td>Paul</td>
-      <td>Classics</td>
-      <td>9</td>
-      <td>Term 3</td>
+      <td>Music</td>
+      <td>Term 1</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>12</th>
       <td>Matilda</td>
-      <td>History</td>
-      <td>0</td>
+      <td>Drama</td>
       <td>Term 1</td>
+      <td>7</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>Matilda</td>
-      <td>History</td>
-      <td>0</td>
-      <td>Term 2</td>
+      <td>Nicholas</td>
+      <td>Drama</td>
+      <td>Term 1</td>
+      <td>6</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>Matilda</td>
-      <td>History</td>
-      <td>5</td>
-      <td>Term 3</td>
+      <td>Olivia</td>
+      <td>Drama</td>
+      <td>Term 1</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>Nicholas</td>
-      <td>History</td>
-      <td>4</td>
+      <td>Paul</td>
+      <td>Drama</td>
       <td>Term 1</td>
+      <td>5</td>
     </tr>
     <tr>
       <th>16</th>
-      <td>Nicholas</td>
-      <td>History</td>
-      <td>5</td>
+      <td>Matilda</td>
+      <td>Classics</td>
       <td>Term 2</td>
+      <td>2</td>
     </tr>
     <tr>
       <th>17</th>
       <td>Nicholas</td>
-      <td>History</td>
-      <td>9</td>
-      <td>Term 3</td>
+      <td>Classics</td>
+      <td>Term 2</td>
+      <td>7</td>
     </tr>
     <tr>
       <th>18</th>
       <td>Olivia</td>
-      <td>History</td>
-      <td>1</td>
-      <td>Term 1</td>
+      <td>Classics</td>
+      <td>Term 2</td>
+      <td>9</td>
     </tr>
     <tr>
       <th>19</th>
-      <td>Olivia</td>
-      <td>History</td>
-      <td>3</td>
+      <td>Paul</td>
+      <td>Classics</td>
       <td>Term 2</td>
+      <td>4</td>
     </tr>
     <tr>
       <th>20</th>
-      <td>Olivia</td>
+      <td>Matilda</td>
       <td>History</td>
-      <td>3</td>
-      <td>Term 3</td>
+      <td>Term 2</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>21</th>
-      <td>Paul</td>
+      <td>Nicholas</td>
       <td>History</td>
-      <td>3</td>
-      <td>Term 1</td>
+      <td>Term 2</td>
+      <td>5</td>
     </tr>
     <tr>
       <th>22</th>
-      <td>Paul</td>
+      <td>Olivia</td>
       <td>History</td>
-      <td>5</td>
       <td>Term 2</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>23</th>
       <td>Paul</td>
       <td>History</td>
-      <td>6</td>
-      <td>Term 3</td>
+      <td>Term 2</td>
+      <td>5</td>
     </tr>
     <tr>
       <th>24</th>
       <td>Matilda</td>
       <td>Music</td>
-      <td>6</td>
-      <td>Term 1</td>
+      <td>Term 2</td>
+      <td>2</td>
     </tr>
     <tr>
       <th>25</th>
-      <td>Matilda</td>
+      <td>Nicholas</td>
       <td>Music</td>
-      <td>2</td>
       <td>Term 2</td>
+      <td>7</td>
     </tr>
     <tr>
       <th>26</th>
-      <td>Matilda</td>
+      <td>Olivia</td>
       <td>Music</td>
-      <td>4</td>
-      <td>Term 3</td>
+      <td>Term 2</td>
+      <td>6</td>
     </tr>
     <tr>
       <th>27</th>
-      <td>Nicholas</td>
+      <td>Paul</td>
       <td>Music</td>
-      <td>5</td>
-      <td>Term 1</td>
+      <td>Term 2</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>28</th>
-      <td>Nicholas</td>
-      <td>Music</td>
-      <td>7</td>
+      <td>Matilda</td>
+      <td>Drama</td>
       <td>Term 2</td>
+      <td>7</td>
     </tr>
     <tr>
       <th>29</th>
       <td>Nicholas</td>
-      <td>Music</td>
-      <td>6</td>
-      <td>Term 3</td>
+      <td>Drama</td>
+      <td>Term 2</td>
+      <td>7</td>
     </tr>
     <tr>
       <th>30</th>
       <td>Olivia</td>
-      <td>Music</td>
-      <td>1</td>
-      <td>Term 1</td>
+      <td>Drama</td>
+      <td>Term 2</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>31</th>
-      <td>Olivia</td>
-      <td>Music</td>
-      <td>6</td>
+      <td>Paul</td>
+      <td>Drama</td>
       <td>Term 2</td>
+      <td>7</td>
     </tr>
     <tr>
       <th>32</th>
-      <td>Olivia</td>
-      <td>Music</td>
-      <td>0</td>
-      <td>Term 3</td>
+      <td>Matilda</td>
+      <td>Classics</td>
+      <td>Term3</td>
+      <td>1</td>
     </tr>
     <tr>
       <th>33</th>
-      <td>Paul</td>
-      <td>Music</td>
-      <td>1</td>
-      <td>Term 1</td>
+      <td>Nicholas</td>
+      <td>Classics</td>
+      <td>Term3</td>
+      <td>6</td>
     </tr>
     <tr>
       <th>34</th>
-      <td>Paul</td>
-      <td>Music</td>
-      <td>3</td>
-      <td>Term 2</td>
+      <td>Olivia</td>
+      <td>Classics</td>
+      <td>Term3</td>
+      <td>5</td>
     </tr>
     <tr>
       <th>35</th>
       <td>Paul</td>
-      <td>Music</td>
-      <td>3</td>
-      <td>Term 3</td>
+      <td>Classics</td>
+      <td>Term3</td>
+      <td>9</td>
     </tr>
     <tr>
       <th>36</th>
       <td>Matilda</td>
-      <td>Drama</td>
-      <td>7</td>
-      <td>Term 1</td>
+      <td>History</td>
+      <td>Term3</td>
+      <td>5</td>
     </tr>
     <tr>
       <th>37</th>
-      <td>Matilda</td>
-      <td>Drama</td>
-      <td>7</td>
-      <td>Term 2</td>
+      <td>Nicholas</td>
+      <td>History</td>
+      <td>Term3</td>
+      <td>9</td>
     </tr>
     <tr>
       <th>38</th>
-      <td>Matilda</td>
-      <td>Drama</td>
-      <td>0</td>
-      <td>Term 3</td>
+      <td>Olivia</td>
+      <td>History</td>
+      <td>Term3</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>39</th>
-      <td>Nicholas</td>
-      <td>Drama</td>
+      <td>Paul</td>
+      <td>History</td>
+      <td>Term3</td>
       <td>6</td>
-      <td>Term 1</td>
     </tr>
     <tr>
       <th>40</th>
-      <td>Nicholas</td>
-      <td>Drama</td>
-      <td>7</td>
-      <td>Term 2</td>
+      <td>Matilda</td>
+      <td>Music</td>
+      <td>Term3</td>
+      <td>4</td>
     </tr>
     <tr>
       <th>41</th>
       <td>Nicholas</td>
-      <td>Drama</td>
-      <td>8</td>
-      <td>Term 3</td>
+      <td>Music</td>
+      <td>Term3</td>
+      <td>6</td>
     </tr>
     <tr>
       <th>42</th>
       <td>Olivia</td>
-      <td>Drama</td>
-      <td>1</td>
-      <td>Term 1</td>
+      <td>Music</td>
+      <td>Term3</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>43</th>
-      <td>Olivia</td>
-      <td>Drama</td>
+      <td>Paul</td>
+      <td>Music</td>
+      <td>Term3</td>
       <td>3</td>
-      <td>Term 2</td>
     </tr>
     <tr>
       <th>44</th>
-      <td>Olivia</td>
+      <td>Matilda</td>
       <td>Drama</td>
-      <td>3</td>
-      <td>Term 3</td>
+      <td>Term3</td>
+      <td>0</td>
     </tr>
     <tr>
       <th>45</th>
-      <td>Paul</td>
+      <td>Nicholas</td>
       <td>Drama</td>
-      <td>5</td>
-      <td>Term 1</td>
+      <td>Term3</td>
+      <td>8</td>
     </tr>
     <tr>
       <th>46</th>
-      <td>Paul</td>
+      <td>Olivia</td>
       <td>Drama</td>
-      <td>7</td>
-      <td>Term 2</td>
+      <td>Term3</td>
+      <td>3</td>
     </tr>
     <tr>
       <th>47</th>
       <td>Paul</td>
       <td>Drama</td>
+      <td>Term3</td>
       <td>2</td>
-      <td>Term 3</td>
     </tr>
   </tbody>
 </table>

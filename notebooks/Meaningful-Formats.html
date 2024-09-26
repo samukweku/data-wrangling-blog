@@ -436,7 +436,8 @@ document.write(`
 <section id="meaningful-formats">
 <h2><strong>Meaningful Formats</strong><a class="headerlink" href="#meaningful-formats" title="Link to this heading">#</a></h2>
 <p><em>updated : September 24, 2024</em></p>
-<p>This is part of a series of blog posts about extracting data from spreadsheets using Python.  It is based on the <a class="reference external" href="https://nacnudus.github.io/spreadsheet-munging-strategies/index.html">book</a> written by <a class="reference external" href="https://twitter.com/nacnudus?lang=en">Duncan Garmonsway</a>, which was written primarily for R users. LInks to the other posts are on the <a class="reference external" href="https://samukweku.github.io/data-wrangling-blog/">homepage</a>.</p>
+<p>This is part of a series of blog posts about extracting data from spreadsheets using Python.  It is based on the <a class="reference external" href="https://nacnudus.github.io/spreadsheet-munging-strategies/index.html">book</a> written by <a class="reference external" href="https://twitter.com/nacnudus?lang=en">Duncan Garmonsway</a>, which was written primarily for R users. Links to the other posts are on the sidebar.</p>
+<p>The key takeaway is this - you understand your data layout; use the tools to achieve your end goal. <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a> offers a way to get the cells in a spreadsheet into individual rows, with some metadata. The final outcome however relies on your understanding of the data layout and its proper application.</p>
 <p>This is an excerpt from <a class="reference external" href="https://nacnudus.github.io/spreadsheet-munging-strategies/tidy-formatted-rows.html">Duncan’s book</a> regarding meaningful formats :</p>
 <blockquote>
 <div><p>Sometimes whole rows in a table are highlighted by formatting them with, say, a bright yellow fill. The highlighting could mean “this observation should be ignored”, or “this product is no longer available”. Different colours could mean different levels of a hierarchy, e.g. green for “pass” and red for “fail”.</p>
@@ -450,10 +451,9 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pip install pyjanitor</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">janitor</span>
+<span class="kn">import</span> <span class="nn">janitor</span> <span class="k">as</span> <span class="nn">jn</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">janitor</span> <span class="kn">import</span> <span class="n">xlsx_cells</span>
 
 <span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;Data_files/worked-examples.xlsx&quot;</span>
 </pre></div>
@@ -462,43 +462,25 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">janitor</span><span class="o">.</span><span class="n">__version__</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;pandas version: &#39;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;janitor version: &#39;</span><span class="p">,</span> <span class="n">jn</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;python version: &#39;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;numpy version: &#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;0.29.1&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pandas version:  2.2.2
+janitor version:  0.29.1
+python version:  3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:49) [Clang 16.0.6 ]
+numpy version:  2.0.2
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">__version__</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;2.2.2&#39;
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sys</span><span class="o">.</span><span class="n">version</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:49) [Clang 16.0.6 ]&#39;
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;highlights&quot;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">jn</span><span class="o">.</span><span class="n">xlsx_cells</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;highlights&quot;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">frame</span>
 </pre></div>
 </div>
@@ -783,183 +765,18 @@ Length: 3, dtype: object
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;annotations&quot;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span>     <span class="p">{</span><span class="s2">&quot;row&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">}</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">frame</span>
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>value</th>
-      <th>internal_value</th>
-      <th>coordinate</th>
-      <th>row</th>
-      <th>column</th>
-      <th>data_type</th>
-      <th>is_date</th>
-      <th>number_format</th>
-      <th>fill</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>Name</td>
-      <td>Name</td>
-      <td>A1</td>
-      <td>1</td>
-      <td>1</td>
-      <td>s</td>
-      <td>False</td>
-      <td>General</td>
-      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>Age</td>
-      <td>Age</td>
-      <td>B1</td>
-      <td>1</td>
-      <td>2</td>
-      <td>s</td>
-      <td>False</td>
-      <td>General</td>
-      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>Height</td>
-      <td>Height</td>
-      <td>C1</td>
-      <td>1</td>
-      <td>3</td>
-      <td>s</td>
-      <td>False</td>
-      <td>General</td>
-      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>Matilda</td>
-      <td>Matilda</td>
-      <td>A2</td>
-      <td>2</td>
-      <td>1</td>
-      <td>s</td>
-      <td>False</td>
-      <td>General</td>
-      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>1</td>
-      <td>1</td>
-      <td>B2</td>
-      <td>2</td>
-      <td>2</td>
-      <td>n</td>
-      <td>False</td>
-      <td>General</td>
-      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>2</td>
-      <td>2</td>
-      <td>C2</td>
-      <td>2</td>
-      <td>3</td>
-      <td>n</td>
-      <td>False</td>
-      <td>General</td>
-      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>Nicholas</td>
-      <td>Nicholas</td>
-      <td>A3</td>
-      <td>3</td>
-      <td>1</td>
-      <td>s</td>
-      <td>False</td>
-      <td>General</td>
-      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>3</td>
-      <td>3</td>
-      <td>B3</td>
-      <td>3</td>
-      <td>2</td>
-      <td>n</td>
-      <td>False</td>
-      <td>General</td>
-      <td>{'patternType': 'solid', 'fgColor': {'rgb': 'F...</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>4</td>
-      <td>4</td>
-      <td>C3</td>
-      <td>3</td>
-      <td>3</td>
-      <td>n</td>
-      <td>False</td>
-      <td>General</td>
-      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>Olivia</td>
-      <td>Olivia</td>
-      <td>A4</td>
-      <td>4</td>
-      <td>1</td>
-      <td>s</td>
-      <td>False</td>
-      <td>General</td>
-      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>5</td>
-      <td>5</td>
-      <td>B4</td>
-      <td>4</td>
-      <td>2</td>
-      <td>n</td>
-      <td>False</td>
-      <td>General</td>
-      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
-    </tr>
-    <tr>
-      <th>11</th>
-      <td>6</td>
-      <td>6</td>
-      <td>C4</td>
-      <td>4</td>
-      <td>3</td>
-      <td>n</td>
-      <td>False</td>
-      <td>General</td>
-      <td>{'patternType': 'solid', 'fgColor': {'rgb': 'F...</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
+<span class="ne">NameError</span>: name &#39;xlsx_cells&#39; is not defined
+</pre></div>
+</div>
+</div>
 </div>
 <p>Steps:</p>
 <ul class="simple">
