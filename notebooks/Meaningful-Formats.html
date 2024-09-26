@@ -757,7 +757,7 @@ Length: 3, dtype: object
 <p>In the pic above, the table has different colors for different cells.  <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/io/#janitor.io.xlsx_cells">xlsx_cells</a> comes in handy again, and the focus here, just as in Case 1, is the cell’s fill attribute.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;annotations&quot;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">jn</span><span class="o">.</span><span class="n">xlsx_cells</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;annotations&quot;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
     <span class="p">{</span><span class="s2">&quot;row&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">}</span>
 <span class="p">)</span>
 <span class="n">frame</span>
@@ -765,18 +765,183 @@ Length: 3, dtype: object
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;annotations&quot;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span>     <span class="p">{</span><span class="s2">&quot;row&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">}</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">frame</span>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-<span class="ne">NameError</span>: name &#39;xlsx_cells&#39; is not defined
-</pre></div>
-</div>
-</div>
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>value</th>
+      <th>internal_value</th>
+      <th>coordinate</th>
+      <th>row</th>
+      <th>column</th>
+      <th>data_type</th>
+      <th>is_date</th>
+      <th>number_format</th>
+      <th>fill</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Name</td>
+      <td>Name</td>
+      <td>A1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Age</td>
+      <td>Age</td>
+      <td>B1</td>
+      <td>1</td>
+      <td>2</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Height</td>
+      <td>Height</td>
+      <td>C1</td>
+      <td>1</td>
+      <td>3</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Matilda</td>
+      <td>Matilda</td>
+      <td>A2</td>
+      <td>2</td>
+      <td>1</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>1</td>
+      <td>B2</td>
+      <td>2</td>
+      <td>2</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>2</td>
+      <td>2</td>
+      <td>C2</td>
+      <td>2</td>
+      <td>3</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Nicholas</td>
+      <td>Nicholas</td>
+      <td>A3</td>
+      <td>3</td>
+      <td>1</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>3</td>
+      <td>3</td>
+      <td>B3</td>
+      <td>3</td>
+      <td>2</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'patternType': 'solid', 'fgColor': {'rgb': 'F...</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>4</td>
+      <td>4</td>
+      <td>C3</td>
+      <td>3</td>
+      <td>3</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Olivia</td>
+      <td>Olivia</td>
+      <td>A4</td>
+      <td>4</td>
+      <td>1</td>
+      <td>s</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>5</td>
+      <td>5</td>
+      <td>B4</td>
+      <td>4</td>
+      <td>2</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'patternType': None, 'fgColor': {'rgb': '0000...</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>6</td>
+      <td>6</td>
+      <td>C4</td>
+      <td>4</td>
+      <td>3</td>
+      <td>n</td>
+      <td>False</td>
+      <td>General</td>
+      <td>{'patternType': 'solid', 'fgColor': {'rgb': 'F...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
 </div>
 <p>Steps:</p>
 <ul class="simple">
@@ -1098,7 +1263,7 @@ Name: fill, dtype: object
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;combined-highlights&quot;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">jn</span><span class="o">.</span><span class="n">xlsx_cells</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;combined-highlights&quot;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s2">&quot;row&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span> <span class="s2">&quot;column&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">})</span>
 <span class="n">frame</span>
 </pre></div>
@@ -1573,7 +1738,7 @@ Again, the formatting is applied to the entire row.</p></li>
 </ul>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">xlsx_cells</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;highlight-hierarchy&quot;</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame</span> <span class="o">=</span> <span class="n">jn</span><span class="o">.</span><span class="n">xlsx_cells</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sheetnames</span><span class="o">=</span><span class="s2">&quot;highlight-hierarchy&quot;</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s1">&#39;row&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">,</span> <span class="s1">&#39;column&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">})</span>
 <span class="n">frame</span>
 </pre></div>

@@ -721,22 +721,6 @@ document.write(`
 <p>We wish to retain <code class="docutils literal notranslate"><span class="pre">Model</span></code>, <code class="docutils literal notranslate"><span class="pre">Quantity</span></code> and <code class="docutils literal notranslate"><span class="pre">Max-quant</span></code> as headers, and flip the remaining parts of the columns:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">manufacturer</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div><style>
-.dataframe > thead > tr,
-.dataframe > tbody > tr {
-  text-align: right;
-  white-space: pre-wrap;
-}
-</style>
-<small>shape: (3, 9)</small><table border="1" class="dataframe"><thead><tr><th>Sony | TV | Model | value</th><th>Sony | TV | Quantity | value</th><th>Sony | TV | Max-quant | value</th><th>Panasonic | TV | Model | value</th><th>Panasonic | TV | Quantity | value</th><th>Panasonic | TV | Max-quant | value</th><th>Sanyo | Radio | Model | value</th><th>Sanyo | Radio | Quantity | value</th><th>Sanyo | Radio | Max-quant | value</th></tr><tr><td>str</td><td>i64</td><td>i64</td><td>str</td><td>i64</td><td>i64</td><td>str</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;A222&quot;</td><td>5</td><td>10</td><td>&quot;T232&quot;</td><td>1</td><td>10</td><td>&quot;S111&quot;</td><td>4</td><td>9</td></tr><tr><td>&quot;A234&quot;</td><td>5</td><td>9</td><td>&quot;S3424&quot;</td><td>5</td><td>12</td><td>&quot;S1s1&quot;</td><td>2</td><td>9</td></tr><tr><td>&quot;A4345&quot;</td><td>4</td><td>9</td><td>&quot;X3421&quot;</td><td>1</td><td>11</td><td>&quot;S1s2&quot;</td><td>4</td><td>10</td></tr></tbody></table></div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
     <span class="n">manufacturer</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
         <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -755,7 +739,7 @@ document.write(`
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (9, 5)</small><table border="1" class="dataframe"><thead><tr><th>Manufacturer</th><th>Device</th><th>Model</th><th>Quantity</th><th>Max-quant</th></tr><tr><td>str</td><td>str</td><td>str</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;T232&quot;</td><td>1</td><td>10</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;S3424&quot;</td><td>5</td><td>12</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;X3421&quot;</td><td>1</td><td>11</td></tr><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A222&quot;</td><td>5</td><td>10</td></tr><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A234&quot;</td><td>5</td><td>9</td></tr><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A4345&quot;</td><td>4</td><td>9</td></tr><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S111&quot;</td><td>4</td><td>9</td></tr><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S1s1&quot;</td><td>2</td><td>9</td></tr><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S1s2&quot;</td><td>4</td><td>10</td></tr></tbody></table></div></div></div>
+<small>shape: (9, 5)</small><table border="1" class="dataframe"><thead><tr><th>Manufacturer</th><th>Device</th><th>Model</th><th>Quantity</th><th>Max-quant</th></tr><tr><td>str</td><td>str</td><td>str</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S111&quot;</td><td>4</td><td>9</td></tr><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S1s1&quot;</td><td>2</td><td>9</td></tr><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S1s2&quot;</td><td>4</td><td>10</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;T232&quot;</td><td>1</td><td>10</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;S3424&quot;</td><td>5</td><td>12</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;X3421&quot;</td><td>1</td><td>11</td></tr><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A222&quot;</td><td>5</td><td>10</td></tr><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A234&quot;</td><td>5</td><td>9</td></tr><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A4345&quot;</td><td>4</td><td>9</td></tr></tbody></table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -763,7 +747,7 @@ document.write(`
     <span class="n">manufacturer</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
         <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">names_to</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Manufacturer&quot;</span><span class="p">,</span> <span class="s2">&quot;Device&quot;</span><span class="p">,</span> <span class="s2">&quot;.value&quot;</span><span class="p">),</span>
-        <span class="n">names_pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;(.+)\s?\|(.+)\s?\|(.+)\s?\|.*&quot;</span><span class="p">,</span>
+        <span class="n">names_pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;([a-zA-Z]+)\s?\|\s?([a-zA-Z]+)\s?\|\s?([a-zA-Z-]+)\s?\|.*&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
@@ -777,7 +761,7 @@ document.write(`
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (9, 5)</small><table border="1" class="dataframe"><thead><tr><th>Manufacturer</th><th>Device</th><th> Model </th><th> Quantity </th><th> Max-quant </th></tr><tr><td>str</td><td>str</td><td>str</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Panasonic &quot;</td><td>&quot; TV &quot;</td><td>&quot;T232&quot;</td><td>1</td><td>10</td></tr><tr><td>&quot;Panasonic &quot;</td><td>&quot; TV &quot;</td><td>&quot;S3424&quot;</td><td>5</td><td>12</td></tr><tr><td>&quot;Panasonic &quot;</td><td>&quot; TV &quot;</td><td>&quot;X3421&quot;</td><td>1</td><td>11</td></tr><tr><td>&quot;Sanyo &quot;</td><td>&quot; Radio &quot;</td><td>&quot;S111&quot;</td><td>4</td><td>9</td></tr><tr><td>&quot;Sanyo &quot;</td><td>&quot; Radio &quot;</td><td>&quot;S1s1&quot;</td><td>2</td><td>9</td></tr><tr><td>&quot;Sanyo &quot;</td><td>&quot; Radio &quot;</td><td>&quot;S1s2&quot;</td><td>4</td><td>10</td></tr><tr><td>&quot;Sony &quot;</td><td>&quot; TV &quot;</td><td>&quot;A222&quot;</td><td>5</td><td>10</td></tr><tr><td>&quot;Sony &quot;</td><td>&quot; TV &quot;</td><td>&quot;A234&quot;</td><td>5</td><td>9</td></tr><tr><td>&quot;Sony &quot;</td><td>&quot; TV &quot;</td><td>&quot;A4345&quot;</td><td>4</td><td>9</td></tr></tbody></table></div></div></div>
+<small>shape: (9, 5)</small><table border="1" class="dataframe"><thead><tr><th>Manufacturer</th><th>Device</th><th>Model</th><th>Quantity</th><th>Max-quant</th></tr><tr><td>str</td><td>str</td><td>str</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A222&quot;</td><td>5</td><td>10</td></tr><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A234&quot;</td><td>5</td><td>9</td></tr><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A4345&quot;</td><td>4</td><td>9</td></tr><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S111&quot;</td><td>4</td><td>9</td></tr><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S1s1&quot;</td><td>2</td><td>9</td></tr><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S1s2&quot;</td><td>4</td><td>10</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;T232&quot;</td><td>1</td><td>10</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;S3424&quot;</td><td>5</td><td>12</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;X3421&quot;</td><td>1</td><td>11</td></tr></tbody></table></div></div></div>
 </div>
 <p>What if our header is actually composed of different parts of a column name? This is best explained with an example:</p>
 <div class="cell docutils container">
@@ -829,7 +813,7 @@ document.write(`
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (2, 4)</small><table border="1" class="dataframe"><thead><tr><th>unit</th><th>number</th><th>xmean</th><th>ymean</th></tr><tr><td>i64</td><td>i8</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>50</td><td>2</td><td>20</td><td>40</td></tr><tr><td>50</td><td>1</td><td>10</td><td>30</td></tr></tbody></table></div></div></div>
+<small>shape: (2, 4)</small><table border="1" class="dataframe"><thead><tr><th>unit</th><th>number</th><th>xmean</th><th>ymean</th></tr><tr><td>i64</td><td>i8</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>50</td><td>1</td><td>10</td><td>30</td></tr><tr><td>50</td><td>2</td><td>20</td><td>40</td></tr></tbody></table></div></div></div>
 </div>
 </section>
 <section id="describe-the-output-with-pivot-longer-spec">
@@ -909,7 +893,7 @@ document.write(`
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (8, 4)</small><table border="1" class="dataframe"><thead><tr><th>Species</th><th>part</th><th>dimension</th><th>measurement</th></tr><tr><td>str</td><td>str</td><td>str</td><td>f64</td></tr></thead><tbody><tr><td>&quot;setosa&quot;</td><td>&quot;Sepal&quot;</td><td>&quot;Length&quot;</td><td>5.1</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Sepal&quot;</td><td>&quot;Length&quot;</td><td>5.9</td></tr><tr><td>&quot;setosa&quot;</td><td>&quot;Sepal&quot;</td><td>&quot;Width&quot;</td><td>3.5</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Sepal&quot;</td><td>&quot;Width&quot;</td><td>3.0</td></tr><tr><td>&quot;setosa&quot;</td><td>&quot;Petal&quot;</td><td>&quot;Length&quot;</td><td>1.4</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Petal&quot;</td><td>&quot;Length&quot;</td><td>5.1</td></tr><tr><td>&quot;setosa&quot;</td><td>&quot;Petal&quot;</td><td>&quot;Width&quot;</td><td>0.2</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Petal&quot;</td><td>&quot;Width&quot;</td><td>1.8</td></tr></tbody></table></div></div></div>
+<small>shape: (8, 4)</small><table border="1" class="dataframe"><thead><tr><th>Species</th><th>part</th><th>dimension</th><th>measurement</th></tr><tr><td>str</td><td>str</td><td>str</td><td>f64</td></tr></thead><tbody><tr><td>&quot;setosa&quot;</td><td>&quot;Petal&quot;</td><td>&quot;Length&quot;</td><td>1.4</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Petal&quot;</td><td>&quot;Length&quot;</td><td>5.1</td></tr><tr><td>&quot;setosa&quot;</td><td>&quot;Sepal&quot;</td><td>&quot;Width&quot;</td><td>3.5</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Sepal&quot;</td><td>&quot;Width&quot;</td><td>3.0</td></tr><tr><td>&quot;setosa&quot;</td><td>&quot;Petal&quot;</td><td>&quot;Width&quot;</td><td>0.2</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Petal&quot;</td><td>&quot;Width&quot;</td><td>1.8</td></tr><tr><td>&quot;setosa&quot;</td><td>&quot;Sepal&quot;</td><td>&quot;Length&quot;</td><td>5.1</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Sepal&quot;</td><td>&quot;Length&quot;</td><td>5.9</td></tr></tbody></table></div></div></div>
 </div>
 <p>Let’s take it further - the Sepal/Petal prefixes go into a <code class="docutils literal notranslate"><span class="pre">part</span></code> column, while the <code class="docutils literal notranslate"><span class="pre">Width/Length</span></code> suffixes remain as headers:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source_column_name</span>     <span class="n">new_column_name</span>           <span class="n">part</span>                 
@@ -956,7 +940,7 @@ document.write(`
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (4, 4)</small><table border="1" class="dataframe"><thead><tr><th>Species</th><th>part</th><th>Length</th><th>Width</th></tr><tr><td>str</td><td>str</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>&quot;setosa&quot;</td><td>&quot;Sepal&quot;</td><td>5.1</td><td>3.5</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Sepal&quot;</td><td>5.9</td><td>3.0</td></tr><tr><td>&quot;setosa&quot;</td><td>&quot;Petal&quot;</td><td>1.4</td><td>0.2</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Petal&quot;</td><td>5.1</td><td>1.8</td></tr></tbody></table></div></div></div>
+<small>shape: (4, 4)</small><table border="1" class="dataframe"><thead><tr><th>Species</th><th>part</th><th>Length</th><th>Width</th></tr><tr><td>str</td><td>str</td><td>f64</td><td>f64</td></tr></thead><tbody><tr><td>&quot;setosa&quot;</td><td>&quot;Petal&quot;</td><td>1.4</td><td>0.2</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Petal&quot;</td><td>5.1</td><td>1.8</td></tr><tr><td>&quot;setosa&quot;</td><td>&quot;Sepal&quot;</td><td>5.1</td><td>3.5</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Sepal&quot;</td><td>5.9</td><td>3.0</td></tr></tbody></table></div></div></div>
 </div>
 <p>The idea is simple - you know your data well, so describe the new DataFrame based on the current DataFrame, and <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/polars/#janitor.polars.pivot_longer.pivot_longer_spec">pivot_longer_spec</a> will take care of the transformation.</p>
 </section>
@@ -1000,7 +984,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.22 s ± 9.59 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.2 s ± 8.17 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -1039,7 +1023,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>78.2 ms ± 782 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>81.3 ms ± 4.01 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -1051,7 +1035,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>52.9 ms ± 416 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>55.8 ms ± 959 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -1071,7 +1055,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>55.3 ms ± 381 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>56.5 ms ± 747 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
