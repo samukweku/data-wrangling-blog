@@ -433,10 +433,12 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">janitor</span> <span class="k">as</span> <span class="nn">jn</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot; pandas version :&quot;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> 
       <span class="s2">&quot;numpy version :&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> 
+      <span class="s2">&quot;janitor version :&quot;</span><span class="p">,</span> <span class="n">jn</span><span class="o">.</span><span class="n">__version__</span><span class="p">,</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span>
       <span class="s2">&quot;python version :&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -444,6 +446,7 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> pandas version : 2.2.2 
  numpy version : 2.0.2 
+ janitor version : 0.31.0 
  python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:49) [Clang 16.0.6 ]
 </pre></div>
 </div>
@@ -809,6 +812,103 @@ dtype: int64
 </table>
 </div></div></div>
 </div>
+<p>with <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.summarise.summarise">janitor.summarise</a>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">nunique</span><span class="p">(</span><span class="n">dropna</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="p">(</span><span class="n">starwars</span>
+ <span class="o">.</span><span class="n">summarise</span><span class="p">(([</span><span class="s1">&#39;sex&#39;</span><span class="p">,</span><span class="s1">&#39;gender&#39;</span><span class="p">,</span><span class="s1">&#39;homeworld&#39;</span><span class="p">],</span> <span class="n">func</span><span class="p">),</span> 
+            <span class="p">{</span><span class="s1">&#39;n&#39;</span><span class="p">:(</span><span class="s1">&#39;species&#39;</span><span class="p">,</span><span class="s1">&#39;size&#39;</span><span class="p">)},</span>
+            <span class="n">by</span><span class="o">=</span><span class="s1">&#39;species&#39;</span>
+        <span class="p">)</span>
+ <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">n</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">:</span><span class="s1">&#39;homeworld&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sex</th>
+      <th>gender</th>
+      <th>homeworld</th>
+    </tr>
+    <tr>
+      <th>species</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Human</th>
+      <td>2</td>
+      <td>2</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>Droid</th>
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>Wookiee</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Gungan</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Zabrak</th>
+      <td>1</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>Twi'lek</th>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Mirialan</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>Kaminoan</th>
+      <td>2</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dplyr : </span>
@@ -1021,15 +1121,116 @@ dtype: int64
 </table>
 </div></div></div>
 </div>
+<p>with <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.summarise.summarise">janitor.summarise</a>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pandas.api.types</span> <span class="kn">import</span> <span class="n">is_numeric_dtype</span>
+
+<span class="p">(</span><span class="n">starwars</span>
+ <span class="o">.</span><span class="n">summarise</span><span class="p">((</span><span class="n">is_numeric_dtype</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">),</span> 
+            <span class="p">{</span><span class="s1">&#39;n&#39;</span><span class="p">:(</span><span class="s1">&#39;homeworld&#39;</span><span class="p">,</span><span class="s1">&#39;size&#39;</span><span class="p">)},</span>
+            <span class="n">by</span><span class="o">=</span><span class="s1">&#39;homeworld&#39;</span>
+        <span class="p">)</span>
+ <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">n</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="p">:</span><span class="s1">&#39;birth_year&#39;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>height</th>
+      <th>mass</th>
+      <th>birth_year</th>
+    </tr>
+    <tr>
+      <th>homeworld</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Tatooine</th>
+      <td>169.800000</td>
+      <td>85.375000</td>
+      <td>54.644444</td>
+    </tr>
+    <tr>
+      <th>Naboo</th>
+      <td>177.272727</td>
+      <td>64.166667</td>
+      <td>55.000000</td>
+    </tr>
+    <tr>
+      <th>Alderaan</th>
+      <td>176.333333</td>
+      <td>64.000000</td>
+      <td>43.000000</td>
+    </tr>
+    <tr>
+      <th>Kashyyyk</th>
+      <td>231.000000</td>
+      <td>124.000000</td>
+      <td>200.000000</td>
+    </tr>
+    <tr>
+      <th>Corellia</th>
+      <td>175.000000</td>
+      <td>78.500000</td>
+      <td>25.000000</td>
+    </tr>
+    <tr>
+      <th>Kamino</th>
+      <td>208.333333</td>
+      <td>83.100000</td>
+      <td>31.500000</td>
+    </tr>
+    <tr>
+      <th>Coruscant</th>
+      <td>173.666667</td>
+      <td>50.000000</td>
+      <td>91.000000</td>
+    </tr>
+    <tr>
+      <th>Ryloth</th>
+      <td>179.000000</td>
+      <td>55.000000</td>
+      <td>48.000000</td>
+    </tr>
+    <tr>
+      <th>Mirial</th>
+      <td>168.000000</td>
+      <td>53.100000</td>
+      <td>49.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
 <p>An alternate approach, where the groupby is reused, is with <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/">pyjanitor’s</a> <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.utils.get_columns">get_columns</a> function:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">janitor</span> <span class="kn">import</span> <span class="n">get_columns</span>
-<span class="kn">from</span> <span class="nn">pandas.api.types</span> <span class="kn">import</span> <span class="n">is_numeric_dtype</span>
-
-<span class="n">grp</span> <span class="o">=</span> <span class="n">starwars</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;homeworld&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grp</span> <span class="o">=</span> <span class="n">starwars</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;homeworld&#39;</span><span class="p">)</span>
 <span class="p">(</span><span class="n">grp</span>
- <span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="n">get_columns</span><span class="p">,</span> <span class="n">is_numeric_dtype</span><span class="p">)</span>
+ <span class="o">.</span><span class="n">pipe</span><span class="p">(</span><span class="n">jn</span><span class="o">.</span><span class="n">get_columns</span><span class="p">,</span> <span class="n">is_numeric_dtype</span><span class="p">)</span>
  <span class="o">.</span><span class="n">mean</span><span class="p">()</span>
  <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">grp</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span>
  <span class="p">)</span>
@@ -1836,7 +2037,7 @@ Name: count, Length: 67, dtype: int64
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grp</span> <span class="o">=</span> <span class="n">cars</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;cyl&#39;</span><span class="p">)</span>
-<span class="n">summary</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_columns</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="s1">&#39;*p&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="n">get_columns</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="s1">&#39;*t&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()]</span>
+<span class="n">summary</span> <span class="o">=</span> <span class="p">[</span><span class="n">jn</span><span class="o">.</span><span class="n">get_columns</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="s1">&#39;*p&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span> <span class="n">jn</span><span class="o">.</span><span class="n">get_columns</span><span class="p">(</span><span class="n">grp</span><span class="p">,</span> <span class="s1">&#39;*t&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()]</span>
 <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">summary</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1887,6 +2088,71 @@ Name: count, Length: 67, dtype: int64
       <td>856</td>
       <td>3.585714</td>
       <td>3.117143</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>4943.4</td>
+      <td>2929</td>
+      <td>3.229286</td>
+      <td>3.999214</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>with <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.summarise.summarise">janitor.summarise</a>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cars</span><span class="o">.</span><span class="n">summarise</span><span class="p">((</span><span class="s2">&quot;*p&quot;</span><span class="p">,</span><span class="s2">&quot;sum&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;*t&quot;</span><span class="p">,</span><span class="s2">&quot;mean&quot;</span><span class="p">),</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;cyl&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>disp</th>
+      <th>hp</th>
+      <th>drat</th>
+      <th>wt</th>
+    </tr>
+    <tr>
+      <th>cyl</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>6</th>
+      <td>1283.2</td>
+      <td>856</td>
+      <td>3.585714</td>
+      <td>3.117143</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1156.5</td>
+      <td>909</td>
+      <td>4.070909</td>
+      <td>2.285727</td>
     </tr>
     <tr>
       <th>8</th>
