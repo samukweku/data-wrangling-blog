@@ -923,7 +923,11 @@ dtype: int64
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get the grouper</span>
-<span class="n">grp</span> <span class="o">=</span> <span class="n">starwars</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;homeworld&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;homeworld&#39;</span><span class="p">)</span>
+<span class="n">grp</span> <span class="o">=</span> <span class="p">(</span><span class="n">starwars</span>
+       <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;homeworld&#39;</span><span class="p">)</span>
+       <span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">)</span>
+       <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;homeworld&#39;</span><span class="p">)</span>
+       <span class="p">)</span>
 <span class="c1"># get the size:</span>
 <span class="n">n</span> <span class="o">=</span> <span class="n">grp</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
 <span class="c1"># filter averages with the size:</span>
