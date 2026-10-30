@@ -16,41 +16,78 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
 
-  
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script kind="utterances">
+
+    var commentsRunWhenDOMLoaded = cb => {
+    if (document.readyState != 'loading') {
+        cb()
+    } else if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', cb)
+    } else {
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState == 'complete') cb()
+        })
+    }
+}
+
+var addUtterances = () => {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://utteranc.es/client.js";
+    script.async = "async";
+
+    script.setAttribute("repo", "samukweku/data-wrangling-blog");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("theme", "github-light");
+    script.setAttribute("label", "💬 comment");
+    script.setAttribute("crossorigin", "anonymous");
+
+    sections = document.querySelectorAll("div.section");
+    if (sections !== null) {
+        section = sections[sections.length-1];
+        section.appendChild(script);
+    }
+}
+commentsRunWhenDOMLoaded(addUtterances);
+</script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
@@ -58,40 +95,37 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/Fast-and-Efficient-Inequality-Joins-in-Pandas';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Pivot_longer : Reshape Data in Pandas Efficiently and with Ease from Wide to Long" href="Pivot_longer---Reshape-Data-in-Pandas-with-Ease-From-Wide-to-Long.html" />
     <link rel="prev" title="Dplyr’s across: Replicating within Pandas" href="dplyr-across-in-Pandas.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
+  <body data-default-mode="">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -99,7 +133,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -107,15 +140,59 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
     </header>
   
 
@@ -124,7 +201,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -154,15 +232,11 @@
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -225,9 +299,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -357,7 +436,7 @@
 
 
 <button onclick="toggleFullScreen()"
-  class="btn btn-sm btn-fullscreen-button"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
   title="Fullscreen mode"
   data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
@@ -371,25 +450,17 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
-<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
 </div></div>
@@ -411,14 +482,13 @@ document.write(`
                 <h2> Contents </h2>
             </div>
             <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction"><strong>Introduction</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#strictly-non-equi-joins"><strong>Strictly Non-equi Joins</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#equi-and-non-equi-joins"><strong>Equi and Non-equi Joins</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#non-equi-joins-with-or"><strong>Non-equi joins with OR</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance"><strong>Performance</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary"><strong>Summary</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comments">Comments</a></li>
 </ul>
             </nav>
         </div>
@@ -438,10 +508,10 @@ document.write(`
 <p>Let’s look at some examples, culled from <a class="reference external" href="https://github.com/pandas-dev/pandas/issues/34543#issue-629846136">here</a>, that illustrate equi and non-equi joins:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;col_a&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">]})</span>
-<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">&#39;col_b&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">]})</span>
+<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'left'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="s1">'col_a'</span><span class="p">:</span> <span class="p">[</span><span class="s2">"A"</span><span class="p">,</span> <span class="s2">"B"</span><span class="p">,</span> <span class="s2">"C"</span><span class="p">]})</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'right'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s1">'col_b'</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Z"</span><span class="p">,</span> <span class="s2">"X"</span><span class="p">,</span> <span class="s2">"Y"</span><span class="p">]})</span>
 </pre></div>
 </div>
 </div>
@@ -655,8 +725,8 @@ Consider a dataframe `df_process` that contains `process_id`, `process_start_dat
 </blockquote>
 <p>The above scenario is an example of a range join, where the join is <em>between a range of values</em>. Currently in Pandas, to solve non-equi joins, one option is via an IntervalIndex, if the intervals do not overlap. Another option, which is more common, involves a cartesian join, where every row from the left dataframe is joined to every row from the right dataframe, before it is filtered with the non-equi joins:</p>
 <div class="highlight-py notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">df_event</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_process</span><span class="p">,</span> <span class="n">how</span> <span class="o">=</span> <span class="s1">&#39;cross&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;process_start_date &lt;= event_date &lt;= process_end_date&#39;</span><span class="p">)</span>
+<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df_process</span><span class="p">,</span> <span class="n">how</span> <span class="o">=</span> <span class="s1">'cross'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'process_start_date &lt;= event_date &lt;= process_end_date'</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -668,28 +738,29 @@ Consider a dataframe `df_process` that contains `process_id`, `process_start_dat
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pip install pyjanitor</span>
-<span class="kn">import</span> <span class="nn">janitor</span> <span class="k">as</span> <span class="nn">jn</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">janitor</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;pandas version :&quot;</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;janitor version :&quot;</span><span class="p">,</span> <span class="n">jn</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;python version :&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"pandas version :"</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"janitor version :"</span><span class="p">,</span> <span class="n">jn</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"python version :"</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pandas version : 2.2.2
-janitor version : 0.28.1
-python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:49) [Clang 16.0.6 ]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pandas version : 3.1.0
+janitor version : 0.32.65
+python version : 3.11.17 (main, Oct  1 2026, 14:32:31) [GCC 13.3.0]
 </pre></div>
 </div>
 </div>
 </div>
+<p><strong>Reproducibility note:</strong> The timings and memory measurements below are illustrative, not guarantees. They depend on the Pandas, pyjanitor, NumPy, Python, and hardware versions used to run the notebook. The largest examples materialize millions of matching rows and may require several gigabytes of memory.</p>
 <p>Let’s walk through some of the parameters in <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a>:</p>
 <ul class="simple">
 <li><p>df : Left DataFrame.</p></li>
@@ -699,14 +770,13 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 while <code class="docutils literal notranslate"><span class="pre">op</span></code> is the join operator. For multiple conditions, the and(&amp;) operator
 is used to combine the results of the individual conditions.</p></li>
 <li><p>how: indicates the type of join to be performed. Can be one of <code class="docutils literal notranslate"><span class="pre">left</span></code>, <code class="docutils literal notranslate"><span class="pre">right</span></code>, <code class="docutils literal notranslate"><span class="pre">inner</span></code>, or <code class="docutils literal notranslate"><span class="pre">outer</span></code>.</p></li>
-<li><p>use_numba: Whether to use <code class="docutils literal notranslate"><span class="pre">numba</span></code>, for possible performance improvement.</p></li>
-<li><p>df_columns: Select columns from <code class="docutils literal notranslate"><span class="pre">df</span></code>.</p></li>
-<li><p>right_columns: Select columns from <code class="docutils literal notranslate"><span class="pre">right</span></code>.</p></li>
+<li><p>output_columns: Select output columns from the left and right frames with a dictionary such as <code class="docutils literal notranslate"><span class="pre">{'left':</span> <span class="pre">['id'],</span> <span class="pre">'right':</span> <span class="pre">['value']}</span></code>.</p></li>
+<li><p>join_algorithm: Strategy for joins with multiple range predicates; use <code class="docutils literal notranslate"><span class="pre">default</span></code> or <code class="docutils literal notranslate"><span class="pre">regions</span></code>.</p></li>
 </ul>
 <p>Let’s apply the <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> function to solve the non-equi joins earlier:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span><span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;!=&#39;</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span><span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="p">(</span><span class="s1">'left'</span><span class="p">,</span> <span class="s1">'right'</span><span class="p">,</span> <span class="s1">'!='</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -740,27 +810,27 @@ is used to combine the results of the individual conditions.</p></li>
       <th>0</th>
       <td>1</td>
       <td>A</td>
-      <td>2</td>
-      <td>X</td>
+      <td>0</td>
+      <td>Z</td>
     </tr>
     <tr>
       <th>1</th>
       <td>1</td>
       <td>A</td>
-      <td>3</td>
-      <td>Y</td>
+      <td>2</td>
+      <td>X</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>2</td>
-      <td>B</td>
+      <td>1</td>
+      <td>A</td>
       <td>3</td>
       <td>Y</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>1</td>
-      <td>A</td>
+      <td>2</td>
+      <td>B</td>
       <td>0</td>
       <td>Z</td>
     </tr>
@@ -768,8 +838,8 @@ is used to combine the results of the individual conditions.</p></li>
       <th>4</th>
       <td>2</td>
       <td>B</td>
-      <td>0</td>
-      <td>Z</td>
+      <td>3</td>
+      <td>Y</td>
     </tr>
     <tr>
       <th>5</th>
@@ -791,7 +861,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span><span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span><span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="p">(</span><span class="s1">'left'</span><span class="p">,</span> <span class="s1">'right'</span><span class="p">,</span> <span class="s1">'&gt;'</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -1000,10 +1070,10 @@ is used to combine the results of the individual conditions.</p></li>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">east</span>
 <span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
     <span class="n">west</span><span class="p">,</span> 
-    <span class="p">(</span><span class="s1">&#39;dur&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;&#39;</span><span class="p">),</span> 
-    <span class="p">(</span><span class="s1">&#39;rev&#39;</span><span class="p">,</span> <span class="s1">&#39;cost&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">),</span> 
-    <span class="n">df_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;dur&#39;</span><span class="p">,</span> <span class="s1">&#39;rev&#39;</span><span class="p">],</span>
-    <span class="n">right_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;t_id&#39;</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="s1">&#39;cost&#39;</span><span class="p">]</span>
+    <span class="p">(</span><span class="s1">'dur'</span><span class="p">,</span> <span class="s1">'time'</span><span class="p">,</span> <span class="s1">'&lt;'</span><span class="p">),</span> 
+    <span class="p">(</span><span class="s1">'rev'</span><span class="p">,</span> <span class="s1">'cost'</span><span class="p">,</span> <span class="s1">'&gt;'</span><span class="p">),</span> 
+    <span class="n">output_columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'left'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'dur'</span><span class="p">,</span> <span class="s1">'rev'</span><span class="p">],</span>
+                      <span class="s1">'right'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'t_id'</span><span class="p">,</span> <span class="s1">'time'</span><span class="p">,</span> <span class="s1">'cost'</span><span class="p">]}</span>
     <span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
@@ -1050,8 +1120,8 @@ is used to combine the results of the individual conditions.</p></li>
 </table>
 </div></div></div>
 </div>
-<p>For range joins, and when <code class="docutils literal notranslate"><span class="pre">use_numba</span> <span class="pre">=</span> <span class="pre">False</span></code>, <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> uses an algorithm based on this <a class="reference external" href="https://www.vertica.com/blog/what-is-a-range-join-and-why-is-it-so-fastba-p223413/">vertica blog post</a>.</p>
-<p>You might get more performance with <code class="docutils literal notranslate"><span class="pre">use_numba</span> <span class="pre">=</span> <span class="pre">True</span></code>. The implementation is based on the algorithm in this <a class="reference external" href="https://www.scitepress.org/papers/2018/68268/68268.pdf">publication</a></p>
+<p>For range joins, <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> uses an algorithm based on this <a class="reference external" href="https://www.vertica.com/blog/what-is-a-range-join-and-why-is-it-so-fastba-p223413/">Vertica blog post</a>.</p>
+<p>For multiple range predicates, <code class="docutils literal notranslate"><span class="pre">join_algorithm='regions'</span></code> is available when the region-based strategy is appropriate.</p>
 <p>Note that non-equi join is supported only for numeric and date types.</p>
 </section>
 <section id="equi-and-non-equi-joins">
@@ -1059,12 +1129,12 @@ is used to combine the results of the individual conditions.</p></li>
 <p><a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> also supports a combination of equi and non-equi join conditions - under the hood it uses Pandas’ internal merge function to get the matching pairs, before pruning the non-equi joins to get the final dataframe. Depending on the size of the dataframes, this might offer more performance than the classic merge and filter approach:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> 
-                    <span class="s1">&#39;value_1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]})</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> 
+                    <span class="s1">'value_1'</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]})</span>
                     
-<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> 
-                    <span class="s1">&#39;value_2A&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> 
-                    <span class="s1">&#39;value_2B&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">3</span><span class="p">]})</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">'id'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> 
+                    <span class="s1">'value_2A'</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> 
+                    <span class="s1">'value_2B'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">3</span><span class="p">]})</span>
 </pre></div>
 </div>
 </div>
@@ -1220,8 +1290,8 @@ is used to combine the results of the individual conditions.</p></li>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">df1</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;id&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;value_2A &lt;= value_1 &lt;= value_2B&#39;</span><span class="p">)</span>
+<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">df2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">'id'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'value_2A &lt;= value_1 &lt;= value_2B'</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -1297,9 +1367,9 @@ is used to combine the results of the individual conditions.</p></li>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">df1</span>
 <span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
     <span class="n">df2</span><span class="p">,</span>
-    <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;==&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s1">&#39;value_1&#39;</span><span class="p">,</span> <span class="s1">&#39;value_2A&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s1">&#39;value_1&#39;</span><span class="p">,</span> <span class="s1">&#39;value_2B&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">)</span>
+    <span class="p">(</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'id'</span><span class="p">,</span> <span class="s1">'=='</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'value_1'</span><span class="p">,</span> <span class="s1">'value_2A'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'value_1'</span><span class="p">,</span> <span class="s1">'value_2B'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">)</span>
 <span class="p">))</span>
 </pre></div>
 </div>
@@ -1380,7 +1450,7 @@ is used to combine the results of the individual conditions.</p></li>
 </table>
 </div></div></div>
 </div>
-<p>Note the above returned a MultiIndex column; if the columns from the left and right dataframes have something in common a MultiIndex column is returned. Of course, you can select/rename columns with <code class="docutils literal notranslate"><span class="pre">df_columns</span></code> and <code class="docutils literal notranslate"><span class="pre">right_columns</span></code> to get a single index column, if that is preferred.</p>
+<p>Note the above returned a MultiIndex column; if the columns from the left and right dataframes have something in common a MultiIndex column is returned. You can use <code class="docutils literal notranslate"><span class="pre">output_columns</span></code> to select columns from each side and return a single-level column index.</p>
 </section>
 <section id="non-equi-joins-with-or">
 <h2><strong>Non-equi joins with OR</strong><a class="headerlink" href="#non-equi-joins-with-or" title="Link to this heading">#</a></h2>
@@ -1388,22 +1458,30 @@ is used to combine the results of the individual conditions.</p></li>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sales_volume_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">([</span>
-    <span class="p">{</span><span class="s1">&#39;date&#39;</span><span class="p">:</span><span class="s1">&#39;2021-11-15&#39;</span><span class="p">,</span> <span class="s1">&#39;quantity&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;brand&#39;</span><span class="p">:</span><span class="s1">&#39;Outdoor&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;date&#39;</span><span class="p">:</span><span class="s1">&#39;2021-11-20&#39;</span><span class="p">,</span> <span class="s1">&#39;quantity&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;brand&#39;</span><span class="p">:</span><span class="s1">&#39;Leisure&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;date&#39;</span><span class="p">:</span><span class="s1">&#39;2021-11-25&#39;</span><span class="p">,</span> <span class="s1">&#39;quantity&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;brand&#39;</span><span class="p">:</span><span class="s1">&#39;Athletic&#39;</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;date&#39;</span><span class="p">:</span><span class="s1">&#39;2021-11-26&#39;</span><span class="p">,</span> <span class="s1">&#39;quantity&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;brand&#39;</span><span class="p">:</span><span class="s1">&#39;Outdoor&#39;</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">'date'</span><span class="p">:</span><span class="s1">'2021-11-15'</span><span class="p">,</span> <span class="s1">'quantity'</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'brand'</span><span class="p">:</span><span class="s1">'Outdoor'</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">'date'</span><span class="p">:</span><span class="s1">'2021-11-20'</span><span class="p">,</span> <span class="s1">'quantity'</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'brand'</span><span class="p">:</span><span class="s1">'Leisure'</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">'date'</span><span class="p">:</span><span class="s1">'2021-11-25'</span><span class="p">,</span> <span class="s1">'quantity'</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s1">'brand'</span><span class="p">:</span><span class="s1">'Athletic'</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">'date'</span><span class="p">:</span><span class="s1">'2021-11-26'</span><span class="p">,</span> <span class="s1">'quantity'</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'brand'</span><span class="p">:</span><span class="s1">'Outdoor'</span><span class="p">},</span>
 <span class="p">])</span>
 
 <span class="n">promos_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">([</span>
-    <span class="p">{</span><span class="s1">&#39;start_date&#39;</span><span class="p">:</span><span class="s1">&#39;2021-11-01&#39;</span><span class="p">,</span> <span class="s1">&#39;end_date&#39;</span><span class="p">:</span><span class="s1">&#39;2021-11-25&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;brand&#39;</span><span class="p">:</span><span class="s1">&#39;ANY&#39;</span><span class="p">,</span> <span class="s1">&#39;rebate_per_unit&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">},</span>
-    <span class="p">{</span><span class="s1">&#39;start_date&#39;</span><span class="p">:</span><span class="s1">&#39;2021-11-25&#39;</span><span class="p">,</span> <span class="s1">&#39;end_date&#39;</span><span class="p">:</span><span class="s1">&#39;2021-11-26&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;brand&#39;</span><span class="p">:</span><span class="s1">&#39;Outdoor&#39;</span><span class="p">,</span> <span class="s1">&#39;rebate_per_unit&#39;</span><span class="p">:</span><span class="mi">5</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">'start_date'</span><span class="p">:</span><span class="s1">'2021-11-01'</span><span class="p">,</span> <span class="s1">'end_date'</span><span class="p">:</span><span class="s1">'2021-11-25'</span><span class="p">,</span>
+    <span class="s1">'brand'</span><span class="p">:</span><span class="s1">'ANY'</span><span class="p">,</span> <span class="s1">'rebate_per_unit'</span><span class="p">:</span><span class="mi">3</span><span class="p">},</span>
+    <span class="p">{</span><span class="s1">'start_date'</span><span class="p">:</span><span class="s1">'2021-11-25'</span><span class="p">,</span> <span class="s1">'end_date'</span><span class="p">:</span><span class="s1">'2021-11-26'</span><span class="p">,</span>
+    <span class="s1">'brand'</span><span class="p">:</span><span class="s1">'Outdoor'</span><span class="p">,</span> <span class="s1">'rebate_per_unit'</span><span class="p">:</span><span class="mi">5</span><span class="p">},</span>
 <span class="p">])</span>
 
-<span class="n">sales_volume_table</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">sales_volume_table</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span>
-<span class="n">promos_table</span><span class="p">[</span><span class="s1">&#39;start_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">promos_table</span><span class="p">[</span><span class="s1">&#39;start_date&#39;</span><span class="p">])</span>
-<span class="n">promos_table</span><span class="p">[</span><span class="s1">&#39;end_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">promos_table</span><span class="p">[</span><span class="s1">&#39;end_date&#39;</span><span class="p">])</span>
+<span class="n">sales_volume_table</span><span class="p">[</span><span class="s1">'date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">sales_volume_table</span><span class="p">[</span><span class="s1">'date'</span><span class="p">])</span>
+<span class="n">promos_table</span><span class="p">[</span><span class="s1">'start_date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">promos_table</span><span class="p">[</span><span class="s1">'start_date'</span><span class="p">])</span>
+<span class="n">promos_table</span><span class="p">[</span><span class="s1">'end_date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">promos_table</span><span class="p">[</span><span class="s1">'end_date'</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2617/654970451.py:1: Pandas4Warning: Passing a list to DataFrame.from_dict is deprecated. Use the DataFrame constructor instead.
+  sales_volume_table = pd.DataFrame.from_dict([
+/tmp/ipykernel_2617/654970451.py:8: Pandas4Warning: Passing a list to DataFrame.from_dict is deprecated. Use the DataFrame constructor instead.
+  promos_table = pd.DataFrame.from_dict([
 </pre></div>
 </div>
 </div>
@@ -1525,7 +1603,7 @@ is used to combine the results of the individual conditions.</p></li>
 <p>Translating this into SQL is <a class="reference external" href="https://www.nelsontang.com/blog/2021-11-25-pandas-conditional-merging">easy</a>:</p>
 <div class="highlight-SQL notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span>
 <span class="k">FROM</span><span class="w"> </span><span class="n">sales_volume_table</span><span class="p">,</span><span class="w"> </span><span class="n">promos_table</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="p">(</span><span class="n">sales_volume_table</span><span class="p">.</span><span class="n">brand</span><span class="o">=</span><span class="n">promos_table</span><span class="p">.</span><span class="n">brand</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">promos_table</span><span class="p">.</span><span class="n">brand</span><span class="o">=</span><span class="s1">&#39;ANY&#39;</span><span class="p">)</span>
+<span class="k">WHERE</span><span class="w"> </span><span class="p">(</span><span class="n">sales_volume_table</span><span class="p">.</span><span class="n">brand</span><span class="o">=</span><span class="n">promos_table</span><span class="p">.</span><span class="n">brand</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">promos_table</span><span class="p">.</span><span class="n">brand</span><span class="o">=</span><span class="s1">'ANY'</span><span class="p">)</span>
 <span class="k">AND</span><span class="w"> </span><span class="p">(</span><span class="n">start_date</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="nb">date</span><span class="w"> </span><span class="k">AND</span><span class="w"> </span><span class="nb">date</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">end_date</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1535,17 +1613,17 @@ is used to combine the results of the individual conditions.</p></li>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">top</span> <span class="o">=</span> <span class="p">(</span><span class="n">sales_volume_table</span>
        <span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
             <span class="n">promos_table</span><span class="p">,</span>
-            <span class="p">(</span><span class="s1">&#39;brand&#39;</span><span class="p">,</span> <span class="s1">&#39;brand&#39;</span><span class="p">,</span> <span class="s1">&#39;==&#39;</span><span class="p">),</span>
-            <span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;start_date&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">),</span>
-            <span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;end_date&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">)</span>
+            <span class="p">(</span><span class="s1">'brand'</span><span class="p">,</span> <span class="s1">'brand'</span><span class="p">,</span> <span class="s1">'=='</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">'date'</span><span class="p">,</span> <span class="s1">'start_date'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span>
+            <span class="p">(</span><span class="s1">'date'</span><span class="p">,</span> <span class="s1">'end_date'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">)</span>
           <span class="p">)</span>
     <span class="p">)</span>
 
 <span class="n">bottom</span> <span class="o">=</span> <span class="p">(</span><span class="n">sales_volume_table</span>
           <span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
-               <span class="n">promos_table</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;brand == &quot;ANY&quot;&#39;</span><span class="p">),</span>
-               <span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;start_date&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">),</span>
-               <span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;end_date&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">)</span>
+               <span class="n">promos_table</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'brand == "ANY"'</span><span class="p">),</span>
+               <span class="p">(</span><span class="s1">'date'</span><span class="p">,</span> <span class="s1">'start_date'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span>
+               <span class="p">(</span><span class="s1">'date'</span><span class="p">,</span> <span class="s1">'end_date'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">)</span>
                <span class="p">)</span>
      <span class="p">)</span>
 
@@ -1638,8 +1716,8 @@ is used to combine the results of the individual conditions.</p></li>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> memory_profiler
-<span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">ascii_lowercase</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">string</span><span class="w"> </span><span class="kn">import</span> <span class="n">ascii_lowercase</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">2_000</span><span class="p">;</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">10_000</span>
 
@@ -1655,14 +1733,6 @@ is used to combine the results of the individual conditions.</p></li>
 
 <span class="n">d1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span>
 <span class="n">d2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/memory_profiler.py:1136: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
-  ipython_version = LooseVersion(IPython.__version__)
-/Users/samuel.oranyeli/mambaforge/envs/blogger/lib/python3.10/site-packages/setuptools/_distutils/version.py:337: DeprecationWarning: distutils Version classes are deprecated. Use packaging.version instead.
-  other = LooseVersion(other)
 </pre></div>
 </div>
 </div>
@@ -1806,9 +1876,9 @@ is used to combine the results of the individual conditions.</p></li>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="n">d1</span>
-    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">how</span> <span class="o">=</span> <span class="s1">&#39;cross&#39;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;start &lt;= pos1 &lt;= end&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">filter</span><span class="p">([</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">how</span> <span class="o">=</span> <span class="s1">'cross'</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">"start &lt;= pos1 &lt;= end"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">filter</span><span class="p">([</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">])</span>
     <span class="p">)</span>
 <span class="n">A</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
@@ -1890,11 +1960,9 @@ is used to combine the results of the individual conditions.</p></li>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">B</span> <span class="o">=</span> <span class="p">(</span><span class="n">d1</span>
     <span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
         <span class="n">d2</span><span class="p">,</span> 
-        <span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">),</span> 
-        <span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">),</span> 
-        <span class="n">df_columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">],</span>
-        <span class="n">right_columns</span><span class="o">=</span><span class="s1">&#39;pos1&#39;</span><span class="p">,</span>
-        <span class="n">use_numba</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span> 
+        <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span> 
+        <span class="n">output_columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'left'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">],</span> <span class="s1">'right'</span><span class="p">:</span> <span class="s1">'pos1'</span><span class="p">})</span>
     <span class="p">)</span>
 <span class="n">B</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
@@ -1976,11 +2044,10 @@ is used to combine the results of the individual conditions.</p></li>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">C</span> <span class="o">=</span> <span class="p">(</span><span class="n">d1</span>
     <span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
         <span class="n">d2</span><span class="p">,</span> 
-        <span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">),</span> 
-        <span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">),</span> 
-        <span class="n">df_columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">],</span>
-        <span class="n">right_columns</span><span class="o">=</span><span class="s1">&#39;pos1&#39;</span><span class="p">,</span>
-        <span class="n">use_numba</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span> 
+        <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span> 
+        <span class="n">output_columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'left'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">],</span> <span class="s1">'right'</span><span class="p">:</span> <span class="s1">'pos1'</span><span class="p">},</span>
+        <span class="n">join_algorithm</span><span class="o">=</span><span class="s1">'regions'</span><span class="p">)</span>
     <span class="p">)</span>
 <span class="n">C</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
@@ -1995,7 +2062,7 @@ is used to combine the results of the individual conditions.</p></li>
 <p>Check that the outputs match:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">]</span>
 <span class="n">A</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">B</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">C</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -2012,36 +2079,36 @@ is used to combine the results of the individual conditions.</p></li>
 <p>Let’s compare the speed:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> d1.merge(d2, how = &#39;cross&#39;).query(&quot;start &lt;= pos1 &lt;= end&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> d1.merge(d2, how = 'cross').query("start &lt;= pos1 &lt;= end")
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.11 s ± 31.6 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>501 ms ± 5.36 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> d1.conditional_join(d2, (&#39;start&#39;, &#39;pos1&#39;, &#39;&lt;=&#39;), (&#39;end&#39;, &#39;pos1&#39;, &#39;&gt;=&#39;), use_numba=False)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> d1.conditional_join(d2, ('start', 'pos1', '&lt;='), ('end', 'pos1', '&gt;='), join_algorithm='default')
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>38.9 ms ± 401 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>57.3 ms ± 203 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> d1.conditional_join(d2, (&#39;start&#39;, &#39;pos1&#39;, &#39;&lt;=&#39;), (&#39;end&#39;, &#39;pos1&#39;, &#39;&gt;=&#39;), use_numba=True)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> d1.conditional_join(d2, ('start', 'pos1', '&lt;='), ('end', 'pos1', '&gt;='), join_algorithm='regions')
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>40.4 ms ± 1.03 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>60.1 ms ± 373 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -2049,36 +2116,36 @@ is used to combine the results of the individual conditions.</p></li>
 <p>Compare memory usage:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.merge(d2, how = &#39;cross&#39;).query(&quot;start &lt;= pos1 &lt;= end&quot;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.merge(d2, how = 'cross').query("start &lt;= pos1 &lt;= end")
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 3844.30 MiB, increment: 0.14 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 1732.26 MiB, increment: 1220.78 MiB
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.conditional_join(d2, (&#39;start&#39;, &#39;pos1&#39;, &#39;&lt;=&#39;), (&#39;end&#39;, &#39;pos1&#39;, &#39;&gt;=&#39;), use_numba=False)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.conditional_join(d2, ('start', 'pos1', '&lt;='), ('end', 'pos1', '&gt;='), join_algorithm='default')
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 3844.30 MiB, increment: 0.00 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 511.61 MiB, increment: 0.00 MiB
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.conditional_join(d2, (&#39;start&#39;, &#39;pos1&#39;, &#39;&lt;=&#39;), (&#39;end&#39;, &#39;pos1&#39;, &#39;&gt;=&#39;), use_numba=True)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.conditional_join(d2, ('start', 'pos1', '&lt;='), ('end', 'pos1', '&gt;='), join_algorithm='regions')
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 3844.30 MiB, increment: 0.00 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 511.61 MiB, increment: 0.00 MiB
 </pre></div>
 </div>
 </div>
@@ -2086,8 +2153,8 @@ is used to combine the results of the individual conditions.</p></li>
 <p>Let’s run another performance test - the code below is a self join to find overlapping events in a 30,000 row DataFrame, and adapted from <a class="reference external" href="https://github.com/duckdb/duckdb/blob/master/benchmark/micro/join/iejoin_events.benchmark">DuckDB</a>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/samukweku/data-wrangling-blog/master/notebooks/Data_files/results.csv&#39;</span>
-<span class="n">events</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">url</span> <span class="o">=</span> <span class="s1">'https://raw.githubusercontent.com/samukweku/data-wrangling-blog/master/notebooks/Data_files/results.csv'</span>
+<span class="n">events</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">])</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span>
 <span class="n">events</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -2174,12 +2241,11 @@ is used to combine the results of the individual conditions.</p></li>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">events</span>
 <span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
     <span class="n">events</span><span class="p">,</span>
-    <span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;!=&#39;</span><span class="p">),</span>
-    <span class="n">use_numba</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">df_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">],</span>
-    <span class="n">right_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">])</span>
+    <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'id'</span><span class="p">,</span> <span class="s1">'!='</span><span class="p">),</span>
+    <span class="n">output_columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'left'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">],</span>
+                      <span class="s1">'right'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">]})</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -2258,9 +2324,9 @@ is used to combine the results of the individual conditions.</p></li>
       <td>35</td>
       <td>2024-05-02 15:00:00</td>
       <td>2024-05-02 15:35:00</td>
-      <td>6916</td>
+      <td>27696</td>
       <td>2024-05-02 15:00:00</td>
-      <td>2024-05-02 15:36:00</td>
+      <td>2024-05-02 15:07:00</td>
     </tr>
     <tr>
       <th>...</th>
@@ -2324,44 +2390,44 @@ is used to combine the results of the individual conditions.</p></li>
 <p>The cartesian join takes a very long time - too long for us to test here. The focus for this test will just be on <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%timeit</span>
 <span class="p">(</span><span class="n">events</span>
 <span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
     <span class="n">events</span><span class="p">,</span>
-    <span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;!=&#39;</span><span class="p">),</span>
-    <span class="n">use_numba</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="n">df_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">],</span>
-    <span class="n">right_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">])</span>
+    <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'id'</span><span class="p">,</span> <span class="s1">'!='</span><span class="p">),</span>
+    <span class="n">output_columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'left'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">],</span>
+                      <span class="s1">'right'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">]},</span>
+    <span class="n">join_algorithm</span> <span class="o">=</span> <span class="s1">'default'</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>19.6 ms ± 2.99 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11.7 ms ± 16.5 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%timeit</span>
 <span class="p">(</span><span class="n">events</span>
 <span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
     <span class="n">events</span><span class="p">,</span>
-    <span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;!=&#39;</span><span class="p">),</span>
-    <span class="n">use_numba</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">df_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">],</span>
-    <span class="n">right_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;end&#39;</span><span class="p">])</span>
+    <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span>
+    <span class="p">(</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'id'</span><span class="p">,</span> <span class="s1">'!='</span><span class="p">),</span>
+    <span class="n">output_columns</span> <span class="o">=</span> <span class="p">{</span><span class="s1">'left'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">],</span>
+                      <span class="s1">'right'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'start'</span><span class="p">,</span> <span class="s1">'end'</span><span class="p">]},</span>
+    <span class="n">join_algorithm</span> <span class="o">=</span> <span class="s1">'regions'</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>22.2 ms ± 2 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>14 ms ± 106 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 </pre></div>
 </div>
 </div>
@@ -2369,7 +2435,7 @@ is used to combine the results of the individual conditions.</p></li>
 <p>Let’s look at performance when an equi join is present:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">string</span> <span class="kn">import</span> <span class="n">ascii_lowercase</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">string</span><span class="w"> </span><span class="kn">import</span> <span class="n">ascii_lowercase</span>
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">n</span> <span class="o">=</span> <span class="mi">20_000</span><span class="p">;</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">50_000</span>
 
@@ -2392,8 +2458,8 @@ is used to combine the results of the individual conditions.</p></li>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">d1</span>
-       <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span>
-       <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;start &lt;= pos1 &lt;= end&#39;</span><span class="p">)</span>
+       <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">'x'</span><span class="p">)</span>
+       <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'start &lt;= pos1 &lt;= end'</span><span class="p">)</span>
        <span class="p">)</span>
 <span class="n">out</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
@@ -2410,10 +2476,9 @@ is used to combine the results of the individual conditions.</p></li>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">d1</span>
        <span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
             <span class="n">d2</span><span class="p">,</span> 
-            <span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">),</span> 
-            <span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">),</span> 
-            <span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;==&#39;</span><span class="p">),</span> 
-            <span class="n">use_numba</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span> 
+            <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span> 
+            <span class="p">(</span><span class="s1">'x'</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'=='</span><span class="p">))</span>
     <span class="p">)</span>
 <span class="n">out</span><span class="o">.</span><span class="n">shape</span>
 </pre></div>
@@ -2425,91 +2490,103 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 </div>
-<p>About 18 million rows are returned; let’s see how fast each function runs:</p>
+<p>About 8.9 million rows are returned; let’s see how fast each function runs:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%timeit</span>
 <span class="p">(</span><span class="n">d1</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;start &lt;= pos1 &lt;= end&#39;</span><span class="p">)</span>
+<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">'x'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'start &lt;= pos1 &lt;= end'</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.65 s ± 51.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.33 s ± 12.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%timeit</span>
 <span class="p">(</span><span class="n">d1</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">'x'</span><span class="p">)</span>
 <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">le</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">pos1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">df</span><span class="o">.</span><span class="n">pos1</span><span class="o">.</span><span class="n">le</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">end</span><span class="p">)]</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.56 s ± 50.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.05 s ± 5.56 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%timeit</span>
 <span class="p">(</span><span class="n">d1</span>
 <span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
     <span class="n">d2</span><span class="p">,</span> 
-    <span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">),</span> 
-    <span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">),</span> 
-    <span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;==&#39;</span><span class="p">),</span> 
-    <span class="n">use_numba</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span> 
+    <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span> 
+    <span class="p">(</span><span class="s1">'x'</span><span class="p">,</span> <span class="s1">'x'</span><span class="p">,</span> <span class="s1">'=='</span><span class="p">))</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.74 s ± 39.5 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>283 ms ± 1.13 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.merge(d2, on = &#39;x&#39;).query(&#39;start &lt;= pos1 &lt;= end&#39;)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The forced comparison is benchmarked below after encoding the equi key numerically.</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.merge(d2, on = 'x').query('start &lt;= pos1 &lt;= end')
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 7749.67 MiB, increment: 1846.95 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 4481.73 MiB, increment: 3628.14 MiB
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.conditional_join(d2, (&#39;start&#39;, &#39;pos1&#39;, &#39;&lt;=&#39;), (&#39;end&#39;, &#39;pos1&#39;, &#39;&gt;=&#39;), (&#39;x&#39;, &#39;x&#39;, &#39;==&#39;), use_numba=False)
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">memit</span> d1.conditional_join(d2, ('start', 'pos1', '&lt;='), ('end', 'pos1', '&gt;='), ('x', 'x', '=='))
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 5711.58 MiB, increment: 0.00 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 1206.28 MiB, increment: 352.69 MiB
 </pre></div>
 </div>
 </div>
 </div>
-<p><a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a> is slightly faster; this might not be the case all the time.</p>
-<p>Depending on the distribution of data, using <code class="docutils literal notranslate"><span class="pre">numba</span></code> where an equi-join is present can give significant performance speedups:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">count</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The forced comparison is benchmarked below after encoding the equi key numerically.</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">conditional_join</span></code> normally handles a mixed equality/range join through its equi-join path. With <code class="docutils literal notranslate"><span class="pre">force=True</span></code>, it uses the non-equi preparation path so that the range predicates drive candidate generation. Compare the normal path with the forced path; <code class="docutils literal notranslate"><span class="pre">default</span></code> and <code class="docutils literal notranslate"><span class="pre">regions</span></code> are meaningful algorithm choices for multi-range predicates, not for equality itself.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">itertools</span><span class="w"> </span><span class="kn">import</span> <span class="n">count</span>
 <span class="n">mapper</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">ascii_lowercase</span><span class="p">,</span> <span class="n">count</span><span class="p">()))</span>
-<span class="n">d1</span><span class="p">[</span><span class="s1">&#39;xx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d1</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">mapper</span><span class="p">)</span>
-<span class="n">d2</span><span class="p">[</span><span class="s1">&#39;xx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d2</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">mapper</span><span class="p">)</span>
+<span class="n">d1</span><span class="p">[</span><span class="s1">'xx'</span><span class="p">]</span> <span class="o">=</span> <span class="n">d1</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">mapper</span><span class="p">)</span>
+<span class="n">d2</span><span class="p">[</span><span class="s1">'xx'</span><span class="p">]</span> <span class="o">=</span> <span class="n">d2</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">mapper</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2652,96 +2729,84 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%timeit</span>
 <span class="p">(</span><span class="n">d1</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;xx&#39;</span><span class="p">)</span>
-<span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;start &lt;= pos1 &lt;= end&#39;</span><span class="p">)</span>
+<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">'xx'</span><span class="p">)</span>
+<span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'start &lt;= pos1 &lt;= end'</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4.44 s ± 222 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.9 s ± 11.2 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%timeit</span>
 <span class="p">(</span><span class="n">d1</span>
-<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;xx&#39;</span><span class="p">)</span>
+<span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">'xx'</span><span class="p">)</span>
 <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="k">lambda</span> <span class="n">df</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">start</span><span class="o">.</span><span class="n">le</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">pos1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">df</span><span class="o">.</span><span class="n">pos1</span><span class="o">.</span><span class="n">le</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">end</span><span class="p">)]</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4.23 s ± 156 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.64 s ± 18.6 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%timeit</span>
 <span class="p">(</span><span class="n">d1</span>
 <span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
     <span class="n">d2</span><span class="p">,</span> 
-    <span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">),</span> 
-    <span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">),</span> 
-    <span class="p">(</span><span class="s1">&#39;xx&#39;</span><span class="p">,</span> <span class="s1">&#39;xx&#39;</span><span class="p">,</span> <span class="s1">&#39;==&#39;</span><span class="p">),</span> 
-    <span class="n">use_numba</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span> 
+    <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span> 
+    <span class="p">(</span><span class="s1">'xx'</span><span class="p">,</span> <span class="s1">'xx'</span><span class="p">,</span> <span class="s1">'=='</span><span class="p">),</span> 
+    <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">join_algorithm</span><span class="o">=</span><span class="s1">'default'</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.76 s ± 3.24 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>865 ms ± 7.72 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%timeit</span>
 <span class="p">(</span><span class="n">d1</span>
 <span class="o">.</span><span class="n">conditional_join</span><span class="p">(</span>
     <span class="n">d2</span><span class="p">,</span> 
-    <span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">),</span> 
-    <span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="s1">&#39;pos1&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">),</span> 
-    <span class="p">(</span><span class="s1">&#39;xx&#39;</span><span class="p">,</span> <span class="s1">&#39;xx&#39;</span><span class="p">,</span> <span class="s1">&#39;==&#39;</span><span class="p">),</span> 
-    <span class="n">use_numba</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">(</span><span class="s1">'start'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&lt;='</span><span class="p">),</span> 
+    <span class="p">(</span><span class="s1">'end'</span><span class="p">,</span> <span class="s1">'pos1'</span><span class="p">,</span> <span class="s1">'&gt;='</span><span class="p">),</span> 
+    <span class="p">(</span><span class="s1">'xx'</span><span class="p">,</span> <span class="s1">'xx'</span><span class="p">,</span> <span class="s1">'=='</span><span class="p">),</span> 
+    <span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">join_algorithm</span><span class="o">=</span><span class="s1">'regions'</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>159 ms ± 638 μs per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.58 s ± 3.86 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
 </div>
-<p>The above numba implementation depends on a number of conditions:</p>
-<ul class="simple">
-<li><p>Only a single equi join is supported</p></li>
-<li><p>The columns in the equi join should be either numeric or datetime data types</p></li>
-<li><p>The columns in the equi join are duplicated with large ranges, but small unique values</p></li>
-</ul>
+<p>With <code class="docutils literal notranslate"><span class="pre">force=True</span></code>, the range predicates drive candidate generation before the equality predicate is applied. Benchmark the normal and forced paths on representative data before choosing between them.</p>
 </section>
 <section id="summary">
 <h2><strong>Summary</strong><a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
 <p>This blog post shows how to efficiently join on non-equi conditions, using <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.conditional_join.conditional_join">conditional_join</a>. If you are comfortable with SQL, you could get more performance with <a class="reference external" href="https://duckdb.org">DuckDB</a>, which allows querying Pandas DataFrames efficiently with SQL, supports non-equi joins as well, and has a <a class="reference external" href="https://duckdb.org/2022/05/27/iejoin.html">performant implementation</a> for range joins.</p>
 </section>
-<section id="comments">
-<h2>Comments<a class="headerlink" href="#comments" title="Link to this heading">#</a></h2>
-<script src="https://utteranc.es/client.js"
-        repo="samukweku/data-wrangling-blog"
-        issue-term="title"
-        theme="github-light"
-        crossorigin="anonymous"
-        async>
-</script></section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -2799,22 +2864,23 @@ is used to combine the results of the individual conditions.</p></li>
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> Contents
   </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction"><strong>Introduction</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#strictly-non-equi-joins"><strong>Strictly Non-equi Joins</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#equi-and-non-equi-joins"><strong>Equi and Non-equi Joins</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#non-equi-joins-with-or"><strong>Non-equi joins with OR</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#performance"><strong>Performance</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary"><strong>Summary</strong></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#comments">Comments</a></li>
 </ul>
   </nav></div>
 
@@ -2863,8 +2929,8 @@ By Samuel Oranyeli
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
 
   <footer class="bd-footer">
   </footer>

@@ -16,41 +16,78 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
 
-  
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script kind="utterances">
+
+    var commentsRunWhenDOMLoaded = cb => {
+    if (document.readyState != 'loading') {
+        cb()
+    } else if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', cb)
+    } else {
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState == 'complete') cb()
+        })
+    }
+}
+
+var addUtterances = () => {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://utteranc.es/client.js";
+    script.async = "async";
+
+    script.setAttribute("repo", "samukweku/data-wrangling-blog");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("theme", "github-light");
+    script.setAttribute("label", "💬 comment");
+    script.setAttribute("crossorigin", "anonymous");
+
+    sections = document.querySelectorAll("div.section");
+    if (sections !== null) {
+        section = sections[sections.length-1];
+        section.appendChild(script);
+    }
+}
+commentsRunWhenDOMLoaded(addUtterances);
+</script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
@@ -58,39 +95,36 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/Reshape-Data-in-Polars-Wide-to_Long-Part-III';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="prev" title="Reshape Data in Polars Efficiently from Wide to Long Form - Part II" href="Reshape-Data-in-Polars-Wide-to_Long-Part-II.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
+  <body data-default-mode="">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -98,7 +132,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -106,15 +139,59 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
     </header>
   
 
@@ -123,7 +200,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -153,15 +231,11 @@
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -224,9 +298,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -356,7 +435,7 @@
 
 
 <button onclick="toggleFullScreen()"
-  class="btn btn-sm btn-fullscreen-button"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
   title="Fullscreen mode"
   data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
@@ -370,25 +449,17 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
-<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
 </div></div>
@@ -410,7 +481,7 @@ document.write(`
                 <h2> Contents </h2>
             </div>
             <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction"><strong>Introduction</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#string-data-in-column-names"><strong>String data in column names</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#numeric-data-in-column-names"><strong>Numeric data in column names</strong></a></li>
@@ -442,11 +513,84 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pip install pyjanitor</span>
-<span class="kn">import</span> <span class="nn">janitor</span> <span class="k">as</span> <span class="nn">jn</span>
-<span class="kn">import</span> <span class="nn">janitor.polars</span>
-<span class="kn">import</span> <span class="nn">polars</span> <span class="k">as</span> <span class="nn">pl</span>
-<span class="kn">import</span> <span class="nn">polars.selectors</span> <span class="k">as</span> <span class="nn">cs</span>
-<span class="kn">from</span> <span class="nn">janitor.polars</span> <span class="kn">import</span> <span class="n">pivot_longer_spec</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">janitor</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jn</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">janitor.polars</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">polars</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">polars.selectors</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">janitor.polars</span><span class="w"> </span><span class="kn">import</span> <span class="n">pivot_longer_spec</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>To use the janitor submodule polars, you need to install polars.
+
+To do so, use the following command:
+
+    pip install polars
+To use the janitor submodule polars, you need to install polars.
+
+To do so, use the following command:
+
+    pip install polars
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">3</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># pip install pyjanitor</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span><span class="w"> </span><span class="nn">janitor</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jn</span>
+<span class="ne">----&gt; </span><span class="mi">3</span> <span class="kn">import</span><span class="w"> </span><span class="nn">janitor.polars</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">import</span><span class="w"> </span><span class="nn">polars</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">import</span><span class="w"> </span><span class="nn">polars.selectors</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cs</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="kn">from</span><span class="w"> </span><span class="nn">janitor.polars</span><span class="w"> </span><span class="kn">import</span> <span class="n">pivot_longer_spec</span>
+
+<span class="n">File</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">hostedtoolcache</span><span class="o">/</span><span class="n">Python</span><span class="o">/</span><span class="mf">3.11.17</span><span class="o">/</span><span class="n">x64</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.11</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">janitor</span><span class="o">/</span><span class="n">polars</span><span class="o">/</span><span class="fm">__init__</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">from</span><span class="w"> </span><span class="nn">.clean_names</span><span class="w"> </span><span class="kn">import</span> <span class="n">clean_names</span><span class="p">,</span> <span class="n">make_clean_names</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">from</span><span class="w"> </span><span class="nn">.complete</span><span class="w"> </span><span class="kn">import</span> <span class="n">complete</span><span class="p">,</span> <span class="n">expand</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="kn">from</span><span class="w"> </span><span class="nn">.dates_to_polars</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_excel_date</span><span class="p">,</span> <span class="n">convert_matlab_date</span>
+
+<span class="n">File</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">hostedtoolcache</span><span class="o">/</span><span class="n">Python</span><span class="o">/</span><span class="mf">3.11.17</span><span class="o">/</span><span class="n">x64</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.11</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">janitor</span><span class="o">/</span><span class="n">polars</span><span class="o">/</span><span class="n">clean_names</span><span class="o">.</span><span class="n">py</span><span class="p">:</span><span class="mi">36</span>
+<span class="g g-Whitespace">     </span><span class="mi">26</span> <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">27</span>     <span class="n">import_message</span><span class="p">(</span>
+<span class="g g-Whitespace">     </span><span class="mi">28</span>         <span class="n">submodule</span><span class="o">=</span><span class="s2">"polars"</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">29</span>         <span class="n">package</span><span class="o">=</span><span class="s2">"polars"</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">30</span>         <span class="n">conda_channel</span><span class="o">=</span><span class="s2">"conda-forge"</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">31</span>         <span class="n">pip_install</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">32</span>     <span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">35</span> <span class="nd">@register_lazyframe_method</span>
+<span class="ne">---&gt; </span><span class="mi">36</span> <span class="nd">@register_dataframe_method</span>
+<span class="g g-Whitespace">     </span><span class="mi">37</span> <span class="k">def</span><span class="w"> </span><span class="nf">clean_names</span><span class="p">(</span>
+<span class="g g-Whitespace">     </span><span class="mi">38</span>     <span class="n">df</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="n">pl</span><span class="o">.</span><span class="n">LazyFrame</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">39</span>     <span class="n">strip_underscores</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">40</span>     <span class="n">case_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"lower"</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">41</span>     <span class="n">remove_special</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">42</span>     <span class="n">strip_accents</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">43</span>     <span class="n">truncate_limit</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">44</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="n">pl</span><span class="o">.</span><span class="n">LazyFrame</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">45</span><span class="w">     </span><span class="sd">"""</span>
+<span class="g g-Whitespace">     </span><span class="mi">46</span><span class="sd">     Clean the column names in a polars DataFrame.</span>
+<span class="g g-Whitespace">     </span><span class="mi">47</span><span class="sd"> </span>
+<span class="sd">   (...)     99         A polars DataFrame/LazyFrame.</span>
+<span class="g g-Whitespace">    </span><span class="mi">100</span><span class="sd">     """</span>  <span class="c1"># noqa: E501</span>
+<span class="g g-Whitespace">    </span><span class="mi">101</span>     <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">102</span>         <span class="k">lambda</span> <span class="n">col</span><span class="p">:</span> <span class="n">_clean_column_names</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">103</span>             <span class="n">obj</span><span class="o">=</span><span class="n">col</span><span class="p">,</span>
+   <span class="p">(</span><span class="o">...</span><span class="p">)</span>    <span class="mi">109</span>         <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">110</span>     <span class="p">)</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/janitor/polars/polars_flavor.py:51,</span> in <span class="ni">register_dataframe_method</span><span class="nt">(method)</span>
+<span class="g g-Whitespace">     </span><span class="mi">48</span>     <span class="n">pl</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">register_dataframe_namespace</span><span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)(</span><span class="n">AccessorMethod</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">49</span>     <span class="k">return</span> <span class="n">method</span>
+<span class="ne">---&gt; </span><span class="mi">51</span> <span class="k">return</span> <span class="n">inner</span><span class="p">()</span>
+
+<span class="nn">File /opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/janitor/polars/polars_flavor.py:48,</span> in <span class="ni">register_dataframe_method.&lt;locals&gt;.inner</span><span class="nt">(*args, **kwargs)</span>
+<span class="g g-Whitespace">     </span><span class="mi">44</span>     <span class="nd">@wraps</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">45</span>     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="g g-Whitespace">     </span><span class="mi">46</span>         <span class="k">return</span> <span class="n">method</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_obj</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">48</span> <span class="n">pl</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">register_dataframe_namespace</span><span class="p">(</span><span class="n">method</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)(</span><span class="n">AccessorMethod</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">49</span> <span class="k">return</span> <span class="n">method</span>
+
+<span class="ne">NameError</span>: name 'pl' is not defined
 </pre></div>
 </div>
 </div>
@@ -458,7 +602,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;1.7.1&#39;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'1.7.1'
 </pre></div>
 </div>
 </div>
@@ -470,7 +614,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;0.29.1&#39;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>'0.29.1'
 </pre></div>
 </div>
 </div>
@@ -480,7 +624,7 @@ document.write(`
 <span id="id2"></span><h2><strong>String data in column names</strong><a class="headerlink" href="#string-data-in-column-names" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">relig_income</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./Data_files/relig_income.csv&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">relig_income</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"./Data_files/relig_income.csv"</span><span class="p">)</span>
 <span class="n">relig_income</span>
 </pre></div>
 </div>
@@ -499,13 +643,13 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">relig_income</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-    <span class="n">index</span><span class="o">=</span><span class="s2">&quot;religion&quot;</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="s2">"religion"</span><span class="p">,</span>
     <span class="c1"># all columns will be collated</span>
     <span class="c1"># under names_to</span>
-    <span class="n">names_to</span><span class="o">=</span><span class="s2">&quot;income&quot;</span><span class="p">,</span>
+    <span class="n">names_to</span><span class="o">=</span><span class="s2">"income"</span><span class="p">,</span>
     <span class="c1"># all values in the columns</span>
     <span class="c1"># will be collated into values_to</span>
-    <span class="n">values_to</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+    <span class="n">values_to</span><span class="o">=</span><span class="s2">"count"</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -525,8 +669,8 @@ document.write(`
 <span id="numeric-data"></span><h2><strong>Numeric data in column names</strong><a class="headerlink" href="#numeric-data-in-column-names" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">billboard</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./Data_files/billboard.csv&quot;</span><span class="p">,</span> <span class="n">null_values</span><span class="o">=</span><span class="s2">&quot;NA&quot;</span><span class="p">)</span>
-<span class="n">billboard</span> <span class="o">=</span> <span class="n">billboard</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">starts_with</span><span class="p">(</span><span class="s2">&quot;wk&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">Int32</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">billboard</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"./Data_files/billboard.csv"</span><span class="p">,</span> <span class="n">null_values</span><span class="o">=</span><span class="s2">"NA"</span><span class="p">)</span>
+<span class="n">billboard</span> <span class="o">=</span> <span class="n">billboard</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">cs</span><span class="o">.</span><span class="n">starts_with</span><span class="p">(</span><span class="s2">"wk"</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">Int32</span><span class="p">))</span>
 <span class="n">billboard</span>
 </pre></div>
 </div>
@@ -546,12 +690,12 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
     <span class="n">billboard</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;artist&quot;</span><span class="p">,</span> <span class="s2">&quot;track&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;date.entered&quot;</span><span class="p">],</span>
-        <span class="n">names_to</span><span class="o">=</span><span class="s2">&quot;week&quot;</span><span class="p">,</span>
-        <span class="n">values_to</span><span class="o">=</span><span class="s2">&quot;rank&quot;</span><span class="p">,</span>
-        <span class="n">names_pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;.+(\d)&quot;</span><span class="p">,</span>
-        <span class="n">names_transform</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;week&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">Int32</span><span class="p">),</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s2">&quot;rank&quot;</span><span class="p">)</span>
+        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">"year"</span><span class="p">,</span> <span class="s2">"artist"</span><span class="p">,</span> <span class="s2">"track"</span><span class="p">,</span> <span class="s2">"time"</span><span class="p">,</span> <span class="s2">"date.entered"</span><span class="p">],</span>
+        <span class="n">names_to</span><span class="o">=</span><span class="s2">"week"</span><span class="p">,</span>
+        <span class="n">values_to</span><span class="o">=</span><span class="s2">"rank"</span><span class="p">,</span>
+        <span class="n">names_pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">".+(\d)"</span><span class="p">,</span>
+        <span class="n">names_transform</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"week"</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">Int32</span><span class="p">),</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s2">"rank"</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -576,14 +720,14 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
     <span class="n">billboard</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;year&quot;</span><span class="p">,</span> <span class="s2">&quot;artist&quot;</span><span class="p">,</span> <span class="s2">&quot;track&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;date.entered&quot;</span><span class="p">],</span>
-        <span class="n">names_to</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;week&quot;</span><span class="p">],</span>
-        <span class="n">values_to</span><span class="o">=</span><span class="s2">&quot;rank&quot;</span><span class="p">,</span>
-        <span class="n">names_sep</span><span class="o">=</span><span class="s2">&quot;wk&quot;</span><span class="p">,</span>
-        <span class="n">names_transform</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;week&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">Int32</span><span class="p">),</span>
+        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">"year"</span><span class="p">,</span> <span class="s2">"artist"</span><span class="p">,</span> <span class="s2">"track"</span><span class="p">,</span> <span class="s2">"time"</span><span class="p">,</span> <span class="s2">"date.entered"</span><span class="p">],</span>
+        <span class="n">names_to</span><span class="o">=</span><span class="p">[</span><span class="s2">""</span><span class="p">,</span> <span class="s2">"week"</span><span class="p">],</span>
+        <span class="n">values_to</span><span class="o">=</span><span class="s2">"rank"</span><span class="p">,</span>
+        <span class="n">names_sep</span><span class="o">=</span><span class="s2">"wk"</span><span class="p">,</span>
+        <span class="n">names_transform</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"week"</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">Int32</span><span class="p">),</span>
     <span class="p">)</span>
-    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s2">&quot;rank&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s2">"rank"</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -603,7 +747,7 @@ document.write(`
 <h2><strong>Many variables in column names</strong><a class="headerlink" href="#many-variables-in-column-names" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">who</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./Data_files/who.csv&quot;</span><span class="p">,</span> <span class="n">null_values</span><span class="o">=</span><span class="s2">&quot;NA&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">who</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"./Data_files/who.csv"</span><span class="p">,</span> <span class="n">null_values</span><span class="o">=</span><span class="s2">"NA"</span><span class="p">)</span>
 <span class="n">who</span>
 </pre></div>
 </div>
@@ -622,10 +766,10 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">who</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-    <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">,</span> <span class="s2">&quot;iso2&quot;</span><span class="p">,</span> <span class="s2">&quot;iso3&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">],</span>
-    <span class="n">names_to</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;diagnosis&quot;</span><span class="p">,</span> <span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="s2">&quot;age&quot;</span><span class="p">),</span>
-    <span class="n">names_pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;new_?(.*)_(.)(.*)&quot;</span><span class="p">,</span>
-    <span class="n">values_to</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">"country"</span><span class="p">,</span> <span class="s2">"iso2"</span><span class="p">,</span> <span class="s2">"iso3"</span><span class="p">,</span> <span class="s2">"year"</span><span class="p">],</span>
+    <span class="n">names_to</span><span class="o">=</span><span class="p">(</span><span class="s2">"diagnosis"</span><span class="p">,</span> <span class="s2">"gender"</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">),</span>
+    <span class="n">names_pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">"new_?(.*)_(.)(.*)"</span><span class="p">,</span>
+    <span class="n">values_to</span><span class="o">=</span><span class="s2">"count"</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -645,7 +789,7 @@ document.write(`
 <span id="id3"></span><h2><strong>Multiple observations per row</strong><a class="headerlink" href="#multiple-observations-per-row" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">household</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./Data_files/household.csv&quot;</span><span class="p">,</span> <span class="n">null_values</span><span class="o">=</span><span class="s2">&quot;NA&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">household</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"./Data_files/household.csv"</span><span class="p">,</span> <span class="n">null_values</span><span class="o">=</span><span class="s2">"NA"</span><span class="p">)</span>
 <span class="n">household</span>
 </pre></div>
 </div>
@@ -663,7 +807,7 @@ document.write(`
 <p>In the DataFrame above, we wish to separate the <code class="docutils literal notranslate"><span class="pre">name</span></code> and <code class="docutils literal notranslate"><span class="pre">dob</span></code> into separate columns. How does <a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/polars/#janitor.polars.pivot_longer">pivot_longer</a> handle this?</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">household</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="n">names_to</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;.value&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">),</span> <span class="n">names_sep</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">household</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">"family"</span><span class="p">,</span> <span class="n">names_to</span><span class="o">=</span><span class="p">(</span><span class="s2">".value"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">),</span> <span class="n">names_sep</span><span class="o">=</span><span class="s2">"_"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -692,15 +836,15 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">manufacturer</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
     <span class="p">{</span>
-        <span class="s2">&quot;Sony | TV | Model | value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;A222&quot;</span><span class="p">,</span> <span class="s2">&quot;A234&quot;</span><span class="p">,</span> <span class="s2">&quot;A4345&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;Sony | TV | Quantity | value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
-        <span class="s2">&quot;Sony | TV | Max-quant | value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
-        <span class="s2">&quot;Panasonic | TV | Model | value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;T232&quot;</span><span class="p">,</span> <span class="s2">&quot;S3424&quot;</span><span class="p">,</span> <span class="s2">&quot;X3421&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;Panasonic | TV | Quantity | value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="s2">&quot;Panasonic | TV | Max-quant | value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">],</span>
-        <span class="s2">&quot;Sanyo | Radio | Model | value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;S111&quot;</span><span class="p">,</span> <span class="s2">&quot;S1s1&quot;</span><span class="p">,</span> <span class="s2">&quot;S1s2&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;Sanyo | Radio | Quantity | value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
-        <span class="s2">&quot;Sanyo | Radio | Max-quant | value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+        <span class="s2">"Sony | TV | Model | value"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"A222"</span><span class="p">,</span> <span class="s2">"A234"</span><span class="p">,</span> <span class="s2">"A4345"</span><span class="p">],</span>
+        <span class="s2">"Sony | TV | Quantity | value"</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+        <span class="s2">"Sony | TV | Max-quant | value"</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
+        <span class="s2">"Panasonic | TV | Model | value"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"T232"</span><span class="p">,</span> <span class="s2">"S3424"</span><span class="p">,</span> <span class="s2">"X3421"</span><span class="p">],</span>
+        <span class="s2">"Panasonic | TV | Quantity | value"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="s2">"Panasonic | TV | Max-quant | value"</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">],</span>
+        <span class="s2">"Sanyo | Radio | Model | value"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"S111"</span><span class="p">,</span> <span class="s2">"S1s1"</span><span class="p">,</span> <span class="s2">"S1s2"</span><span class="p">],</span>
+        <span class="s2">"Sanyo | Radio | Quantity | value"</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+        <span class="s2">"Sanyo | Radio | Max-quant | value"</span><span class="p">:</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
     <span class="p">}</span>
 <span class="p">)</span>
 
@@ -724,9 +868,9 @@ document.write(`
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
     <span class="n">manufacturer</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
         <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">names_to</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Manufacturer&quot;</span><span class="p">,</span> <span class="s2">&quot;Device&quot;</span><span class="p">,</span> <span class="s2">&quot;.value&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">),</span>
-        <span class="n">names_sep</span><span class="o">=</span><span class="s2">&quot; | &quot;</span><span class="p">,</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+        <span class="n">names_to</span><span class="o">=</span><span class="p">(</span><span class="s2">"Manufacturer"</span><span class="p">,</span> <span class="s2">"Device"</span><span class="p">,</span> <span class="s2">".value"</span><span class="p">,</span> <span class="s2">"value"</span><span class="p">),</span>
+        <span class="n">names_sep</span><span class="o">=</span><span class="s2">" | "</span><span class="p">,</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -739,15 +883,15 @@ document.write(`
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (9, 5)</small><table border="1" class="dataframe"><thead><tr><th>Manufacturer</th><th>Device</th><th>Model</th><th>Quantity</th><th>Max-quant</th></tr><tr><td>str</td><td>str</td><td>str</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S111&quot;</td><td>4</td><td>9</td></tr><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S1s1&quot;</td><td>2</td><td>9</td></tr><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S1s2&quot;</td><td>4</td><td>10</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;T232&quot;</td><td>1</td><td>10</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;S3424&quot;</td><td>5</td><td>12</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;X3421&quot;</td><td>1</td><td>11</td></tr><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A222&quot;</td><td>5</td><td>10</td></tr><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A234&quot;</td><td>5</td><td>9</td></tr><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A4345&quot;</td><td>4</td><td>9</td></tr></tbody></table></div></div></div>
+<small>shape: (9, 5)</small><table border="1" class="dataframe"><thead><tr><th>Manufacturer</th><th>Device</th><th>Model</th><th>Quantity</th><th>Max-quant</th></tr><tr><td>str</td><td>str</td><td>str</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A222&quot;</td><td>5</td><td>10</td></tr><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A234&quot;</td><td>5</td><td>9</td></tr><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A4345&quot;</td><td>4</td><td>9</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;T232&quot;</td><td>1</td><td>10</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;S3424&quot;</td><td>5</td><td>12</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;X3421&quot;</td><td>1</td><td>11</td></tr><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S111&quot;</td><td>4</td><td>9</td></tr><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S1s1&quot;</td><td>2</td><td>9</td></tr><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S1s2&quot;</td><td>4</td><td>10</td></tr></tbody></table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
     <span class="n">manufacturer</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
         <span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">names_to</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Manufacturer&quot;</span><span class="p">,</span> <span class="s2">&quot;Device&quot;</span><span class="p">,</span> <span class="s2">&quot;.value&quot;</span><span class="p">),</span>
-        <span class="n">names_pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;([a-zA-Z]+)\s?\|\s?([a-zA-Z]+)\s?\|\s?([a-zA-Z-]+)\s?\|.*&quot;</span><span class="p">,</span>
+        <span class="n">names_to</span><span class="o">=</span><span class="p">(</span><span class="s2">"Manufacturer"</span><span class="p">,</span> <span class="s2">"Device"</span><span class="p">,</span> <span class="s2">".value"</span><span class="p">),</span>
+        <span class="n">names_pattern</span><span class="o">=</span><span class="sa">r</span><span class="s2">"([a-zA-Z]+)\s?\|\s?([a-zA-Z]+)\s?\|\s?([a-zA-Z-]+)\s?\|.*"</span><span class="p">,</span>
     <span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
@@ -761,18 +905,18 @@ document.write(`
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (9, 5)</small><table border="1" class="dataframe"><thead><tr><th>Manufacturer</th><th>Device</th><th>Model</th><th>Quantity</th><th>Max-quant</th></tr><tr><td>str</td><td>str</td><td>str</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A222&quot;</td><td>5</td><td>10</td></tr><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A234&quot;</td><td>5</td><td>9</td></tr><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A4345&quot;</td><td>4</td><td>9</td></tr><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S111&quot;</td><td>4</td><td>9</td></tr><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S1s1&quot;</td><td>2</td><td>9</td></tr><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S1s2&quot;</td><td>4</td><td>10</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;T232&quot;</td><td>1</td><td>10</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;S3424&quot;</td><td>5</td><td>12</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;X3421&quot;</td><td>1</td><td>11</td></tr></tbody></table></div></div></div>
+<small>shape: (9, 5)</small><table border="1" class="dataframe"><thead><tr><th>Manufacturer</th><th>Device</th><th>Model</th><th>Quantity</th><th>Max-quant</th></tr><tr><td>str</td><td>str</td><td>str</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S111&quot;</td><td>4</td><td>9</td></tr><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S1s1&quot;</td><td>2</td><td>9</td></tr><tr><td>&quot;Sanyo&quot;</td><td>&quot;Radio&quot;</td><td>&quot;S1s2&quot;</td><td>4</td><td>10</td></tr><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A222&quot;</td><td>5</td><td>10</td></tr><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A234&quot;</td><td>5</td><td>9</td></tr><tr><td>&quot;Sony&quot;</td><td>&quot;TV&quot;</td><td>&quot;A4345&quot;</td><td>4</td><td>9</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;T232&quot;</td><td>1</td><td>10</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;S3424&quot;</td><td>5</td><td>12</td></tr><tr><td>&quot;Panasonic&quot;</td><td>&quot;TV&quot;</td><td>&quot;X3421&quot;</td><td>1</td><td>11</td></tr></tbody></table></div></div></div>
 </div>
 <p>What if our header is actually composed of different parts of a column name? This is best explained with an example:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_mean</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
     <span class="p">{</span>
-        <span class="s2">&quot;x_1_mean&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span>
-        <span class="s2">&quot;x_2_mean&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">],</span>
-        <span class="s2">&quot;y_1_mean&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">30</span><span class="p">],</span>
-        <span class="s2">&quot;y_2_mean&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">40</span><span class="p">],</span>
-        <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">],</span>
+        <span class="s2">"x_1_mean"</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">],</span>
+        <span class="s2">"x_2_mean"</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">],</span>
+        <span class="s2">"y_1_mean"</span><span class="p">:</span> <span class="p">[</span><span class="mi">30</span><span class="p">],</span>
+        <span class="s2">"y_2_mean"</span><span class="p">:</span> <span class="p">[</span><span class="mi">40</span><span class="p">],</span>
+        <span class="s2">"unit"</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">],</span>
     <span class="p">}</span>
 <span class="p">)</span>
 
@@ -796,10 +940,10 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span>
     <span class="n">df_mean</span><span class="o">.</span><span class="n">pivot_longer</span><span class="p">(</span>
-        <span class="n">index</span><span class="o">=</span><span class="s2">&quot;unit&quot;</span><span class="p">,</span>
-        <span class="n">names_to</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;.value&quot;</span><span class="p">,</span> <span class="s2">&quot;number&quot;</span><span class="p">,</span> <span class="s2">&quot;.value&quot;</span><span class="p">),</span>
-        <span class="n">names_sep</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span>
-        <span class="n">names_transform</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;number&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">Int8</span><span class="p">),</span>
+        <span class="n">index</span><span class="o">=</span><span class="s2">"unit"</span><span class="p">,</span>
+        <span class="n">names_to</span><span class="o">=</span><span class="p">(</span><span class="s2">".value"</span><span class="p">,</span> <span class="s2">"number"</span><span class="p">,</span> <span class="s2">".value"</span><span class="p">),</span>
+        <span class="n">names_sep</span><span class="o">=</span><span class="s2">"_"</span><span class="p">,</span>
+        <span class="n">names_transform</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"number"</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">Int8</span><span class="p">),</span>
     <span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
@@ -813,7 +957,7 @@ document.write(`
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (2, 4)</small><table border="1" class="dataframe"><thead><tr><th>unit</th><th>number</th><th>xmean</th><th>ymean</th></tr><tr><td>i64</td><td>i8</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>50</td><td>1</td><td>10</td><td>30</td></tr><tr><td>50</td><td>2</td><td>20</td><td>40</td></tr></tbody></table></div></div></div>
+<small>shape: (2, 4)</small><table border="1" class="dataframe"><thead><tr><th>unit</th><th>number</th><th>xmean</th><th>ymean</th></tr><tr><td>i64</td><td>i8</td><td>i64</td><td>i64</td></tr></thead><tbody><tr><td>50</td><td>2</td><td>20</td><td>40</td></tr><tr><td>50</td><td>1</td><td>10</td><td>30</td></tr></tbody></table></div></div></div>
 </div>
 </section>
 <section id="describe-the-output-with-pivot-longer-spec">
@@ -824,11 +968,11 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">iris</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
     <span class="p">{</span>
-        <span class="s2">&quot;Sepal.Length&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">5.1</span><span class="p">,</span> <span class="mf">5.9</span><span class="p">],</span>
-        <span class="s2">&quot;Sepal.Width&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">3.5</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span>
-        <span class="s2">&quot;Petal.Length&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.4</span><span class="p">,</span> <span class="mf">5.1</span><span class="p">],</span>
-        <span class="s2">&quot;Petal.Width&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">],</span>
-        <span class="s2">&quot;Species&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;setosa&quot;</span><span class="p">,</span> <span class="s2">&quot;virginica&quot;</span><span class="p">],</span>
+        <span class="s2">"Sepal.Length"</span><span class="p">:</span> <span class="p">[</span><span class="mf">5.1</span><span class="p">,</span> <span class="mf">5.9</span><span class="p">],</span>
+        <span class="s2">"Sepal.Width"</span><span class="p">:</span> <span class="p">[</span><span class="mf">3.5</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span>
+        <span class="s2">"Petal.Length"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.4</span><span class="p">,</span> <span class="mf">5.1</span><span class="p">],</span>
+        <span class="s2">"Petal.Width"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">],</span>
+        <span class="s2">"Species"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"setosa"</span><span class="p">,</span> <span class="s2">"virginica"</span><span class="p">],</span>
     <span class="p">}</span>
 <span class="p">)</span>
 
@@ -858,10 +1002,10 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spec</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;.name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Sepal.Length&quot;</span><span class="p">,</span> <span class="s2">&quot;Sepal.Width&quot;</span><span class="p">,</span> <span class="s2">&quot;Petal.Length&quot;</span><span class="p">,</span> <span class="s2">&quot;Petal.Width&quot;</span><span class="p">],</span>
-    <span class="s2">&quot;.value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;measurement&quot;</span><span class="p">,</span> <span class="s2">&quot;measurement&quot;</span><span class="p">,</span> <span class="s2">&quot;measurement&quot;</span><span class="p">,</span> <span class="s2">&quot;measurement&quot;</span><span class="p">],</span>
-    <span class="s2">&quot;part&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Sepal&quot;</span><span class="p">,</span> <span class="s2">&quot;Sepal&quot;</span><span class="p">,</span> <span class="s2">&quot;Petal&quot;</span><span class="p">,</span> <span class="s2">&quot;Petal&quot;</span><span class="p">],</span>
-    <span class="s2">&quot;dimension&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Length&quot;</span><span class="p">,</span> <span class="s2">&quot;Width&quot;</span><span class="p">,</span> <span class="s2">&quot;Length&quot;</span><span class="p">,</span> <span class="s2">&quot;Width&quot;</span><span class="p">],</span>
+    <span class="s2">".name"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Sepal.Length"</span><span class="p">,</span> <span class="s2">"Sepal.Width"</span><span class="p">,</span> <span class="s2">"Petal.Length"</span><span class="p">,</span> <span class="s2">"Petal.Width"</span><span class="p">],</span>
+    <span class="s2">".value"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"measurement"</span><span class="p">,</span> <span class="s2">"measurement"</span><span class="p">,</span> <span class="s2">"measurement"</span><span class="p">,</span> <span class="s2">"measurement"</span><span class="p">],</span>
+    <span class="s2">"part"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Sepal"</span><span class="p">,</span> <span class="s2">"Sepal"</span><span class="p">,</span> <span class="s2">"Petal"</span><span class="p">,</span> <span class="s2">"Petal"</span><span class="p">],</span>
+    <span class="s2">"dimension"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Length"</span><span class="p">,</span> <span class="s2">"Width"</span><span class="p">,</span> <span class="s2">"Length"</span><span class="p">,</span> <span class="s2">"Width"</span><span class="p">],</span>
 <span class="p">}</span>
 <span class="n">spec</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
 <span class="n">spec</span>
@@ -893,7 +1037,7 @@ document.write(`
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (8, 4)</small><table border="1" class="dataframe"><thead><tr><th>Species</th><th>part</th><th>dimension</th><th>measurement</th></tr><tr><td>str</td><td>str</td><td>str</td><td>f64</td></tr></thead><tbody><tr><td>&quot;setosa&quot;</td><td>&quot;Petal&quot;</td><td>&quot;Length&quot;</td><td>1.4</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Petal&quot;</td><td>&quot;Length&quot;</td><td>5.1</td></tr><tr><td>&quot;setosa&quot;</td><td>&quot;Sepal&quot;</td><td>&quot;Width&quot;</td><td>3.5</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Sepal&quot;</td><td>&quot;Width&quot;</td><td>3.0</td></tr><tr><td>&quot;setosa&quot;</td><td>&quot;Petal&quot;</td><td>&quot;Width&quot;</td><td>0.2</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Petal&quot;</td><td>&quot;Width&quot;</td><td>1.8</td></tr><tr><td>&quot;setosa&quot;</td><td>&quot;Sepal&quot;</td><td>&quot;Length&quot;</td><td>5.1</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Sepal&quot;</td><td>&quot;Length&quot;</td><td>5.9</td></tr></tbody></table></div></div></div>
+<small>shape: (8, 4)</small><table border="1" class="dataframe"><thead><tr><th>Species</th><th>part</th><th>dimension</th><th>measurement</th></tr><tr><td>str</td><td>str</td><td>str</td><td>f64</td></tr></thead><tbody><tr><td>&quot;setosa&quot;</td><td>&quot;Sepal&quot;</td><td>&quot;Width&quot;</td><td>3.5</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Sepal&quot;</td><td>&quot;Width&quot;</td><td>3.0</td></tr><tr><td>&quot;setosa&quot;</td><td>&quot;Petal&quot;</td><td>&quot;Length&quot;</td><td>1.4</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Petal&quot;</td><td>&quot;Length&quot;</td><td>5.1</td></tr><tr><td>&quot;setosa&quot;</td><td>&quot;Sepal&quot;</td><td>&quot;Length&quot;</td><td>5.1</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Sepal&quot;</td><td>&quot;Length&quot;</td><td>5.9</td></tr><tr><td>&quot;setosa&quot;</td><td>&quot;Petal&quot;</td><td>&quot;Width&quot;</td><td>0.2</td></tr><tr><td>&quot;virginica&quot;</td><td>&quot;Petal&quot;</td><td>&quot;Width&quot;</td><td>1.8</td></tr></tbody></table></div></div></div>
 </div>
 <p>Let’s take it further - the Sepal/Petal prefixes go into a <code class="docutils literal notranslate"><span class="pre">part</span></code> column, while the <code class="docutils literal notranslate"><span class="pre">Width/Length</span></code> suffixes remain as headers:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">source_column_name</span>     <span class="n">new_column_name</span>           <span class="n">part</span>                 
@@ -907,9 +1051,9 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spec</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;.name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Sepal.Length&quot;</span><span class="p">,</span> <span class="s2">&quot;Sepal.Width&quot;</span><span class="p">,</span> <span class="s2">&quot;Petal.Length&quot;</span><span class="p">,</span> <span class="s2">&quot;Petal.Width&quot;</span><span class="p">],</span>
-    <span class="s2">&quot;part&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Sepal&quot;</span><span class="p">,</span> <span class="s2">&quot;Sepal&quot;</span><span class="p">,</span> <span class="s2">&quot;Petal&quot;</span><span class="p">,</span> <span class="s2">&quot;Petal&quot;</span><span class="p">],</span>
-    <span class="s2">&quot;.value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Length&quot;</span><span class="p">,</span> <span class="s2">&quot;Width&quot;</span><span class="p">,</span> <span class="s2">&quot;Length&quot;</span><span class="p">,</span> <span class="s2">&quot;Width&quot;</span><span class="p">],</span>
+    <span class="s2">".name"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Sepal.Length"</span><span class="p">,</span> <span class="s2">"Sepal.Width"</span><span class="p">,</span> <span class="s2">"Petal.Length"</span><span class="p">,</span> <span class="s2">"Petal.Width"</span><span class="p">],</span>
+    <span class="s2">"part"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Sepal"</span><span class="p">,</span> <span class="s2">"Sepal"</span><span class="p">,</span> <span class="s2">"Petal"</span><span class="p">,</span> <span class="s2">"Petal"</span><span class="p">],</span>
+    <span class="s2">".value"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Length"</span><span class="p">,</span> <span class="s2">"Width"</span><span class="p">,</span> <span class="s2">"Length"</span><span class="p">,</span> <span class="s2">"Width"</span><span class="p">],</span>
 <span class="p">}</span>
 <span class="n">spec</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
 <span class="n">spec</span>
@@ -949,11 +1093,11 @@ document.write(`
 <p><a class="reference external" href="https://pyjanitor-devs.github.io/pyjanitor/api/functions/#janitor.functions.pivot.pivot_longer">pivot_longer</a> is not just simple, convenient, and straightforward, it is efficient as well - We can refer to <a class="reference internal" href="Reshape-Data-in-Polars-Wide-to_Long-Part-II.html"><span class="std std-doc">part II</span></a> of this series to compare speeds:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">ZipFile</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">zipfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZipFile</span>
 
-<span class="n">zip_file</span> <span class="o">=</span> <span class="n">ZipFile</span><span class="p">(</span><span class="s2">&quot;./Data_files/household_large.csv.zip&quot;</span><span class="p">)</span>
-<span class="n">zip_file</span> <span class="o">=</span> <span class="n">zip_file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;household_large.csv&quot;</span><span class="p">)</span>
-<span class="n">household_large</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">zip_file</span><span class="p">,</span> <span class="n">null_values</span><span class="o">=</span><span class="s2">&quot;NA&quot;</span><span class="p">)</span>
+<span class="n">zip_file</span> <span class="o">=</span> <span class="n">ZipFile</span><span class="p">(</span><span class="s2">"./Data_files/household_large.csv.zip"</span><span class="p">)</span>
+<span class="n">zip_file</span> <span class="o">=</span> <span class="n">zip_file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">"household_large.csv"</span><span class="p">)</span>
+<span class="n">household_large</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">zip_file</span><span class="p">,</span> <span class="n">null_values</span><span class="o">=</span><span class="s2">"NA"</span><span class="p">)</span>
 <span class="n">household_large</span>
 </pre></div>
 </div>
@@ -970,92 +1114,87 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
-<span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%timeit</span>
+<span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span>
+<span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"header"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">])</span>
 <span class="p">(</span>
-    <span class="n">household_large</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;family&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="n">household_large</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">"family"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)</span>
     <span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">expression</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">"family"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">"header"</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">"value"</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.2 s ± 8.17 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.24 s ± 17.2 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;family&quot;</span>
-<span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">household_large</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%timeit</span>
+<span class="n">index</span> <span class="o">=</span> <span class="s2">"family"</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">"header"</span><span class="p">,</span> <span class="n">household_large</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 <span class="n">mask</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">is_in</span><span class="p">([</span><span class="n">index</span><span class="p">])</span><span class="o">.</span><span class="n">not_</span><span class="p">()</span>
 <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
-<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
-<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span>
+<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"header"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">])</span>
 <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">struct</span><span class="o">.</span><span class="n">unnest</span><span class="p">()</span>
 <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
-<span class="n">grouped</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;child&quot;</span><span class="p">)</span>
+<span class="n">grouped</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">"child"</span><span class="p">)</span>
 <span class="n">grouped</span> <span class="o">=</span> <span class="n">grouped</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
 <span class="n">expression</span> <span class="o">=</span> <span class="p">[</span><span class="n">index</span><span class="p">]</span>
 <span class="n">zipped</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span>
-    <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
-    <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+    <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">"header"</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+    <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">"columns"</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
 <span class="p">)</span>
 <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="p">(</span><span class="n">heads</span><span class="p">,</span> <span class="n">column_names</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">zipped</span><span class="p">):</span>
     <span class="n">expr_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">heads</span><span class="p">,</span> <span class="n">column_names</span><span class="p">))</span>
     <span class="n">expr_</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">struct</span><span class="p">(</span><span class="o">**</span><span class="n">expr_</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
     <span class="n">expression</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expr_</span><span class="p">)</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">household_large</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">))</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s1">'*'</span><span class="p">))</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s1">&#39;child&#39;</span><span class="p">))</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">([</span><span class="s1">&#39;family&#39;</span><span class="p">,</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s1">'child'</span><span class="p">))</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'variable'</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">([</span><span class="s1">'family'</span><span class="p">,</span><span class="s1">'value'</span><span class="p">])</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s1">'value'</span><span class="p">)</span>
 <span class="n">out</span>
 </pre></div>
 </div>
 </div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> household_large.pivot_longer(index='family', names_to=('.value','child'), names_sep='_')
+</pre></div>
+</div>
+</div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>81.3 ms ± 4.01 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>54.4 ms ± 119 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">timeit</span> household_large.pivot_longer(index=&#39;family&#39;, names_to=(&#39;.value&#39;,&#39;child&#39;), names_sep=&#39;_&#39;)
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>55.8 ms ± 959 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%timeit</span>
 <span class="n">spec</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;.name&quot;</span><span class="p">:</span> <span class="n">household_large</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]})</span>
+    <span class="n">pl</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">".name"</span><span class="p">:</span> <span class="n">household_large</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:]})</span>
     <span class="o">.</span><span class="n">with_columns</span><span class="p">(</span>
-        <span class="n">other</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;.name&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;.value&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+        <span class="n">other</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">".name"</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">".value"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">])</span>
     <span class="p">)</span>
-    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;other&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">"other"</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="n">pivot_longer_spec</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">household_large</span><span class="p">,</span> <span class="n">spec</span><span class="o">=</span><span class="n">spec</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>56.5 ms ± 747 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>57.9 ms ± 318 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -1123,15 +1262,17 @@ document.write(`
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> Contents
   </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction"><strong>Introduction</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#string-data-in-column-names"><strong>String data in column names</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#numeric-data-in-column-names"><strong>Numeric data in column names</strong></a></li>
@@ -1189,8 +1330,8 @@ By Samuel Oranyeli
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
 
   <footer class="bd-footer">
   </footer>

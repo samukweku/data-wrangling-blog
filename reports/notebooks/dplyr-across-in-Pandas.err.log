@@ -1,0 +1,50 @@
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/nbclient/client.py", line 1323, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/nbclient/client.py", line 709, in async_execute
+    await self.async_execute_cell(
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/nbclient/client.py", line 1062, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/nbclient/client.py", line 918, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# get the grouper
+grp = (
+    starwars.groupby("homeworld")
+    # feature from pyjanitor
+    .select(pd.api.types.is_numeric_dtype)
+)
+grp.mean().loc[grp.size().gt(1)]
+------------------
+
+
+[31m---------------------------------------------------------------------------[39m
+[31mAttributeError[39m                            Traceback (most recent call last)
+[36mCell[39m[36m [39m[32mIn[7][39m[32m, line 5[39m
+[32m      1[39m [38;5;66;03m# get the grouper[39;00m
+[32m      2[39m grp = (
+[32m      3[39m     starwars.groupby([33m"homeworld"[39m)
+[32m      4[39m     [38;5;66;03m# feature from pyjanitor[39;00m
+[32m----> [39m[32m5[39m     .select(pd.api.types.is_numeric_dtype)
+[32m      6[39m )
+[32m      7[39m grp.mean().loc[grp.size().gt([32m1[39m)]
+
+[36mFile [39m[32m/opt/hostedtoolcache/Python/3.11.17/x64/lib/python3.11/site-packages/pandas/core/groupby/groupby.py:869[39m, in [36mGroupBy.__getattr__[39m[34m(self, attr)[39m
+[32m    866[39m [38;5;28;01mif[39;00m attr [38;5;129;01min[39;00m [38;5;28mself[39m.obj:
+[32m    867[39m     [38;5;28;01mreturn[39;00m [38;5;28mself[39m[attr]
+[32m--> [39m[32m869[39m [38;5;28;01mraise[39;00m [38;5;167;01mAttributeError[39;00m(
+[32m    870[39m     [33mf[39m[33m"[39m[33m'[39m[38;5;132;01m{[39;00m[38;5;28mtype[39m([38;5;28mself[39m).[34m__name__[39m[38;5;132;01m}[39;00m[33m'[39m[33m object has no attribute [39m[33m'[39m[38;5;132;01m{[39;00mattr[38;5;132;01m}[39;00m[33m'[39m[33m"[39m
+[32m    871[39m )
+
+[31mAttributeError[39m: 'DataFrameGroupBy' object has no attribute 'select'
+

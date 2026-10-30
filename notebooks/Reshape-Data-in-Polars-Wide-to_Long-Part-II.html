@@ -16,41 +16,78 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
 
-  
-  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
   
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
 
     <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script kind="utterances">
+
+    var commentsRunWhenDOMLoaded = cb => {
+    if (document.readyState != 'loading') {
+        cb()
+    } else if (document.addEventListener) {
+        document.addEventListener('DOMContentLoaded', cb)
+    } else {
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState == 'complete') cb()
+        })
+    }
+}
+
+var addUtterances = () => {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://utteranc.es/client.js";
+    script.async = "async";
+
+    script.setAttribute("repo", "samukweku/data-wrangling-blog");
+    script.setAttribute("issue-term", "pathname");
+    script.setAttribute("theme", "github-light");
+    script.setAttribute("label", "💬 comment");
+    script.setAttribute("crossorigin", "anonymous");
+
+    sections = document.querySelectorAll("div.section");
+    if (sections !== null) {
+        section = sections[sections.length-1];
+        section.appendChild(script);
+    }
+}
+commentsRunWhenDOMLoaded(addUtterances);
+</script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/design-tabs.js?v=f930bc37"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
@@ -58,40 +95,37 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/Reshape-Data-in-Polars-Wide-to_Long-Part-II';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Reshape Data in Polars Efficiently from Wide to Long Form - Part III" href="Reshape-Data-in-Polars-Wide-to_Long-Part-III.html" />
     <link rel="prev" title="Reshape Data in Polars Efficiently from Wide to Long Form - Part I" href="Reshape-Data-in-Polars-Wide-to_Long-Part-I.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
   </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
+  <body data-default-mode="">
   
   
   <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -99,7 +133,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -107,15 +140,59 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
 
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
     </header>
   
 
@@ -124,7 +201,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -154,15 +232,11 @@
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -225,9 +299,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -357,7 +436,7 @@
 
 
 <button onclick="toggleFullScreen()"
-  class="btn btn-sm btn-fullscreen-button"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
   title="Fullscreen mode"
   data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
@@ -371,25 +450,17 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
-<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
 </div></div>
@@ -411,7 +482,7 @@ document.write(`
                 <h2> Contents </h2>
             </div>
             <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction"><strong>Introduction</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#many-variables-in-column-names"><strong>Many variables in column names</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-observations-per-row"><strong>Multiple observations per row</strong></a></li>
@@ -440,17 +511,24 @@ document.write(`
 <p>Caveat: Do not optimise prematurely, or rather optimise only if you need to.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">polars</span> <span class="k">as</span> <span class="nn">pl</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">polars</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;polars version :&quot;</span><span class="p">,</span> <span class="n">pl</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;python version :&quot;</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"polars version :"</span><span class="p">,</span> <span class="n">pl</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"python version :"</span><span class="p">,</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>polars version : 1.7.1
-python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:49) [Clang 16.0.6 ]
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="kn">import</span><span class="w"> </span><span class="nn">polars</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> 
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="nb">print</span><span class="p">(</span><span class="s2">"polars version :"</span><span class="p">,</span> <span class="n">pl</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named 'polars'
 </pre></div>
 </div>
 </div>
@@ -460,7 +538,7 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 <span id="id1"></span><h2><strong>Many variables in column names</strong><a class="headerlink" href="#many-variables-in-column-names" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">who</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./Data_files/who.csv&quot;</span><span class="p">,</span> <span class="n">null_values</span><span class="o">=</span><span class="s2">&quot;NA&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">who</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"./Data_files/who.csv"</span><span class="p">,</span> <span class="n">null_values</span><span class="o">=</span><span class="s2">"NA"</span><span class="p">)</span>
 <span class="n">who</span>
 </pre></div>
 </div>
@@ -478,16 +556,16 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 <p>In the <a class="reference internal" href="Reshape-Data-in-Polars-Wide-to_Long-Part-I.html"><span class="std std-doc">previous blogpost</span></a>, we flipped to long form using the code below:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)&quot;</span>
-<span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract_groups</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)"</span>
+<span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract_groups</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
 <span class="n">out_naive</span> <span class="o">=</span> <span class="p">(</span>
     <span class="n">who</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span>
-        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">,</span> <span class="s2">&quot;iso2&quot;</span><span class="p">,</span> <span class="s2">&quot;iso3&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">],</span>
-        <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">"country"</span><span class="p">,</span> <span class="s2">"iso2"</span><span class="p">,</span> <span class="s2">"iso3"</span><span class="p">,</span> <span class="s2">"year"</span><span class="p">],</span>
+        <span class="n">value_name</span><span class="o">=</span><span class="s2">"count"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">expression</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">cast</span><span class="p">({</span><span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Int32</span><span class="p">})</span>
+    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">cast</span><span class="p">({</span><span class="s2">"count"</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Int32</span><span class="p">})</span>
 <span class="p">)</span>
 
 <span class="n">out_naive</span>
@@ -506,22 +584,22 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)&quot;</span>
-<span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract_groups</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%timeit</span>
+<span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)"</span>
+<span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract_groups</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
 <span class="p">(</span>
     <span class="n">who</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">,</span> <span class="s2">&quot;iso2&quot;</span><span class="p">,</span> <span class="s2">&quot;iso3&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">],</span>
-        <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"country"</span><span class="p">,</span> <span class="s2">"iso2"</span><span class="p">,</span> <span class="s2">"iso3"</span><span class="p">,</span> <span class="s2">"year"</span><span class="p">],</span>
+        <span class="n">value_name</span><span class="o">=</span><span class="s2">"count"</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">expression</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>102 ms ± 2.33 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>101 ms ± 230 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -533,22 +611,28 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The line_profiler extension is already loaded. To reload it, use:
+  %reload_ext line_profiler
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">wide_to_long</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">wide_to_long</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
     <span class="c1"># the computation is broken down</span>
     <span class="c1"># into parts for more clarity</span>
     <span class="c1"># on what happens at each stage</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span>
-        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">,</span> <span class="s2">&quot;iso2&quot;</span><span class="p">,</span> <span class="s2">&quot;iso3&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">],</span>
-        <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+        <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">"country"</span><span class="p">,</span> <span class="s2">"iso2"</span><span class="p">,</span> <span class="s2">"iso3"</span><span class="p">,</span> <span class="s2">"year"</span><span class="p">],</span>
+        <span class="n">value_name</span><span class="o">=</span><span class="s2">"count"</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
-    <span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)&quot;</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)"</span>
     <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract_groups</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">string</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span>
 </pre></div>
 </div>
@@ -557,6 +641,32 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">lprun</span> -f wide_to_long wide_to_long(df=who)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Timer unit: 1e-09 s
+
+Total time: 0.103107 s
+File: /var/folders/yh/003fk4jn5fl9kl3mnm1y0b1h0000gr/T/ipykernel_83318/3562139280.py
+Function: wide_to_long at line 1
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+     1                                           def wide_to_long(df):
+     2                                               # the computation is broken down
+     3                                               # into parts for more clarity
+     4                                               # on what happens at each stage
+     5         2    3527000.0    2e+06      3.4      out = df.unpivot(
+     6         1          0.0      0.0      0.0          index=["country", "iso2", "iso3", "year"],
+     7         1          0.0      0.0      0.0          value_name="count",
+     8                                               )
+     9         1      11000.0  11000.0      0.0      string = out.get_column("variable")
+    10         1       1000.0   1000.0      0.0      regex = r"new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)"
+    11         1   99471000.0    1e+08     96.5      string = string.str.extract_groups(regex)
+    12         1      81000.0  81000.0      0.1      out = out.with_columns(variable=string)
+    13         1      15000.0  15000.0      0.0      out = out.unnest("variable")
+    14         1       1000.0   1000.0      0.0      return out
 </pre></div>
 </div>
 </div>
@@ -569,19 +679,19 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 
 <span class="n">Line</span> <span class="c1">#      Hits         Time  Per Hit   % Time  Line Contents</span>
 <span class="o">==============================================================</span>
-     <span class="mi">1</span>                                           <span class="k">def</span> <span class="nf">wide_to_long</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+     <span class="mi">1</span>                                           <span class="k">def</span><span class="w"> </span><span class="nf">wide_to_long</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
      <span class="mi">2</span>                                               <span class="c1"># the computation is broken down</span>
      <span class="mi">3</span>                                               <span class="c1"># into parts for more clarity</span>
      <span class="mi">4</span>                                               <span class="c1"># on what happens at each stage</span>
      <span class="mi">5</span>         <span class="mi">2</span>    <span class="mf">3317000.0</span>    <span class="mf">2e+06</span>      <span class="mf">3.3</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span>
-     <span class="mi">6</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>          <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">,</span> <span class="s2">&quot;iso2&quot;</span><span class="p">,</span> <span class="s2">&quot;iso3&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">],</span>
-     <span class="mi">7</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>          <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+     <span class="mi">6</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>          <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">"country"</span><span class="p">,</span> <span class="s2">"iso2"</span><span class="p">,</span> <span class="s2">"iso3"</span><span class="p">,</span> <span class="s2">"year"</span><span class="p">],</span>
+     <span class="mi">7</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>          <span class="n">value_name</span><span class="o">=</span><span class="s2">"count"</span><span class="p">,</span>
      <span class="mi">8</span>                                               <span class="p">)</span>
-     <span class="mi">9</span>         <span class="mi">1</span>      <span class="mf">12000.0</span>  <span class="mf">12000.0</span>      <span class="mf">0.0</span>      <span class="n">string</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
-    <span class="mi">10</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)&quot;</span>
+     <span class="mi">9</span>         <span class="mi">1</span>      <span class="mf">12000.0</span>  <span class="mf">12000.0</span>      <span class="mf">0.0</span>      <span class="n">string</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span>
+    <span class="mi">10</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)"</span>
     <span class="mi">11</span>         <span class="mi">1</span>   <span class="mf">97543000.0</span>    <span class="mf">1e+08</span>     <span class="mf">96.6</span>      <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract_groups</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
     <span class="mi">12</span>         <span class="mi">1</span>      <span class="mf">82000.0</span>  <span class="mf">82000.0</span>      <span class="mf">0.1</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">string</span><span class="p">)</span>
-    <span class="mi">13</span>         <span class="mi">1</span>      <span class="mf">14000.0</span>  <span class="mf">14000.0</span>      <span class="mf">0.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+    <span class="mi">13</span>         <span class="mi">1</span>      <span class="mf">14000.0</span>  <span class="mf">14000.0</span>      <span class="mf">0.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span>
     <span class="mi">14</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="k">return</span> <span class="n">out</span>
 </pre></div>
 </div>
@@ -589,11 +699,11 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 <p>Can we reduce this cost? How? What if we compute the string regex operation on the columns before unpivoting? 	🤔</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">,</span> <span class="s2">&quot;iso2&quot;</span><span class="p">,</span> <span class="s2">&quot;iso3&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"country"</span><span class="p">,</span> <span class="s2">"iso2"</span><span class="p">,</span> <span class="s2">"iso3"</span><span class="p">,</span> <span class="s2">"year"</span><span class="p">]</span>
 <span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">who</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 <span class="n">mask</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">not_</span><span class="p">()</span>
 <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
-<span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)&quot;</span>
+<span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)"</span>
 <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract_groups</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
 <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">struct</span><span class="o">.</span><span class="n">unnest</span><span class="p">()</span>
 <span class="n">columns</span>
@@ -614,13 +724,13 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># implosion and unpivoting ensures we get a final length</span>
-<span class="c1"># that is the same as the columns&#39; length</span>
+<span class="c1"># that is the same as the columns' length</span>
 <span class="c1"># ensuring we can pair correctly</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">who</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">))</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">who</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s2">"*"</span><span class="p">))</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">"count"</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
-<span class="n">index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
+<span class="n">index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"count"</span><span class="p">)</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
 <span class="n">out</span>
 </pre></div>
@@ -651,26 +761,26 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">,</span> <span class="s2">&quot;iso2&quot;</span><span class="p">,</span> <span class="s2">&quot;iso3&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%timeit</span>
+<span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"country"</span><span class="p">,</span> <span class="s2">"iso2"</span><span class="p">,</span> <span class="s2">"iso3"</span><span class="p">,</span> <span class="s2">"year"</span><span class="p">]</span>
 <span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">who</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 <span class="n">mask</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">not_</span><span class="p">()</span>
 <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
-<span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)&quot;</span>
+<span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)"</span>
 <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract_groups</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
 <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">struct</span><span class="o">.</span><span class="n">unnest</span><span class="p">()</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">who</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">))</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">who</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s2">"*"</span><span class="p">))</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">"count"</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'variable'</span><span class="p">)</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
-<span class="n">index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;count&#39;</span><span class="p">)</span>
+<span class="n">index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">'count'</span><span class="p">)</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
 <span class="n">out</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4.2 ms ± 14.8 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5.61 ms ± 233 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 </pre></div>
 </div>
 </div>
@@ -686,19 +796,19 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 <p>By changing our approach and shifting the computation to a less expensive section, we claw back some performance gains.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">wide_to_long_optimised</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">,</span> <span class="s2">&quot;iso2&quot;</span><span class="p">,</span> <span class="s2">&quot;iso3&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">wide_to_long_optimised</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"country"</span><span class="p">,</span> <span class="s2">"iso2"</span><span class="p">,</span> <span class="s2">"iso3"</span><span class="p">,</span> <span class="s2">"year"</span><span class="p">]</span>
     <span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">not_</span><span class="p">()</span>
     <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
-    <span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)&quot;</span>
+    <span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)"</span>
     <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract_groups</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
     <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">struct</span><span class="o">.</span><span class="n">unnest</span><span class="p">()</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">))</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s2">"*"</span><span class="p">))</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">"count"</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
-    <span class="n">index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
+    <span class="n">index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"count"</span><span class="p">)</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span>
 </pre></div>
@@ -711,6 +821,33 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Timer unit: 1e-09 s
+
+Total time: 0.006154 s
+File: /var/folders/yh/003fk4jn5fl9kl3mnm1y0b1h0000gr/T/ipykernel_83318/509568358.py
+Function: wide_to_long_optimised at line 1
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+     1                                           def wide_to_long_optimised(df):
+     2         1          0.0      0.0      0.0      index = ["country", "iso2", "iso3", "year"]
+     3         1      34000.0  34000.0      0.6      columns = pl.Series(df.columns)
+     4         1     223000.0 223000.0      3.6      mask = columns.is_in(index).not_()
+     5         1       6000.0   6000.0      0.1      columns = columns.filter(mask)
+     6         1          0.0      0.0      0.0      regex = r"new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)"
+     7         1     190000.0 190000.0      3.1      columns = columns.str.extract_groups(regex)
+     8         1       6000.0   6000.0      0.1      columns = columns.struct.unnest()
+     9         1     354000.0 354000.0      5.8      out = df.select(pl.implode("*"))
+    10         1    3491000.0    3e+06     56.7      out = out.unpivot(index=index, value_name="count")
+    11         1      42000.0  42000.0      0.7      out = out.drop("variable")
+    12         1      76000.0  76000.0      1.2      out = out.with_columns(columns)
+    13         1          0.0      0.0      0.0      index.append("count")
+    14         1    1732000.0    2e+06     28.1      out = out.explode(index)
+    15         1          0.0      0.0      0.0      return out
+</pre></div>
+</div>
+</div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Timer</span> <span class="n">unit</span><span class="p">:</span> <span class="mf">1e-09</span> <span class="n">s</span>
 
@@ -720,19 +857,19 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 
 <span class="n">Line</span> <span class="c1">#      Hits         Time  Per Hit   % Time  Line Contents</span>
 <span class="o">==============================================================</span>
-     <span class="mi">1</span>                                           <span class="k">def</span> <span class="nf">wide_to_long_optimised</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-     <span class="mi">2</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;country&quot;</span><span class="p">,</span> <span class="s2">&quot;iso2&quot;</span><span class="p">,</span> <span class="s2">&quot;iso3&quot;</span><span class="p">,</span> <span class="s2">&quot;year&quot;</span><span class="p">]</span>
+     <span class="mi">1</span>                                           <span class="k">def</span><span class="w"> </span><span class="nf">wide_to_long_optimised</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+     <span class="mi">2</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"country"</span><span class="p">,</span> <span class="s2">"iso2"</span><span class="p">,</span> <span class="s2">"iso3"</span><span class="p">,</span> <span class="s2">"year"</span><span class="p">]</span>
      <span class="mi">3</span>         <span class="mi">1</span>      <span class="mf">29000.0</span>  <span class="mf">29000.0</span>      <span class="mf">0.5</span>      <span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
      <span class="mi">4</span>         <span class="mi">1</span>     <span class="mf">232000.0</span> <span class="mf">232000.0</span>      <span class="mf">3.9</span>      <span class="n">mask</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">is_in</span><span class="p">(</span><span class="n">index</span><span class="p">)</span><span class="o">.</span><span class="n">not_</span><span class="p">()</span>
      <span class="mi">5</span>         <span class="mi">1</span>       <span class="mf">4000.0</span>   <span class="mf">4000.0</span>      <span class="mf">0.1</span>      <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
-     <span class="mi">6</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)&quot;</span>
+     <span class="mi">6</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="n">regex</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"new_?(?&lt;diagnosis&gt;.*)_(?&lt;gender&gt;.)(?&lt;age&gt;.*)"</span>
      <span class="mi">7</span>         <span class="mi">1</span>     <span class="mf">299000.0</span> <span class="mf">299000.0</span>      <span class="mf">5.1</span>      <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract_groups</span><span class="p">(</span><span class="n">regex</span><span class="p">)</span>
      <span class="mi">8</span>         <span class="mi">1</span>       <span class="mf">5000.0</span>   <span class="mf">5000.0</span>      <span class="mf">0.1</span>      <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">struct</span><span class="o">.</span><span class="n">unnest</span><span class="p">()</span>
-     <span class="mi">9</span>         <span class="mi">1</span>     <span class="mf">439000.0</span> <span class="mf">439000.0</span>      <span class="mf">7.5</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">))</span>
-    <span class="mi">10</span>         <span class="mi">1</span>    <span class="mf">3119000.0</span>    <span class="mf">3e+06</span>     <span class="mf">53.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
-    <span class="mi">11</span>         <span class="mi">1</span>      <span class="mf">34000.0</span>  <span class="mf">34000.0</span>      <span class="mf">0.6</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
+     <span class="mi">9</span>         <span class="mi">1</span>     <span class="mf">439000.0</span> <span class="mf">439000.0</span>      <span class="mf">7.5</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s2">"*"</span><span class="p">))</span>
+    <span class="mi">10</span>         <span class="mi">1</span>    <span class="mf">3119000.0</span>    <span class="mf">3e+06</span>     <span class="mf">53.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">,</span> <span class="n">value_name</span><span class="o">=</span><span class="s2">"count"</span><span class="p">)</span>
+    <span class="mi">11</span>         <span class="mi">1</span>      <span class="mf">34000.0</span>  <span class="mf">34000.0</span>      <span class="mf">0.6</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span>
     <span class="mi">12</span>         <span class="mi">1</span>      <span class="mf">60000.0</span>  <span class="mf">60000.0</span>      <span class="mf">1.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
-    <span class="mi">13</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="n">index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">)</span>
+    <span class="mi">13</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="n">index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">"count"</span><span class="p">)</span>
     <span class="mi">14</span>         <span class="mi">1</span>    <span class="mf">1669000.0</span>    <span class="mf">2e+06</span>     <span class="mf">28.3</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
     <span class="mi">15</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="k">return</span> <span class="n">out</span>
 </pre></div>
@@ -742,7 +879,7 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 <h2><strong>Multiple observations per row</strong><a class="headerlink" href="#multiple-observations-per-row" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">household</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;./Data_files/household.csv&quot;</span><span class="p">,</span> <span class="n">null_values</span><span class="o">=</span><span class="s2">&quot;NA&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">household</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"./Data_files/household.csv"</span><span class="p">,</span> <span class="n">null_values</span><span class="o">=</span><span class="s2">"NA"</span><span class="p">)</span>
 <span class="n">household</span>
 </pre></div>
 </div>
@@ -760,14 +897,14 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 <p>In the <a class="reference internal" href="Reshape-Data-in-Polars-Wide-to_Long-Part-I.html"><span class="std std-doc">previous blogpost</span></a>, we kept the <code class="docutils literal notranslate"><span class="pre">dob</span></code> and <code class="docutils literal notranslate"><span class="pre">name</span></code> as column headers, while flipping the remaining parts of the columns to rows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
-<span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span>
+<span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"header"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">])</span>
 <span class="p">(</span>
-    <span class="n">household</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;family&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="n">household</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">"family"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)</span>
     <span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">expression</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">"family"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">"header"</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">"value"</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -784,21 +921,21 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
-<span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%timeit</span>
+<span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span>
+<span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"header"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">])</span>
 <span class="p">(</span>
-    <span class="n">household</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;family&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="n">household</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">"family"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)</span>
     <span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">expression</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">"family"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">"header"</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">"value"</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>222 μs ± 4.05 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>497 μs ± 10.5 μs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
 </pre></div>
 </div>
 </div>
@@ -806,10 +943,10 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 <p>Let’s see the performance for a similar dataset, but larger:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">ZipFile</span>
-<span class="n">zip_file</span> <span class="o">=</span> <span class="n">ZipFile</span><span class="p">(</span><span class="s2">&quot;./Data_files/household_large.csv.zip&quot;</span><span class="p">)</span>
-<span class="n">zip_file</span> <span class="o">=</span> <span class="n">zip_file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;household_large.csv&quot;</span><span class="p">)</span>
-<span class="n">household_large</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">zip_file</span><span class="p">,</span> <span class="n">null_values</span><span class="o">=</span><span class="s2">&quot;NA&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">zipfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZipFile</span>
+<span class="n">zip_file</span> <span class="o">=</span> <span class="n">ZipFile</span><span class="p">(</span><span class="s2">"./Data_files/household_large.csv.zip"</span><span class="p">)</span>
+<span class="n">zip_file</span> <span class="o">=</span> <span class="n">zip_file</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">"household_large.csv"</span><span class="p">)</span>
+<span class="n">household_large</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">zip_file</span><span class="p">,</span> <span class="n">null_values</span><span class="o">=</span><span class="s2">"NA"</span><span class="p">)</span>
 <span class="n">household_large</span>
 </pre></div>
 </div>
@@ -838,14 +975,14 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
-<span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span>
+<span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"header"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">])</span>
 <span class="n">out_naive</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">household_large</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;family&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="n">household_large</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">"family"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)</span>
     <span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">expression</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">"family"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">"header"</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">"value"</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="n">out_naive</span>
 </pre></div>
@@ -863,36 +1000,36 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
-<span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%timeit</span>
+<span class="n">expression</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span>
+<span class="n">expression</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"header"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">])</span>
 <span class="p">(</span>
-    <span class="n">household_large</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;family&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="n">household_large</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">"family"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)</span>
     <span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">expression</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
-    <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">"family"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">"header"</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">"value"</span><span class="p">)</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.2 s ± 8.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.23 s ± 6.81 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">lreshape</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;family&quot;</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
-    <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">lreshape</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">"family"</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span>
+    <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"header"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">])</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">string</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">"family"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">"header"</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">"value"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span>
 </pre></div>
 </div>
@@ -901,6 +1038,28 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">lprun</span> -f lreshape lreshape(household_large)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Timer unit: 1e-09 s
+
+Total time: 1.24179 s
+File: /var/folders/yh/003fk4jn5fl9kl3mnm1y0b1h0000gr/T/ipykernel_83318/2283907795.py
+Function: lreshape at line 1
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+     1                                           def lreshape(df):
+     2         1   56682000.0    6e+07      4.6      out = df.unpivot(index="family")
+     3         1     242000.0 242000.0      0.0      out = out.drop_nulls("value")
+     4         1       6000.0   6000.0      0.0      string = out.get_column("variable")
+     5         1  232017000.0    2e+08     18.7      string = string.str.split("_")
+     6         1   42616000.0    4e+07      3.4      string = string.list.to_struct(fields=["header", "child"])
+     7         1    1193000.0    1e+06      0.1      out = out.with_columns(variable=string)
+     8         1      21000.0  21000.0      0.0      out = out.unnest("variable")
+     9         1  909016000.0    9e+08     73.2      out = out.pivot(index=["family", "child"], on="header", values="value")
+    10         1          0.0      0.0      0.0      return out
 </pre></div>
 </div>
 </div>
@@ -913,15 +1072,15 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 
 <span class="n">Line</span> <span class="c1">#      Hits         Time  Per Hit   % Time  Line Contents</span>
 <span class="o">==============================================================</span>
-     <span class="mi">1</span>                                           <span class="k">def</span> <span class="nf">lreshape</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-     <span class="mi">2</span>         <span class="mi">1</span>   <span class="mf">55695000.0</span>    <span class="mf">6e+07</span>      <span class="mf">4.9</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">&quot;family&quot;</span><span class="p">)</span>
-     <span class="mi">3</span>         <span class="mi">1</span>     <span class="mf">268000.0</span> <span class="mf">268000.0</span>      <span class="mf">0.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
-     <span class="mi">4</span>         <span class="mi">1</span>       <span class="mf">9000.0</span>   <span class="mf">9000.0</span>      <span class="mf">0.0</span>      <span class="n">string</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
-     <span class="mi">5</span>         <span class="mi">1</span>  <span class="mf">222072000.0</span>    <span class="mf">2e+08</span>     <span class="mf">19.4</span>      <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
-     <span class="mi">6</span>         <span class="mi">1</span>   <span class="mf">31940000.0</span>    <span class="mf">3e+07</span>      <span class="mf">2.8</span>      <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+     <span class="mi">1</span>                                           <span class="k">def</span><span class="w"> </span><span class="nf">lreshape</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+     <span class="mi">2</span>         <span class="mi">1</span>   <span class="mf">55695000.0</span>    <span class="mf">6e+07</span>      <span class="mf">4.9</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="s2">"family"</span><span class="p">)</span>
+     <span class="mi">3</span>         <span class="mi">1</span>     <span class="mf">268000.0</span> <span class="mf">268000.0</span>      <span class="mf">0.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop_nulls</span><span class="p">(</span><span class="s2">"value"</span><span class="p">)</span>
+     <span class="mi">4</span>         <span class="mi">1</span>       <span class="mf">9000.0</span>   <span class="mf">9000.0</span>      <span class="mf">0.0</span>      <span class="n">string</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span>
+     <span class="mi">5</span>         <span class="mi">1</span>  <span class="mf">222072000.0</span>    <span class="mf">2e+08</span>     <span class="mf">19.4</span>      <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span>
+     <span class="mi">6</span>         <span class="mi">1</span>   <span class="mf">31940000.0</span>    <span class="mf">3e+07</span>      <span class="mf">2.8</span>      <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"header"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">])</span>
      <span class="mi">7</span>         <span class="mi">1</span>    <span class="mf">1298000.0</span>    <span class="mf">1e+06</span>      <span class="mf">0.1</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">variable</span><span class="o">=</span><span class="n">string</span><span class="p">)</span>
-     <span class="mi">8</span>         <span class="mi">1</span>      <span class="mf">17000.0</span>  <span class="mf">17000.0</span>      <span class="mf">0.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">&quot;variable&quot;</span><span class="p">)</span>
-     <span class="mi">9</span>         <span class="mi">1</span>  <span class="mf">830615000.0</span>    <span class="mf">8e+08</span>     <span class="mf">72.7</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;family&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
+     <span class="mi">8</span>         <span class="mi">1</span>      <span class="mf">17000.0</span>  <span class="mf">17000.0</span>      <span class="mf">0.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s2">"variable"</span><span class="p">)</span>
+     <span class="mi">9</span>         <span class="mi">1</span>  <span class="mf">830615000.0</span>    <span class="mf">8e+08</span>     <span class="mf">72.7</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">"family"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">],</span> <span class="n">on</span><span class="o">=</span><span class="s2">"header"</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s2">"value"</span><span class="p">)</span>
     <span class="mi">10</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="k">return</span> <span class="n">out</span>
 </pre></div>
 </div>
@@ -931,12 +1090,12 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 <p>Let’s start with processing the columns :</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;family&quot;</span>
-<span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">household_large</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">index</span> <span class="o">=</span> <span class="s2">"family"</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">"header"</span><span class="p">,</span> <span class="n">household_large</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 <span class="n">mask</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">is_in</span><span class="p">([</span><span class="n">index</span><span class="p">])</span><span class="o">.</span><span class="n">not_</span><span class="p">()</span>
 <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
-<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
-<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span>
+<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"header"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">])</span>
 <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">struct</span><span class="o">.</span><span class="n">unnest</span><span class="p">()</span>
 <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
 <span class="n">columns_</span>
@@ -958,7 +1117,7 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pass maintain_order=True</span>
 <span class="c1"># if you want to retain the order</span>
-<span class="n">grouped</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;child&quot;</span><span class="p">)</span> 
+<span class="n">grouped</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">"child"</span><span class="p">)</span> 
 <span class="n">grouped</span> <span class="o">=</span> <span class="n">grouped</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
 <span class="n">grouped</span>
 </pre></div>
@@ -972,15 +1131,15 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (30, 3)</small><table border="1" class="dataframe"><thead><tr><th>child</th><th>header</th><th>columns</th></tr><tr><td>str</td><td>list[str]</td><td>list[str]</td></tr></thead><tbody><tr><td>&quot;child4&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child4&quot;, &quot;dob_child4&quot;]</td></tr><tr><td>&quot;child2&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child2&quot;, &quot;dob_child2&quot;]</td></tr><tr><td>&quot;child13&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child13&quot;, &quot;dob_child13&quot;]</td></tr><tr><td>&quot;child25&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child25&quot;, &quot;dob_child25&quot;]</td></tr><tr><td>&quot;child19&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child19&quot;, &quot;dob_child19&quot;]</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>&quot;child11&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child11&quot;, &quot;dob_child11&quot;]</td></tr><tr><td>&quot;child10&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child10&quot;, &quot;dob_child10&quot;]</td></tr><tr><td>&quot;child5&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child5&quot;, &quot;dob_child5&quot;]</td></tr><tr><td>&quot;child24&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child24&quot;, &quot;dob_child24&quot;]</td></tr><tr><td>&quot;child15&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child15&quot;, &quot;dob_child15&quot;]</td></tr></tbody></table></div></div></div>
+<small>shape: (30, 3)</small><table border="1" class="dataframe"><thead><tr><th>child</th><th>header</th><th>columns</th></tr><tr><td>str</td><td>list[str]</td><td>list[str]</td></tr></thead><tbody><tr><td>&quot;child20&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child20&quot;, &quot;dob_child20&quot;]</td></tr><tr><td>&quot;child18&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child18&quot;, &quot;dob_child18&quot;]</td></tr><tr><td>&quot;child3&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child3&quot;, &quot;dob_child3&quot;]</td></tr><tr><td>&quot;child26&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child26&quot;, &quot;dob_child26&quot;]</td></tr><tr><td>&quot;child23&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child23&quot;, &quot;dob_child23&quot;]</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>&quot;child5&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child5&quot;, &quot;dob_child5&quot;]</td></tr><tr><td>&quot;child14&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child14&quot;, &quot;dob_child14&quot;]</td></tr><tr><td>&quot;child27&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child27&quot;, &quot;dob_child27&quot;]</td></tr><tr><td>&quot;child12&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child12&quot;, &quot;dob_child12&quot;]</td></tr><tr><td>&quot;child16&quot;</td><td>[&quot;name&quot;, &quot;dob&quot;]</td><td>[&quot;name_child16&quot;, &quot;dob_child16&quot;]</td></tr></tbody></table></div></div></div>
 </div>
 <p>From the above we can see a relationship; we’ll create structs of pairs, where the field names are the headers(<code class="docutils literal notranslate"><span class="pre">dob</span></code>, <code class="docutils literal notranslate"><span class="pre">name</span></code>) and the values in the structs are the relevant column names:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">expression</span> <span class="o">=</span> <span class="p">[</span><span class="n">index</span><span class="p">]</span>
 <span class="n">zipped</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span>
-    <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
-    <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+    <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">"header"</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+    <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">"columns"</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
 <span class="p">)</span>
 <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="p">(</span><span class="n">heads</span><span class="p">,</span> <span class="n">column_names</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">zipped</span><span class="p">):</span>
     <span class="n">expr_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">heads</span><span class="p">,</span> <span class="n">column_names</span><span class="p">))</span>
@@ -994,12 +1153,12 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="n">household_large</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">))</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s1">'*'</span><span class="p">))</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s1">&#39;child&#39;</span><span class="p">))</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">([</span><span class="s1">&#39;family&#39;</span><span class="p">,</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s1">'child'</span><span class="p">))</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'variable'</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">([</span><span class="s1">'family'</span><span class="p">,</span><span class="s1">'value'</span><span class="p">])</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s1">'value'</span><span class="p">)</span>
 <span class="n">out</span>
 </pre></div>
 </div>
@@ -1012,7 +1171,7 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
   white-space: pre-wrap;
 }
 </style>
-<small>shape: (3_000_000, 4)</small><table border="1" class="dataframe"><thead><tr><th>family</th><th>name</th><th>dob</th><th>child</th></tr><tr><td>i64</td><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>0</td><td>&quot;Elizabeth Sampson&quot;</td><td>&quot;1947-01-25&quot;</td><td>&quot;child4&quot;</td></tr><tr><td>1</td><td>&quot;Katherine Landry&quot;</td><td>&quot;1935-06-26&quot;</td><td>&quot;child4&quot;</td></tr><tr><td>2</td><td>&quot;Anthony Brewer&quot;</td><td>&quot;1987-06-21&quot;</td><td>&quot;child4&quot;</td></tr><tr><td>3</td><td>&quot;Bailey Stevens&quot;</td><td>&quot;2000-04-09&quot;</td><td>&quot;child4&quot;</td></tr><tr><td>4</td><td>&quot;Kevin Gonzales&quot;</td><td>&quot;1977-10-03&quot;</td><td>&quot;child4&quot;</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>99995</td><td>&quot;Mr. Christopher Harper&quot;</td><td>&quot;2002-07-22&quot;</td><td>&quot;child15&quot;</td></tr><tr><td>99996</td><td>&quot;Desiree Parker&quot;</td><td>&quot;1939-11-15&quot;</td><td>&quot;child15&quot;</td></tr><tr><td>99997</td><td>&quot;Walter Lyons&quot;</td><td>&quot;2002-03-03&quot;</td><td>&quot;child15&quot;</td></tr><tr><td>99998</td><td>&quot;Amber Campbell&quot;</td><td>&quot;1983-10-31&quot;</td><td>&quot;child15&quot;</td></tr><tr><td>99999</td><td>&quot;Katelyn Oconnor&quot;</td><td>&quot;1975-11-13&quot;</td><td>&quot;child15&quot;</td></tr></tbody></table></div></div></div>
+<small>shape: (3_000_000, 4)</small><table border="1" class="dataframe"><thead><tr><th>family</th><th>name</th><th>dob</th><th>child</th></tr><tr><td>i64</td><td>str</td><td>str</td><td>str</td></tr></thead><tbody><tr><td>0</td><td>&quot;Tanya Brandt&quot;</td><td>&quot;1943-08-16&quot;</td><td>&quot;child20&quot;</td></tr><tr><td>1</td><td>&quot;Ashley Schultz&quot;</td><td>&quot;1993-04-15&quot;</td><td>&quot;child20&quot;</td></tr><tr><td>2</td><td>&quot;Tina Benjamin&quot;</td><td>&quot;1911-02-01&quot;</td><td>&quot;child20&quot;</td></tr><tr><td>3</td><td>&quot;Eric Santos&quot;</td><td>&quot;1928-02-18&quot;</td><td>&quot;child20&quot;</td></tr><tr><td>4</td><td>&quot;Roger Meza&quot;</td><td>&quot;1934-12-10&quot;</td><td>&quot;child20&quot;</td></tr><tr><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td><td>&hellip;</td></tr><tr><td>99995</td><td>&quot;Jennifer Flores&quot;</td><td>&quot;1933-06-17&quot;</td><td>&quot;child16&quot;</td></tr><tr><td>99996</td><td>&quot;Amanda Ruiz&quot;</td><td>&quot;2018-08-09&quot;</td><td>&quot;child16&quot;</td></tr><tr><td>99997</td><td>&quot;Angela Johnson&quot;</td><td>&quot;2015-06-24&quot;</td><td>&quot;child16&quot;</td></tr><tr><td>99998</td><td>&quot;Ashley Mitchell&quot;</td><td>&quot;1962-09-07&quot;</td><td>&quot;child16&quot;</td></tr><tr><td>99999</td><td>&quot;James Blair&quot;</td><td>&quot;1976-03-29&quot;</td><td>&quot;child16&quot;</td></tr></tbody></table></div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1029,39 +1188,39 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>it
-<span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;family&quot;</span>
-<span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">household_large</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%timeit</span>
+<span class="n">index</span> <span class="o">=</span> <span class="s2">"family"</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">"header"</span><span class="p">,</span> <span class="n">household_large</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 <span class="n">mask</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">is_in</span><span class="p">([</span><span class="n">index</span><span class="p">])</span><span class="o">.</span><span class="n">not_</span><span class="p">()</span>
 <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
-<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
-<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span>
+<span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"header"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">])</span>
 <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">struct</span><span class="o">.</span><span class="n">unnest</span><span class="p">()</span>
 <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
-<span class="n">grouped</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;child&quot;</span><span class="p">)</span>
+<span class="n">grouped</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">"child"</span><span class="p">)</span>
 <span class="n">grouped</span> <span class="o">=</span> <span class="n">grouped</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
 <span class="n">expression</span> <span class="o">=</span> <span class="p">[</span><span class="n">index</span><span class="p">]</span>
 <span class="n">zipped</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span>
-    <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
-    <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+    <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">"header"</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+    <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">"columns"</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
 <span class="p">)</span>
 <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="p">(</span><span class="n">heads</span><span class="p">,</span> <span class="n">column_names</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">zipped</span><span class="p">):</span>
     <span class="n">expr_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">heads</span><span class="p">,</span> <span class="n">column_names</span><span class="p">))</span>
     <span class="n">expr_</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">struct</span><span class="p">(</span><span class="o">**</span><span class="n">expr_</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
     <span class="n">expression</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expr_</span><span class="p">)</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">household_large</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">))</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s1">'*'</span><span class="p">))</span>
 <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s1">&#39;child&#39;</span><span class="p">))</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">([</span><span class="s1">&#39;family&#39;</span><span class="p">,</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s1">'child'</span><span class="p">))</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'variable'</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">([</span><span class="s1">'family'</span><span class="p">,</span><span class="s1">'value'</span><span class="p">])</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s1">'value'</span><span class="p">)</span>
 <span class="n">out</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>86.1 ms ± 233 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>83.1 ms ± 190 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -1069,33 +1228,33 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 <p>By changing our approach (preprocess the columns, and grouping related columns into structs before unpivoting) we improve the peformance significantly - about 14x faster.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">lreshape_optimised</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-    <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;family&quot;</span>
-    <span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">lreshape_optimised</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="s2">"family"</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">"header"</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
     <span class="n">mask</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">is_in</span><span class="p">([</span><span class="n">index</span><span class="p">])</span><span class="o">.</span><span class="n">not_</span><span class="p">()</span>
     <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
-    <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
-    <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+    <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span>
+    <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"header"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">])</span>
     <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">struct</span><span class="o">.</span><span class="n">unnest</span><span class="p">()</span>
     <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
-    <span class="n">grouped</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;child&quot;</span><span class="p">)</span>
+    <span class="n">grouped</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">"child"</span><span class="p">)</span>
     <span class="n">grouped</span> <span class="o">=</span> <span class="n">grouped</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
     <span class="n">expression</span> <span class="o">=</span> <span class="p">[</span><span class="n">index</span><span class="p">]</span>
     <span class="n">zipped</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span>
-        <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
-        <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+        <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">"header"</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+        <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">"columns"</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
     <span class="p">)</span>
     <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="p">(</span><span class="n">heads</span><span class="p">,</span> <span class="n">column_names</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">zipped</span><span class="p">):</span>
         <span class="n">expr_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">heads</span><span class="p">,</span> <span class="n">column_names</span><span class="p">))</span>
         <span class="n">expr_</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">struct</span><span class="p">(</span><span class="o">**</span><span class="n">expr_</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
         <span class="n">expression</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expr_</span><span class="p">)</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">))</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s1">'*'</span><span class="p">))</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s1">&#39;child&#39;</span><span class="p">))</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">([</span><span class="s1">&#39;family&#39;</span><span class="p">,</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s1">'child'</span><span class="p">))</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'variable'</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">([</span><span class="s1">'family'</span><span class="p">,</span><span class="s1">'value'</span><span class="p">])</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s1">'value'</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span>
 </pre></div>
 </div>
@@ -1104,6 +1263,46 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">lprun</span> -f lreshape_optimised lreshape_optimised(household_large)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Timer unit: 1e-09 s
+
+Total time: 0.083045 s
+File: /var/folders/yh/003fk4jn5fl9kl3mnm1y0b1h0000gr/T/ipykernel_83318/2813683113.py
+Function: lreshape_optimised at line 1
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+     1                                           def lreshape_optimised(df):
+     2         1       1000.0   1000.0      0.0      index = "family"
+     3         1      43000.0  43000.0      0.1      columns = pl.Series("header", df.columns)
+     4         1     278000.0 278000.0      0.3      mask = columns.is_in([index]).not_()
+     5         1      12000.0  12000.0      0.0      columns = columns.filter(mask)
+     6         1     196000.0 196000.0      0.2      columns_ = columns.str.split("_")
+     7         1     244000.0 244000.0      0.3      columns_ = columns_.list.to_struct(fields=["header", "child"])
+     8         1       6000.0   6000.0      0.0      columns_ = columns_.struct.unnest()
+     9         1     127000.0 127000.0      0.2      columns_ = columns_.with_columns(columns=columns)
+    10         1       5000.0   5000.0      0.0      grouped = columns_.group_by("child")
+    11         1     216000.0 216000.0      0.3      grouped = grouped.agg(pl.all())
+    12         1          0.0      0.0      0.0      expression = [index]
+    13         2       2000.0   1000.0      0.0      zipped = zip(
+    14         1      12000.0  12000.0      0.0          grouped.get_column("header").to_list(),
+    15         1       7000.0   7000.0      0.0          grouped.get_column("columns").to_list(),
+    16                                               )
+    17        31       7000.0    225.8      0.0      for num, (heads, column_names) in enumerate(zipped):
+    18        30      13000.0    433.3      0.0          expr_ = dict(zip(heads, column_names))
+    19        30     178000.0   5933.3      0.2          expr_ = pl.struct(**expr_).alias(str(num))
+    20        30       5000.0    166.7      0.0          expression.append(expr_)
+    21         1    1063000.0    1e+06      1.3      out = df.select(expression)
+    22         1    6824000.0    7e+06      8.2      out = out.select(pl.implode('*'))
+    23         1   53012000.0    5e+07     63.8      out = out.unpivot(index=index)
+    24         1      90000.0  90000.0      0.1      out = out.with_columns(grouped.get_column('child'))
+    25         1      23000.0  23000.0      0.0      out = out.drop('variable')
+    26         1   20647000.0    2e+07     24.9      out = out.explode(['family','value'])
+    27         1      34000.0  34000.0      0.0      out = out.unnest('value')
+    28         1          0.0      0.0      0.0      return out
 </pre></div>
 </div>
 </div>
@@ -1116,33 +1315,33 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
 
 <span class="n">Line</span> <span class="c1">#      Hits         Time  Per Hit   % Time  Line Contents</span>
 <span class="o">==============================================================</span>
-     <span class="mi">1</span>                                           <span class="k">def</span> <span class="nf">lreshape_optimised</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-     <span class="mi">2</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;family&quot;</span>
-     <span class="mi">3</span>         <span class="mi">1</span>      <span class="mf">34000.0</span>  <span class="mf">34000.0</span>      <span class="mf">0.0</span>      <span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+     <span class="mi">1</span>                                           <span class="k">def</span><span class="w"> </span><span class="nf">lreshape_optimised</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+     <span class="mi">2</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="n">index</span> <span class="o">=</span> <span class="s2">"family"</span>
+     <span class="mi">3</span>         <span class="mi">1</span>      <span class="mf">34000.0</span>  <span class="mf">34000.0</span>      <span class="mf">0.0</span>      <span class="n">columns</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="s2">"header"</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
      <span class="mi">4</span>         <span class="mi">1</span>     <span class="mf">165000.0</span> <span class="mf">165000.0</span>      <span class="mf">0.2</span>      <span class="n">mask</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">is_in</span><span class="p">([</span><span class="n">index</span><span class="p">])</span><span class="o">.</span><span class="n">not_</span><span class="p">()</span>
      <span class="mi">5</span>         <span class="mi">1</span>       <span class="mf">6000.0</span>   <span class="mf">6000.0</span>      <span class="mf">0.0</span>      <span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
-     <span class="mi">6</span>         <span class="mi">1</span>     <span class="mf">136000.0</span> <span class="mf">136000.0</span>      <span class="mf">0.2</span>      <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
-     <span class="mi">7</span>         <span class="mi">1</span>     <span class="mf">157000.0</span> <span class="mf">157000.0</span>      <span class="mf">0.2</span>      <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;child&quot;</span><span class="p">])</span>
+     <span class="mi">6</span>         <span class="mi">1</span>     <span class="mf">136000.0</span> <span class="mf">136000.0</span>      <span class="mf">0.2</span>      <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span>
+     <span class="mi">7</span>         <span class="mi">1</span>     <span class="mf">157000.0</span> <span class="mf">157000.0</span>      <span class="mf">0.2</span>      <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">to_struct</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s2">"header"</span><span class="p">,</span> <span class="s2">"child"</span><span class="p">])</span>
      <span class="mi">8</span>         <span class="mi">1</span>       <span class="mf">8000.0</span>   <span class="mf">8000.0</span>      <span class="mf">0.0</span>      <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">struct</span><span class="o">.</span><span class="n">unnest</span><span class="p">()</span>
      <span class="mi">9</span>         <span class="mi">1</span>     <span class="mf">187000.0</span> <span class="mf">187000.0</span>      <span class="mf">0.2</span>      <span class="n">columns_</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">columns</span><span class="p">)</span>
-    <span class="mi">10</span>         <span class="mi">1</span>       <span class="mf">4000.0</span>   <span class="mf">4000.0</span>      <span class="mf">0.0</span>      <span class="n">grouped</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">&quot;child&quot;</span><span class="p">)</span>
+    <span class="mi">10</span>         <span class="mi">1</span>       <span class="mf">4000.0</span>   <span class="mf">4000.0</span>      <span class="mf">0.0</span>      <span class="n">grouped</span> <span class="o">=</span> <span class="n">columns_</span><span class="o">.</span><span class="n">group_by</span><span class="p">(</span><span class="s2">"child"</span><span class="p">)</span>
     <span class="mi">11</span>         <span class="mi">1</span>     <span class="mf">274000.0</span> <span class="mf">274000.0</span>      <span class="mf">0.3</span>      <span class="n">grouped</span> <span class="o">=</span> <span class="n">grouped</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
     <span class="mi">12</span>         <span class="mi">1</span>       <span class="mf">1000.0</span>   <span class="mf">1000.0</span>      <span class="mf">0.0</span>      <span class="n">expression</span> <span class="o">=</span> <span class="p">[</span><span class="n">index</span><span class="p">]</span>
     <span class="mi">13</span>         <span class="mi">2</span>       <span class="mf">1000.0</span>    <span class="mf">500.0</span>      <span class="mf">0.0</span>      <span class="n">zipped</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span>
-    <span class="mi">14</span>         <span class="mi">1</span>      <span class="mf">14000.0</span>  <span class="mf">14000.0</span>      <span class="mf">0.0</span>          <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
-    <span class="mi">15</span>         <span class="mi">1</span>       <span class="mf">6000.0</span>   <span class="mf">6000.0</span>      <span class="mf">0.0</span>          <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">&quot;columns&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+    <span class="mi">14</span>         <span class="mi">1</span>      <span class="mf">14000.0</span>  <span class="mf">14000.0</span>      <span class="mf">0.0</span>          <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">"header"</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+    <span class="mi">15</span>         <span class="mi">1</span>       <span class="mf">6000.0</span>   <span class="mf">6000.0</span>      <span class="mf">0.0</span>          <span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s2">"columns"</span><span class="p">)</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
     <span class="mi">16</span>                                               <span class="p">)</span>
     <span class="mi">17</span>        <span class="mi">31</span>       <span class="mf">8000.0</span>    <span class="mf">258.1</span>      <span class="mf">0.0</span>      <span class="k">for</span> <span class="n">num</span><span class="p">,</span> <span class="p">(</span><span class="n">heads</span><span class="p">,</span> <span class="n">column_names</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">zipped</span><span class="p">):</span>
     <span class="mi">18</span>        <span class="mi">30</span>      <span class="mf">12000.0</span>    <span class="mf">400.0</span>      <span class="mf">0.0</span>          <span class="n">expr_</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">heads</span><span class="p">,</span> <span class="n">column_names</span><span class="p">))</span>
     <span class="mi">19</span>        <span class="mi">30</span>     <span class="mf">193000.0</span>   <span class="mf">6433.3</span>      <span class="mf">0.2</span>          <span class="n">expr_</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">struct</span><span class="p">(</span><span class="o">**</span><span class="n">expr_</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num</span><span class="p">))</span>
     <span class="mi">20</span>        <span class="mi">30</span>       <span class="mf">5000.0</span>    <span class="mf">166.7</span>      <span class="mf">0.0</span>          <span class="n">expression</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">expr_</span><span class="p">)</span>
     <span class="mi">21</span>         <span class="mi">1</span>     <span class="mf">719000.0</span> <span class="mf">719000.0</span>      <span class="mf">0.9</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">expression</span><span class="p">)</span>
-    <span class="mi">22</span>         <span class="mi">1</span>    <span class="mf">6927000.0</span>    <span class="mf">7e+06</span>      <span class="mf">8.3</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">))</span>
+    <span class="mi">22</span>         <span class="mi">1</span>    <span class="mf">6927000.0</span>    <span class="mf">7e+06</span>      <span class="mf">8.3</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">implode</span><span class="p">(</span><span class="s1">'*'</span><span class="p">))</span>
     <span class="mi">23</span>         <span class="mi">1</span>   <span class="mf">57090000.0</span>    <span class="mf">6e+07</span>     <span class="mf">68.3</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unpivot</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">index</span><span class="p">)</span>
-    <span class="mi">24</span>         <span class="mi">1</span>      <span class="mf">93000.0</span>  <span class="mf">93000.0</span>      <span class="mf">0.1</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s1">&#39;child&#39;</span><span class="p">))</span>
-    <span class="mi">25</span>         <span class="mi">1</span>      <span class="mf">23000.0</span>  <span class="mf">23000.0</span>      <span class="mf">0.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;variable&#39;</span><span class="p">)</span>
-    <span class="mi">26</span>         <span class="mi">1</span>   <span class="mf">17479000.0</span>    <span class="mf">2e+07</span>     <span class="mf">20.9</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">([</span><span class="s1">&#39;family&#39;</span><span class="p">,</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
-    <span class="mi">27</span>         <span class="mi">1</span>      <span class="mf">18000.0</span>  <span class="mf">18000.0</span>      <span class="mf">0.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s1">&#39;value&#39;</span><span class="p">)</span>
+    <span class="mi">24</span>         <span class="mi">1</span>      <span class="mf">93000.0</span>  <span class="mf">93000.0</span>      <span class="mf">0.1</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">with_columns</span><span class="p">(</span><span class="n">grouped</span><span class="o">.</span><span class="n">get_column</span><span class="p">(</span><span class="s1">'child'</span><span class="p">))</span>
+    <span class="mi">25</span>         <span class="mi">1</span>      <span class="mf">23000.0</span>  <span class="mf">23000.0</span>      <span class="mf">0.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'variable'</span><span class="p">)</span>
+    <span class="mi">26</span>         <span class="mi">1</span>   <span class="mf">17479000.0</span>    <span class="mf">2e+07</span>     <span class="mf">20.9</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">explode</span><span class="p">([</span><span class="s1">'family'</span><span class="p">,</span><span class="s1">'value'</span><span class="p">])</span>
+    <span class="mi">27</span>         <span class="mi">1</span>      <span class="mf">18000.0</span>  <span class="mf">18000.0</span>      <span class="mf">0.0</span>      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">unnest</span><span class="p">(</span><span class="s1">'value'</span><span class="p">)</span>
     <span class="mi">28</span>         <span class="mi">1</span>          <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="mf">0.0</span>      <span class="k">return</span> <span class="n">out</span>
 </pre></div>
 </div>
@@ -1218,15 +1417,17 @@ python version : 3.10.14 | packaged by conda-forge | (main, Mar 20 2024, 12:51:4
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> Contents
   </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction"><strong>Introduction</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#many-variables-in-column-names"><strong>Many variables in column names</strong></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#multiple-observations-per-row"><strong>Multiple observations per row</strong></a></li>
@@ -1280,8 +1481,8 @@ By Samuel Oranyeli
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
 
   <footer class="bd-footer">
   </footer>
