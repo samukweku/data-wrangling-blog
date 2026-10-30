@@ -2076,7 +2076,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>501 ms ± 4.18 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>453 ms ± 1.76 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2088,7 +2088,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>59 ms ± 630 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>60 ms ± 916 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -2100,7 +2100,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>61.8 ms ± 457 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>59.8 ms ± 248 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -2113,7 +2113,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 1732.78 MiB, increment: 1220.78 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 1732.45 MiB, increment: 1220.78 MiB
 </pre></div>
 </div>
 </div>
@@ -2125,7 +2125,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 512.12 MiB, increment: 0.00 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 511.79 MiB, increment: 0.00 MiB
 </pre></div>
 </div>
 </div>
@@ -2137,7 +2137,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 512.12 MiB, increment: 0.00 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 511.79 MiB, increment: 0.00 MiB
 </pre></div>
 </div>
 </div>
@@ -2397,7 +2397,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11.7 ms ± 57.2 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11.9 ms ± 51.7 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 </pre></div>
 </div>
 </div>
@@ -2419,7 +2419,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>14.1 ms ± 170 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>13.5 ms ± 16.7 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 </pre></div>
 </div>
 </div>
@@ -2484,8 +2484,6 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 </div>
-<p>About 8.9 million rows are returned. Each comparison below returns the same four columns; the normal mixed-key path is benchmarked separately from the forced numeric-key path.</p>
-<p><code class="docutils literal notranslate"><span class="pre">%timeit</span></code> repeats only the expression in its cell, so the other notebook benchmarks are not running concurrently. Results can still vary with CPU load, memory pressure, and warm caches. The memory values are process-level peaks from a long-lived kernel and are best treated as relative indicators.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%timeit</span>
@@ -2498,7 +2496,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.34 s ± 12.1 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.21 s ± 15.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2515,7 +2513,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.06 s ± 12.2 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>963 ms ± 15.9 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2535,14 +2533,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>218 ms ± 8.88 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The forced comparison is benchmarked below after encoding the equi key numerically.</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>215 ms ± 2 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2554,7 +2545,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 4409.02 MiB, increment: 3622.70 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 4416.30 MiB, increment: 3630.33 MiB
 </pre></div>
 </div>
 </div>
@@ -2566,14 +2557,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 1192.95 MiB, increment: 406.63 MiB
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># The forced comparison is benchmarked below after encoding the equi key numerically.</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 1171.62 MiB, increment: 385.65 MiB
 </pre></div>
 </div>
 </div>
@@ -2737,7 +2721,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.93 s ± 11.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.76 s ± 24.5 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2754,7 +2738,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.66 s ± 13.7 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.5 s ± 23.4 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2776,7 +2760,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>738 ms ± 7.17 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>773 ms ± 17 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2798,7 +2782,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.43 s ± 2.35 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.43 s ± 18.6 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
