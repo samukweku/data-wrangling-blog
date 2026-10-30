@@ -1457,14 +1457,14 @@ is used to combine the results of the individual conditions.</p></li>
 <p>For multiple non-equi joins, an and(&amp;) operator is applied, to combine the results of the individual conditions. There are scenarios however, where the join might have an <em>OR</em> condition. In this case, the joins are executed individually, and the resulting dataframes can then be concatenated into one. Let’s look at an example from <a class="reference external" href="https://www.nelsontang.com/blog/2021-11-25-pandas-conditional-merging">Nelson Tang’s blog post</a>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sales_volume_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">([</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sales_volume_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
     <span class="p">{</span><span class="s1">'date'</span><span class="p">:</span><span class="s1">'2021-11-15'</span><span class="p">,</span> <span class="s1">'quantity'</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">'brand'</span><span class="p">:</span><span class="s1">'Outdoor'</span><span class="p">},</span>
     <span class="p">{</span><span class="s1">'date'</span><span class="p">:</span><span class="s1">'2021-11-20'</span><span class="p">,</span> <span class="s1">'quantity'</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'brand'</span><span class="p">:</span><span class="s1">'Leisure'</span><span class="p">},</span>
     <span class="p">{</span><span class="s1">'date'</span><span class="p">:</span><span class="s1">'2021-11-25'</span><span class="p">,</span> <span class="s1">'quantity'</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="s1">'brand'</span><span class="p">:</span><span class="s1">'Athletic'</span><span class="p">},</span>
     <span class="p">{</span><span class="s1">'date'</span><span class="p">:</span><span class="s1">'2021-11-26'</span><span class="p">,</span> <span class="s1">'quantity'</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span> <span class="s1">'brand'</span><span class="p">:</span><span class="s1">'Outdoor'</span><span class="p">},</span>
 <span class="p">])</span>
 
-<span class="n">promos_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">([</span>
+<span class="n">promos_table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
     <span class="p">{</span><span class="s1">'start_date'</span><span class="p">:</span><span class="s1">'2021-11-01'</span><span class="p">,</span> <span class="s1">'end_date'</span><span class="p">:</span><span class="s1">'2021-11-25'</span><span class="p">,</span>
     <span class="s1">'brand'</span><span class="p">:</span><span class="s1">'ANY'</span><span class="p">,</span> <span class="s1">'rebate_per_unit'</span><span class="p">:</span><span class="mi">3</span><span class="p">},</span>
     <span class="p">{</span><span class="s1">'start_date'</span><span class="p">:</span><span class="s1">'2021-11-25'</span><span class="p">,</span> <span class="s1">'end_date'</span><span class="p">:</span><span class="s1">'2021-11-26'</span><span class="p">,</span>
@@ -1474,14 +1474,6 @@ is used to combine the results of the individual conditions.</p></li>
 <span class="n">sales_volume_table</span><span class="p">[</span><span class="s1">'date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">sales_volume_table</span><span class="p">[</span><span class="s1">'date'</span><span class="p">])</span>
 <span class="n">promos_table</span><span class="p">[</span><span class="s1">'start_date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">promos_table</span><span class="p">[</span><span class="s1">'start_date'</span><span class="p">])</span>
 <span class="n">promos_table</span><span class="p">[</span><span class="s1">'end_date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">promos_table</span><span class="p">[</span><span class="s1">'end_date'</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_2617/654970451.py:1: Pandas4Warning: Passing a list to DataFrame.from_dict is deprecated. Use the DataFrame constructor instead.
-  sales_volume_table = pd.DataFrame.from_dict([
-/tmp/ipykernel_2617/654970451.py:8: Pandas4Warning: Passing a list to DataFrame.from_dict is deprecated. Use the DataFrame constructor instead.
-  promos_table = pd.DataFrame.from_dict([
 </pre></div>
 </div>
 </div>
@@ -2084,7 +2076,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>501 ms ± 5.36 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>748 ms ± 3.72 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2096,7 +2088,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>57.3 ms ± 203 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>53.6 ms ± 2.66 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -2108,7 +2100,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>60.1 ms ± 373 μs per loop (mean ± std. dev. of 7 runs, 10 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>57.7 ms ± 1.87 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
 </pre></div>
 </div>
 </div>
@@ -2121,7 +2113,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 1732.26 MiB, increment: 1220.78 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 1732.82 MiB, increment: 1220.78 MiB
 </pre></div>
 </div>
 </div>
@@ -2133,7 +2125,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 511.61 MiB, increment: 0.00 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 512.16 MiB, increment: 0.00 MiB
 </pre></div>
 </div>
 </div>
@@ -2145,7 +2137,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 511.61 MiB, increment: 0.00 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 512.16 MiB, increment: 0.00 MiB
 </pre></div>
 </div>
 </div>
@@ -2405,7 +2397,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11.7 ms ± 16.5 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10.4 ms ± 83.8 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 </pre></div>
 </div>
 </div>
@@ -2427,7 +2419,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>14 ms ± 106 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11.7 ms ± 123 μs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 </pre></div>
 </div>
 </div>
@@ -2502,7 +2494,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.33 s ± 12.8 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.19 s ± 12.6 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2518,7 +2510,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.05 s ± 5.56 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.66 s ± 52.4 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2537,7 +2529,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>283 ms ± 1.13 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>263 ms ± 2.15 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2556,7 +2548,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 4481.73 MiB, increment: 3628.14 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 4760.73 MiB, increment: 3906.41 MiB
 </pre></div>
 </div>
 </div>
@@ -2568,7 +2560,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 1206.28 MiB, increment: 352.69 MiB
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak memory: 1250.18 MiB, increment: 395.86 MiB
 </pre></div>
 </div>
 </div>
@@ -2738,7 +2730,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.9 s ± 11.2 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.96 s ± 28.7 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2754,7 +2746,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.64 s ± 18.6 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2.45 s ± 16.5 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2775,7 +2767,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>865 ms ± 7.72 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>839 ms ± 26 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
@@ -2796,7 +2788,7 @@ is used to combine the results of the individual conditions.</p></li>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.58 s ± 3.86 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1.4 s ± 21.6 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 </pre></div>
 </div>
 </div>
