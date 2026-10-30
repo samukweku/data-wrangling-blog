@@ -1,5 +1,7 @@
 numpy
 pandas
+pyjanitor
+memory_profiler
 openpyxl
 datatable
 numba
